@@ -3,12 +3,6 @@ using System.Collections.Generic;
 
 namespace Interfacer;
 
-public class WriteCellData
-{
-	public IntVector gridPos;
-	public string text;
-}
-
 public partial class InterfacerGame : Sandbox.Game
 {
 	public static InterfacerGame Instance { get; private set; }
