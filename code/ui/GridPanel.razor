@@ -1,0 +1,96 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+
+@inherits Panel;
+@namespace Interfacer
+
+<style>
+    .grid 
+    {
+        width:1419px;
+        height:815px;
+        background-color: #ffffff00;
+        flex-wrap: wrap;
+        margin-top: 40px;
+    }
+</style>
+
+<root class="grid">
+    @for (int i = 0; i < InterfacerGame.GridWidth * InterfacerGame.GridHeight; i++)
+    {
+        var localI = i; 
+        <GridCell style="z-index: @localI" @Index=@localI @onmouseover=@(() => HoveredCellIndex = localI ) @onclick=@(() => OnCellClicked(localI)) />
+    }
+
+    <!-- <SliderEntry min="0" max="100" step="1" Value:bind=@ClickedCellIndex></SliderEntry> -->
+    
+</root>
+
+@code
+{
+    public readonly List<GridCell> Cells = new List<GridCell>();
+
+    public int HoveredCellIndex { get; set; }
+    public int ClickedCellIndex { get; set; }
+
+    string cellClass(int i)
+    {
+        return (i % 2) != (i / 10) % 2 ? "dark" : "light";
+    }
+
+    public string GetSelectedIndexString()
+    {
+        if (Hud.Instance.SelectedCell != null)
+            return Hud.Instance.SelectedCell.Index.ToString();
+        else
+            return "None";
+    }
+
+    public void RefreshMe()
+    {
+        StateHasChanged();
+    }
+
+    void OnCellClicked(int index)
+    {
+        
+    }
+
+    protected override void OnChildRemoved( Panel child )
+    {
+        base.OnChildRemoved( child );
+
+        if(child is GridCell gridCell)
+        {
+            Cells.Remove(gridCell);    
+        }
+    }
+
+    protected override void OnChildAdded( Panel child )
+    {
+        base.OnChildAdded( child );
+
+        if(child is GridCell gridCell)
+        {
+            Cells.Add(gridCell);
+        }
+    }
+
+    public GridCell GetCell(int index)
+    {
+        if (index < Cells.Count)
+            return Cells[index];
+
+        return null;
+    }
+
+    public GridCell GetCell(int x, int y)
+    {
+        return GetCell(y * InterfacerGame.GridWidth + x);
+    }
+
+    public GridCell GetCell(IntVector gridPos)
+    {
+        return GetCell(gridPos.y * InterfacerGame.GridWidth + gridPos.x);
+    }
+}

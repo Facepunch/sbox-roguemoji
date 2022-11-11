@@ -1,0 +1,54 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+
+@inherits Panel;
+@namespace Interfacer
+
+<style>
+    $primary: #e500ff !default;
+
+    .outer
+    {
+        flex-direction:row;
+        width: 100%;
+        background-color: #000000;
+    }
+
+    .inner
+    {
+        width: 80%;
+        height: 100%;
+        background-color: #000000;
+        color: #ffffff33;
+        pointer-events: all;
+        font-size:22px;
+        flex-direction:column;
+        margin-left: 40px;
+    }
+
+    .log
+    {
+        width: 20%;
+    }
+</style>
+
+<root class="outer">
+    <div class="inner">
+        <GridPanel @ref=GridPanel></GridPanel>
+        <!-- <p> Hovered: @GridPanel.HoveredCellIndex @GetHoveredCoords() ----- Clicked: @GridPanel.GetSelectedIndexString() ----- # Cells: @GridPanel.Cells.Count() ----- # Things: @InterfacerGame.Instance.NumThings</p> -->
+    </div>
+
+    <LogPanel class="log" @ref=LogPanel></LogPanel>
+</root>
+
+@code
+{
+    public GridPanel GridPanel { get; set; }
+    public LogPanel LogPanel { get; set; }
+
+    public string GetHoveredCoords()
+    {
+        var gridPos = GridManager.GetGridPos(GridPanel.HoveredCellIndex, Hud.Instance.GridWidth);
+        return gridPos.ToString();
+    }
+}

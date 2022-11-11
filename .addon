@@ -1,0 +1,26 @@
+{
+  "Title": "Interfacer",
+  "Type": "game",
+  "Org": "ryleigh",
+  "Ident": "interfacer",
+  "Tags": "",
+  "Schema": 1,
+  "HasAssets": true,
+  "AssetsPath": "",
+  "ResourcePaths": [],
+  "HasCode": true,
+  "CodePath": "/code/",
+  "RootNamespace": null,
+  "Metadata": {
+    "MaxPlayers": 8,
+    "MinPlayers": 1,
+    "GameNetworkType": "Multiplayer",
+    "MapSelect": "Empty",
+    "MapList": [],
+    "RankType": "None",
+    "PerMapRanking": false,
+    "LeaderboardType": "None",
+    "ProjectTemplate": null,
+    "ParentPackage": ""
+  }
+}
