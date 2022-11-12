@@ -26,19 +26,21 @@ public partial class Hud : RootPanel
 		MainPanel = AddChild<MainPanel>();
 	}
 
-	public void GridCellClicked(GridCell gridCell)
+	public void GridCellClicked(int x, int y)
 	{
 		//if ( gridCell == SelectedCell )
 		//	return;
 
-		IndexClicked = gridCell.Index;
+		//Log.Info("GridCellClicked: " + gridCell);
 
-		SelectedCell?.SetSelected(false);
+		//IndexClicked = gridCell.Index;
 
-		SelectedCell = gridCell;
-		SelectedCell.SetSelected(true);
+		////SelectedCell?.SetSelected(false);
 
-		var coords = gridCell.GetCoords();
-		InterfacerGame.CellClicked( coords.x, coords.y );
+		//SelectedCell = gridCell;
+		////SelectedCell.SetSelected(true);
+
+		//var coords = gridCell.GetCoords();
+		InterfacerGame.CellClicked( x, y );
 	}
 }

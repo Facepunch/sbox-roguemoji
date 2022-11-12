@@ -18,12 +18,11 @@
 <root class="grid">
     @for (int i = 0; i < InterfacerGame.GridWidth * InterfacerGame.GridHeight; i++)
     {
-        var localI = i; 
-        <GridCell style="z-index: @localI" @Index=@localI @onmouseover=@(() => HoveredCellIndex = localI ) @onclick=@(() => OnCellClicked(localI)) />
+        var localI = i;
+        var gridPos = GetGridPos(localI);
+        <GridCell style="left: @(gridPos.x * 40); top: @(gridPos.y * 40 - 2);" @Index=@localI @onmouseover=@(() => HoveredCellIndex = localI ) @onclick=@(() => OnCellClicked(localI)) />
     }
 
-    <!-- <SliderEntry min="0" max="100" step="1" Value:bind=@ClickedCellIndex></SliderEntry> -->
-    
 </root>
 
 @code
@@ -46,6 +45,16 @@
             return "None";
     }
 
+    IntVector GetGridPos(int index)
+    {
+        return new IntVector(index % InterfacerGame.GridWidth, MathX.FloorToInt((float)index / (float)InterfacerGame.GridWidth));
+    }
+
+    Vector2 GetCellPos(int index)
+    {
+        return new Vector2(index % InterfacerGame.GridWidth, MathX.FloorToInt((float)index / (float)InterfacerGame.GridWidth)) * 40f;   
+    }
+
     public void RefreshMe()
     {
         StateHasChanged();
@@ -53,7 +62,8 @@
 
     void OnCellClicked(int index)
     {
-        
+        var gridPos = GridManager.GetGridPos(index, Hud.Instance.GridWidth);
+        Hud.Instance.GridCellClicked(gridPos.x, gridPos.y);
     }
 
     protected override void OnChildRemoved( Panel child )

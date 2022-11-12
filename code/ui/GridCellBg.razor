@@ -1,0 +1,80 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+
+@inherits Panel;
+@namespace Interfacer
+
+<style>
+    .bg 
+    {
+        width: 40px;
+        height: 40px;
+        border: 1px solid #ffffff00;
+        pointer-events:all;
+        //z-index: -1;
+        position: absolute;
+
+        &:active
+        {
+            border: 1px solid #ffffff88;
+        }
+    }
+
+    .dark
+    {
+        background-color: #171717ff;
+    }
+
+    .light
+    {
+        background-color: #202020ff;
+    }
+
+    .selected
+    {
+        border: 1px solid #7777ff88;
+    }
+</style>
+
+<button class="bg @cellClass(Index) @selectedClass()" @onclick=@( () => OnClick(Index)) ) ></button>
+
+@code
+{
+    public int Index { get; set; }
+    public bool IsSelected { get; set; }
+
+    private string cellClass(int i)
+    {
+        var coords = GetCoords();
+        return coords.x % 2 == coords.y % 2 ? "dark" : "light";
+    }
+
+    public IntVector GetCoords()
+    {
+        return new IntVector(Index % InterfacerGame.GridWidth, MathX.FloorToInt((float)Index / (float)InterfacerGame.GridWidth));
+    }
+
+    private string selectedClass()
+    {
+        if (IsSelected)
+            return "selected";
+        else 
+            return "";
+    }
+
+    public void OnClick(int index)
+    {
+        //Hud.Instance.GridCellClicked(this);
+    }
+
+    public void SetSelected(bool isSelected)
+    {
+        IsSelected = isSelected;
+        StateHasChanged();
+    }
+
+    public void Refresh()
+    {
+        StateHasChanged();
+    }
+}

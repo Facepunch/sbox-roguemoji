@@ -1,11 +1,12 @@
 ﻿@using Sandbox;
 @using Sandbox.UI;
+@using System;
 
 @inherits Panel;
 @namespace Interfacer
 
 <style>
-    .cell
+    .icon
     {
         width: 40px;
         height: 40px;
@@ -13,16 +14,10 @@
         align-items: center;
         text-align: center;
         color:#ffffff;
-        border: 1px solid #ffffff00;
-
+        z-index: 1;
+        position: absolute;
+        pointer-events:all;
         font-size:29px;
-        position: relative;
-        top: -2px;
-
-        &:active
-        {
-            border: 1px solid #ffffff88;
-        }
     }
 
     .player-1 { text-stroke-color: #3333ff; text-stroke-width: 4px; }
@@ -33,41 +28,20 @@
     .player-6 { text-stroke-color: #2299ff; text-stroke-width: 4px; }
     .player-7 { text-stroke-color: #444444; text-stroke-width: 4px; }
     .player-8 { text-stroke-color: #8800bb; text-stroke-width: 4px; }
-
-    .dark
-    {
-        background-color: #171717ff;
-    }
-
-    .light
-    {
-        background-color: #202020ff;
-    }
-
-    .selected
-    {
-        border: 1px solid #7777ff88;
-    }
 </style>
 
-<button class="cell @cellClass(Index) @selectedClass() @playerClass()" @onclick=@( () => OnClick(Index)) ) >@Text</button>
+<root class="icon @playerClass()">@Text</root>
 
 @code
 {
+    public Panel IconPanel { get; set; }
+
     public int Index { get; set; }
     public int PlayerNum { get; set; }
 
     public string Text { get; private set; }
 
     public bool IsSelected { get; set; }
-
-    //public PanelEvent onClicked { get; set; }
-
-    private string cellClass(int i)
-    {
-        var coords = GetCoords();
-        return coords.x % 2 == coords.y % 2 ? "dark" : "light";
-    }
 
     public IntVector GetCoords()
     {
@@ -85,11 +59,6 @@
     private string playerClass()
     {
         return PlayerNum > 0 ? $"player-{PlayerNum}" : "";
-    }
-
-    public void OnClick(int index)
-    {
-        Hud.Instance.GridCellClicked(this);
     }
 
     public void SetSelected(bool isSelected)
@@ -112,4 +81,20 @@
     {
         PlayerNum = num;
     }
+
+    //public override void Tick()
+    //{
+    //    base.Tick();
+
+    //    Style.Width = 40f + MathF.Sin(Time.Now * 4f) * 4f;
+    //    Style.MarginLeft = 12f;
+    //    Style.MarginTop = 12f;
+
+    //    var tr = new PanelTransform();
+    //    tr.AddScale(new Vector3(1f + MathF.Sin(Time.Now * 6f) * 0.05f, 1f + MathF.Sin(Time.Now * 7f) * 0.05f, 1f));
+    //    tr.AddRotation(0f, 0f, MathF.Sin(Time.Now * 5f) * 4f);
+    //    tr.AddTranslateY(MathF.Sin(Time.Now * 10f) * -2f);
+    //    tr.AddRotation(MathF.Cos(Time.Now * 6f) * 25f, MathF.Sin(Time.Now * 6f) * 25f, 0f);
+    //    Style.Transform = tr;
+    //}
 }

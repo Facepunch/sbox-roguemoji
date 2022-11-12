@@ -15,8 +15,9 @@
         margin-top: 40px;
         margin-right: 40px;
         flex-direction:column;
-        align-content: flex-end;
-        overflow: scroll;
+        justify-content: flex-end;
+        //overflow: scroll;
+        overflow: hidden;
         border: 2px solid #ffffff08;
         border-radius: 3px;
     }
@@ -33,18 +34,13 @@
 {
     public Queue<(string, int)> Messages { get; private set; } = new();
 
-    public LogPanel()
-    {
-        PreferScrollToBottom = true;
-    }
-
     public void WriteMessage(string text, int playerNum)
     {
-        //if (Messages.Count() > 10)
+        //while (Messages.Count() > 10)
         //    Messages.Dequeue();
 
         Messages.Enqueue((text, playerNum));
-        TryScrollToBottom();
+
         StateHasChanged();
     }
 }
