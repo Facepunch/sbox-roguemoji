@@ -16,7 +16,7 @@ public partial class InterfacerGame : Sandbox.Game
 	public const int GridWidth = 35;
 	public const int GridHeight = 20;
 
-	public record struct CellData( IntVector gridPos, string text, int playerNum);
+	public record struct CellData( IntVector gridPos, string text, int playerNum, string tooltip );
 	public Queue<CellData> WriteCellQueue = new Queue<CellData> ();
 
 	public record struct LogData( string text, int playerNum );
@@ -97,17 +97,17 @@ public partial class InterfacerGame : Sandbox.Game
 		ThingManager.AddThing( player );
 	}
 
-	public void WriteCell( IntVector gridPos, string text, int playerNum)
+	public void WriteCell( IntVector gridPos, string text, int playerNum, string tooltip)
 	{
-		WriteCellClient( gridPos.x, gridPos.y, text, playerNum);
+		WriteCellClient( gridPos.x, gridPos.y, text, playerNum, tooltip);
 	}
 
 	[ClientRpc]
-	public void WriteCellClient(int x, int y, string text, int playerNum)
+	public void WriteCellClient(int x, int y, string text, int playerNum, string tooltip)
 	{
 		if (Hud.MainPanel.GridPanel == null)
 		{
-			WriteCellQueue.Enqueue(new CellData(new IntVector(x, y), text, playerNum ) );
+			WriteCellQueue.Enqueue(new CellData(new IntVector(x, y), text, playerNum, tooltip) );
 			return;
 		}
 
@@ -117,6 +117,7 @@ public partial class InterfacerGame : Sandbox.Game
 		{
 			cell.SetText( text );
 			cell.SetPlayerNum( playerNum );
+			cell.SetTooltip( tooltip );
 			cell.Refresh();
 		}
 	}

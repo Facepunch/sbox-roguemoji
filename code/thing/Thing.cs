@@ -8,6 +8,7 @@ public partial class Thing : Entity
 
 	public virtual string DisplayIcon { get; protected set; }
 	public virtual string DisplayName => Name;
+	public virtual string Tooltip => "";
 
 	public bool ShouldUpdate { get; set; }
 	public bool DoneFirstUpdate { get; private set; }

@@ -8,6 +8,7 @@ public partial class InterfacerPlayer : Thing
 	private const float REPEAT_DELAY = 0.125f;
 
 	public override string DisplayName => Client?.Name ?? "Player";
+	public override string Tooltip => Client?.Name ?? "Player";
 
 	public InterfacerPlayer()
 	{

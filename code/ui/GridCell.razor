@@ -82,12 +82,26 @@
         PlayerNum = num;
     }
 
+    public void SetTooltip(string text)
+    {
+        Tooltip = text;
+
+    }
+
+    protected override Panel CreateTooltipPanel()
+    {
+        var tooltip = Hud.Instance.AddChild<CellTooltip>();
+        tooltip.Text = Tooltip;
+        tooltip.AddClass($"player-{PlayerNum}");
+        return tooltip;
+    }
+
     //public override void Tick()
     //{
     //    base.Tick();
 
     //    Style.Width = 40f + MathF.Sin(Time.Now * 4f) * 4f;
-    //    Style.MarginLeft = 12f;
+		//    Style.MarginLeft = 12f;
     //    Style.MarginTop = 12f;
 
     //    var tr = new PanelTransform();

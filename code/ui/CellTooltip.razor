@@ -1,0 +1,34 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+
+@inherits Panel;
+@namespace Interfacer
+
+<style>
+    .cell_tooltip 
+    {
+        color: white;
+        font-size: 16px;
+        position: absolute;
+        padding: 0 2px 0 3px;
+        border-radius: 2px;
+        border: 1px solid #ffffff33;
+    }
+
+    .player-0 { background-color: #000000aa; }
+    .player-1 { background-color: #3333ffaa; }
+    .player-2 { background-color: #ff0000aa; }
+    .player-3 { background-color: #009900aa; }
+    .player-4 { background-color: #cc00cc99; }
+    .player-5 { background-color: #ffff0044; }
+    .player-6 { background-color: #2299ffaa; }
+    .player-7 { background-color: #333333aa; }
+    .player-8 { background-color: #8800bbaa; }
+</style>
+
+<root class="cell_tooltip">@Text</root>
+
+@code
+{
+    public string Text { get; set; }
+}

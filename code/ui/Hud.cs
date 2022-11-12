@@ -23,6 +23,8 @@ public partial class Hud : RootPanel
 		GridWidth = width;
 		GridHeight = height;
 
+		StyleSheet.Load("/ui/Hud.scss");
+
 		MainPanel = AddChild<MainPanel>();
 	}
 

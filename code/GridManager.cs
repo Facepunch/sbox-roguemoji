@@ -99,9 +99,8 @@ public class GridManager
 
 	void RefreshCell(IntVector gridPos)
 	{
-		string text = "";
-		int playerNum = 0;
 		float currPriority = -1f;
+		Thing currThing = null;
 
 		if(GridThings.ContainsKey(gridPos))
 		{
@@ -109,14 +108,16 @@ public class GridManager
 			{
 				if(thing.IconPriority > currPriority)
 				{
-					text = thing.DisplayIcon;
-					playerNum = thing.PlayerNum;
+					currThing = thing;
 					currPriority = thing.IconPriority;
 				}
 			}
 		}
 
-		InterfacerGame.Instance.WriteCell( gridPos, text, playerNum);
+		if(currThing != null)
+			InterfacerGame.Instance.WriteCell(gridPos, currThing.DisplayIcon, currThing.PlayerNum, currThing.Tooltip);
+		else
+			InterfacerGame.Instance.WriteCell(gridPos, "", 0, "");
 	}
 
 	public static IntVector GetIntVectorForDirection(Direction direction)
