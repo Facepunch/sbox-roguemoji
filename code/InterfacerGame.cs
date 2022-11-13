@@ -13,7 +13,7 @@ public partial class InterfacerGame : Sandbox.Game
 	public GridManager GridManager { get; private set; }
 	public ThingManager ThingManager { get; private set; }
 
-	public const int GridWidth = 35;
+	public const int GridWidth = 30;
 	public const int GridHeight = 20;
 
 	public record struct CellData( IntVector gridPos, string text, int playerNum, string tooltip );

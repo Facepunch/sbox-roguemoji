@@ -7,22 +7,17 @@
 <style>
     .grid_bg 
     {
-        width:1400px;
-        height:800px;
         opacity: 0.04;
         position:absolute;
         pointer-events:none;
         background-repeat: repeat;
-        left: 0px;
-        top: 40px;
         background-position: 0 0;
         background-size: 80px;
-        backdrop-filter: blur(10px) saturate(80%);
         border-radius:3px;
     }
 </style>
 
-<root class="grid_bg" style="background-image: url( textures/bg_tile.png )"></root>
+<root class="grid_bg" style="width: @(40 * Hud.Instance.GridWidth)px; height: @(40 * Hud.Instance.GridHeight)px; background-image: url( textures/bg_tile.png );"></root>
 
 @code
 {
