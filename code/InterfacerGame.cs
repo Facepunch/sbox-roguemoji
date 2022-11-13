@@ -70,6 +70,7 @@ public partial class InterfacerGame : Sandbox.Game
 				{
 					cell.SetText( data.text );
 					cell.SetPlayerNum( data.playerNum);
+					cell.SetTooltip( data.tooltip );
 					cell.Refresh();
 				}
 			}

@@ -10,23 +10,32 @@
     .log 
     {
         width:100%;
-        height:810px;
-        background-color: #5555ff11;
+        height:800px;
+        //background-color: #ffffff01;
         margin-top: 40px;
         margin-right: 40px;
         flex-direction:column;
         justify-content: flex-end;
         //overflow: scroll;
         overflow: hidden;
-        border: 2px solid #ffffff08;
+        border: 1px solid #ffffff25;
         border-radius: 3px;
     }
 </style>
 
 <root class="log">
+    
+    @{ 
+        int i = 0; 
+        int MAX_MESSAGES = 45;
+        var numMessages = Messages.Count;
+        var minOpacity = Utils.Map(MathF.Min(numMessages, MAX_MESSAGES), 0, MAX_MESSAGES, 1f, 0f);
+    }
     @foreach((string message, int playerNum) in Messages)
     {
-        <LogMessage @Text=@message @PlayerNum=@playerNum></LogMessage>
+        var opacity = Utils.Map(MathF.Max(i, numMessages - MAX_MESSAGES), numMessages - 1, MathF.Max(0, numMessages - MAX_MESSAGES), 1.0f, minOpacity);
+        <LogMessage @Text=@message @PlayerNum=@playerNum style="opacity: @opacity" ></LogMessage>
+        i++;
     }
 </root>
 

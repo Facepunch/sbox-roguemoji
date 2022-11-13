@@ -55,11 +55,6 @@
         return new Vector2(index % InterfacerGame.GridWidth, MathX.FloorToInt((float)index / (float)InterfacerGame.GridWidth)) * 40f;   
     }
 
-    public void RefreshMe()
-    {
-        StateHasChanged();
-    }
-
     void OnCellClicked(int index)
     {
         var gridPos = GridManager.GetGridPos(index, Hud.Instance.GridWidth);
