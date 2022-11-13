@@ -14,7 +14,6 @@
         align-items: center;
         text-align: center;
         color:#ffffff;
-        z-index: 1;
         position: absolute;
         pointer-events:all;
         font-size:29px;
@@ -26,11 +25,11 @@
     .player-4 { text-stroke-color: #ff00ff; text-stroke-width: 4px; }
     .player-5 { text-stroke-color: #ffff00; text-stroke-width: 4px; }
     .player-6 { text-stroke-color: #2299ff; text-stroke-width: 4px; }
-    .player-7 { text-stroke-color: #444444; text-stroke-width: 4px; }
-    .player-8 { text-stroke-color: #8800bb; text-stroke-width: 4px; }
+    .player-7 { text-stroke-color: #8800bb; text-stroke-width: 4px; }
+    .player-8 { text-stroke-color: #ff8800; text-stroke-width: 4px; }
 </style>
 
-<root class="icon @playerClass()">@Text</root>
+<root class="icon @GetPlayerClass()" style="z-index: @Index;">@Text</root>
 
 @code
 {
@@ -41,30 +40,9 @@
 
     public string Text { get; private set; }
 
-    public bool IsSelected { get; set; }
-
-    public IntVector GetCoords()
-    {
-        return new IntVector(Index % InterfacerGame.GridWidth, MathX.FloorToInt((float)Index / (float)InterfacerGame.GridWidth));
-    }
-
-    private string selectedClass()
-    {
-        if (IsSelected)
-            return "selected";
-        else 
-            return "";
-    }
-
-    private string playerClass()
+    private string GetPlayerClass()
     {
         return PlayerNum > 0 ? $"player-{PlayerNum}" : "";
-    }
-
-    public void SetSelected(bool isSelected)
-    {
-        IsSelected = isSelected;
-        StateHasChanged();
     }
 
     public void Refresh()
@@ -85,7 +63,6 @@
     public void SetTooltip(string text)
     {
         Tooltip = text;
-
     }
 
     protected override Panel CreateTooltipPanel()
@@ -96,19 +73,23 @@
         return tooltip;
     }
 
-    //public override void Tick()
-    //{
-    //    base.Tick();
+    public override void Tick()
+    {
+        base.Tick();
 
-    //    Style.Width = 40f + MathF.Sin(Time.Now * 4f) * 4f;
-		//    Style.MarginLeft = 12f;
-    //    Style.MarginTop = 12f;
+        //    Style.Width = 40f + MathF.Sin(Time.Now * 4f) * 4f;
+        //    Style.MarginLeft = 12f;
+        //    Style.MarginTop = 12f;
 
-    //    var tr = new PanelTransform();
-    //    tr.AddScale(new Vector3(1f + MathF.Sin(Time.Now * 6f) * 0.05f, 1f + MathF.Sin(Time.Now * 7f) * 0.05f, 1f));
-    //    tr.AddRotation(0f, 0f, MathF.Sin(Time.Now * 5f) * 4f);
-    //    tr.AddTranslateY(MathF.Sin(Time.Now * 10f) * -2f);
-    //    tr.AddRotation(MathF.Cos(Time.Now * 6f) * 25f, MathF.Sin(Time.Now * 6f) * 25f, 0f);
-    //    Style.Transform = tr;
-    //}
+        var tr = new PanelTransform();
+        //tr.AddScale(new Vector3(1f + MathF.Sin(Time.Now * 6f) * 0.05f, 1f + MathF.Sin(Time.Now * 7f) * 0.05f, 1f));
+        //tr.AddRotation(0f, 0f, MathF.Sin(Time.Now * 5f) * 4f);
+        //tr.AddRotation(0f, 0f, Time.Now * 500f);
+        //tr.AddTranslateY(MathF.Sin(Time.Now * 10f) * -2f);
+        //tr.AddRotation(MathF.Cos(Time.Now * 6f) * 25f, MathF.Sin(Time.Now * 6f) * 25f, 0f);
+        //tr.AddSkew(22.5f, 0.5f, 0.5f);
+        //tr.AddScale(new Vector3(2f, 2f, 1f));
+
+        Style.Transform = tr;
+    }
 }

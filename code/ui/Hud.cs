@@ -30,19 +30,6 @@ public partial class Hud : RootPanel
 
 	public void GridCellClicked(int x, int y)
 	{
-		//if ( gridCell == SelectedCell )
-		//	return;
-
-		//Log.Info("GridCellClicked: " + gridCell);
-
-		//IndexClicked = gridCell.Index;
-
-		////SelectedCell?.SetSelected(false);
-
-		//SelectedCell = gridCell;
-		////SelectedCell.SetSelected(true);
-
-		//var coords = gridCell.GetCoords();
 		InterfacerGame.CellClicked( x, y );
 	}
 }

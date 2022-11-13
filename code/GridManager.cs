@@ -114,10 +114,11 @@ public class GridManager
 			}
 		}
 
-		if(currThing != null)
-			InterfacerGame.Instance.WriteCell(gridPos, currThing.DisplayIcon, currThing.PlayerNum, currThing.Tooltip);
-		else
-			InterfacerGame.Instance.WriteCell(gridPos, "", 0, "");
+		string iconString = currThing?.DisplayIcon ?? "";
+		int playerNum = currThing?.PlayerNum ?? 0;
+		string tooltip = currThing?.Tooltip ?? "";
+
+		InterfacerGame.Instance.WriteCell(gridPos, iconString, playerNum, tooltip);
 	}
 
 	public static IntVector GetIntVectorForDirection(Direction direction)

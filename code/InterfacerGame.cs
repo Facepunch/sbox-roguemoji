@@ -113,12 +113,12 @@ public partial class InterfacerGame : Sandbox.Game
 		}
 
 		var cell = Hud.MainPanel.GridPanel.GetCell( x, y );
-
 		if ( cell != null )
 		{
 			cell.SetText( text );
 			cell.SetPlayerNum( playerNum );
 			cell.SetTooltip( tooltip );
+
 			cell.Refresh();
 		}
 	}

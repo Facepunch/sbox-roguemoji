@@ -58,11 +58,11 @@ public partial class Thing : Entity
 				if ( ShouldLogBehaviour )
 					InterfacerGame.Instance.LogMessage( DisplayIcon + "(" + DisplayName + ") pushed " + otherThing.DisplayIcon + " " + GridManager.GetDirectionText(direction) + "!", PlayerNum );
 
-				var explosion = new Explosion()
-				{
-					GridPos = newGridPos,
-				};
-				ThingManager.Instance.AddThing( explosion );
+				if (!GridManager.Instance.DoesThingExistAt(newGridPos))
+                {
+					var explosion = new Explosion() { GridPos = newGridPos };
+					ThingManager.Instance.AddThing(explosion);
+				}
 
 				return true;
 			}
