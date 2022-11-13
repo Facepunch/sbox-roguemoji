@@ -73,23 +73,32 @@
         return tooltip;
     }
 
-    public override void Tick()
+    public void SetTransform(Vector2 offset, float rotation)
     {
-        base.Tick();
-
-        //    Style.Width = 40f + MathF.Sin(Time.Now * 4f) * 4f;
-        //    Style.MarginLeft = 12f;
-        //    Style.MarginTop = 12f;
-
         var tr = new PanelTransform();
-        //tr.AddScale(new Vector3(1f + MathF.Sin(Time.Now * 6f) * 0.05f, 1f + MathF.Sin(Time.Now * 7f) * 0.05f, 1f));
-        //tr.AddRotation(0f, 0f, MathF.Sin(Time.Now * 5f) * 4f);
-        //tr.AddRotation(0f, 0f, Time.Now * 500f);
-        //tr.AddTranslateY(MathF.Sin(Time.Now * 10f) * -2f);
-        //tr.AddRotation(MathF.Cos(Time.Now * 6f) * 25f, MathF.Sin(Time.Now * 6f) * 25f, 0f);
-        //tr.AddSkew(22.5f, 0.5f, 0.5f);
-        //tr.AddScale(new Vector3(2f, 2f, 1f));
-
+        tr.AddTranslate(offset.x, offset.y);
+        tr.AddRotation(0f, 0f, rotation);
         Style.Transform = tr;
     }
+
+    //public override void Tick()
+    //{
+    //    base.Tick();
+
+    //        Style.Width = 40f + MathF.Sin(Time.Now * 4f) * 4f;
+    //        Style.MarginLeft = 12f;
+    //        Style.MarginTop = 12f;
+
+    //    var tr = new PanelTransform();
+    //    tr.AddScale(new Vector3(1f + MathF.Sin(Time.Now * 6f) * 0.05f, 1f + MathF.Sin(Time.Now * 7f) * 0.05f, 1f));
+    //    tr.AddRotation(0f, 0f, MathF.Sin(Time.Now * 5f) * 4f);
+    //    tr.AddRotation(0f, 0f, Time.Now * 500f);
+    //    tr.AddTranslateY(MathF.Sin(Time.Now * 10f) * -2f);
+    //    tr.AddRotation(MathF.Cos(Time.Now * 6f) * 25f, MathF.Sin(Time.Now * 6f) * 25f, 0f);
+    //    tr.AddSkew(22.5f, 0.5f, 0.5f);
+    //    tr.AddScale(new Vector3(2f, 2f, 1f));
+
+
+    //    Style.Transform = tr;
+    //}
 }

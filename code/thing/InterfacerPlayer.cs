@@ -29,6 +29,9 @@ public partial class InterfacerPlayer : Thing
 	{
 		base.Update( dt );
 
+		var sine = Utils.Map(MathF.Sin(Time.Now * 4f), -1f, 1f, -1f, 1f, EasingType.ExpoInOut);
+		SetOffset(new Vector2(sine * 3f, 0f));
+		SetRotation(sine * 25f);
 	}
 
 	public override void Simulate( Client cl )

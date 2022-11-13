@@ -19,6 +19,9 @@ public partial class Thing : Entity
 	public bool IsVisualEffect { get; set; }
 	public bool ShouldLogBehaviour { get; set; }
 
+	public Vector2 Offset { get; set; }
+	public float RotationDegrees { get; set; }
+
 	public Thing()
 	{
 		ShouldUpdate = false;
@@ -92,5 +95,17 @@ public partial class Thing : Entity
 		GridManager.Instance.DeregisterGridPos( this, GridPos );
 		ThingManager.Instance.RemoveThing( this );
 		Delete();
+	}
+
+	public void SetOffset(Vector2 offset)
+    {
+		Offset = offset;
+		GridManager.Instance.RefreshGridPos(GridPos);
+    }
+
+	public void SetRotation(float rotationDegrees)
+	{
+		RotationDegrees = rotationDegrees;
+		GridManager.Instance.RefreshGridPos(GridPos);
 	}
 }

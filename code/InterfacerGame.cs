@@ -16,7 +16,7 @@ public partial class InterfacerGame : Sandbox.Game
 	public const int GridWidth = 30;
 	public const int GridHeight = 20;
 
-	public record struct CellData( IntVector gridPos, string text, int playerNum, string tooltip );
+	public record struct CellData( IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees);
 	public Queue<CellData> WriteCellQueue = new Queue<CellData> ();
 
 	public record struct LogData( string text, int playerNum );
@@ -65,14 +65,7 @@ public partial class InterfacerGame : Sandbox.Game
 			while ( WriteCellQueue.Count > 0 )
 			{
 				var data = WriteCellQueue.Dequeue();
-				var cell = Hud.MainPanel.GridPanel.GetCell( data.gridPos );
-				if ( cell != null )
-				{
-					cell.SetText( data.text );
-					cell.SetPlayerNum( data.playerNum);
-					cell.SetTooltip( data.tooltip );
-					cell.Refresh();
-				}
+				RefreshCell(data.gridPos, data.text, data.playerNum, data.tooltip, data.offset, data.rotationDegrees);
 			}
 		}
 
@@ -98,26 +91,38 @@ public partial class InterfacerGame : Sandbox.Game
 		ThingManager.AddThing( player );
 	}
 
-	public void WriteCell( IntVector gridPos, string text, int playerNum, string tooltip)
+    public override void ClientDisconnect(Client cl, NetworkDisconnectionReason reason)
+    {
+        base.ClientDisconnect(cl, reason);
+
+    }
+
+    public void WriteCell( IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees)
 	{
-		WriteCellClient( gridPos.x, gridPos.y, text, playerNum, tooltip);
+		WriteCellClient( gridPos.x, gridPos.y, text, playerNum, tooltip, offset, rotationDegrees);
 	}
 
 	[ClientRpc]
-	public void WriteCellClient(int x, int y, string text, int playerNum, string tooltip)
+	public void WriteCellClient(int x, int y, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees)
 	{
 		if (Hud.MainPanel.GridPanel == null)
 		{
-			WriteCellQueue.Enqueue(new CellData(new IntVector(x, y), text, playerNum, tooltip) );
+			WriteCellQueue.Enqueue(new CellData(new IntVector(x, y), text, playerNum, tooltip, offset, rotationDegrees) );
 			return;
 		}
 
-		var cell = Hud.MainPanel.GridPanel.GetCell( x, y );
-		if ( cell != null )
+		RefreshCell(new IntVector(x, y), text, playerNum, tooltip, offset, rotationDegrees);
+	}
+
+	public void RefreshCell(IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees)
+    {
+		var cell = Hud.MainPanel.GridPanel.GetCell(gridPos.x, gridPos.y);
+		if (cell != null)
 		{
-			cell.SetText( text );
-			cell.SetPlayerNum( playerNum );
-			cell.SetTooltip( tooltip );
+			cell.SetText(text);
+			cell.SetPlayerNum(playerNum);
+			cell.SetTooltip(tooltip);
+			cell.SetTransform(offset, rotationDegrees);
 
 			cell.Refresh();
 		}

@@ -117,8 +117,10 @@ public class GridManager
 		string iconString = currThing?.DisplayIcon ?? "";
 		int playerNum = currThing?.PlayerNum ?? 0;
 		string tooltip = currThing?.Tooltip ?? "";
+		Vector2 offset = currThing?.Offset ?? Vector2.Zero;
+		float rotationDegrees = currThing?.RotationDegrees ?? 0f;
 
-		InterfacerGame.Instance.WriteCell(gridPos, iconString, playerNum, tooltip);
+		InterfacerGame.Instance.WriteCell(gridPos, iconString, playerNum, tooltip, offset, rotationDegrees);
 	}
 
 	public static IntVector GetIntVectorForDirection(Direction direction)
