@@ -24,7 +24,7 @@ public class ThingManager
 			if ( !thing.DoneFirstUpdate )
 				thing.FirstUpdate();
 
-			if ( thing.ShouldUpdate )
+			if ( thing.ShouldUpdate || thing.Statuses.Count > 0 )
 				thing.Update( dt );
 		}
 	}

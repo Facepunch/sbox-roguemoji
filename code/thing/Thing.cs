@@ -35,12 +35,17 @@ public partial class Thing : Entity
 
 	public virtual void Update(float dt)
 	{
+		var statusString = "";
 		foreach (KeyValuePair<TypeDescription, ThingStatus> pair in Statuses)
         {
 			var status = pair.Value;
 			if (status.ShouldUpdate)
 				status.Update(dt);
+
+			statusString += status.GetType().Name + "\n";
 		}
+
+		//DrawDebugText(statusString);
 	}
 
 	public virtual void FirstUpdate()
@@ -65,6 +70,11 @@ public partial class Thing : Entity
 				var pushSuccess = otherThing.TryMove( direction );
 				if ( !pushSuccess )
 					return false;
+
+				var slide = otherThing.AddStatus(TypeLibrary.GetDescription(typeof(VfxSlideStatus))) as VfxSlideStatus;
+				slide.Direction = direction;
+				slide.Lifetime = 0.2f;
+				slide.Distance = 20f;
 
 				if ( ShouldLogBehaviour )
 					InterfacerGame.Instance.LogMessage( DisplayIcon + "(" + DisplayName + ") pushed " + otherThing.DisplayIcon + " " + GridManager.GetDirectionText(direction) + "!", PlayerNum );
@@ -119,6 +129,8 @@ public partial class Thing : Entity
 
 	public ThingStatus AddStatus(TypeDescription type)
 	{
+		Log.Info(DisplayName + " AddStatus: " + type.Name);
+
 		if(Statuses.ContainsKey(type))
         {
 			var status = Statuses[type];
@@ -138,6 +150,8 @@ public partial class Thing : Entity
     {
 		if(Statuses.ContainsKey(type))
         {
+			Log.Info(DisplayName + " RemoveStatus: " + type.Name);
+
 			var status = Statuses[type];
 			status.OnRemove();
 			Statuses.Remove(type);
