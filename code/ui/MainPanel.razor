@@ -5,41 +5,93 @@
 @namespace Interfacer
 
 <style>
-    $primary: #e500ff !default;
+    .root
+    {
+        flex-direction:column;
+        background-color: #050505;
+    }
 
-    .outer
+    .upper_row
     {
         flex-direction:row;
         width: 100%;
-        background-color: #000000;
-        margin:40px;
+        //height: 100%;
+        //background-color: #002200;
+        padding:20px;
     }
 
-    .inner
+    .lower_row
     {
-        width: 80%;
-        height: 100%;
-        background-color: #000000;
-        color: #ffffff33;
-        pointer-events: all;
-        font-size:22px;
-        flex-direction:column;
+        flex-direction:row;
+        padding: 0 20px 20px 20px;
+        //background-color: #333300;
+        flex-grow: 1;
+        //border: 1px solid #ff88ff05;
+    }
+
+    .grid_container
+    {
+        //width: 80%;
+        //height: 100%;
+        //background-color: #550000;
+        //pointer-events: all;
+        //font-size:22px;
+        //flex-direction:column;
     }
 
     .log
     {
-        width: 20%;
+        //width: 20%;
+        margin-left:20px;
+        //background-color: #000055;
+        flex-grow: 1;
+    }
+
+    .character
+    {
+        //background-color: #440044;
+        width: 400px;
+        border: 1px solid #ffffff05;
+        border-radius: 3px;
+    }
+
+    .inventory
+    {
+        //background-color: #333366;
+        width: 400px;
+        padding: 0px;
+        margin-left: 20px;
+        border: 1px solid #ffffff05;
+        border-radius: 3px;
+    }
+
+    .stats
+    {
+        //background-color: #663300;
+        width: 400px;
+        flex-grow: 1;
+        margin-left: 20px;
+        border-radius: 3px;
+        border: 1px solid #ffffff05;
     }
 </style>
 
-<root class="outer">
-    <div class="inner">
-        <GridBg></GridBg>
-        <GridPanel @ref=GridPanel></GridPanel>
-        <!-- <p> Hovered: @GridPanel.HoveredCellIndex @GetHoveredCoords() ----- Clicked: @GridPanel.GetSelectedIndexString() ----- # Cells: @GridPanel.Cells.Count() ----- # Things: @InterfacerGame.Instance.NumThings</p> -->
-    </div>
+<root class="root">
+    <div class="upper_row">
+        <div class="grid_container" style="width: @(40 * Hud.Instance.GridWidth)px; height: @(40 * Hud.Instance.GridHeight)px;">
+            <GridBg></GridBg>
+            <GridPanel @ref=GridPanel></GridPanel>
+            <!-- <p style="color: #ffffff33;"> Hovered: @GridPanel.HoveredCellIndex @GetHoveredCoords() ----- Clicked: @GridPanel.GetSelectedIndexString() ----- # Cells: @GridPanel.Cells.Count() ----- # Things: @InterfacerGame.Instance.NumThings</p> -->
+        </div>
 
-    <LogPanel class="log" @ref=LogPanel></LogPanel>
+        <LogPanel class="log" @ref=LogPanel></LogPanel>
+     </div>
+
+    <div class="lower_row">
+        <div class="character"></div>
+        <div class="inventory"></div>
+        <div class="stats"></div>
+    </div>
 </root>
 
 @code
