@@ -9,7 +9,7 @@ public partial class Explosion : Thing
 
 	public Explosion()
 	{
-		DisplayIcon = "💥";
+        DisplayIcon = "💥";
 		IconPriority = 99f;
 		ShouldUpdate = true;
 		_spawnTime = 0f;

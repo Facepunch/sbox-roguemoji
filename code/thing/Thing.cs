@@ -22,6 +22,8 @@ public partial class Thing : Entity
 
 	public Vector2 Offset { get; set; }
 	public float RotationDegrees { get; set; }
+	public float FontSize { get; set; }
+	public float DefaultFontSize { get; set; }
 
 	public Dictionary<TypeDescription, ThingStatus> Statuses = new Dictionary<TypeDescription, ThingStatus>();
 
@@ -31,11 +33,12 @@ public partial class Thing : Entity
 		DisplayIcon = ".";
 		IconPriority = 0f;
 		ShouldLogBehaviour = false;
+		FontSize = DefaultFontSize = 29f;
 	}
 
 	public virtual void Update(float dt)
 	{
-		var statusString = "";
+		var statusString = "Statuses (" + Statuses.Count + "):\n";
 		foreach (KeyValuePair<TypeDescription, ThingStatus> pair in Statuses)
         {
 			var status = pair.Value;
@@ -46,7 +49,7 @@ public partial class Thing : Entity
 		}
 
 		//DrawDebugText(statusString);
-	}
+    }
 
 	public virtual void FirstUpdate()
 	{
@@ -69,10 +72,12 @@ public partial class Thing : Entity
 			{
 				var pushSuccess = otherThing.TryMove( direction );
 				if ( !pushSuccess )
+                {
+					otherThing.VfxShake(0.2f, 4f);
 					return false;
+				}
 
-				//otherThing.VfxSlide(direction, 0.2f, 20f);
-				otherThing.VfxShake(0.3f, 5f);
+                otherThing.VfxSlide(direction, 0.2f, 20f);
 
 				if ( ShouldLogBehaviour )
 					InterfacerGame.Instance.LogMessage( DisplayIcon + "(" + DisplayName + ") pushed " + otherThing.DisplayIcon + " " + GridManager.GetDirectionText(direction) + "!", PlayerNum );
@@ -80,6 +85,7 @@ public partial class Thing : Entity
 				if (!GridManager.Instance.DoesThingExistAt(newGridPos))
                 {
 					var explosion = new Explosion() { GridPos = newGridPos };
+					explosion.VfxShake(0.15f, 5f);
 					ThingManager.Instance.AddThing(explosion);
 				}
 
@@ -87,6 +93,7 @@ public partial class Thing : Entity
 			}
 		}
 
+		VfxSlide(direction, 0.2f, 40f);
 		SetGridPos( newGridPos );
 		return true;
 	}
@@ -125,9 +132,16 @@ public partial class Thing : Entity
 		GridManager.Instance.RefreshGridPos(GridPos);
 	}
 
+	public void SetFontSize(float fontSize)
+	{
+		FontSize = fontSize;
+		//Log.Info(DisplayName + " set size: " + size);
+		GridManager.Instance.RefreshGridPos(GridPos);
+	}
+
 	public ThingStatus AddStatus(TypeDescription type)
 	{
-		Log.Info(DisplayName + " AddStatus: " + type.Name);
+		//Log.Info(DisplayName + " AddStatus: " + type.Name);
 
 		if(Statuses.ContainsKey(type))
         {
@@ -148,7 +162,7 @@ public partial class Thing : Entity
     {
 		if(Statuses.ContainsKey(type))
         {
-			Log.Info(DisplayName + " RemoveStatus: " + type.Name);
+			//Log.Info(DisplayName + " RemoveStatus: " + type.Name);
 
 			var status = Statuses[type];
 			status.OnRemove();
@@ -171,7 +185,7 @@ public partial class Thing : Entity
 
 	public void DrawDebugText(string text)
 	{
-		DrawDebugText(text, Color.White);
+		DrawDebugText(text, new Color(1f, 1f, 1f, 0.5f));
 	}
 
 	public void VfxNudge(Direction direction, float lifetime, float distance)
@@ -195,5 +209,13 @@ public partial class Thing : Entity
 		var shake = AddStatus(TypeLibrary.GetDescription(typeof(VfxShakeStatus))) as VfxShakeStatus;
 		shake.Lifetime = lifetime;
 		shake.Distance = distance;
+	}
+
+	public void VfxScale(float lifetime, float startScale, float endScale)
+	{
+		var scale = AddStatus(TypeLibrary.GetDescription(typeof(VfxScaleStatus))) as VfxScaleStatus;
+		scale.Lifetime = lifetime;
+		scale.StartScale = startScale;
+		scale.EndScale = endScale;
 	}
 }

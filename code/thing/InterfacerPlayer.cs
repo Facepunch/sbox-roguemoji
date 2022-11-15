@@ -56,8 +56,10 @@ public partial class InterfacerPlayer : Thing
 	{
 		var success = base.TryMove( direction );
 		if ( !success )
+        {
 			VfxNudge(direction, 0.1f, 10f);
-
+		}
+			
 		_inputRepeatTime = 0f;
 
 		return success;

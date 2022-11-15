@@ -86,6 +86,7 @@ public class GridManager
 
 	public void RefreshGridPos(IntVector gridPos)
 	{
+		//Log.Info("RefreshGridPos: " + gridPos);
 		if ( !GridCellsToRefresh.Contains( gridPos ) )
 			GridCellsToRefresh.Add( gridPos );
 	}
@@ -120,8 +121,14 @@ public class GridManager
 		string tooltip = currThing?.Tooltip ?? "";
 		Vector2 offset = currThing?.Offset ?? Vector2.Zero;
 		float rotationDegrees = currThing?.RotationDegrees ?? 0f;
+		float size = currThing?.FontSize ?? 0f;
 
-		InterfacerGame.Instance.WriteCell(gridPos, iconString, playerNum, tooltip, offset, rotationDegrees);
+		if (currThing != null) 
+		{
+			//Log.Info(currThing.DisplayName + " size: " + size);
+		}
+
+		InterfacerGame.Instance.WriteCell(gridPos, iconString, playerNum, tooltip, offset, rotationDegrees, size);
 	}
 
 	public static IntVector GetIntVectorForDirection(Direction direction)

@@ -16,7 +16,6 @@
         color:#ffffff;
         position: absolute;
         pointer-events:all;
-        font-size:29px;
     }
 
     .player-1 { text-stroke-color: #3333ff; text-stroke-width: 4px; }
@@ -85,26 +84,33 @@
         Style.Transform = tr;
     }
 
+    public void SetSize(float size)
+    {
+        Style.FontSize = size;
+    }
+
     //public override void Tick()
     //{
     //    base.Tick();
 
-    //    Tooltip = Rand.Float(0f, 1000f).ToString();
+        //if(Style.FontSize != null)
+        //    DebugOverlay.ScreenText(Style.FontSize!.Value.Value.ToString(), new Vector2(Style.Left!.Value.Value, Style.Top!.Value.Value), 0, new Color(0.3f, 0.3f, 1f, 0.7f), 0f);
 
-    //    Style.Width = 40f + MathF.Sin(Time.Now * 4f) * 4f;
-    //    Style.MarginLeft = 12f;
-    //    Style.MarginTop = 12f;
+        //Tooltip = Rand.Float(0f, 1000f).ToString();
 
-    //    var tr = new PanelTransform();
-    //    tr.AddScale(new Vector3(1f + MathF.Sin(Time.Now * 6f) * 0.05f, 1f + MathF.Sin(Time.Now * 7f) * 0.05f, 1f));
-    //    tr.AddRotation(0f, 0f, MathF.Sin(Time.Now * 5f) * 4f);
-    //    tr.AddRotation(0f, 0f, Time.Now * 500f);
-    //    tr.AddTranslateY(MathF.Sin(Time.Now * 10f) * -2f);
-    //    tr.AddRotation(MathF.Cos(Time.Now * 6f) * 25f, MathF.Sin(Time.Now * 6f) * 25f, 0f);
-    //    tr.AddSkew(22.5f, 0.5f, 0.5f);
-    //    tr.AddScale(new Vector3(2f, 2f, 1f));
+        //Style.Width = 40f + MathF.Sin(Time.Now * 4f) * 4f;
+        //Style.MarginLeft = 12f;
+        //Style.MarginTop = 12f;
 
+        //var tr = new PanelTransform();
+        //tr.AddScale(new Vector3(1f + MathF.Sin(Time.Now * 6f) * 0.05f, 1f + MathF.Sin(Time.Now * 7f) * 0.05f, 1f));
+        //tr.AddRotation(0f, 0f, MathF.Sin(Time.Now * 5f) * 4f);
+        //tr.AddRotation(0f, 0f, Time.Now * 500f);
+        //tr.AddTranslateY(MathF.Sin(Time.Now * 10f) * -2f);
+        //tr.AddRotation(MathF.Cos(Time.Now * 6f) * 25f, MathF.Sin(Time.Now * 6f) * 25f, 0f);
+        //tr.AddSkew(22.5f, 0.5f, 0.5f);
+        //tr.AddScale(new Vector3(2f, 2f, 1f));
 
-    //    Style.Transform = tr;
+        //Style.Transform = tr;
     //}
 }
