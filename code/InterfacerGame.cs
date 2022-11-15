@@ -1,7 +1,20 @@
 ﻿using Sandbox;
+using Sandbox.UI;
 using System.Collections.Generic;
 
 namespace Interfacer;
+
+public class PanelFlickerData
+{
+	public Panel panel;
+	public int numFrames;
+
+	public PanelFlickerData(Panel _panel)
+    {
+		panel = _panel;
+		numFrames = 0;
+    }
+}
 
 public partial class InterfacerGame : Sandbox.Game
 {
@@ -24,6 +37,8 @@ public partial class InterfacerGame : Sandbox.Game
 
 	[Net] public int NumThings { get; set; }
 
+	public List<PanelFlickerData> _panelsToFlicker;
+
 	public InterfacerGame()
 	{
 		Instance = this;
@@ -43,6 +58,7 @@ public partial class InterfacerGame : Sandbox.Game
 		if (Host.IsClient)
 		{
 			Hud = new Hud( GridWidth, GridHeight );
+			_panelsToFlicker = new List<PanelFlickerData>();
 		}
 	}
 
@@ -76,6 +92,20 @@ public partial class InterfacerGame : Sandbox.Game
 				var data = LogMessageQueue.Dequeue();
 				Hud.MainPanel.LogPanel.WriteMessage( data.text, data.playerNum );
 			}
+		}
+
+		for(int i = _panelsToFlicker.Count - 1; i >= 0; i--)
+        {
+			var data = _panelsToFlicker[i];
+			data.numFrames++;
+
+			if(data.numFrames >= 2)
+            {
+				if (data.panel != null)
+					data.panel.Style.PointerEvents = PointerEvents.All;
+
+				_panelsToFlicker.RemoveAt(i);
+            }
 		}
 	}
 
@@ -158,4 +188,13 @@ public partial class InterfacerGame : Sandbox.Game
 		};
 		ThingManager.Instance.AddThing( rock );
 	}
+
+	public void FlickerPanel(Panel panel)
+    {
+		if (panel == null)
+            return;
+
+		panel.Style.PointerEvents = PointerEvents.None;
+		_panelsToFlicker.Add(new PanelFlickerData(panel));
+    }
 }

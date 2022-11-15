@@ -49,6 +49,9 @@
     public void Refresh()
     {
         StateHasChanged();
+
+        if(TooltipPanel != null)
+            InterfacerGame.Instance.FlickerPanel(this);
     }
 
     public void SetText(string text)
