@@ -23,20 +23,10 @@
     .lower_row
     {
         flex-direction:row;
-        padding: 0 20px 20px 20px;
+        padding: 0 35px 35px 35px;
         //background-color: #333300;
         flex-grow: 1;
         //border: 1px solid #ff88ff05;
-    }
-
-    .grid_container
-    {
-        //width: 80%;
-        //height: 100%;
-        //background-color: #550000;
-        //pointer-events: all;
-        //font-size:22px;
-        //flex-direction:column;
     }
 
     .log
@@ -57,12 +47,9 @@
 
     .inventory
     {
-        //background-color: #333366;
-        width: 400px;
-        padding: 0px;
-        margin-left: 20px;
         border: 1px solid #ffffff05;
         border-radius: 3px;
+        margin: 0 35px 0 35px;
     }
 
     .stats
@@ -70,7 +57,7 @@
         //background-color: #663300;
         width: 400px;
         flex-grow: 1;
-        margin-left: 20px;
+        //margin-left: 20px;
         border-radius: 3px;
         border: 1px solid #ffffff05;
     }
@@ -78,18 +65,15 @@
 
 <root class="root">
     <div class="upper_row">
-        <div class="grid_container" style="width: @(40 * Hud.Instance.GridWidth)px; height: @(40 * Hud.Instance.GridHeight)px;">
-            <GridBg></GridBg>
-            <GridPanel @ref=GridPanel></GridPanel>
+        <GridPanel style="width: @(40 * InterfacerGame.GridWidth)px; height: @(40 * InterfacerGame.GridHeight)px;" @ref=GridPanel></GridPanel>
             <!-- <p style="color: #ffffff33;"> Hovered: @GridPanel.HoveredCellIndex @GetHoveredCoords() ----- Clicked: @GridPanel.GetSelectedIndexString() ----- # Cells: @GridPanel.Cells.Count() ----- # Things: @InterfacerGame.Instance.NumThings</p> -->
-        </div>
 
         <LogPanel class="log" @ref=LogPanel></LogPanel>
      </div>
 
     <div class="lower_row">
         <div class="character"></div>
-        <div class="inventory"></div>
+        <InventoryPanel class="inventory" style="width: @(40 * InterfacerGame.InventoryWidth)px; height: @(40 * InterfacerGame.InventoryHeight)px;" @ref=InventoryPanel></InventoryPanel>
         <div class="stats"></div>
     </div>
 </root>
@@ -98,10 +82,11 @@
 {
     public GridPanel GridPanel { get; set; }
     public LogPanel LogPanel { get; set; }
+    public InventoryPanel InventoryPanel { get; set; }
 
     public string GetHoveredCoords()
     {
-        var gridPos = GridManager.GetGridPos(GridPanel.HoveredCellIndex, Hud.Instance.GridWidth);
+        var gridPos = GridManager.GetGridPos(GridPanel.HoveredCellIndex, InterfacerGame.GridWidth);
         return gridPos.ToString();
     }
 }

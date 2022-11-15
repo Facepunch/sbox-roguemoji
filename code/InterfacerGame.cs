@@ -28,6 +28,8 @@ public partial class InterfacerGame : Sandbox.Game
 
 	public const int GridWidth = 30;
 	public const int GridHeight = 20;
+	public const int InventoryWidth = 10;
+	public const int InventoryHeight = 5;
 
 	public record struct CellData( IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float size);
 	public Queue<CellData> WriteCellQueue = new Queue<CellData> ();

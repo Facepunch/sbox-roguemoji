@@ -5,9 +5,12 @@
 @namespace Interfacer
 
 <style>
-    .grid_bg 
+    .inventory_bg 
     {
-        opacity: 0.04;
+        opacity: 0.005;
+        background-color: transparent;
+        box-shadow: 0px 0px 0px #0000ff;
+
         position:absolute;
         pointer-events:none;
         background-repeat: repeat;
@@ -19,9 +22,9 @@
     }
 </style>
 
-<root class>
-    <div class="grid_bg" style="background-image: url( textures/bg_tile.png );"></div>
-    @for (int i = 0; i < InterfacerGame.GridWidth * InterfacerGame.GridHeight; i++)
+<root>
+    <div class="inventory_bg" style="background-image: url( textures/bg_tile.png );"></div>
+    @for (int i = 0; i < InterfacerGame.InventoryWidth * InterfacerGame.InventoryHeight; i++)
     {
         var localI = i;
         var gridPos = GetGridPos(localI);
@@ -46,17 +49,17 @@
 
     IntVector GetGridPos(int index)
     {
-        return new IntVector(index % InterfacerGame.GridWidth, MathX.FloorToInt((float)index / (float)InterfacerGame.GridWidth));
+        return new IntVector(index % InterfacerGame.InventoryWidth, MathX.FloorToInt((float)index / (float)InterfacerGame.InventoryWidth));
     }
 
     Vector2 GetCellPos(int index)
     {
-        return new Vector2(index % InterfacerGame.GridWidth, MathX.FloorToInt((float)index / (float)InterfacerGame.GridWidth)) * 40f;   
+        return new Vector2(index % InterfacerGame.InventoryWidth, MathX.FloorToInt((float)index / (float)InterfacerGame.InventoryWidth)) * 40f;   
     }
 
     void OnCellClicked(int index)
     {
-        var gridPos = GridManager.GetGridPos(index, InterfacerGame.GridWidth);
+        var gridPos = GridManager.GetGridPos(index, InterfacerGame.InventoryWidth);
         Hud.Instance.GridCellClicked(gridPos.x, gridPos.y);
     }
 
@@ -90,11 +93,11 @@
 
     public GridCell GetCell(int x, int y)
     {
-        return GetCell(y * InterfacerGame.GridWidth + x);
+        return GetCell(y * InterfacerGame.InventoryWidth + x);
     }
 
     public GridCell GetCell(IntVector gridPos)
     {
-        return GetCell(gridPos.y * InterfacerGame.GridWidth + gridPos.x);
+        return GetCell(gridPos.y * InterfacerGame.InventoryWidth + gridPos.x);
     }
 }

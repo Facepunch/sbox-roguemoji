@@ -5,9 +5,6 @@ namespace Interfacer;
 
 public partial class Hud : RootPanel
 {
-	public int GridWidth { get; private set; }
-	public int GridHeight { get; private set; }
-
 	public static Hud Instance { get; private set; }
 
 	public int IndexClicked { get; private set; }
@@ -19,9 +16,6 @@ public partial class Hud : RootPanel
 	public Hud(int width, int height)
 	{
 		Instance = this;
-
-		GridWidth = width;
-		GridHeight = height;
 
 		StyleSheet.Load("/ui/Hud.scss");
 
