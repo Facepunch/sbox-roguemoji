@@ -43,7 +43,7 @@
 
     public void WriteMessage(string text, int playerNum)
     {
-        //while (Messages.Count() > 10)
+        //while (Messages.Count() > MAX_MESSAGES)
         //    Messages.Dequeue();
 
         Messages.Enqueue((text, playerNum));

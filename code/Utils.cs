@@ -183,7 +183,7 @@ public static class Utils
         return outVal;
     }
 
-    public static float MapReturn(float value, float inputMin, float inputMax, float outputMin, float outputMax, EasingType easingType)
+    public static float MapReturn(float value, float inputMin, float inputMax, float outputMin, float outputMax, EasingType easingType = EasingType.Linear)
     {
         var halfway = inputMin + (inputMax - inputMin) * 0.5f;
         if (value < halfway) return Map(value, inputMin, halfway, outputMin, outputMax, easingType);

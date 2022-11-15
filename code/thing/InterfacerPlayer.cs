@@ -5,7 +5,7 @@ namespace Interfacer;
 public partial class InterfacerPlayer : Thing
 {
 	private TimeSince _inputRepeatTime;
-	private const float REPEAT_DELAY = 0.125f;
+	private const float MOVE_DELAY = 0.3f;
 
 	public override string DisplayName => Client?.Name ?? "Player";
 	public override string Tooltip => Client?.Name ?? "Player";
@@ -29,57 +29,42 @@ public partial class InterfacerPlayer : Thing
 	{
 		base.Update( dt );
 
-		var sine = Utils.Map(MathF.Sin(Time.Now * 4f), -1f, 1f, -1f, 1f, EasingType.ExpoInOut);
-		SetOffset(new Vector2(sine * 3f, 0f));
-		SetRotation(sine * 25f);
+		//var sine = Utils.Map(MathF.Sin(Time.Now * 4f), -1f, 1f, -1f, 1f, EasingType.ExpoInOut);
+		//SetOffset(new Vector2(sine * 3f, 0f));
+		//SetRotation(sine * 25f);
 	}
 
 	public override void Simulate( Client cl )
 	{
 		if(Host.IsServer)
 		{
-			if ( Input.Pressed( InputButton.Left ) || (_inputRepeatTime > REPEAT_DELAY && Input.Down( InputButton.Left )) )
-				TryMove(Direction.Left);
-			else if ( Input.Pressed( InputButton.Right ) || (_inputRepeatTime > REPEAT_DELAY && Input.Down( InputButton.Right )) )
-				TryMove( Direction.Right );
-			else if ( Input.Pressed( InputButton.Back ) || (_inputRepeatTime > REPEAT_DELAY && Input.Down( InputButton.Back )) )
-				TryMove( Direction.Down);
-			else if ( Input.Pressed( InputButton.Forward ) || (_inputRepeatTime > REPEAT_DELAY && Input.Down( InputButton.Forward )) )
-				TryMove( Direction.Up);
+			if (_inputRepeatTime > MOVE_DELAY)
+            {
+				if (Input.Down(InputButton.Left))
+					TryMove(Direction.Left);
+				else if (Input.Down(InputButton.Right))
+					TryMove(Direction.Right);
+				else if (Input.Down(InputButton.Back))
+					TryMove(Direction.Down);
+				else if (Input.Down(InputButton.Forward))
+					TryMove(Direction.Up);
+			}
 		}
 	}
 
 	public override bool TryMove( Direction direction )
 	{
 		var success = base.TryMove( direction );
-		if ( success )
-			_inputRepeatTime = 0f;
+		if ( !success )
+        {
+			var nudge = AddStatus(TypeLibrary.GetDescription(typeof(VfxNudgeStatus))) as VfxNudgeStatus;
+			nudge.Direction = direction;
+			nudge.Lifetime = 0.1f;
+			nudge.Distance = 10f;
+		}
+
+		_inputRepeatTime = 0f;
 
 		return success;
-	}
-
-	string GetPlayerIcon(int playerNum)
-	{
-		switch (playerNum) {
-			case 0:
-			default:
-				return "."; 
-			case 1:
-				return "🐻";
-			case 2:
-				return "🐭";
-			case 3:
-				return "🐵";
-			case 4:
-				return "🐷";
-			case 5:
-				return "🐮";
-			case 6:
-				return "🐱";
-			case 7:
-				return "🐶";
-			case 8:
-				return "🐹";
-		}
 	}
 }

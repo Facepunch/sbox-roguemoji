@@ -1,5 +1,6 @@
 ﻿using Sandbox;
 using System;
+using System.Collections.Generic;
 
 namespace Interfacer;
 public partial class Thing : Entity
@@ -22,6 +23,8 @@ public partial class Thing : Entity
 	public Vector2 Offset { get; set; }
 	public float RotationDegrees { get; set; }
 
+	public Dictionary<TypeDescription, ThingStatus> Statuses = new Dictionary<TypeDescription, ThingStatus>();
+
 	public Thing()
 	{
 		ShouldUpdate = false;
@@ -32,7 +35,12 @@ public partial class Thing : Entity
 
 	public virtual void Update(float dt)
 	{
-		
+		foreach (KeyValuePair<TypeDescription, ThingStatus> pair in Statuses)
+        {
+			var status = pair.Value;
+			if (status.ShouldUpdate)
+				status.Update(dt);
+		}
 	}
 
 	public virtual void FirstUpdate()
@@ -67,7 +75,7 @@ public partial class Thing : Entity
 					ThingManager.Instance.AddThing(explosion);
 				}
 
-				return true;
+				return false;
 			}
 		}
 
@@ -107,5 +115,50 @@ public partial class Thing : Entity
 	{
 		RotationDegrees = rotationDegrees;
 		GridManager.Instance.RefreshGridPos(GridPos);
+	}
+
+	public ThingStatus AddStatus(TypeDescription type)
+	{
+		if(Statuses.ContainsKey(type))
+        {
+			var status = Statuses[type];
+			status.ReInitialize();
+			return status;
+        }
+		else
+        {
+			var status = type.Create<ThingStatus>();
+			status.Init(this);
+			Statuses.Add(type, status);
+			return status;
+		}
+	}
+
+	public void RemoveStatus(TypeDescription type)
+    {
+		if(Statuses.ContainsKey(type))
+        {
+			var status = Statuses[type];
+			status.OnRemove();
+			Statuses.Remove(type);
+        }
+    }
+
+	public void ForEachStatus(Action<ThingStatus> action)
+	{
+		foreach (var (_, status) in Statuses)
+		{
+			action(status);
+		}
+	}
+
+	public void DrawDebugText(string text, Color color, float time = 0f)
+    {
+		DebugOverlay.ScreenText(text, GridManager.Instance.GetScreenPos(GridPos), 0, color, time);
+	}
+
+	public void DrawDebugText(string text)
+	{
+		DrawDebugText(text, Color.White);
 	}
 }

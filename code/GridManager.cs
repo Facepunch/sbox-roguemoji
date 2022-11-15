@@ -32,6 +32,7 @@ public class GridManager
 
 	public int GetIndex( int x, int y ) { return y * GridWidth + x; }
 	public IntVector GetGridPos( int index ) { return new IntVector( index % GridWidth, ((float)index / (float)GridWidth).FloorToInt() ); }
+	public Vector2 GetScreenPos(IntVector gridPos) { return new Vector2(gridPos.x * 40f, gridPos.y * 40f); }
 
 	public static int GetIndex( int x, int y, int width) { return y * width + x; }
 	public static IntVector GetGridPos( int index, int width) { return new IntVector( index % width, ((float)index / (float)width).FloorToInt() ); }
@@ -125,26 +126,24 @@ public class GridManager
 
 	public static IntVector GetIntVectorForDirection(Direction direction)
 	{
-		IntVector vec;
-
 		switch(direction)
 		{
-			case Direction.Left: 
-				vec = new IntVector( -1, 0 );
-				break;
-			case Direction.Right:
-				vec = new IntVector( 1, 0 );
-				break;
-			case Direction.Down:
-				vec = new IntVector( 0, 1 );
-				break;
-			case Direction.Up:
-			default:
-				vec = new IntVector( 0, -1 );
-				break;
+			case Direction.Left:  return new IntVector( -1, 0 );
+			case Direction.Right: return new IntVector( 1, 0 );
+			case Direction.Down: return new IntVector( 0, 1 );
+			case Direction.Up: default: return new IntVector( 0, -1 );
 		}
+	}
 
-		return vec;
+	public static Vector2 GetVectorForDirection(Direction direction)
+	{
+		switch (direction)
+		{
+			case Direction.Left: return new Vector2(-1f, 0f);
+			case Direction.Right: return new Vector2(1f, 0f);
+			case Direction.Down: return new Vector2(0f, 1f);
+			case Direction.Up: default: return new Vector2(0f, -1f);
+		}
 	}
 
 	public static string GetDirectionText(Direction direction)
