@@ -3,9 +3,8 @@ using System;
 
 namespace Interfacer;
 
-public class VfxSlideStatus : ThingStatus
+public class VfxShakeStatus : ThingStatus
 {
-    public Direction Direction { get; set; }
     public float Lifetime { get; set; }
     public float Distance { get; set; }
 
@@ -18,8 +17,8 @@ public class VfxSlideStatus : ThingStatus
 
     public override void Update(float dt)
     {
-        var dir = GridManager.GetVectorForDirection(Direction);
-        Thing.SetOffset(dir * Utils.Map(TimeSinceStart, 0f, Lifetime, -Distance, 0f, EasingType.ExpoOut));
+        var dir = Utils.DegreesToVector(Rand.Float(0f, 360f));
+        Thing.SetOffset(dir * Utils.Map(TimeSinceStart, 0f, Lifetime, Distance, 0f, EasingType.QuadOut));
 
         if(TimeSinceStart > Lifetime)
             Remove();

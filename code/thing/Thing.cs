@@ -71,10 +71,8 @@ public partial class Thing : Entity
 				if ( !pushSuccess )
 					return false;
 
-				var slide = otherThing.AddStatus(TypeLibrary.GetDescription(typeof(VfxSlideStatus))) as VfxSlideStatus;
-				slide.Direction = direction;
-				slide.Lifetime = 0.2f;
-				slide.Distance = 20f;
+				//otherThing.VfxSlide(direction, 0.2f, 20f);
+				otherThing.VfxShake(0.3f, 5f);
 
 				if ( ShouldLogBehaviour )
 					InterfacerGame.Instance.LogMessage( DisplayIcon + "(" + DisplayName + ") pushed " + otherThing.DisplayIcon + " " + GridManager.GetDirectionText(direction) + "!", PlayerNum );
@@ -174,5 +172,28 @@ public partial class Thing : Entity
 	public void DrawDebugText(string text)
 	{
 		DrawDebugText(text, Color.White);
+	}
+
+	public void VfxNudge(Direction direction, float lifetime, float distance)
+	{
+		var nudge = AddStatus(TypeLibrary.GetDescription(typeof(VfxNudgeStatus))) as VfxNudgeStatus;
+		nudge.Direction = direction;
+		nudge.Lifetime = lifetime;
+		nudge.Distance = distance;
+	}
+
+	public void VfxSlide(Direction direction, float lifetime, float distance)
+    {
+		var slide = AddStatus(TypeLibrary.GetDescription(typeof(VfxSlideStatus))) as VfxSlideStatus;
+		slide.Direction = direction;
+		slide.Lifetime = lifetime;
+		slide.Distance = distance;
+	}
+
+	public void VfxShake(float lifetime, float distance)
+	{
+		var shake = AddStatus(TypeLibrary.GetDescription(typeof(VfxShakeStatus))) as VfxShakeStatus;
+		shake.Lifetime = lifetime;
+		shake.Distance = distance;
 	}
 }

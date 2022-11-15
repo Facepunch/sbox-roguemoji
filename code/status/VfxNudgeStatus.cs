@@ -29,4 +29,9 @@ public class VfxNudgeStatus : ThingStatus
     {
 
     }
+
+    public override void OnRemove()
+    {
+        Thing.SetOffset(Vector2.Zero);
+    }
 }
