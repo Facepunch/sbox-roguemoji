@@ -55,8 +55,13 @@ public partial class InterfacerPlayer : Thing
 	public override bool TryMove( Direction direction )
 	{
 		var success = base.TryMove( direction );
-		if ( !success )
-        {
+		if (success)
+		{
+			SetIcon("😀");
+		}
+		else 
+		{
+			SetIcon("🤨");
 			VfxNudge(direction, 0.1f, 10f);
 		}
 			

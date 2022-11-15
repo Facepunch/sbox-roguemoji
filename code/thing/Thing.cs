@@ -188,6 +188,12 @@ public partial class Thing : Entity
 		DrawDebugText(text, new Color(1f, 1f, 1f, 0.5f));
 	}
 
+	public void SetIcon(string icon)
+	{
+		DisplayIcon = icon;
+		GridManager.Instance.RefreshGridPos(GridPos);
+	}
+
 	public void VfxNudge(Direction direction, float lifetime, float distance)
 	{
 		var nudge = AddStatus(TypeLibrary.GetDescription(typeof(VfxNudgeStatus))) as VfxNudgeStatus;
