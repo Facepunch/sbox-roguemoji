@@ -3,6 +3,8 @@ using Sandbox.UI;
 
 namespace Interfacer;
 
+public enum GridPanelType { None, Arena, Inventory };
+
 public partial class Hud : RootPanel
 {
 	public static Hud Instance { get; private set; }
@@ -13,7 +15,7 @@ public partial class Hud : RootPanel
 
 	public MainPanel MainPanel { get; private set; }
 
-	public Hud(int width, int height)
+	public Hud()
 	{
 		Instance = this;
 
@@ -22,8 +24,18 @@ public partial class Hud : RootPanel
 		MainPanel = AddChild<MainPanel>();
 	}
 
-	public void GridCellClicked(int x, int y)
+	public void GridCellClicked(GridPanelType gridPanelType, int x, int y)
 	{
-		InterfacerGame.CellClicked( x, y );
+		InterfacerGame.CellClicked( gridPanelType, x, y );
 	}
+
+	public GridPanel GetGridPanel(GridPanelType gridPanelType)
+    {
+		if (gridPanelType == GridPanelType.Arena)
+			return MainPanel.ArenaPanel;
+		else if(gridPanelType == GridPanelType.Inventory)
+			return MainPanel.InventoryPanel;
+
+		return null;
+    }
 }

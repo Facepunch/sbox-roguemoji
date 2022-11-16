@@ -5,12 +5,9 @@
 @namespace Interfacer
 
 <style>
-    .inventory_bg 
+    .grid_bg 
     {
-        opacity: 0.005;
-        background-color: transparent;
-        box-shadow: 0px 0px 0px #0000ff;
-
+        opacity: 0.04;
         position:absolute;
         pointer-events:none;
         background-repeat: repeat;
@@ -22,8 +19,8 @@
     }
 </style>
 
-<root>
-    <div class="inventory_bg" style="background-image: url( textures/bg_tile.png );"></div>
+<root class>
+    <div class="grid_bg" style="background-image: url( textures/bg_tile.png );"></div>
     @for (int i = 0; i < GridWidth * GridHeight; i++)
     {
         var localI = i;
@@ -34,7 +31,7 @@
 
 @code
 {
-    public override int GridWidth => InterfacerGame.InventoryWidth;
-    public override int GridHeight => InterfacerGame.InventoryHeight;
-    public override GridPanelType GridPanelType => GridPanelType.Inventory;
+    public override int GridWidth => InterfacerGame.ArenaWidth;
+    public override int GridHeight => InterfacerGame.ArenaHeight;
+    public override GridPanelType GridPanelType => GridPanelType.Arena;
 }

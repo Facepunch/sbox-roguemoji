@@ -6,6 +6,8 @@ namespace Interfacer;
 public partial class Thing : Entity
 {
 	public IntVector GridPos { get; set; }
+	public GridPanelType GridPanelType { get; set; }
+	public GridManager GridManager => InterfacerGame.Instance.GetGridManager(GridPanelType);
 
 	public virtual string DisplayIcon { get; protected set; }
 	public virtual string DisplayName => Name;
@@ -62,12 +64,12 @@ public partial class Thing : Entity
 		IntVector vec = GridManager.GetIntVectorForDirection(direction);
 		IntVector newGridPos = GridPos + vec;
 
-		if ( !GridManager.Instance.IsGridPosInBounds( newGridPos ) )
+		if ( !GridManager.IsGridPosInBounds( newGridPos ) )
 			return false;
 
-		if ( GridManager.Instance.DoesThingExistAt( newGridPos ) )
+		if (GridManager.DoesThingExistAt( newGridPos ) )
 		{
-			var otherThing = GridManager.Instance.GetThingAt( newGridPos );
+			var otherThing = GridManager.GetThingAt( newGridPos );
 			if(!otherThing.IsVisualEffect)
 			{
 				var pushSuccess = otherThing.TryMove( direction );
@@ -82,9 +84,13 @@ public partial class Thing : Entity
 				if ( ShouldLogBehaviour )
 					InterfacerGame.Instance.LogMessage( DisplayIcon + "(" + DisplayName + ") pushed " + otherThing.DisplayIcon + " " + GridManager.GetDirectionText(direction) + "!", PlayerNum );
 
-				if (!GridManager.Instance.DoesThingExistAt(newGridPos))
+				if (!GridManager.DoesThingExistAt(newGridPos))
                 {
-					var explosion = new Explosion() { GridPos = newGridPos };
+					var explosion = new Explosion() 
+					{ 
+						GridPos = newGridPos,
+						GridPanelType = GridPanelType,
+					};
 					explosion.VfxShake(0.15f, 5f);
 					ThingManager.Instance.AddThing(explosion);
 				}
@@ -103,7 +109,10 @@ public partial class Thing : Entity
 		if ( GridPos.Equals( gridPos ) && !forceRefresh )
 			return;
 
-		GridManager.Instance.SetGridPos( this, gridPos );
+		if (GridPanelType == GridPanelType.None)
+			Log.Error(DisplayName + " has no GridPanelType!");
+
+		GridManager.SetGridPos( this, gridPos );
 		GridPos = gridPos;
 
 		if(ShouldLogBehaviour)
@@ -115,7 +124,7 @@ public partial class Thing : Entity
 		if ( ShouldLogBehaviour )
 			InterfacerGame.Instance.LogMessage( DisplayIcon + "(" + DisplayName + ") removed.", PlayerNum );
 
-		GridManager.Instance.DeregisterGridPos( this, GridPos );
+		GridManager.DeregisterGridPos( this, GridPos );
 		ThingManager.Instance.RemoveThing( this );
 		Delete();
 	}
@@ -123,20 +132,20 @@ public partial class Thing : Entity
 	public void SetOffset(Vector2 offset)
     {
 		Offset = offset;
-		GridManager.Instance.RefreshGridPos(GridPos);
+		GridManager.RefreshGridPos(GridPos);
     }
 
 	public void SetRotation(float rotationDegrees)
 	{
 		RotationDegrees = rotationDegrees;
-		GridManager.Instance.RefreshGridPos(GridPos);
+		GridManager.RefreshGridPos(GridPos);
 	}
 
 	public void SetFontSize(float fontSize)
 	{
 		FontSize = fontSize;
 		//Log.Info(DisplayName + " set size: " + size);
-		GridManager.Instance.RefreshGridPos(GridPos);
+		GridManager.RefreshGridPos(GridPos);
 	}
 
 	public ThingStatus AddStatus(TypeDescription type)
@@ -180,7 +189,7 @@ public partial class Thing : Entity
 
 	public void DrawDebugText(string text, Color color, float time = 0f)
     {
-		DebugOverlay.ScreenText(text, GridManager.Instance.GetScreenPos(GridPos), 0, color, time);
+		DebugOverlay.ScreenText(text, GridManager.GetScreenPos(GridPos), 0, color, time);
 	}
 
 	public void DrawDebugText(string text)
@@ -191,7 +200,7 @@ public partial class Thing : Entity
 	public void SetIcon(string icon)
 	{
 		DisplayIcon = icon;
-		GridManager.Instance.RefreshGridPos(GridPos);
+		GridManager.RefreshGridPos(GridPos);
 	}
 
 	public void VfxNudge(Direction direction, float lifetime, float distance)

@@ -23,15 +23,16 @@ public partial class InterfacerGame : Sandbox.Game
 	public static int PlayerNum { get; set; }
 
 	public Hud Hud { get; private set; }
-	public GridManager GridManager { get; private set; }
+	public GridManager ArenaGridManager { get; private set; }
+	public GridManager InventoryGridManager { get; private set; }
 	public ThingManager ThingManager { get; private set; }
 
-	public const int GridWidth = 30;
-	public const int GridHeight = 20;
+	public const int ArenaWidth = 30;
+	public const int ArenaHeight = 20;
 	public const int InventoryWidth = 10;
 	public const int InventoryHeight = 5;
 
-	public record struct CellData( IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float size);
+	public record struct CellData( GridPanelType gridPanelType, IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float size);
 	public Queue<CellData> WriteCellQueue = new Queue<CellData> ();
 
 	public record struct LogData( string text, int playerNum );
@@ -47,19 +48,21 @@ public partial class InterfacerGame : Sandbox.Game
 
 		if(Host.IsServer)
 		{
-			GridManager = new GridManager( GridWidth, GridHeight );
 			ThingManager = new ThingManager();
+			ArenaGridManager = new GridManager( ArenaWidth, ArenaHeight, GridPanelType.Arena );
+			InventoryGridManager = new GridManager(InventoryWidth, InventoryHeight, GridPanelType.Inventory);
 
 			var rock = new Rock()
 			{
-				GridPos = new IntVector(10, 10)
+				GridPos = new IntVector(10, 10),
+				GridPanelType = GridPanelType.Arena,
 			};
 			ThingManager.AddThing( rock );
 		}
 
 		if (Host.IsClient)
 		{
-			Hud = new Hud( GridWidth, GridHeight );
+			Hud = new Hud();
 			_panelsToFlicker = new List<PanelFlickerData>();
 		}
 	}
@@ -70,7 +73,8 @@ public partial class InterfacerGame : Sandbox.Game
 		float dt = Time.Delta;
 
 		ThingManager.Update( dt );
-		GridManager.Update();
+		ArenaGridManager.Update();
+		InventoryGridManager.Update();
 
 		NumThings = ThingManager.Things.Count;
 	}
@@ -78,12 +82,12 @@ public partial class InterfacerGame : Sandbox.Game
 	[Event.Tick.Client]
 	public void ClientTick()
 	{
-		if( Hud.MainPanel.GridPanel != null)
+		if( Hud.MainPanel.ArenaPanel != null && Hud.MainPanel.InventoryPanel != null)
 		{
 			while ( WriteCellQueue.Count > 0 )
 			{
 				var data = WriteCellQueue.Dequeue();
-				RefreshCell(data.gridPos, data.text, data.playerNum, data.tooltip, data.offset, data.rotationDegrees, data.size);
+				RefreshCell(data.gridPanelType, data.gridPos, data.text, data.playerNum, data.tooltip, data.offset, data.rotationDegrees, data.size);
 			}
 		}
 
@@ -118,6 +122,7 @@ public partial class InterfacerGame : Sandbox.Game
 		var player = new InterfacerPlayer()
 		{
 			GridPos = new IntVector( 3, 3 ),
+			GridPanelType = GridPanelType.Inventory,
 		};
 		client.Pawn = player;
 		ThingManager.AddThing( player );
@@ -129,26 +134,34 @@ public partial class InterfacerGame : Sandbox.Game
 
     }
 
-    public void WriteCell( IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float size)
+    public void WriteCell(GridPanelType gridPanelType, IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float size)
 	{
-		WriteCellClient( gridPos.x, gridPos.y, text, playerNum, tooltip, offset, rotationDegrees, size);
+		WriteCellClient(gridPanelType, gridPos.x, gridPos.y, text, playerNum, tooltip, offset, rotationDegrees, size);
 	}
 
 	[ClientRpc]
-	public void WriteCellClient(int x, int y, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float size)
+	public void WriteCellClient(GridPanelType gridPanelType, int x, int y, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float size)
 	{
-		if (Hud.MainPanel.GridPanel == null)
+		var gridPanel = Hud.GetGridPanel(gridPanelType);
+		if (gridPanel == null)
 		{
-			WriteCellQueue.Enqueue(new CellData(new IntVector(x, y), text, playerNum, tooltip, offset, rotationDegrees, size) );
+			WriteCellQueue.Enqueue(new CellData(gridPanelType, new IntVector(x, y), text, playerNum, tooltip, offset, rotationDegrees, size) );
 			return;
 		}
 
-		RefreshCell(new IntVector(x, y), text, playerNum, tooltip, offset, rotationDegrees, size);
+		RefreshCell(gridPanelType, new IntVector(x, y), text, playerNum, tooltip, offset, rotationDegrees, size);
 	}
 
-	public void RefreshCell(IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float size)
+	public void RefreshCell(GridPanelType gridPanelType, IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float size)
     {
-		var cell = Hud.MainPanel.GridPanel.GetCell(gridPos.x, gridPos.y);
+		GridPanel gridPanel = Hud.GetGridPanel(gridPanelType);
+		if (gridPanel == null)
+        {
+			Log.Error("RefreshCell: " + gridPanelType + " - no grid panel of this type!");
+			return;
+		}
+			
+		var cell = gridPanel.GetCell(gridPos.x, gridPos.y);
 		if (cell != null)
 		{
 			cell.SetText(text);
@@ -179,7 +192,7 @@ public partial class InterfacerGame : Sandbox.Game
 	}
 
 	[ConCmd.Server]
-	public static void CellClicked(int x, int y)
+	public static void CellClicked(GridPanelType gridPanelType, int x, int y)
 	{
 		var player = ConsoleSystem.Caller.Pawn as InterfacerPlayer;
 
@@ -188,6 +201,7 @@ public partial class InterfacerGame : Sandbox.Game
 		var rock = new Rock()
 		{
 			GridPos = new IntVector( x, y ),
+			GridPanelType = gridPanelType,
 		};
 		ThingManager.Instance.AddThing( rock );
 	}
@@ -199,5 +213,15 @@ public partial class InterfacerGame : Sandbox.Game
 
 		panel.Style.PointerEvents = PointerEvents.None;
 		_panelsToFlicker.Add(new PanelFlickerData(panel));
+    }
+
+	public GridManager GetGridManager(GridPanelType gridPanelType)
+    {
+		if (gridPanelType == GridPanelType.Arena)
+			return ArenaGridManager;
+		else if (gridPanelType == GridPanelType.Inventory)
+			return InventoryGridManager;
+
+		return null;
     }
 }

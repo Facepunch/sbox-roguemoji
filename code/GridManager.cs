@@ -9,20 +9,19 @@ public enum Direction { Left, Right, Down, Up }
 
 public class GridManager
 {
-	public static GridManager Instance { get; private set; }
-
 	public int GridWidth { get; private set; }
 	public int GridHeight { get; private set; }
+
+	public GridPanelType GridPanelType { get; private set; }
 
 	public Dictionary<IntVector, List<Thing>> GridThings = new Dictionary<IntVector, List<Thing>>();
 	public List<IntVector> GridCellsToRefresh = new List<IntVector>();
 
-	public GridManager(int width, int height)
+	public GridManager(int width, int height, GridPanelType gridPanelType)
 	{
 		GridWidth = width;
 		GridHeight = height;
-
-		Instance = this;
+		GridPanelType = gridPanelType;
 	}
 
 	public void Update()
@@ -94,7 +93,7 @@ public class GridManager
 	public void RefreshCells()
 	{
 		foreach(IntVector gridCell in GridCellsToRefresh)
-			RefreshCell( gridCell);
+			RefreshCell( gridCell );
 
 		GridCellsToRefresh.Clear();
 	}
@@ -123,12 +122,7 @@ public class GridManager
 		float rotationDegrees = currThing?.RotationDegrees ?? 0f;
 		float size = currThing?.FontSize ?? 0f;
 
-		if (currThing != null) 
-		{
-			//Log.Info(currThing.DisplayName + " size: " + size);
-		}
-
-		InterfacerGame.Instance.WriteCell(gridPos, iconString, playerNum, tooltip, offset, rotationDegrees, size);
+		InterfacerGame.Instance.WriteCell(GridPanelType, gridPos, iconString, playerNum, tooltip, offset, rotationDegrees, size);
 	}
 
 	public static IntVector GetIntVectorForDirection(Direction direction)

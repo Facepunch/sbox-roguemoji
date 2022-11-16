@@ -65,8 +65,8 @@
 
 <root class="root">
     <div class="upper_row">
-        <GridPanel style="width: @(40 * InterfacerGame.GridWidth)px; height: @(40 * InterfacerGame.GridHeight)px;" @ref=GridPanel></GridPanel>
-            <!-- <p style="color: #ffffff33;"> Hovered: @GridPanel.HoveredCellIndex @GetHoveredCoords() ----- Clicked: @GridPanel.GetSelectedIndexString() ----- # Cells: @GridPanel.Cells.Count() ----- # Things: @InterfacerGame.Instance.NumThings</p> -->
+        <ArenaPanel style="width: @(40 * InterfacerGame.ArenaWidth)px; height: @(40 * InterfacerGame.ArenaHeight)px;" @ref=ArenaPanel></ArenaPanel>
+            <!-- <p style="color: #ffffff33;"> Hovered: @ArenaPanel.HoveredCellIndex @GetHoveredCoords() ----- Clicked: @ArenaPanel.GetSelectedIndexString() ----- # Cells: @ArenaPanel.Cells.Count() ----- # Things: @InterfacerGame.Instance.NumThings</p> -->
 
         <LogPanel class="log" @ref=LogPanel></LogPanel>
      </div>
@@ -80,13 +80,13 @@
 
 @code
 {
-    public GridPanel GridPanel { get; set; }
+    public ArenaPanel ArenaPanel { get; set; }
     public LogPanel LogPanel { get; set; }
     public InventoryPanel InventoryPanel { get; set; }
 
     public string GetHoveredCoords()
     {
-        var gridPos = GridManager.GetGridPos(GridPanel.HoveredCellIndex, InterfacerGame.GridWidth);
+        var gridPos = GridManager.GetGridPos(ArenaPanel.HoveredCellIndex, InterfacerGame.ArenaWidth);
         return gridPos.ToString();
     }
 }
