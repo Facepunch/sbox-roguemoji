@@ -14,15 +14,15 @@ public class VfxScaleStatus : ThingStatus
         base.Init(thing);
 
         ShouldUpdate = true;
+        Thing.SetScale(StartScale);
     }
 
     public override void Update(float dt)
     {
         //Log.Info("update: " + TimeSinceStart + " / " + Lifetime + " start: " + StartScale + " end: " + EndScale);
-        //Thing.SetFontSize(Thing.DefaultSize * Utils.Map(TimeSinceStart, 0f, Lifetime, StartScale, EndScale, EasingType.Linear));
-        Thing.SetFontSize(10f);
+        Thing.SetScale(Utils.Map(TimeSinceStart, 0f, Lifetime, StartScale, EndScale, EasingType.Linear));
 
-        //Thing.DrawDebugText("" + Thing.FontSize);
+        //Thing.DrawDebugText("" + Thing.IconScale);
 
         if(TimeSinceStart > Lifetime)
             Remove();
@@ -30,6 +30,6 @@ public class VfxScaleStatus : ThingStatus
 
     public override void OnRemove()
     {
-        Thing.SetFontSize(Thing.DefaultFontSize * EndScale);
+        Thing.SetScale(EndScale);
     }
 }

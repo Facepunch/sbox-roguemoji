@@ -16,6 +16,7 @@
         //color:#ffffff;
         position: absolute;
         pointer-events:all;
+        font-size: 29px;
         //color: transparent;  
         //text-shadow: 0 0 0.01px #ff0000;
         //filter: contrast(0.5);
@@ -81,17 +82,13 @@
         return TooltipPanel;
     }
 
-    public void SetTransform(Vector2 offset, float rotation)
+    public void SetTransform(Vector2 offset, float rotation, float scale)
     {
         var tr = new PanelTransform();
         tr.AddTranslate(offset.x, offset.y);
         tr.AddRotation(0f, 0f, rotation);
+        tr.AddScale(scale);
         Style.Transform = tr;
-    }
-
-    public void SetSize(float size)
-    {
-        Style.FontSize = size;
     }
 
     //public override void Tick()

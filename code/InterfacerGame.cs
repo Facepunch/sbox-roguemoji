@@ -32,7 +32,7 @@ public partial class InterfacerGame : Sandbox.Game
 	public const int InventoryWidth = 10;
 	public const int InventoryHeight = 5;
 
-	public record struct CellData( GridPanelType gridPanelType, IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float size);
+	public record struct CellData( GridPanelType gridPanelType, IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float scale);
 	public Queue<CellData> WriteCellQueue = new Queue<CellData> ();
 
 	public record struct LogData( string text, int playerNum );
@@ -87,7 +87,7 @@ public partial class InterfacerGame : Sandbox.Game
 			while ( WriteCellQueue.Count > 0 )
 			{
 				var data = WriteCellQueue.Dequeue();
-				RefreshCell(data.gridPanelType, data.gridPos, data.text, data.playerNum, data.tooltip, data.offset, data.rotationDegrees, data.size);
+				RefreshCell(data.gridPanelType, data.gridPos, data.text, data.playerNum, data.tooltip, data.offset, data.rotationDegrees, data.scale);
 			}
 		}
 
@@ -122,7 +122,7 @@ public partial class InterfacerGame : Sandbox.Game
 		var player = new InterfacerPlayer()
 		{
 			GridPos = new IntVector( 3, 3 ),
-			GridPanelType = GridPanelType.Inventory,
+			GridPanelType = GridPanelType.Arena,
 		};
 		client.Pawn = player;
 		ThingManager.AddThing( player );
@@ -134,25 +134,25 @@ public partial class InterfacerGame : Sandbox.Game
 
     }
 
-    public void WriteCell(GridPanelType gridPanelType, IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float size)
+    public void WriteCell(GridPanelType gridPanelType, IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float scale)
 	{
-		WriteCellClient(gridPanelType, gridPos.x, gridPos.y, text, playerNum, tooltip, offset, rotationDegrees, size);
+		WriteCellClient(gridPanelType, gridPos.x, gridPos.y, text, playerNum, tooltip, offset, rotationDegrees, scale);
 	}
 
 	[ClientRpc]
-	public void WriteCellClient(GridPanelType gridPanelType, int x, int y, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float size)
+	public void WriteCellClient(GridPanelType gridPanelType, int x, int y, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float scale)
 	{
 		var gridPanel = Hud.GetGridPanel(gridPanelType);
 		if (gridPanel == null)
 		{
-			WriteCellQueue.Enqueue(new CellData(gridPanelType, new IntVector(x, y), text, playerNum, tooltip, offset, rotationDegrees, size) );
+			WriteCellQueue.Enqueue(new CellData(gridPanelType, new IntVector(x, y), text, playerNum, tooltip, offset, rotationDegrees, scale) );
 			return;
 		}
 
-		RefreshCell(gridPanelType, new IntVector(x, y), text, playerNum, tooltip, offset, rotationDegrees, size);
+		RefreshCell(gridPanelType, new IntVector(x, y), text, playerNum, tooltip, offset, rotationDegrees, scale);
 	}
 
-	public void RefreshCell(GridPanelType gridPanelType, IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float size)
+	public void RefreshCell(GridPanelType gridPanelType, IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float scale)
     {
 		GridPanel gridPanel = Hud.GetGridPanel(gridPanelType);
 		if (gridPanel == null)
@@ -167,8 +167,7 @@ public partial class InterfacerGame : Sandbox.Game
 			cell.SetText(text);
 			cell.SetPlayerNum(playerNum);
 			cell.SetTooltip(tooltip);
-			cell.SetTransform(offset, rotationDegrees);
-			cell.SetSize(size);
+			cell.SetTransform(offset, rotationDegrees, scale);
 
 			cell.Refresh();
 		}

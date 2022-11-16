@@ -120,7 +120,7 @@ public class GridManager
 		string tooltip = currThing?.Tooltip ?? "";
 		Vector2 offset = currThing?.Offset ?? Vector2.Zero;
 		float rotationDegrees = currThing?.RotationDegrees ?? 0f;
-		float size = currThing?.FontSize ?? 0f;
+		float size = currThing?.IconScale ?? 1f;
 
 		InterfacerGame.Instance.WriteCell(GridPanelType, gridPos, iconString, playerNum, tooltip, offset, rotationDegrees, size);
 	}

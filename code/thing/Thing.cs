@@ -24,8 +24,7 @@ public partial class Thing : Entity
 
 	public Vector2 Offset { get; set; }
 	public float RotationDegrees { get; set; }
-	public float FontSize { get; set; }
-	public float DefaultFontSize { get; set; }
+	public float IconScale { get; set; }
 
 	public Dictionary<TypeDescription, ThingStatus> Statuses = new Dictionary<TypeDescription, ThingStatus>();
 
@@ -35,7 +34,7 @@ public partial class Thing : Entity
 		DisplayIcon = ".";
 		IconPriority = 0f;
 		ShouldLogBehaviour = false;
-		FontSize = DefaultFontSize = 29f;
+		IconScale = 1f;
 	}
 
 	public virtual void Update(float dt)
@@ -92,6 +91,7 @@ public partial class Thing : Entity
 						GridPanelType = GridPanelType,
 					};
 					explosion.VfxShake(0.15f, 5f);
+					explosion.VfxScale(0.15f, 1f, 0.8f);
 					ThingManager.Instance.AddThing(explosion);
 				}
 
@@ -141,17 +141,14 @@ public partial class Thing : Entity
 		GridManager.RefreshGridPos(GridPos);
 	}
 
-	public void SetFontSize(float fontSize)
+	public void SetScale(float scale)
 	{
-		FontSize = fontSize;
-		//Log.Info(DisplayName + " set size: " + size);
+		IconScale = scale;
 		GridManager.RefreshGridPos(GridPos);
 	}
 
 	public ThingStatus AddStatus(TypeDescription type)
 	{
-		//Log.Info(DisplayName + " AddStatus: " + type.Name);
-
 		if(Statuses.ContainsKey(type))
         {
 			var status = Statuses[type];
@@ -171,8 +168,6 @@ public partial class Thing : Entity
     {
 		if(Statuses.ContainsKey(type))
         {
-			//Log.Info(DisplayName + " RemoveStatus: " + type.Name);
-
 			var status = Statuses[type];
 			status.OnRemove();
 			Statuses.Remove(type);
