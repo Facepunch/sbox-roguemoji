@@ -15,6 +15,27 @@ public abstract class GridPanel : Panel
     public int HoveredCellIndex { get; set; }
     public int ClickedCellIndex { get; set; }
 
+    public Dictionary<IntVector, List<CellVfx>> CellVfxs = new Dictionary<IntVector, List<CellVfx>>();
+    public List<IntVector> GridCellsToRefresh = new List<IntVector>();
+
+    public override void Tick()
+    {
+        base.Tick();
+
+        float dt = Time.Delta;
+        foreach (KeyValuePair<IntVector, List <CellVfx>> pair in CellVfxs)
+        {
+            var vfxList = pair.Value;
+            for(int i = vfxList.Count - 1; i >= 0; i--)
+            {
+                var vfx = vfxList[i];
+                vfx.Update(dt);
+            }
+        }
+
+        RefreshCells();
+    }
+
     public string GetSelectedIndexString()
     {
         if (Hud.Instance.SelectedCell != null)
@@ -75,5 +96,74 @@ public abstract class GridPanel : Panel
     public GridCell GetCell(IntVector gridPos)
     {
         return GetCell(gridPos.y * GridWidth + gridPos.x);
+    }
+
+    public CellVfx AddCellVfx(IntVector gridPos, TypeDescription type)
+    {
+        if (!CellVfxs.ContainsKey(gridPos))
+            CellVfxs[gridPos] = new List<CellVfx>();
+
+        var gridCell = GetCell(gridPos);
+
+        var vfx = type.Create<CellVfx>();
+        vfx.Init(gridCell, gridPos, this);
+        CellVfxs[gridPos].Add(vfx);
+        return vfx;
+    }
+
+    public void RemoveCellVfx(IntVector gridPos, TypeDescription type)
+    {
+        if (CellVfxs.ContainsKey(gridPos))
+        {
+            var vfxList = CellVfxs[gridPos];
+
+            for(int i = vfxList.Count - 1; i >= 0; i--)
+            {
+                var vfx = vfxList[i];
+                var vfxType = TypeLibrary.GetDescription(vfx.GetType());
+                if(vfxType == type)
+                {
+                    vfx.OnRemove();
+                    vfxList.RemoveAt(i);
+                }
+            }
+        }
+    }
+
+    public void ClearAllCellVfx(IntVector gridPos)
+    {
+        if (CellVfxs.ContainsKey(gridPos))
+        {
+            foreach(var vfx in CellVfxs[gridPos])
+                vfx.OnRemove();
+        }
+
+        CellVfxs.Clear();
+    }
+
+    public void RefreshGridPos(IntVector gridPos)
+    {
+        if (!GridCellsToRefresh.Contains(gridPos))
+            GridCellsToRefresh.Add(gridPos);
+    }
+
+    public void RefreshCells()
+    {
+        foreach (IntVector gridCell in GridCellsToRefresh)
+            RefreshCell(gridCell);
+
+        GridCellsToRefresh.Clear();
+    }
+
+    void RefreshCell(IntVector gridPos)
+    {
+        var gridCell = GetCell(gridPos);
+
+        Log.Info("RefreshCell: " + gridPos + " gridCell: " + gridCell);
+
+        if (gridCell == null)
+            return;
+
+        gridCell.RefreshTransform();
     }
 }

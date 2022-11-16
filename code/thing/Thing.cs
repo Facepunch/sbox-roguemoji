@@ -74,11 +74,11 @@ public partial class Thing : Entity
 				var pushSuccess = otherThing.TryMove( direction );
 				if ( !pushSuccess )
                 {
-					otherThing.VfxShake(0.2f, 4f);
+					//otherThing.VfxShake(0.2f, 4f);
 					return false;
 				}
 
-                otherThing.VfxSlide(direction, 0.2f, 20f);
+                //otherThing.VfxSlide(direction, 0.2f, 20f);
 
 				if ( ShouldLogBehaviour )
 					InterfacerGame.Instance.LogMessage( DisplayIcon + "(" + DisplayName + ") pushed " + otherThing.DisplayIcon + " " + GridManager.GetDirectionText(direction) + "!", PlayerNum );
@@ -90,8 +90,8 @@ public partial class Thing : Entity
 						GridPos = newGridPos,
 						GridPanelType = GridPanelType,
 					};
-					explosion.VfxShake(0.15f, 5f);
-					explosion.VfxScale(0.15f, 1f, 0.8f);
+					//explosion.VfxShake(0.15f, 5f);
+					//explosion.VfxScale(0.15f, 1f, 0.8f);
 					ThingManager.Instance.AddThing(explosion);
 				}
 
@@ -99,7 +99,7 @@ public partial class Thing : Entity
 			}
 		}
 
-		VfxSlide(direction, 0.2f, 40f);
+		//VfxSlide(direction, 0.2f, 40f);
 		SetGridPos( newGridPos );
 		return true;
 	}
@@ -200,10 +200,11 @@ public partial class Thing : Entity
 
 	public void VfxNudge(Direction direction, float lifetime, float distance)
 	{
-		var nudge = AddStatus(TypeLibrary.GetDescription(typeof(VfxNudgeStatus))) as VfxNudgeStatus;
-		nudge.Direction = direction;
-		nudge.Lifetime = lifetime;
-		nudge.Distance = distance;
+		InterfacerGame.Instance.VfxNudgeClient(GridPanelType, GridPos.x, GridPos.y, direction, lifetime, distance);
+		//var nudge = AddStatus(TypeLibrary.GetDescription(typeof(VfxNudgeStatus))) as VfxNudgeStatus;
+		//nudge.Direction = direction;
+		//nudge.Lifetime = lifetime;
+		//nudge.Distance = distance;
 	}
 
 	public void VfxSlide(Direction direction, float lifetime, float distance)

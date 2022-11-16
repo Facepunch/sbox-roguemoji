@@ -46,6 +46,10 @@
 
     public string Text { get; private set; }
 
+    public Vector2 VfxOffset { get; set; }
+    public float VfxRotation { get; set; }
+    public float VfxScale { get; set; }
+
     private string GetPlayerClass()
     {
         return PlayerNum > 0 ? $"player-{PlayerNum}" : "";
@@ -89,6 +93,19 @@
         tr.AddRotation(0f, 0f, rotation);
         tr.AddScale(scale);
         Style.Transform = tr;
+    }
+
+    public void RefreshTransform()
+    {
+        var tr = new PanelTransform();
+        tr.AddTranslate(VfxOffset.x, VfxOffset.y);
+        tr.AddRotation(0f, 0f, VfxRotation);
+        tr.AddScale(VfxScale);
+        Style.Transform = tr;
+
+        VfxOffset = Vector2.Zero;
+        VfxRotation = 0f;
+        VfxScale = 1f;
     }
 
     //public override void Tick()
