@@ -26,9 +26,17 @@ public abstract class GridPanel : Panel
         foreach (KeyValuePair<IntVector, List <CellVfx>> pair in CellVfxs)
         {
             var vfxList = pair.Value;
+
+            //if(vfxList.Count > 0)
+            //{
+            //    var gridCell = GetCell(pair.Key);
+            //    Log.Info(gridCell.Text + " vfxList.Count: " + vfxList.Count);
+            //}
+            
             for(int i = vfxList.Count - 1; i >= 0; i--)
             {
                 var vfx = vfxList[i];
+                //Log.Info(pair.Key + " i: " + i + " -- " + vfx.GetType().Name + " vfxList.Count: " + vfxList.Count + " ---------- " + Time.Delta);
                 vfx.Update(dt);
             }
         }
@@ -101,7 +109,21 @@ public abstract class GridPanel : Panel
     public CellVfx AddCellVfx(IntVector gridPos, TypeDescription type)
     {
         if (!CellVfxs.ContainsKey(gridPos))
+        {
             CellVfxs[gridPos] = new List<CellVfx>();
+        }
+        else
+        {
+            foreach (var v in CellVfxs[gridPos])
+            {
+                var vType = TypeLibrary.GetDescription(v.GetType());
+                if(vType == type)
+                {
+                    Log.Error("AddCellVfx: " + gridPos + " already has vfx of type " + type.Name + "!");
+                    return null;
+                }
+            }
+        }
 
         var gridCell = GetCell(gridPos);
 
@@ -113,6 +135,8 @@ public abstract class GridPanel : Panel
 
     public void RemoveCellVfx(IntVector gridPos, TypeDescription type)
     {
+        //Log.Info("RemoveCellVfx: " + gridPos + " - " + type.Name);
+
         if (CellVfxs.ContainsKey(gridPos))
         {
             var vfxList = CellVfxs[gridPos];
@@ -125,6 +149,7 @@ public abstract class GridPanel : Panel
                 {
                     vfx.OnRemove();
                     vfxList.RemoveAt(i);
+                    break;
                 }
             }
         }
@@ -158,8 +183,6 @@ public abstract class GridPanel : Panel
     void RefreshCell(IntVector gridPos)
     {
         var gridCell = GetCell(gridPos);
-
-        Log.Info("RefreshCell: " + gridPos + " gridCell: " + gridCell);
 
         if (gridCell == null)
             return;

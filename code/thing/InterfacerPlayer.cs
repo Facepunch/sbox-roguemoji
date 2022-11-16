@@ -62,7 +62,7 @@ public partial class InterfacerPlayer : Thing
 		else 
 		{
 			SetIcon("🤨");
-			VfxNudge(direction, 0.1f, 10f);
+            VfxNudge(direction, 0.1f, 10f);
 		}
 			
 		_inputRepeatTime = 0f;

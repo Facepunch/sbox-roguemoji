@@ -5,7 +5,7 @@ namespace Interfacer;
 public partial class Explosion : Thing
 {
 	private TimeSince _spawnTime;
-	private const float LIFE_TIME = 0.15f;
+	private const float LIFE_TIME = 1.15f;
 
 	public Explosion()
 	{

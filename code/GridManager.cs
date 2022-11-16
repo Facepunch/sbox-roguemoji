@@ -78,6 +78,8 @@ public class GridManager
 	{
 		if(GridThings.ContainsKey(gridPos))
 		{
+			InterfacerGame.Instance.RemoveCellVfx(thing.GridPanelType, gridPos.x, gridPos.y);
+
 			GridThings[gridPos].Remove( thing );
 			RefreshGridPos( gridPos );
 		}
@@ -85,7 +87,6 @@ public class GridManager
 
 	public void RefreshGridPos(IntVector gridPos)
 	{
-		//Log.Info("RefreshGridPos: " + gridPos);
 		if ( !GridCellsToRefresh.Contains( gridPos ) )
 			GridCellsToRefresh.Add( gridPos );
 	}

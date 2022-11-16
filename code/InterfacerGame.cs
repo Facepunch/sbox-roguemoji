@@ -229,8 +229,48 @@ public partial class InterfacerGame : Sandbox.Game
 	{
 		GridPanel gridPanel = Hud.GetGridPanel(gridPanelType);
 		var nudge = gridPanel.AddCellVfx(new IntVector(x, y), TypeLibrary.GetDescription(typeof(VfxNudge))) as VfxNudge;
+		if (nudge == null) return;
 		nudge.Direction = direction;
 		nudge.Lifetime = lifetime;
 		nudge.Distance = distance;
+	}
+
+	[ClientRpc]
+	public void VfxSlideClient(GridPanelType gridPanelType, int x, int y, Direction direction, float lifetime, float distance)
+	{
+		GridPanel gridPanel = Hud.GetGridPanel(gridPanelType);
+		var slide = gridPanel.AddCellVfx(new IntVector(x, y), TypeLibrary.GetDescription(typeof(VfxSlide))) as VfxSlide;
+		if (slide == null) return;
+		slide.Direction = direction;
+		slide.Lifetime = lifetime;
+		slide.Distance = distance;
+	}
+
+	[ClientRpc]
+	public void VfxShakeClient(GridPanelType gridPanelType, int x, int y, float lifetime, float distance)
+	{
+		GridPanel gridPanel = Hud.GetGridPanel(gridPanelType);
+		var shake = gridPanel.AddCellVfx(new IntVector(x, y), TypeLibrary.GetDescription(typeof(VfxShake))) as VfxShake;
+		if (shake == null) return;
+		shake.Lifetime = lifetime;
+		shake.Distance = distance;
+	}
+
+	[ClientRpc]
+	public void VfxScaleClient(GridPanelType gridPanelType, int x, int y, float lifetime, float startScale, float endScale)
+	{
+		GridPanel gridPanel = Hud.GetGridPanel(gridPanelType);
+		var scale = gridPanel.AddCellVfx(new IntVector(x, y), TypeLibrary.GetDescription(typeof(VfxScale))) as VfxScale;
+		if (scale == null) return;
+		scale.Lifetime = lifetime;
+		scale.StartScale = startScale;
+		scale.EndScale = endScale;
+	}
+
+	[ClientRpc]
+	public void RemoveCellVfx(GridPanelType gridPanelType, int x, int y)
+	{
+		GridPanel gridPanel = Hud.GetGridPanel(gridPanelType);
+		gridPanel.ClearAllCellVfx(new IntVector(x, y));
 	}
 }
