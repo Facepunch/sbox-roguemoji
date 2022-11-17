@@ -1,6 +1,8 @@
-﻿using Sandbox;
+﻿using System;
+using Sandbox;
 using Sandbox.UI;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Interfacer;
 
@@ -55,6 +57,10 @@ public abstract class GridPanel : Panel
     public IntVector GetGridPos(int index)
     {
         return new IntVector(index % GridWidth, MathX.FloorToInt((float)index / (float)GridWidth));
+    }
+    public int GetIndex(IntVector gridPos)
+    {
+        return gridPos.y * GridWidth + gridPos.x;
     }
 
     public Vector2 GetCellPos(int index)
@@ -188,5 +194,18 @@ public abstract class GridPanel : Panel
             return;
 
         gridCell.RefreshTransform();
+    }
+
+    public List<Thing> GetThings()
+    {
+        return Entity.All
+            .OfType<Thing>()
+            .Where(x => x.GridPanelType == GridPanelType)
+            .ToList();
+    }
+
+    public void Refresh()
+    {
+        StateHasChanged();
     }
 }

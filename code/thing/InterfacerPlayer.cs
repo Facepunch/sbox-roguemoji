@@ -7,9 +7,6 @@ public partial class InterfacerPlayer : Thing
 	private TimeSince _inputRepeatTime;
 	private const float MOVE_DELAY = 0.3f;
 
-	public override string DisplayName => Client?.Name ?? "Player";
-	public override string Tooltip => Client?.Name ?? "Player";
-
 	public InterfacerPlayer()
 	{
 		ShouldUpdate = true;
@@ -17,6 +14,8 @@ public partial class InterfacerPlayer : Thing
 		DisplayIcon = "🙂";
 		IconPriority = 2f;
 		ShouldLogBehaviour = true;
+		DisplayName = "Player";
+		Tooltip = "";
 	}
 
 	public override void Spawn()
@@ -25,7 +24,15 @@ public partial class InterfacerPlayer : Thing
 
 	}
 
-	public override void Update( float dt )
+    public override void OnClientActive(Client client)
+    {
+        base.OnClientActive(client);
+
+		DisplayName = Client.Name;
+		Tooltip = Client.Name;
+	}
+
+    public override void Update( float dt )
 	{
 		base.Update( dt );
 

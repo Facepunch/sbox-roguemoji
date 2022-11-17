@@ -5,18 +5,18 @@ using System.Collections.Generic;
 namespace Interfacer;
 public partial class Thing : Entity
 {
-	public IntVector GridPos { get; set; }
-	public GridPanelType GridPanelType { get; set; }
+	[Net] public IntVector GridPos { get; set; }
+	[Net] public GridPanelType GridPanelType { get; set; }
 	public GridManager GridManager => InterfacerGame.Instance.GetGridManager(GridPanelType);
 
-	public virtual string DisplayIcon { get; protected set; }
-	public virtual string DisplayName => Name;
-	public virtual string Tooltip => "";
+	[Net] public string DisplayIcon { get; protected set; }
+	[Net] public string DisplayName { get; protected set; }
+	[Net] public string Tooltip { get; protected set; }
 
 	public bool ShouldUpdate { get; set; }
 	public bool DoneFirstUpdate { get; private set; }
 
-	public int PlayerNum { get; set; }
+	[Net] public int PlayerNum { get; set; }
 
 	public float IconPriority { get; set; }
 	public bool IsVisualEffect { get; set; }
@@ -32,12 +32,27 @@ public partial class Thing : Entity
 	{
 		ShouldUpdate = false;
 		DisplayIcon = ".";
+		DisplayName = Name;
+		Tooltip = "";
 		IconPriority = 0f;
 		ShouldLogBehaviour = false;
 		IconScale = 1f;
 	}
 
-	public virtual void Update(float dt)
+	public override void Spawn()
+	{
+		base.Spawn();
+
+		Transmit = TransmitType.Always;
+	}
+
+	[Event.Tick.Client]
+	public void ClientTick()
+    {
+		//Log.Info(Name + " ClientTick: " + Time.Delta + " DisplayIcon: " + DisplayIcon + " GridPos: " + GridPos + " PlayerNum: " + PlayerNum + " DisplayName: " + DisplayName);
+    }
+
+    public virtual void Update(float dt)
 	{
 		var statusString = "Statuses (" + Statuses.Count + "):\n";
 		foreach (KeyValuePair<TypeDescription, ThingStatus> pair in Statuses)
@@ -114,9 +129,24 @@ public partial class Thing : Entity
 		GridManager.SetGridPos( this, gridPos );
 		GridPos = gridPos;
 
-		if(ShouldLogBehaviour)
+		GridPosChangedClient();
+
+		if (ShouldLogBehaviour)
 			InterfacerGame.Instance.LogMessage( DisplayIcon + "(" + DisplayName + ") moved to (" + gridPos.x + ", " + gridPos.y + ").", PlayerNum);
 	}
+
+	[ClientRpc]
+	public void GridPosChangedClient()
+    {
+		if (Hud.Instance == null)
+			return;
+
+		var panel = Hud.Instance.GetGridPanel(GridPanelType);
+		if (panel == null)
+			return;
+
+		panel.Refresh();
+    }
 
 	public void Remove()
 	{
@@ -199,22 +229,21 @@ public partial class Thing : Entity
 
 	public void VfxNudge(Direction direction, float lifetime, float distance)
 	{
-		InterfacerGame.Instance.VfxNudgeClient(GridPanelType, GridPos.x, GridPos.y, direction, lifetime, distance);
+		//InterfacerGame.Instance.VfxNudgeClient(GridPanelType, GridPos.x, GridPos.y, direction, lifetime, distance);
 	}
 
 	public void VfxSlide(Direction direction, float lifetime, float distance)
     {
-		//Log.Info("~~~~~~~ " + DisplayName + " SLIDE!         _            _ " + Rand.Float(0f, 100f));
-		InterfacerGame.Instance.VfxSlideClient(GridPanelType, GridPos.x, GridPos.y, direction, lifetime, distance);
+		//InterfacerGame.Instance.VfxSlideClient(GridPanelType, GridPos.x, GridPos.y, direction, lifetime, distance);
 	}
 
 	public void VfxShake(float lifetime, float distance)
 	{
-		InterfacerGame.Instance.VfxShakeClient(GridPanelType, GridPos.x, GridPos.y, lifetime, distance);
+		//InterfacerGame.Instance.VfxShakeClient(GridPanelType, GridPos.x, GridPos.y, lifetime, distance);
 	}
 
 	public void VfxScale(float lifetime, float startScale, float endScale)
 	{
-		InterfacerGame.Instance.VfxScaleClient(GridPanelType, GridPos.x, GridPos.y, lifetime, startScale, endScale);
+		//InterfacerGame.Instance.VfxScaleClient(GridPanelType, GridPos.x, GridPos.y, lifetime, startScale, endScale);
 	}
 }

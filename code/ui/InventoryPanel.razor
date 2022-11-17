@@ -22,13 +22,15 @@
     }
 </style>
 
+@{
+    Log.Info("#things: " + GetThings().Count);
+}
 <root>
     <div class="inventory_bg" style="background-image: url( textures/bg_tile.png );"></div>
-    @for (int i = 0; i < GridWidth * GridHeight; i++)
+    @foreach(var thing in GetThings())
     {
-        var localI = i;
-        var gridPos = GetGridPos(localI);
-        <GridCell style="left: @(gridPos.x * 40); top: @(gridPos.y * 40 - 2);" @Index=@localI @onmouseover=@(() => HoveredCellIndex = localI ) @onclick=@(() => OnCellClicked(localI)) />
+        var index = GetIndex(thing.GridPos);
+        <GridCell style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40 - 2);" @Text=@thing.DisplayIcon @PlayerNum=@thing.PlayerNum @Index=@index @onmouseover=@(() => HoveredCellIndex = index ) @onclick=@(() => OnCellClicked(index)) />
     }
 </root>
 

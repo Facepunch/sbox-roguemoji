@@ -76,9 +76,10 @@ public class GridManager
 
 	public void DeregisterGridPos(Thing thing, IntVector gridPos)
 	{
+		Log.Info("DeregisterGridPos: " + thing.DisplayName + ", " + gridPos);
 		if(GridThings.ContainsKey(gridPos))
 		{
-			InterfacerGame.Instance.RemoveCellVfx(thing.GridPanelType, gridPos.x, gridPos.y);
+			//InterfacerGame.Instance.RemoveCellVfx(thing.GridPanelType, gridPos.x, gridPos.y);
 
 			GridThings[gridPos].Remove( thing );
 			RefreshGridPos( gridPos );

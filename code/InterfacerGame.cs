@@ -58,6 +58,13 @@ public partial class InterfacerGame : Sandbox.Game
 				GridPanelType = GridPanelType.Arena,
 			};
 			ThingManager.AddThing(rock);
+
+			var inventoryRock = new Rock()
+			{
+				GridPos = new IntVector(4, 3),
+				GridPanelType = GridPanelType.Inventory,
+			};
+			ThingManager.AddThing(inventoryRock);
 		}
 
 		if (Host.IsClient)
@@ -164,7 +171,7 @@ public partial class InterfacerGame : Sandbox.Game
 		var cell = gridPanel.GetCell(gridPos);
 		if (cell != null)
 		{
-			cell.SetText(text);
+			//cell.SetText(text);
 			cell.SetPlayerNum(playerNum);
 			cell.SetTooltip(tooltip);
 			cell.SetTransform(offset, rotationDegrees, scale);
