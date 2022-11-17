@@ -34,54 +34,46 @@
     .player-8 { text-stroke-color: #ff8800; text-stroke-width: 4px; }
 </style>
 
-<root class="icon @GetPlayerClass()" style="z-index: @Index;">@Text</root>
+<root class="icon @GetPlayerClass()" style="z-index: @Index;">@Thing.DisplayIcon</root>
 
 @code
 {
     public Panel IconPanel { get; set; }
     public CellTooltip TooltipPanel { get; set; }
 
-    public int Index { get; set; }
-    public int PlayerNum { get; set; }
-
-    public string Text { get; set; }
-
     public Thing Thing { get; set; }
+    public int Index { get; set; }
 
     private string GetPlayerClass()
     {
-        return PlayerNum > 0 ? $"player-{PlayerNum}" : "";
-    }
-
-    public void Refresh()
-    {
-        StateHasChanged();
-
-        if(TooltipPanel != null)
-            InterfacerGame.Instance.FlickerPanel(this);
-    }
-
-    public void SetText(string text)
-    {
-        Text = text;
-    }
-
-    public void SetPlayerNum(int num)
-    {
-        PlayerNum = num;
-    }
-
-    public void SetTooltip(string text)
-    {
-        Tooltip = text;
+        return Thing.PlayerNum > 0 ? $"player-{Thing.PlayerNum}" : "";
     }
 
     protected override Panel CreateTooltipPanel()
     {
         TooltipPanel = Hud.Instance.AddChild<CellTooltip>();
         TooltipPanel.Text = Tooltip;
-        TooltipPanel.AddClass($"player-{PlayerNum}");
+        TooltipPanel.AddClass($"player-{Thing.PlayerNum}");
         return TooltipPanel;
+    }
+
+    protected override int BuildHash()
+    {
+        if (Thing == null)
+            return base.BuildHash();
+
+        return HashCode.Combine( Thing.DisplayIcon, Thing.PlayerNum, Thing.Offset, Thing.RotationDegrees, Thing.IconScale );
+    }
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        base.OnAfterTreeRender(firstTime);
+
+        if (Thing == null)
+            return;
+
+        Tooltip = Thing.Tooltip;
+        SetTransform(Thing.Offset, Thing.RotationDegrees, Thing.IconScale);
     }
 
     public void SetTransform(Vector2 offset, float rotation, float scale)
@@ -91,20 +83,5 @@
         tr.AddRotation(0f, 0f, rotation);
         tr.AddScale(scale);
         Style.Transform = tr;
-    }
-
-    protected override void OnAfterTreeRender(bool firstTime)
-    {
-        base.OnAfterTreeRender(firstTime);
-
-        SetTransform(Thing.Offset, Thing.RotationDegrees, Thing.IconScale);
-    }
-
-    protected override int BuildHash()
-    {
-        if (Thing == null)
-            return base.BuildHash();
-
-        return HashCode.Combine( Text, Thing.Offset, Thing.RotationDegrees, Thing.IconScale );
     }
 }

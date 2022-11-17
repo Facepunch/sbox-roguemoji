@@ -15,7 +15,6 @@ public class GridManager
 	public GridPanelType GridPanelType { get; private set; }
 
 	public Dictionary<IntVector, List<Thing>> GridThings = new Dictionary<IntVector, List<Thing>>();
-	//public List<IntVector> GridCellsToRefresh = new List<IntVector>();
 
 	public GridManager(int width, int height, GridPanelType gridPanelType)
 	{
@@ -23,11 +22,6 @@ public class GridManager
 		GridHeight = height;
 		GridPanelType = gridPanelType;
 	}
-
-	//public void Update()
-	//{
-	//	RefreshCells();
-	//}
 
 	public int GetIndex( int x, int y ) { return y * GridWidth + x; }
 	public IntVector GetGridPos( int index ) { return new IntVector( index % GridWidth, ((float)index / (float)GridWidth).FloorToInt() ); }
@@ -74,55 +68,11 @@ public class GridManager
 
     public void DeregisterGridPos(Thing thing, IntVector gridPos)
     {
-        //Log.Info("DeregisterGridPos: " + thing.DisplayName + ", " + gridPos);
         if (GridThings.ContainsKey(gridPos))
         {
             GridThings[gridPos].Remove(thing);
         }
     }
-
-    //public void RefreshGridPos(IntVector gridPos)
-    //{
-    //	if ( !GridCellsToRefresh.Contains( gridPos ) )
-    //		GridCellsToRefresh.Add( gridPos );
-    //}
-
-    //public void RefreshCells()
-    //{
-    //	foreach(IntVector gridCell in GridCellsToRefresh)
-    //		RefreshCell( gridCell );
-
-    //	GridCellsToRefresh.Clear();
-    //}
-
-    //void RefreshCell(IntVector gridPos)
-    //{
-    //	return;
-
-    //	float currPriority = -1f;
-    //	Thing currThing = null;
-
-    //	if(GridThings.ContainsKey(gridPos))
-    //	{
-    //		foreach(var thing in GridThings[gridPos])
-    //		{
-    //			if(thing.IconPriority > currPriority)
-    //			{
-    //				currThing = thing;
-    //				currPriority = thing.IconPriority;
-    //			}
-    //		}
-    //	}
-
-    //	string iconString = currThing?.DisplayIcon ?? "";
-    //	int playerNum = currThing?.PlayerNum ?? 0;
-    //	string tooltip = currThing?.Tooltip ?? "";
-    //	Vector2 offset = currThing?.Offset ?? Vector2.Zero;
-    //	float rotationDegrees = currThing?.RotationDegrees ?? 0f;
-    //	float size = currThing?.IconScale ?? 1f;
-
-    //	InterfacerGame.Instance.WriteCell(GridPanelType, gridPos, iconString, playerNum, tooltip, offset, rotationDegrees, size);
-    //}
 
     public static IntVector GetIntVectorForDirection(Direction direction)
 	{

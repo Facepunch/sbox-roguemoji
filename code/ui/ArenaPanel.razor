@@ -25,7 +25,7 @@
     @foreach(Thing thing in GetThings())
     {
         var index = GetIndex(thing.GridPos);
-        <GridCell style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40 - 2);" Thing=@thing @Text=@thing.DisplayIcon @PlayerNum=@thing.PlayerNum @Index=@index @onmouseover=@(() => HoveredCellIndex = index ) @onclick=@(() => OnCellClicked(index)) />
+        <GridCell style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40 - 2);" Thing=@thing @Index=@index @onmouseover=@(() => HoveredCellIndex = index ) @onclick=@(() => OnCellClicked(index)) />
     }
 </root>
 

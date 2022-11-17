@@ -10,9 +10,8 @@ public partial class InterfacerPlayer : Thing
 	public InterfacerPlayer()
 	{
 		ShouldUpdate = true;
-		PlayerNum = ++InterfacerGame.PlayerNum;
 		DisplayIcon = "🙂";
-		IconPriority = 2f;
+		//IconPriority = 2f;
 		ShouldLogBehaviour = true;
 		DisplayName = "Player";
 		Tooltip = "";

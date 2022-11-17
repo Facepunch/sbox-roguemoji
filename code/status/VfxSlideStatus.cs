@@ -14,6 +14,7 @@ public class VfxSlideStatus : ThingStatus
         base.Init(thing);
 
         ShouldUpdate = true;
+        IsClientStatus = true;
     }
 
     public override void Update(float dt)

@@ -10,7 +10,7 @@ public partial class Explosion : Thing
 	public Explosion()
 	{
         DisplayIcon = "💥";
-		IconPriority = 99f;
+		//IconPriority = 99f;
 		ShouldUpdate = true;
 		_spawnTime = 0f;
 		IsVisualEffect = true;

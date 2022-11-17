@@ -14,6 +14,7 @@ public class VfxScaleStatus : ThingStatus
         base.Init(thing);
 
         ShouldUpdate = true;
+        IsClientStatus = true;
         Thing.SetScale(StartScale);
     }
 
@@ -21,10 +22,7 @@ public class VfxScaleStatus : ThingStatus
     {
         base.Update(dt);
 
-        //Log.Info("update: " + TimeSinceStart + " / " + Lifetime + " start: " + StartScale + " end: " + EndScale);
         Thing.SetScale(Utils.Map(TimeSinceStart, 0f, Lifetime, StartScale, EndScale, EasingType.Linear));
-
-        //Thing.DrawDebugText("" + Thing.IconScale);
 
         if(TimeSinceStart > Lifetime)
             Remove();

@@ -18,7 +18,7 @@ public partial class Thing : Entity
 
 	[Net] public int PlayerNum { get; set; }
 
-	public float IconPriority { get; set; }
+	//public float IconPriority { get; set; }
 	public bool IsVisualEffect { get; set; }
 	public bool ShouldLogBehaviour { get; set; }
 
@@ -36,7 +36,7 @@ public partial class Thing : Entity
 		DisplayIcon = ".";
 		DisplayName = Name;
 		Tooltip = "";
-		IconPriority = 0f;
+		//IconPriority = 0f;
 		ShouldLogBehaviour = false;
 		IconScale = 1f;
 	}
@@ -122,7 +122,7 @@ public partial class Thing : Entity
 		}
 
 		SetGridPos(newGridPos);
-		VfxSlide(direction, 0.2f, 40f);
+		VfxSlide(direction, 0.2f, 20f);
 
 		return true;
 	}
@@ -178,19 +178,16 @@ public partial class Thing : Entity
 	public void SetOffset(Vector2 offset)
     {
 		Offset = offset;
-		//GridManager.RefreshGridPos(GridPos);
     }
 
 	public void SetRotation(float rotationDegrees)
 	{
 		RotationDegrees = rotationDegrees;
-		//GridManager.RefreshGridPos(GridPos);
 	}
 
 	public void SetScale(float scale)
 	{
 		IconScale = scale;
-		//GridManager.RefreshGridPos(GridPos);
 	}
 
 	public ThingStatus AddStatus(TypeDescription type)
@@ -252,22 +249,31 @@ public partial class Thing : Entity
         nudge.Direction = direction;
         nudge.Lifetime = lifetime;
         nudge.Distance = distance;
-
-        //InterfacerGame.Instance.VfxNudgeClient(GridPanelType, GridPos.x, GridPos.y, direction, lifetime, distance);
     }
 
-    public void VfxSlide(Direction direction, float lifetime, float distance)
+	[ClientRpc]
+	public void VfxSlide(Direction direction, float lifetime, float distance)
     {
-		//InterfacerGame.Instance.VfxSlideClient(GridPanelType, GridPos.x, GridPos.y, direction, lifetime, distance);
+		var slide = AddStatus(TypeLibrary.GetDescription(typeof(VfxSlideStatus))) as VfxSlideStatus;
+		slide.Direction = direction;
+		slide.Lifetime = lifetime;
+		slide.Distance = distance;
 	}
 
+	[ClientRpc]
 	public void VfxShake(float lifetime, float distance)
 	{
-		//InterfacerGame.Instance.VfxShakeClient(GridPanelType, GridPos.x, GridPos.y, lifetime, distance);
+		var shake = AddStatus(TypeLibrary.GetDescription(typeof(VfxShakeStatus))) as VfxShakeStatus;
+		shake.Lifetime = lifetime;
+		shake.Distance = distance;
 	}
 
+	[ClientRpc]
 	public void VfxScale(float lifetime, float startScale, float endScale)
 	{
-		//InterfacerGame.Instance.VfxScaleClient(GridPanelType, GridPos.x, GridPos.y, lifetime, startScale, endScale);
+		var scale = AddStatus(TypeLibrary.GetDescription(typeof(VfxScaleStatus))) as VfxScaleStatus;
+		scale.Lifetime = lifetime;
+		scale.StartScale = startScale;
+		scale.EndScale = endScale;
 	}
 }
