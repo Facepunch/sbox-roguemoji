@@ -12,13 +12,12 @@ public abstract class GridPanel : Panel
     public virtual int GridHeight => 0;
     public virtual GridPanelType GridPanelType => GridPanelType.None;
 
-    public readonly List<GridCell> Cells = new List<GridCell>();
+    //public readonly List<GridCell> Cells = new List<GridCell>();
 
     public int HoveredCellIndex { get; set; }
     public int ClickedCellIndex { get; set; }
 
     public Dictionary<IntVector, List<CellVfx>> CellVfxs = new Dictionary<IntVector, List<CellVfx>>();
-    public List<IntVector> GridCellsToRefresh = new List<IntVector>();
 
     public override void Tick()
     {
@@ -42,8 +41,6 @@ public abstract class GridPanel : Panel
                 vfx.Update(dt);
             }
         }
-
-        RefreshCells();
     }
 
     public string GetSelectedIndexString()
@@ -74,70 +71,65 @@ public abstract class GridPanel : Panel
         Hud.Instance.GridCellClicked(GridPanelType, gridPos.x, gridPos.y);
     }
 
-    protected override void OnChildAdded(Panel child)
-    {
-        base.OnChildAdded(child);
+    //protected override void OnChildAdded(Panel child)
+    //{
+    //    base.OnChildAdded(child);
 
-        if (child is GridCell gridCell)
-        {
-            Cells.Add(gridCell);
-        }
-    }
+    //    if (child is GridCell gridCell)
+    //    {
+    //        Cells.Add(gridCell);
+    //    }
+    //}
 
-    protected override void OnChildRemoved(Panel child)
-    {
-        base.OnChildRemoved(child);
+    //protected override void OnChildRemoved(Panel child)
+    //{
+    //    base.OnChildRemoved(child);
 
-        if (child is GridCell gridCell)
-        {
-            Cells.Remove(gridCell);
-        }
-    }
+    //    if (child is GridCell gridCell)
+    //    {
+    //        Cells.Remove(gridCell);
+    //    }
+    //}
 
-    public GridCell GetCell(int index)
-    {
-        if (index < Cells.Count)
-            return Cells[index];
+    //public GridCell GetCell(int index)
+    //{
+    //    if (index < Cells.Count)
+    //        return Cells[index];
 
-        return null;
-    }
+    //    return null;
+    //}
 
-    public GridCell GetCell(int x, int y)
-    {
-        return GetCell(y * GridWidth + x);
-    }
+    //public GridCell GetCell(IntVector gridPos)
+    //{
+    //    return GetCell(gridPos.y * GridWidth + gridPos.x);
+    //}
 
-    public GridCell GetCell(IntVector gridPos)
-    {
-        return GetCell(gridPos.y * GridWidth + gridPos.x);
-    }
+    //public CellVfx AddCellVfx(IntVector gridPos, TypeDescription type)
+    //{
+    //    if (!CellVfxs.ContainsKey(gridPos))
+    //    {
+    //        CellVfxs[gridPos] = new List<CellVfx>();
+    //    }
+    //    else
+    //    {
+    //        foreach (var v in CellVfxs[gridPos])
+    //        {
+    //            var vType = TypeLibrary.GetDescription(v.GetType());
+    //            if(vType == type)
+    //            {
+    //                Log.Error("AddCellVfx: " + gridPos + " already has vfx of type " + type.Name + "!");
+    //                return null;
+    //            }
+    //        }
+    //    }
 
-    public CellVfx AddCellVfx(IntVector gridPos, TypeDescription type)
-    {
-        if (!CellVfxs.ContainsKey(gridPos))
-        {
-            CellVfxs[gridPos] = new List<CellVfx>();
-        }
-        else
-        {
-            foreach (var v in CellVfxs[gridPos])
-            {
-                var vType = TypeLibrary.GetDescription(v.GetType());
-                if(vType == type)
-                {
-                    Log.Error("AddCellVfx: " + gridPos + " already has vfx of type " + type.Name + "!");
-                    return null;
-                }
-            }
-        }
+    //    var gridCell = GetCell(gridPos);
 
-        var gridCell = GetCell(gridPos);
-
-        var vfx = type.Create<CellVfx>();
-        vfx.Init(gridCell, gridPos, this);
-        CellVfxs[gridPos].Add(vfx);
-        return vfx;
-    }
+    //    var vfx = type.Create<CellVfx>();
+    //    vfx.Init(gridCell, gridPos, this);
+    //    CellVfxs[gridPos].Add(vfx);
+    //    return vfx;
+    //}
 
     public void RemoveCellVfx(IntVector gridPos, TypeDescription type)
     {
@@ -172,34 +164,35 @@ public abstract class GridPanel : Panel
         CellVfxs.Clear();
     }
 
-    public void RefreshGridPos(IntVector gridPos)
-    {
-        if (!GridCellsToRefresh.Contains(gridPos))
-            GridCellsToRefresh.Add(gridPos);
-    }
+    //public void RefreshGridPos(IntVector gridPos)
+    //{
+    //    if (!GridCellsToRefresh.Contains(gridPos))
+    //        GridCellsToRefresh.Add(gridPos);
+    //}
 
-    public void RefreshCells()
-    {
-        foreach (IntVector gridCell in GridCellsToRefresh)
-            RefreshCell(gridCell);
+    //public void RefreshCells()
+    //{
+    //    foreach (IntVector gridCell in GridCellsToRefresh)
+    //        RefreshCell(gridCell);
 
-        GridCellsToRefresh.Clear();
-    }
+    //    GridCellsToRefresh.Clear();
+    //}
 
-    void RefreshCell(IntVector gridPos)
-    {
-        var gridCell = GetCell(gridPos);
+    //void RefreshCell(IntVector gridPos)
+    //{
+    //    var gridCell = GetCell(gridPos);
 
-        if (gridCell == null)
-            return;
+    //    if (gridCell == null)
+    //        return;
 
-        gridCell.RefreshTransform();
-    }
+    //    gridCell.RefreshTransform();
+    //}
 
     public List<Thing> GetThings()
     {
         return Entity.All
             .OfType<Thing>()
+            .Where(x => !x.IsRemoved)
             .Where(x => x.GridPanelType == GridPanelType)
             .ToList();
     }

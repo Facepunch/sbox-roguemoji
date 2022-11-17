@@ -18,6 +18,8 @@ public class VfxSlideStatus : ThingStatus
 
     public override void Update(float dt)
     {
+        base.Update(dt);
+
         var dir = GridManager.GetVectorForDirection(Direction);
         Thing.SetOffset(dir * Utils.Map(TimeSinceStart, 0f, Lifetime, -Distance, 0f, EasingType.ExpoOut));
 

@@ -10,6 +10,7 @@ public abstract class ThingStatus
     public bool ShouldUpdate { get; protected set; }
 
     public TimeSince TimeSinceStart { get; protected set; }
+    public bool IsClientStatus { get; protected set; }
 
     public virtual void Init(Thing thing)
     {
@@ -20,7 +21,10 @@ public abstract class ThingStatus
 
     public virtual void Update(float dt)
     {
-        
+        if(IsClientStatus == Host.IsServer)
+        {
+            Log.Error(GetType().Name + " IsClientStatus: " + IsClientStatus + " Host.IsServer: " + Host.IsServer + "!");
+        }
     }
 
     // status was added when already existing

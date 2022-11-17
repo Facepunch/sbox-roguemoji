@@ -28,6 +28,8 @@ public partial class Thing : Entity
 
 	public Dictionary<TypeDescription, ThingStatus> Statuses = new Dictionary<TypeDescription, ThingStatus>();
 
+	[Net] public bool IsRemoved { get; set; }
+
 	public Thing()
 	{
 		ShouldUpdate = false;
@@ -49,10 +51,17 @@ public partial class Thing : Entity
 	[Event.Tick.Client]
 	public void ClientTick()
     {
-		//Log.Info(Name + " ClientTick: " + Time.Delta + " DisplayIcon: " + DisplayIcon + " GridPos: " + GridPos + " PlayerNum: " + PlayerNum + " DisplayName: " + DisplayName);
+		float dt = Time.Delta;
+
+		foreach (KeyValuePair<TypeDescription, ThingStatus> pair in Statuses)
+		{
+			var status = pair.Value;
+			if (status.ShouldUpdate)
+				status.Update(dt);
+		}
     }
 
-    public virtual void Update(float dt)
+	public virtual void Update(float dt)
 	{
 		var statusString = "Statuses (" + Statuses.Count + "):\n";
 		foreach (KeyValuePair<TypeDescription, ThingStatus> pair in Statuses)
@@ -64,7 +73,7 @@ public partial class Thing : Entity
 			statusString += status.GetType().Name + "\n";
 		}
 
-		//DrawDebugText(statusString);
+        //DrawDebugText(statusString);
     }
 
 	public virtual void FirstUpdate()
@@ -129,15 +138,33 @@ public partial class Thing : Entity
 		GridManager.SetGridPos( this, gridPos );
 		GridPos = gridPos;
 
-		GridPosChangedClient();
+		RefreshPanel();
 
 		if (ShouldLogBehaviour)
 			InterfacerGame.Instance.LogMessage( DisplayIcon + "(" + DisplayName + ") moved to (" + gridPos.x + ", " + gridPos.y + ").", PlayerNum);
 	}
 
+	public void Remove()
+	{
+		if (IsRemoved)
+			return;
+
+		Log.Info("Remove: " + DisplayIcon);
+
+		IsRemoved = true;
+
+		if ( ShouldLogBehaviour )
+			InterfacerGame.Instance.LogMessage( DisplayIcon + "(" + DisplayName + ") removed.", PlayerNum );
+
+		GridManager.DeregisterGridPos( this, GridPos );
+		ThingManager.Instance.RemoveThing( this );
+		Delete();
+		RefreshPanel();
+	}
+
 	[ClientRpc]
-	public void GridPosChangedClient()
-    {
+	public void RefreshPanel()
+	{
 		if (Hud.Instance == null)
 			return;
 
@@ -146,34 +173,24 @@ public partial class Thing : Entity
 			return;
 
 		panel.Refresh();
-    }
-
-	public void Remove()
-	{
-		if ( ShouldLogBehaviour )
-			InterfacerGame.Instance.LogMessage( DisplayIcon + "(" + DisplayName + ") removed.", PlayerNum );
-
-		GridManager.DeregisterGridPos( this, GridPos );
-		ThingManager.Instance.RemoveThing( this );
-		Delete();
 	}
 
 	public void SetOffset(Vector2 offset)
     {
 		Offset = offset;
-		GridManager.RefreshGridPos(GridPos);
+		//GridManager.RefreshGridPos(GridPos);
     }
 
 	public void SetRotation(float rotationDegrees)
 	{
 		RotationDegrees = rotationDegrees;
-		GridManager.RefreshGridPos(GridPos);
+		//GridManager.RefreshGridPos(GridPos);
 	}
 
 	public void SetScale(float scale)
 	{
 		IconScale = scale;
-		GridManager.RefreshGridPos(GridPos);
+		//GridManager.RefreshGridPos(GridPos);
 	}
 
 	public ThingStatus AddStatus(TypeDescription type)
@@ -213,7 +230,8 @@ public partial class Thing : Entity
 
 	public void DrawDebugText(string text, Color color, float time = 0f)
     {
-		DebugOverlay.ScreenText(text, GridManager.GetScreenPos(GridPos), 0, color, time);
+		DebugOverlay.ScreenText(text, Hud.Instance.MousePosition, 0, color, time);
+		//DebugOverlay.ScreenText(text, GridManager.GetScreenPos(GridPos), 0, color, time);
 	}
 
 	public void DrawDebugText(string text)
@@ -224,15 +242,21 @@ public partial class Thing : Entity
 	public void SetIcon(string icon)
 	{
 		DisplayIcon = icon;
-		GridManager.RefreshGridPos(GridPos);
+		//GridManager.RefreshGridPos(GridPos);
 	}
 
+	[ClientRpc]
 	public void VfxNudge(Direction direction, float lifetime, float distance)
 	{
-		//InterfacerGame.Instance.VfxNudgeClient(GridPanelType, GridPos.x, GridPos.y, direction, lifetime, distance);
-	}
+		var nudge = AddStatus(TypeLibrary.GetDescription(typeof(VfxNudgeStatus))) as VfxNudgeStatus;
+        nudge.Direction = direction;
+        nudge.Lifetime = lifetime;
+        nudge.Distance = distance;
 
-	public void VfxSlide(Direction direction, float lifetime, float distance)
+        //InterfacerGame.Instance.VfxNudgeClient(GridPanelType, GridPos.x, GridPos.y, direction, lifetime, distance);
+    }
+
+    public void VfxSlide(Direction direction, float lifetime, float distance)
     {
 		//InterfacerGame.Instance.VfxSlideClient(GridPanelType, GridPos.x, GridPos.y, direction, lifetime, distance);
 	}

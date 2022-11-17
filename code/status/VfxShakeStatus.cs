@@ -17,6 +17,8 @@ public class VfxShakeStatus : ThingStatus
 
     public override void Update(float dt)
     {
+        base.Update(dt);
+
         var dir = Utils.DegreesToVector(Rand.Float(0f, 360f));
         Thing.SetOffset(dir * Utils.Map(TimeSinceStart, 0f, Lifetime, Distance, 0f, EasingType.QuadOut));
 

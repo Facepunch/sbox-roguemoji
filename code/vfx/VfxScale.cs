@@ -11,8 +11,8 @@ public class VfxScale : CellVfx
 
     public override void Update(float dt)
     {
-        GridCell.VfxScale = Utils.Map(TimeSinceStart, 0f, Lifetime, StartScale, EndScale, EasingType.Linear);
-        GridPanel.RefreshGridPos(GridPos);
+        //GridCell.VfxScale = Utils.Map(TimeSinceStart, 0f, Lifetime, StartScale, EndScale, EasingType.Linear);
+        //GridPanel.RefreshGridPos(GridPos);
 
         if (TimeSinceStart > Lifetime)
             Remove();

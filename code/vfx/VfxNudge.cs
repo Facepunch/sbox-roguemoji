@@ -12,8 +12,8 @@ public class VfxNudge : CellVfx
     public override void Update(float dt)
     {
         var dir = GridManager.GetVectorForDirection(Direction);
-        GridCell.VfxOffset = dir * Utils.MapReturn(TimeSinceStart, 0f, Lifetime, 0f, Distance, EasingType.QuadOut);
-        GridPanel.RefreshGridPos(GridPos);
+        //GridCell.VfxOffset = dir * Utils.MapReturn(TimeSinceStart, 0f, Lifetime, 0f, Distance, EasingType.QuadOut);
+        //GridPanel.RefreshGridPos(GridPos);
 
         if (TimeSinceStart > Lifetime)
             Remove();

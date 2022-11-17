@@ -19,6 +19,8 @@ public class VfxScaleStatus : ThingStatus
 
     public override void Update(float dt)
     {
+        base.Update(dt);
+
         //Log.Info("update: " + TimeSinceStart + " / " + Lifetime + " start: " + StartScale + " end: " + EndScale);
         Thing.SetScale(Utils.Map(TimeSinceStart, 0f, Lifetime, StartScale, EndScale, EasingType.Linear));
 

@@ -46,9 +46,7 @@
 
     public string Text { get; set; }
 
-    public Vector2 VfxOffset { get; set; }
-    public float VfxRotation { get; set; }
-    public float VfxScale { get; set; }
+    public Thing Thing { get; set; }
 
     private string GetPlayerClass()
     {
@@ -95,47 +93,18 @@
         Style.Transform = tr;
     }
 
-    public void RefreshTransform()
+    protected override void OnAfterTreeRender(bool firstTime)
     {
-        var tr = new PanelTransform();
-        tr.AddTranslate(VfxOffset.x, VfxOffset.y);
-        tr.AddRotation(0f, 0f, VfxRotation);
-        tr.AddScale(VfxScale);
-        Style.Transform = tr;
+        base.OnAfterTreeRender(firstTime);
 
-        VfxOffset = Vector2.Zero;
-        VfxRotation = 0f;
-        VfxScale = 1f;
+        SetTransform(Thing.Offset, Thing.RotationDegrees, Thing.IconScale);
     }
 
     protected override int BuildHash()
     {
-        //var style = ComputedStyle;
-        return HashCode.Combine( Text );
+        if (Thing == null)
+            return base.BuildHash();
+
+        return HashCode.Combine( Text, Thing.Offset, Thing.RotationDegrees, Thing.IconScale );
     }
-
-    //public override void Tick()
-    //{
-    //    base.Tick();
-
-        //if(Style.FontSize != null)
-        //    DebugOverlay.ScreenText(Style.FontSize!.Value.Value.ToString(), new Vector2(Style.Left!.Value.Value, Style.Top!.Value.Value), 0, new Color(0.3f, 0.3f, 1f, 0.7f), 0f);
-
-        //Tooltip = Rand.Float(0f, 1000f).ToString();
-
-        //Style.Width = 40f + MathF.Sin(Time.Now * 4f) * 4f;
-        //Style.MarginLeft = 12f;
-        //Style.MarginTop = 12f;
-
-        //var tr = new PanelTransform();
-        //tr.AddScale(new Vector3(1f + MathF.Sin(Time.Now * 6f) * 0.05f, 1f + MathF.Sin(Time.Now * 7f) * 0.05f, 1f));
-        //tr.AddRotation(0f, 0f, MathF.Sin(Time.Now * 5f) * 4f);
-        //tr.AddRotation(0f, 0f, Time.Now * 500f);
-        //tr.AddTranslateY(MathF.Sin(Time.Now * 10f) * -2f);
-        //tr.AddRotation(MathF.Cos(Time.Now * 6f) * 25f, MathF.Sin(Time.Now * 6f) * 25f, 0f);
-        //tr.AddSkew(22.5f, 0.5f, 0.5f);
-        //tr.AddScale(new Vector3(2f, 2f, 1f));
-
-        //Style.Transform = tr;
-    //}
 }

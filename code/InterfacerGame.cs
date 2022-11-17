@@ -32,8 +32,8 @@ public partial class InterfacerGame : Sandbox.Game
 	public const int InventoryWidth = 10;
 	public const int InventoryHeight = 5;
 
-	public record struct CellData(GridPanelType gridPanelType, IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float scale);
-	public Queue<CellData> WriteCellQueue = new Queue<CellData>();
+	//public record struct CellData(GridPanelType gridPanelType, IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float scale);
+	//public Queue<CellData> WriteCellQueue = new Queue<CellData>();
 
 	public record struct LogData(string text, int playerNum);
 	public Queue<LogData> LogMessageQueue = new Queue<LogData>();
@@ -80,8 +80,8 @@ public partial class InterfacerGame : Sandbox.Game
 		float dt = Time.Delta;
 
 		ThingManager.Update(dt);
-		ArenaGridManager.Update();
-		InventoryGridManager.Update();
+		//ArenaGridManager.Update();
+		//InventoryGridManager.Update();
 
 		NumThings = ThingManager.Things.Count;
 	}
@@ -89,14 +89,14 @@ public partial class InterfacerGame : Sandbox.Game
 	[Event.Tick.Client]
 	public void ClientTick()
 	{
-		if (Hud.MainPanel.ArenaPanel != null && Hud.MainPanel.InventoryPanel != null)
-		{
-			while (WriteCellQueue.Count > 0)
-			{
-				var data = WriteCellQueue.Dequeue();
-				RefreshCell(data.gridPanelType, data.gridPos, data.text, data.playerNum, data.tooltip, data.offset, data.rotationDegrees, data.scale);
-			}
-		}
+		//if (Hud.MainPanel.ArenaPanel != null && Hud.MainPanel.InventoryPanel != null)
+		//{
+		//	while (WriteCellQueue.Count > 0)
+		//	{
+		//		var data = WriteCellQueue.Dequeue();
+		//		RefreshCell(data.gridPanelType, data.gridPos, data.text, data.playerNum, data.tooltip, data.offset, data.rotationDegrees, data.scale);
+		//	}
+		//}
 
 		if (Hud.MainPanel.LogPanel != null)
 		{
@@ -128,7 +128,7 @@ public partial class InterfacerGame : Sandbox.Game
 
 		var player = new InterfacerPlayer()
 		{
-			GridPos = new IntVector(3, 3),
+			GridPos = new IntVector(5, 10),
 			GridPanelType = GridPanelType.Arena,
 		};
 		client.Pawn = player;
@@ -141,44 +141,44 @@ public partial class InterfacerGame : Sandbox.Game
 
 	}
 
-	public void WriteCell(GridPanelType gridPanelType, IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float scale)
-	{
-		WriteCellClient(gridPanelType, gridPos.x, gridPos.y, text, playerNum, tooltip, offset, rotationDegrees, scale);
-	}
+	//public void WriteCell(GridPanelType gridPanelType, IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float scale)
+	//{
+	//	WriteCellClient(gridPanelType, gridPos.x, gridPos.y, text, playerNum, tooltip, offset, rotationDegrees, scale);
+	//}
 
-	[ClientRpc]
-	public void WriteCellClient(GridPanelType gridPanelType, int x, int y, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float scale)
-	{
-		var gridPanel = Hud.GetGridPanel(gridPanelType);
-		if (gridPanel == null)
-		{
-			WriteCellQueue.Enqueue(new CellData(gridPanelType, new IntVector(x, y), text, playerNum, tooltip, offset, rotationDegrees, scale));
-			return;
-		}
+	//[ClientRpc]
+	//public void WriteCellClient(GridPanelType gridPanelType, int x, int y, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float scale)
+	//{
+	//	var gridPanel = Hud.GetGridPanel(gridPanelType);
+	//	if (gridPanel == null)
+	//	{
+	//		WriteCellQueue.Enqueue(new CellData(gridPanelType, new IntVector(x, y), text, playerNum, tooltip, offset, rotationDegrees, scale));
+	//		return;
+	//	}
 
-		RefreshCell(gridPanelType, new IntVector(x, y), text, playerNum, tooltip, offset, rotationDegrees, scale);
-	}
+	//	RefreshCell(gridPanelType, new IntVector(x, y), text, playerNum, tooltip, offset, rotationDegrees, scale);
+	//}
 
-	public void RefreshCell(GridPanelType gridPanelType, IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float scale)
-	{
-		GridPanel gridPanel = Hud.GetGridPanel(gridPanelType);
-		if (gridPanel == null)
-		{
-			Log.Error("RefreshCell: " + gridPanelType + " - no grid panel of this type!");
-			return;
-		}
+	//public void RefreshCell(GridPanelType gridPanelType, IntVector gridPos, string text, int playerNum, string tooltip, Vector2 offset, float rotationDegrees, float scale)
+	//{
+	//	GridPanel gridPanel = Hud.GetGridPanel(gridPanelType);
+	//	if (gridPanel == null)
+	//	{
+	//		Log.Error("RefreshCell: " + gridPanelType + " - no grid panel of this type!");
+	//		return;
+	//	}
 
-		var cell = gridPanel.GetCell(gridPos);
-		if (cell != null)
-		{
-			//cell.SetText(text);
-			cell.SetPlayerNum(playerNum);
-			cell.SetTooltip(tooltip);
-			cell.SetTransform(offset, rotationDegrees, scale);
+	//	var cell = gridPanel.GetCell(gridPos);
+	//	if (cell != null)
+	//	{
+	//		//cell.SetText(text);
+	//		cell.SetPlayerNum(playerNum);
+	//		cell.SetTooltip(tooltip);
+	//		cell.SetTransform(offset, rotationDegrees, scale);
 
-			cell.Refresh();
-		}
-	}
+	//		cell.Refresh();
+	//	}
+	//}
 
 	public void LogMessage(string text, int playerNum)
 	{
@@ -234,50 +234,50 @@ public partial class InterfacerGame : Sandbox.Game
 	[ClientRpc]
 	public void VfxNudgeClient(GridPanelType gridPanelType, int x, int y, Direction direction, float lifetime, float distance)
 	{
-		GridPanel gridPanel = Hud.GetGridPanel(gridPanelType);
-		var nudge = gridPanel.AddCellVfx(new IntVector(x, y), TypeLibrary.GetDescription(typeof(VfxNudge))) as VfxNudge;
-		if (nudge == null) return;
-		nudge.Direction = direction;
-		nudge.Lifetime = lifetime;
-		nudge.Distance = distance;
+		//GridPanel gridPanel = Hud.GetGridPanel(gridPanelType);
+		//var nudge = gridPanel.AddCellVfx(new IntVector(x, y), TypeLibrary.GetDescription(typeof(VfxNudge))) as VfxNudge;
+		//if (nudge == null) return;
+		//nudge.Direction = direction;
+		//nudge.Lifetime = lifetime;
+		//nudge.Distance = distance;
 	}
 
 	[ClientRpc]
 	public void VfxSlideClient(GridPanelType gridPanelType, int x, int y, Direction direction, float lifetime, float distance)
 	{
-		GridPanel gridPanel = Hud.GetGridPanel(gridPanelType);
-		var slide = gridPanel.AddCellVfx(new IntVector(x, y), TypeLibrary.GetDescription(typeof(VfxSlide))) as VfxSlide;
-		if (slide == null) return;
-		slide.Direction = direction;
-		slide.Lifetime = lifetime;
-		slide.Distance = distance;
+		//GridPanel gridPanel = Hud.GetGridPanel(gridPanelType);
+		//var slide = gridPanel.AddCellVfx(new IntVector(x, y), TypeLibrary.GetDescription(typeof(VfxSlide))) as VfxSlide;
+		//if (slide == null) return;
+		//slide.Direction = direction;
+		//slide.Lifetime = lifetime;
+		//slide.Distance = distance;
 	}
 
 	[ClientRpc]
 	public void VfxShakeClient(GridPanelType gridPanelType, int x, int y, float lifetime, float distance)
 	{
-		GridPanel gridPanel = Hud.GetGridPanel(gridPanelType);
-		var shake = gridPanel.AddCellVfx(new IntVector(x, y), TypeLibrary.GetDescription(typeof(VfxShake))) as VfxShake;
-		if (shake == null) return;
-		shake.Lifetime = lifetime;
-		shake.Distance = distance;
+		//GridPanel gridPanel = Hud.GetGridPanel(gridPanelType);
+		//var shake = gridPanel.AddCellVfx(new IntVector(x, y), TypeLibrary.GetDescription(typeof(VfxShake))) as VfxShake;
+		//if (shake == null) return;
+		//shake.Lifetime = lifetime;
+		//shake.Distance = distance;
 	}
 
 	[ClientRpc]
 	public void VfxScaleClient(GridPanelType gridPanelType, int x, int y, float lifetime, float startScale, float endScale)
 	{
-		GridPanel gridPanel = Hud.GetGridPanel(gridPanelType);
-		var scale = gridPanel.AddCellVfx(new IntVector(x, y), TypeLibrary.GetDescription(typeof(VfxScale))) as VfxScale;
-		if (scale == null) return;
-		scale.Lifetime = lifetime;
-		scale.StartScale = startScale;
-		scale.EndScale = endScale;
+		//GridPanel gridPanel = Hud.GetGridPanel(gridPanelType);
+		//var scale = gridPanel.AddCellVfx(new IntVector(x, y), TypeLibrary.GetDescription(typeof(VfxScale))) as VfxScale;
+		//if (scale == null) return;
+		//scale.Lifetime = lifetime;
+		//scale.StartScale = startScale;
+		//scale.EndScale = endScale;
 	}
 
 	[ClientRpc]
 	public void RemoveCellVfx(GridPanelType gridPanelType, int x, int y)
 	{
-		GridPanel gridPanel = Hud.GetGridPanel(gridPanelType);
-		gridPanel.ClearAllCellVfx(new IntVector(x, y));
+		//GridPanel gridPanel = Hud.GetGridPanel(gridPanelType);
+		//gridPanel.ClearAllCellVfx(new IntVector(x, y));
 	}
 }

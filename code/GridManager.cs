@@ -15,7 +15,7 @@ public class GridManager
 	public GridPanelType GridPanelType { get; private set; }
 
 	public Dictionary<IntVector, List<Thing>> GridThings = new Dictionary<IntVector, List<Thing>>();
-	public List<IntVector> GridCellsToRefresh = new List<IntVector>();
+	//public List<IntVector> GridCellsToRefresh = new List<IntVector>();
 
 	public GridManager(int width, int height, GridPanelType gridPanelType)
 	{
@@ -24,10 +24,10 @@ public class GridManager
 		GridPanelType = gridPanelType;
 	}
 
-	public void Update()
-	{
-		RefreshCells();
-	}
+	//public void Update()
+	//{
+	//	RefreshCells();
+	//}
 
 	public int GetIndex( int x, int y ) { return y * GridWidth + x; }
 	public IntVector GetGridPos( int index ) { return new IntVector( index % GridWidth, ((float)index / (float)GridWidth).FloorToInt() ); }
@@ -54,80 +54,77 @@ public class GridManager
 			gridPos.y < GridHeight;
 	}
 
-	public void SetGridPos(Thing thing, IntVector gridPos)
-	{
-		if ( !IsGridPosInBounds( gridPos ) )
-			return;
+    public void SetGridPos(Thing thing, IntVector gridPos)
+    {
+        if (!IsGridPosInBounds(gridPos))
+            return;
 
-		IntVector currGridPos = thing.GridPos;
-		DeregisterGridPos(thing, currGridPos);
-		RegisterGridPos(thing, gridPos );
-	}
+        IntVector currGridPos = thing.GridPos;
+        DeregisterGridPos(thing, currGridPos);
+        RegisterGridPos(thing, gridPos);
+    }
 
-	public void RegisterGridPos( Thing thing, IntVector gridPos )
-	{
-		if ( GridThings.ContainsKey( gridPos ) )
-			GridThings[gridPos].Add( thing );
-		else
-			GridThings[gridPos] = new List<Thing> { thing };
+    public void RegisterGridPos(Thing thing, IntVector gridPos)
+    {
+        if (GridThings.ContainsKey(gridPos))
+            GridThings[gridPos].Add(thing);
+        else
+            GridThings[gridPos] = new List<Thing> { thing };
+    }
 
-		RefreshGridPos( gridPos );
-	}
+    public void DeregisterGridPos(Thing thing, IntVector gridPos)
+    {
+        //Log.Info("DeregisterGridPos: " + thing.DisplayName + ", " + gridPos);
+        if (GridThings.ContainsKey(gridPos))
+        {
+            GridThings[gridPos].Remove(thing);
+        }
+    }
 
-	public void DeregisterGridPos(Thing thing, IntVector gridPos)
-	{
-		Log.Info("DeregisterGridPos: " + thing.DisplayName + ", " + gridPos);
-		if(GridThings.ContainsKey(gridPos))
-		{
-			//InterfacerGame.Instance.RemoveCellVfx(thing.GridPanelType, gridPos.x, gridPos.y);
+    //public void RefreshGridPos(IntVector gridPos)
+    //{
+    //	if ( !GridCellsToRefresh.Contains( gridPos ) )
+    //		GridCellsToRefresh.Add( gridPos );
+    //}
 
-			GridThings[gridPos].Remove( thing );
-			RefreshGridPos( gridPos );
-		}
-	}
+    //public void RefreshCells()
+    //{
+    //	foreach(IntVector gridCell in GridCellsToRefresh)
+    //		RefreshCell( gridCell );
 
-	public void RefreshGridPos(IntVector gridPos)
-	{
-		if ( !GridCellsToRefresh.Contains( gridPos ) )
-			GridCellsToRefresh.Add( gridPos );
-	}
+    //	GridCellsToRefresh.Clear();
+    //}
 
-	public void RefreshCells()
-	{
-		foreach(IntVector gridCell in GridCellsToRefresh)
-			RefreshCell( gridCell );
+    //void RefreshCell(IntVector gridPos)
+    //{
+    //	return;
 
-		GridCellsToRefresh.Clear();
-	}
+    //	float currPriority = -1f;
+    //	Thing currThing = null;
 
-	void RefreshCell(IntVector gridPos)
-	{
-		float currPriority = -1f;
-		Thing currThing = null;
+    //	if(GridThings.ContainsKey(gridPos))
+    //	{
+    //		foreach(var thing in GridThings[gridPos])
+    //		{
+    //			if(thing.IconPriority > currPriority)
+    //			{
+    //				currThing = thing;
+    //				currPriority = thing.IconPriority;
+    //			}
+    //		}
+    //	}
 
-		if(GridThings.ContainsKey(gridPos))
-		{
-			foreach(var thing in GridThings[gridPos])
-			{
-				if(thing.IconPriority > currPriority)
-				{
-					currThing = thing;
-					currPriority = thing.IconPriority;
-				}
-			}
-		}
+    //	string iconString = currThing?.DisplayIcon ?? "";
+    //	int playerNum = currThing?.PlayerNum ?? 0;
+    //	string tooltip = currThing?.Tooltip ?? "";
+    //	Vector2 offset = currThing?.Offset ?? Vector2.Zero;
+    //	float rotationDegrees = currThing?.RotationDegrees ?? 0f;
+    //	float size = currThing?.IconScale ?? 1f;
 
-		string iconString = currThing?.DisplayIcon ?? "";
-		int playerNum = currThing?.PlayerNum ?? 0;
-		string tooltip = currThing?.Tooltip ?? "";
-		Vector2 offset = currThing?.Offset ?? Vector2.Zero;
-		float rotationDegrees = currThing?.RotationDegrees ?? 0f;
-		float size = currThing?.IconScale ?? 1f;
+    //	InterfacerGame.Instance.WriteCell(GridPanelType, gridPos, iconString, playerNum, tooltip, offset, rotationDegrees, size);
+    //}
 
-		InterfacerGame.Instance.WriteCell(GridPanelType, gridPos, iconString, playerNum, tooltip, offset, rotationDegrees, size);
-	}
-
-	public static IntVector GetIntVectorForDirection(Direction direction)
+    public static IntVector GetIntVectorForDirection(Direction direction)
 	{
 		switch(direction)
 		{
