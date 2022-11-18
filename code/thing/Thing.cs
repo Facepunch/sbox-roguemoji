@@ -26,6 +26,8 @@ public partial class Thing : Entity
 	public float RotationDegrees { get; set; }
 	public float IconScale { get; set; }
 
+	[Net] public string DebugText { get; set; }
+
 	public Dictionary<TypeDescription, ThingStatus> Statuses = new Dictionary<TypeDescription, ThingStatus>();
 
 	public Thing()
@@ -57,18 +59,23 @@ public partial class Thing : Entity
 			if (status.ShouldUpdate)
 				status.Update(dt);
 		}
+
+		if(!string.IsNullOrEmpty(DebugText))
+			DrawDebugText(DebugText);
+
+		DrawDebugText("Client Statuses: " + Statuses.Count, Color.Red, 1);
     }
 
 	public virtual void Update(float dt)
 	{
-		var statusString = "Statuses (" + Statuses.Count + "):\n";
+		DebugText = "Server Statuses (" + Statuses.Count + "):\n";
 		foreach (KeyValuePair<TypeDescription, ThingStatus> pair in Statuses)
         {
 			var status = pair.Value;
 			if (status.ShouldUpdate)
 				status.Update(dt);
 
-			statusString += status.GetType().Name + "\n";
+			DebugText += status.GetType().Name + "\n";
 		}
 
         //DrawDebugText(statusString);
@@ -215,7 +222,7 @@ public partial class Thing : Entity
 		}
 	}
 
-	public void DrawDebugText(string text, Color color, float time = 0f)
+	public void DrawDebugText(string text, Color color, int line = 0, float time = 0f)
     {
 		if(Host.IsServer)
         {
@@ -224,7 +231,7 @@ public partial class Thing : Entity
 		else
         {
 			var panel = Hud.Instance.GetGridPanel(GridPanelType);
-			DebugOverlay.ScreenText(text, panel.GetCellPos(GridPos), 0, color, time);
+			DebugOverlay.ScreenText(text, panel.GetCellPos(GridPos), line, color, time);
 		}
 	}
 
