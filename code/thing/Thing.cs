@@ -64,8 +64,8 @@ public partial class Thing : Entity
 		if(!string.IsNullOrEmpty(DebugText))
 			DrawDebugText(DebugText);
 
-        //DrawDebugText(IconDepth.ToString());
-    }
+		//DrawDebugText(Flags.ToString());
+	}
 
 	public virtual void Update(float dt)
 	{
@@ -288,5 +288,13 @@ public partial class Thing : Entity
 	public int GetInfoDisplayHash()
     {
 		return HashCode.Combine(NetworkIdent, DisplayIcon);
+    }
+
+	public void SetSelected(bool selected)
+    {
+		if (selected)
+			Flags |= ThingFlags.Selected;
+		else
+			Flags &= (~ThingFlags.Selected);
     }
 }

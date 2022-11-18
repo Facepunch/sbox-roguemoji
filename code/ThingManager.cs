@@ -73,6 +73,12 @@ public partial class ThingManager : BaseNetworkable
 
 	public void SelectThing(Thing thing)
     {
+		if (SelectedThing == thing)
+			return;
+
+		SelectedThing?.SetSelected(false);
+		thing?.SetSelected(true);
+
 		SelectedThing = thing;
-    }
+	}
 }

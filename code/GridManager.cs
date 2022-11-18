@@ -13,6 +13,7 @@ public enum ThingFlags
 	None = 0,
 	Solid = 1,
 	Selectable = 2,
+	Selected = 4,
 }
 
 public class GridManager

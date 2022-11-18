@@ -13,15 +13,27 @@
 		justify-content: center;
         align-items: center;
         text-align: center;
-        //color:#ffffff;
         position: absolute;
         pointer-events:all;
         font-size: 29px;
+        padding-bottom: 4px;
         //color: transparent;  
         //text-shadow: 0 0 0.01px #ff0000;
         //filter: contrast(0.5);
         //filter: contrast(100);
         //filter: blur(5px);
+        //transform-origin: 0% 50%;
+    }
+
+    .selected 
+    {
+        border: 1px solid #bbbbff22;
+        border-radius:3px;
+        //filter: brightness(2);
+        //filter: contrast(3);
+        //text-shadow: 0px 0px 8px #000000;
+        //text-decoration: overline underline 4px black wavy;
+        //text-decoration-skip-ink: none;
     }
 
     .player-1 { text-stroke-color: #3333ff; text-stroke-width: 4px; }
@@ -34,27 +46,33 @@
     .player-8 { text-stroke-color: #ff8800; text-stroke-width: 4px; }
 </style>
 
-<root class="icon @GetPlayerClass()" style="z-index: @(Index + Thing.IconDepth * 10);">@Thing.DisplayIcon</root>
+<root class="icon @GetSelectedClass()">
+    <div class="@GetPlayerClass()" style="z-index: @(Index + Thing.IconDepth * 10);" @ref=IconPanel>@Thing.DisplayIcon</root>
+</root>
 
 @code
 {
     public Panel IconPanel { get; set; }
-    public CellTooltip TooltipPanel { get; set; }
 
     public Thing Thing { get; set; }
     public int Index { get; set; }
 
-    private string GetPlayerClass()
+    string GetPlayerClass()
     {
         return Thing.PlayerNum > 0 ? $"player-{Thing.PlayerNum}" : "";
     }
 
+    string GetSelectedClass()
+    {
+        return (Thing.Flags & ThingFlags.Selected) != 0 ? "selected" : "";
+    }
+
     protected override Panel CreateTooltipPanel()
     {
-        TooltipPanel = Hud.Instance.AddChild<CellTooltip>();
-        TooltipPanel.Text = Tooltip;
-        TooltipPanel.AddClass($"player-{Thing.PlayerNum}");
-        return TooltipPanel;
+        var panel = Hud.Instance.AddChild<CellTooltip>();
+        panel.Text = Tooltip;
+        panel.AddClass($"player-{Thing.PlayerNum}");
+        return panel;
     }
 
     protected override int BuildHash()
@@ -62,7 +80,7 @@
         if (Thing == null)
             return base.BuildHash();
 
-        return HashCode.Combine( Thing.DisplayIcon, Thing.PlayerNum, Thing.Offset, Thing.RotationDegrees, Thing.IconScale, Thing.IconDepth );
+        return HashCode.Combine( Thing.DisplayIcon, Thing.PlayerNum, Thing.Offset, Thing.RotationDegrees, Thing.IconScale, Thing.IconDepth, Thing.Flags );
     }
 
     protected override void OnAfterTreeRender(bool firstTime)
@@ -82,6 +100,6 @@
         tr.AddTranslate(offset.x, offset.y);
         tr.AddRotation(0f, 0f, rotation);
         tr.AddScale(scale);
-        Style.Transform = tr;
+        IconPanel.Style.Transform = tr;
     }
 }
