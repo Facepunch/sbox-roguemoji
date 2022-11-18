@@ -74,10 +74,11 @@ public partial class InterfacerGame : Sandbox.Game
 		client.Pawn = player;
 	}
 
-	public override void ClientDisconnect(Client cl, NetworkDisconnectionReason reason)
+	public override void ClientDisconnect(Client client, NetworkDisconnectionReason reason)
 	{
-		base.ClientDisconnect(cl, reason);
+		ThingManager.RemoveThing(client.Pawn as InterfacerPlayer);
 
+		base.ClientDisconnect(client, reason);
 	}
 
 	public void LogMessage(string text, int playerNum)
