@@ -63,22 +63,20 @@ public partial class Thing : Entity
 		if(!string.IsNullOrEmpty(DebugText))
 			DrawDebugText(DebugText);
 
-		DrawDebugText("Client Statuses: " + Statuses.Count, Color.Red, 1);
+		//DrawDebugText("Client Statuses: " + Statuses.Count, Color.Red, 1);
     }
 
 	public virtual void Update(float dt)
 	{
-		DebugText = "Server Statuses (" + Statuses.Count + "):\n";
+		//DebugText = "Server Statuses (" + Statuses.Count + "):\n";
 		foreach (KeyValuePair<TypeDescription, ThingStatus> pair in Statuses)
         {
 			var status = pair.Value;
 			if (status.ShouldUpdate)
 				status.Update(dt);
 
-			DebugText += status.GetType().Name + "\n";
+			//DebugText += status.GetType().Name + "\n";
 		}
-
-        //DrawDebugText(statusString);
     }
 
 	public virtual void FirstUpdate()
@@ -104,6 +102,7 @@ public partial class Thing : Entity
 				if ( !pushSuccess )
                 {
                     otherThing.VfxShake(0.2f, 4f);
+					otherThing.VfxSpin(0.6f, 0f, 360f);
 					return false;
 				}
 
@@ -112,14 +111,9 @@ public partial class Thing : Entity
 
 				if (!GridManager.DoesThingExistAt(newGridPos))
                 {
-					var explosion = new Explosion() 
-					{ 
-						GridPos = newGridPos,
-						GridPanelType = GridPanelType,
-					};
+					var explosion = InterfacerGame.Instance.SpawnThing(TypeLibrary.GetDescription(typeof(Explosion)), newGridPos, GridPanelType);
                     explosion.VfxShake(0.15f, 6f);
                     explosion.VfxScale(0.15f, 0.5f, 1f);
-					ThingManager.Instance.AddThing(explosion);
 				}
 
 				return false;
@@ -279,5 +273,14 @@ public partial class Thing : Entity
 		scale.Lifetime = lifetime;
 		scale.StartScale = startScale;
 		scale.EndScale = endScale;
+	}
+
+	[ClientRpc]
+	public void VfxSpin(float lifetime, float startAngle, float endAngle)
+	{
+		var scale = AddStatus(TypeLibrary.GetDescription(typeof(VfxSpinStatus))) as VfxSpinStatus;
+		scale.Lifetime = lifetime;
+		scale.StartAngle = startAngle;
+		scale.EndAngle = endAngle;
 	}
 }

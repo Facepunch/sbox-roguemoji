@@ -12,7 +12,7 @@
         box-shadow: 0px 0px 0px #0000ff;
 
         position:absolute;
-        pointer-events:none;
+        pointer-events:all;
         background-repeat: repeat;
         background-position: 0 0;
         background-size: 80px;
@@ -23,11 +23,11 @@
 </style>
 
 <root>
-    <div class="inventory_bg" style="background-image: url( textures/bg_tile.png );"></div>
+    <div class="inventory_bg" style="background-image: url( textures/bg_tile.png );" @onclick=@OnBgClicked></div>
     @foreach(var thing in GetThings())
     {
         var index = GetIndex(thing.GridPos);
-        <GridCell style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40 - 2);" Thing=@thing @Index=@index @onmouseover=@(() => HoveredCellIndex = index ) @onclick=@(() => OnCellClicked(index)) />
+        <GridCell style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40 - 2);" Thing=@thing @Index=@index @onmouseover=@(() => HoveredCellIndex = index ) @onclick=@(() => OnThingClicked(index)) />
     }
 </root>
 

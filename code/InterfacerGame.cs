@@ -33,19 +33,8 @@ public partial class InterfacerGame : Sandbox.Game
 			ArenaGridManager = new GridManager(ArenaWidth, ArenaHeight, GridPanelType.Arena);
 			InventoryGridManager = new GridManager(InventoryWidth, InventoryHeight, GridPanelType.Inventory);
 
-			var rock = new Rock()
-			{
-				GridPos = new IntVector(10, 10),
-				GridPanelType = GridPanelType.Arena,
-			};
-			ThingManager.AddThing(rock);
-
-			var inventoryRock = new Rock()
-			{
-				GridPos = new IntVector(4, 3),
-				GridPanelType = GridPanelType.Inventory,
-			};
-			ThingManager.AddThing(inventoryRock);
+			SpawnThing(TypeLibrary.GetDescription(typeof(Rock)), new IntVector(10, 10), GridPanelType.Arena);
+			SpawnThing(TypeLibrary.GetDescription(typeof(Rock)), new IntVector(4, 3), GridPanelType.Inventory);
 		}
 
 		if (Host.IsClient)
@@ -79,14 +68,10 @@ public partial class InterfacerGame : Sandbox.Game
 	{
 		base.ClientJoined(client);
 
-		var player = new InterfacerPlayer()
-		{
-			GridPos = new IntVector(5, 10),
-			GridPanelType = GridPanelType.Arena,
-			PlayerNum = ++PlayerNum,
-		};
+		InterfacerPlayer player = SpawnThing(TypeLibrary.GetDescription(typeof(InterfacerPlayer)), new IntVector(5, 10), GridPanelType.Arena) as InterfacerPlayer;
+		player.PlayerNum = ++PlayerNum;
+
 		client.Pawn = player;
-		ThingManager.AddThing(player);
 	}
 
 	public override void ClientDisconnect(Client cl, NetworkDisconnectionReason reason)
@@ -118,14 +103,18 @@ public partial class InterfacerGame : Sandbox.Game
 		var player = ConsoleSystem.Caller.Pawn as InterfacerPlayer;
 
 		Instance.LogMessage(player.Client.Name + " clicked (" + x + ", " + y + ") in the " + gridPanelType + ".", player.PlayerNum);
-
-		var rock = new Rock()
-		{
-			GridPos = new IntVector(x, y),
-			GridPanelType = gridPanelType,
-		};
-		ThingManager.Instance.AddThing(rock);
+		Instance.SpawnThing(TypeLibrary.GetDescription(typeof(Rock)), new IntVector(x, y), gridPanelType);
 	}
+
+	public Thing SpawnThing(TypeDescription type, IntVector gridPos, GridPanelType gridPanelType)
+    {
+		var thing = type.Create<Thing>();
+		thing.GridPos = gridPos;
+		thing.GridPanelType = gridPanelType;
+		ThingManager.AddThing(thing);
+
+		return thing;
+    }
 
 	public GridManager GetGridManager(GridPanelType gridPanelType)
 	{

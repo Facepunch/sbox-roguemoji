@@ -30,7 +30,7 @@ public abstract class ThingStatus
     // status was added when already existing
     public virtual void ReInitialize()
     {
-
+        TimeSinceStart = 0f;
     }
 
     public void Remove()

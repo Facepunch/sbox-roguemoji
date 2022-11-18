@@ -15,6 +15,13 @@ public abstract class GridPanel : Panel
     public int HoveredCellIndex { get; set; }
     public int ClickedCellIndex { get; set; }
 
+    public override void Tick()
+    {
+        base.Tick();
+
+        //Log.Info(GridPanelType + " --- hovered: " + GetGridPos(HoveredCellIndex) + " clicked: " + GetGridPos(ClickedCellIndex));
+    }
+
     public string GetSelectedIndexString()
     {
         if (Hud.Instance.SelectedCell != null)
@@ -37,10 +44,20 @@ public abstract class GridPanel : Panel
         return PanelPositionToScreenPosition(new Vector2(gridPos.x, gridPos.y) * 40f / ScaleFromScreen);
     }
 
-    protected void OnCellClicked(int index)
+    public IntVector GetGridPos(Vector2 screenPos)
+    {
+        float cellSize = 40f / ScaleFromScreen;
+        return new IntVector(MathX.FloorToInt(screenPos.x / cellSize), MathX.FloorToInt(screenPos.y / cellSize));
+    }
+
+    protected void OnThingClicked(int index)
     {
         var gridPos = GridManager.GetGridPos(index, GridWidth);
-        Hud.Instance.GridCellClicked(GridPanelType, gridPos.x, gridPos.y);
+        Hud.Instance.GridCellClicked(GridPanelType, gridPos);
+    }
+    protected void OnBgClicked()
+    {
+        Hud.Instance.GridCellClicked(GridPanelType, GetGridPos(MousePosition));
     }
 
     public IList<Thing> GetThings()

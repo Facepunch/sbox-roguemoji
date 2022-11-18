@@ -49,13 +49,21 @@
     {
         border: 1px solid #ffffff05;
         border-radius: 3px;
-        margin: 0 35px 0 35px;
+        margin: 0 20px 0 20px;
+    }
+
+    .info
+    {
+        width: 400px;
+        border-radius: 3px;
+        border: 1px solid #ffffff05;
+        margin-right: 20px;
     }
 
     .stats
     {
         //background-color: #663300;
-        width: 400px;
+        width: 100px;
         flex-grow: 1;
         //margin-left: 20px;
         border-radius: 3px;
@@ -74,6 +82,7 @@
     <div class="lower_row">
         <div class="character"></div>
         <InventoryPanel class="inventory" style="width: @(40 * InterfacerGame.InventoryWidth)px; height: @(40 * InterfacerGame.InventoryHeight)px;" @ref=InventoryPanel></InventoryPanel>
+        <InfoPanel class="info"></InfoPanel>
         <div class="stats"></div>
     </div>
 </root>
