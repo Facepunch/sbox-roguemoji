@@ -28,8 +28,6 @@ public partial class Thing : Entity
 
 	public Dictionary<TypeDescription, ThingStatus> Statuses = new Dictionary<TypeDescription, ThingStatus>();
 
-	[Net] public bool IsRemoved { get; set; }
-
 	public Thing()
 	{
 		ShouldUpdate = false;
@@ -112,8 +110,8 @@ public partial class Thing : Entity
 						GridPos = newGridPos,
 						GridPanelType = GridPanelType,
 					};
-                    explosion.VfxShake(0.15f, 5f);
-                    explosion.VfxScale(2.15f, 1f, 2.8f);
+                    explosion.VfxShake(0.15f, 6f);
+                    explosion.VfxScale(0.15f, 0.5f, 1f);
 					ThingManager.Instance.AddThing(explosion);
 				}
 
@@ -146,36 +144,28 @@ public partial class Thing : Entity
 
 	public void Remove()
 	{
-		if (IsRemoved)
-			return;
-
-		Log.Info("Remove: " + DisplayIcon);
-
-		IsRemoved = true;
-
 		if ( ShouldLogBehaviour )
 			InterfacerGame.Instance.LogMessage( DisplayIcon + "(" + DisplayName + ") removed.", PlayerNum );
 
 		GridManager.DeregisterGridPos( this, GridPos );
 		ThingManager.Instance.RemoveThing( this );
 		Delete();
-		RefreshPanel();
 	}
 
 	[ClientRpc]
-	public void RefreshPanel()
-	{
-		if (Hud.Instance == null)
-			return;
+    public void RefreshPanel()
+    {
+        if (Hud.Instance == null)
+            return;
 
-		var panel = Hud.Instance.GetGridPanel(GridPanelType);
-		if (panel == null)
-			return;
+        var panel = Hud.Instance.GetGridPanel(GridPanelType);
+        if (panel == null)
+            return;
 
-		panel.Refresh();
-	}
+        panel.Refresh();
+    }
 
-	public void SetOffset(Vector2 offset)
+    public void SetOffset(Vector2 offset)
     {
 		Offset = offset;
     }

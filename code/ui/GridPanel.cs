@@ -43,13 +43,14 @@ public abstract class GridPanel : Panel
         Hud.Instance.GridCellClicked(GridPanelType, gridPos.x, gridPos.y);
     }
 
-    public List<Thing> GetThings()
+    public IList<Thing> GetThings()
     {
-        return Entity.All
-            .OfType<Thing>()
-            .Where(x => !x.IsRemoved)
-            .Where(x => x.GridPanelType == GridPanelType)
-            .ToList();
+        return ThingManager.Instance.GetThings(GridPanelType);
+    }
+
+    protected override int BuildHash()
+    {
+        return HashCode.Combine(GetThings().Count);
     }
 
     public void Refresh()

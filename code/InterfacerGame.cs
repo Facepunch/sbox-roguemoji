@@ -13,7 +13,7 @@ public partial class InterfacerGame : Sandbox.Game
 	public Hud Hud { get; private set; }
 	public GridManager ArenaGridManager { get; private set; }
 	public GridManager InventoryGridManager { get; private set; }
-	public ThingManager ThingManager { get; private set; }
+	[Net] public ThingManager ThingManager { get; private set; }
 
 	public const int ArenaWidth = 30;
 	public const int ArenaHeight = 20;
@@ -22,8 +22,6 @@ public partial class InterfacerGame : Sandbox.Game
 
 	public record struct LogData(string text, int playerNum);
 	public Queue<LogData> LogMessageQueue = new Queue<LogData>();
-
-	[Net] public int NumThings { get; set; }
 
 	public InterfacerGame()
 	{
@@ -62,8 +60,6 @@ public partial class InterfacerGame : Sandbox.Game
 		float dt = Time.Delta;
 
 		ThingManager.Update(dt);
-
-		NumThings = ThingManager.Things.Count;
 	}
 
 	[Event.Tick.Client]
