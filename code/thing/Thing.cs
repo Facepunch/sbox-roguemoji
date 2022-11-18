@@ -47,7 +47,7 @@ public partial class Thing : Entity
 	}
 
 	[Event.Tick.Client]
-	public void ClientTick()
+	public virtual void ClientTick()
     {
 		float dt = Time.Delta;
 
@@ -217,8 +217,15 @@ public partial class Thing : Entity
 
 	public void DrawDebugText(string text, Color color, float time = 0f)
     {
-		DebugOverlay.ScreenText(text, Hud.Instance.MousePosition, 0, color, time);
-		//DebugOverlay.ScreenText(text, GridManager.GetScreenPos(GridPos), 0, color, time);
+		if(Host.IsServer)
+        {
+			DebugOverlay.ScreenText(text, GridManager.GetScreenPos(GridPos), 0, color, time);
+		}
+		else
+        {
+			var panel = Hud.Instance.GetGridPanel(GridPanelType);
+			DebugOverlay.ScreenText(text, panel.GetCellPos(GridPos), 0, color, time);
+		}
 	}
 
 	public void DrawDebugText(string text)

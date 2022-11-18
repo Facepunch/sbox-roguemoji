@@ -32,9 +32,9 @@ public abstract class GridPanel : Panel
         return gridPos.y * GridWidth + gridPos.x;
     }
 
-    public Vector2 GetCellPos(int index)
+    public Vector2 GetCellPos(IntVector gridPos)
     {
-        return new Vector2(index % GridWidth, MathX.FloorToInt((float)index / (float)GridWidth)) * 40f;
+        return PanelPositionToScreenPosition(new Vector2(gridPos.x, gridPos.y) * 40f / ScaleFromScreen);
     }
 
     protected void OnCellClicked(int index)

@@ -31,6 +31,14 @@ public partial class InterfacerPlayer : Thing
 		Tooltip = Client.Name;
 	}
 
+	[Event.Tick.Client]
+	public override void ClientTick()
+    {
+		base.ClientTick();
+
+		DrawDebugText(GridPos.ToString());
+	}
+
     public override void Update( float dt )
 	{
 		base.Update( dt );

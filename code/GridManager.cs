@@ -25,7 +25,7 @@ public class GridManager
 
 	public int GetIndex( int x, int y ) { return y * GridWidth + x; }
 	public IntVector GetGridPos( int index ) { return new IntVector( index % GridWidth, ((float)index / (float)GridWidth).FloorToInt() ); }
-	public Vector2 GetScreenPos(IntVector gridPos) { return new Vector2(gridPos.x * 40f, gridPos.y * 40f); }
+	public Vector2 GetScreenPos(IntVector gridPos) { return new Vector2(gridPos.x, gridPos.y) * 40f; }
 
 	public static int GetIndex( int x, int y, int width) { return y * width + x; }
 	public static IntVector GetGridPos( int index, int width) { return new IntVector( index % width, ((float)index / (float)width).FloorToInt() ); }
