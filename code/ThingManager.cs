@@ -11,6 +11,8 @@ public partial class ThingManager : BaseNetworkable
 	[Net] public IList<Thing> ThingsArena { get; private set; }
 	[Net] public IList<Thing> ThingsInventory { get; private set; }
 
+	[Net] public Thing SelectedThing { get; private set; }
+
 	public ThingManager()
 	{
 		Instance = this;
@@ -68,4 +70,9 @@ public partial class ThingManager : BaseNetworkable
 		Log.Error("ThingManager - GetThings: GridPanelType." + gridPanelType + "!");
 		return null;
 	}
+
+	public void SelectThing(Thing thing)
+    {
+		SelectedThing = thing;
+    }
 }

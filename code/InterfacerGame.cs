@@ -98,12 +98,20 @@ public partial class InterfacerGame : Sandbox.Game
 	}
 
 	[ConCmd.Server]
-	public static void CellClicked(GridPanelType gridPanelType, int x, int y)
+	public static void CellClickedCmd(GridPanelType gridPanelType, int x, int y)
 	{
 		var player = ConsoleSystem.Caller.Pawn as InterfacerPlayer;
+		Instance.CellClicked(gridPanelType, new IntVector(x, y), player);
+	}
 
-		Instance.LogMessage(player.Client.Name + " clicked (" + x + ", " + y + ") in the " + gridPanelType + ".", player.PlayerNum);
-		Instance.SpawnThing(TypeLibrary.GetDescription(typeof(Rock)), new IntVector(x, y), gridPanelType);
+	public void CellClicked(GridPanelType gridPanelType, IntVector gridPos, InterfacerPlayer player)
+    {
+		var thing = GetGridManager(gridPanelType).GetThingAt(gridPos);
+
+		ThingManager.SelectThing(thing);
+		LogMessage(player.Client.Name + " clicked " + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + " in the " + gridPanelType + ".", player.PlayerNum);
+
+		//Instance.SpawnThing(TypeLibrary.GetDescription(typeof(Rock)), new IntVector(x, y), gridPanelType);
 	}
 
 	public Thing SpawnThing(TypeDescription type, IntVector gridPos, GridPanelType gridPanelType)

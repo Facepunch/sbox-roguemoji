@@ -24,5 +24,11 @@
 
 @code
 {
-    
+    public override void Tick()
+    {
+        base.Tick();
+
+        var selectedThing = ThingManager.Instance.SelectedThing;
+        Log.Info("Info: " + selectedThing + ", " + (selectedThing?.DisplayIcon ?? "") + (selectedThing?.GridPos.ToString() ?? ""));
+    }
 }

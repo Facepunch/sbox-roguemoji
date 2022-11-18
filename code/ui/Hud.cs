@@ -26,7 +26,7 @@ public partial class Hud : RootPanel
 
 	public void GridCellClicked(GridPanelType gridPanelType, IntVector gridPos)
 	{
-		InterfacerGame.CellClicked( gridPanelType, gridPos.x, gridPos.y);
+		InterfacerGame.CellClickedCmd( gridPanelType, gridPos.x, gridPos.y);
 	}
 
 	public GridPanel GetGridPanel(GridPanelType gridPanelType)
