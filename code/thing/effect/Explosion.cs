@@ -10,10 +10,8 @@ public partial class Explosion : Thing
 	public Explosion()
 	{
         DisplayIcon = "💥";
-		//IconPriority = 99f;
-		ShouldUpdate = true;
+		IconDepth = 9;
 		_spawnTime = 0f;
-		IsVisualEffect = true;
 	}
 
 	public override void Update( float dt )

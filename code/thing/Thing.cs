@@ -18,8 +18,7 @@ public partial class Thing : Entity
 
 	[Net] public int PlayerNum { get; set; }
 
-	//public float IconPriority { get; set; }
-	public bool IsVisualEffect { get; set; }
+	[Net] public int IconDepth { get; set; }
 	public bool ShouldLogBehaviour { get; set; }
 
 	public Vector2 Offset { get; set; }
@@ -30,13 +29,15 @@ public partial class Thing : Entity
 
 	public Dictionary<TypeDescription, ThingStatus> Statuses = new Dictionary<TypeDescription, ThingStatus>();
 
+	[Net] public ThingFlags Flags { get; set; }
+
 	public Thing()
 	{
-		ShouldUpdate = false;
+		ShouldUpdate = true;
 		DisplayIcon = ".";
 		DisplayName = Name;
 		Tooltip = "";
-		//IconPriority = 0f;
+		IconDepth = 0;
 		ShouldLogBehaviour = false;
 		IconScale = 1f;
 	}
@@ -63,7 +64,7 @@ public partial class Thing : Entity
 		if(!string.IsNullOrEmpty(DebugText))
 			DrawDebugText(DebugText);
 
-		//DrawDebugText("Client Statuses: " + Statuses.Count, Color.Red, 1);
+        //DrawDebugText(IconDepth.ToString());
     }
 
 	public virtual void Update(float dt)
@@ -77,6 +78,8 @@ public partial class Thing : Entity
 
 			//DebugText += status.GetType().Name + "\n";
 		}
+
+		//DrawDebugText(Flags.ToString());
     }
 
 	public virtual void FirstUpdate()
@@ -93,31 +96,28 @@ public partial class Thing : Entity
 		if ( !GridManager.IsGridPosInBounds( newGridPos ) )
 			return false;
 
-		if (GridManager.DoesThingExistAt( newGridPos ) )
+		var otherThing = GridManager.GetThingAt( newGridPos, ThingFlags.Solid );
+		if(otherThing != null)
 		{
-			var otherThing = GridManager.GetThingAt( newGridPos );
-			if(!otherThing.IsVisualEffect)
-			{
-				var pushSuccess = otherThing.TryMove( direction );
-				if ( !pushSuccess )
-                {
-                    otherThing.VfxShake(0.2f, 4f);
-					otherThing.VfxSpin(0.6f, 0f, 360f);
-					return false;
-				}
-
-				if ( ShouldLogBehaviour )
-					InterfacerGame.Instance.LogMessage( DisplayIcon + "(" + DisplayName + ") pushed " + otherThing.DisplayIcon + " " + GridManager.GetDirectionText(direction) + "!", PlayerNum );
-
-				if (!GridManager.DoesThingExistAt(newGridPos))
-                {
-					var explosion = InterfacerGame.Instance.SpawnThing(TypeLibrary.GetDescription(typeof(Explosion)), newGridPos, GridPanelType);
-                    explosion.VfxShake(0.15f, 6f);
-                    explosion.VfxScale(0.15f, 0.5f, 1f);
-				}
-
+			var pushSuccess = otherThing.TryMove( direction );
+			if ( !pushSuccess )
+            {
+                otherThing.VfxShake(0.2f, 4f);
+				otherThing.VfxSpin(0.6f, 0f, 360f);
 				return false;
 			}
+
+			if ( ShouldLogBehaviour )
+				InterfacerGame.Instance.LogMessage( DisplayIcon + "(" + DisplayName + ") pushed " + otherThing.DisplayIcon + " " + GridManager.GetDirectionText(direction) + "!", PlayerNum );
+
+			if (!GridManager.DoesThingExistAt(newGridPos))
+            {
+				var explosion = InterfacerGame.Instance.SpawnThing(TypeLibrary.GetDescription(typeof(Explosion)), newGridPos, GridPanelType);
+                explosion.VfxShake(0.15f, 6f);
+                explosion.VfxScale(0.15f, 0.5f, 1f);
+			}
+
+			return false;
 		}
 
 		SetGridPos(newGridPos);
@@ -225,7 +225,8 @@ public partial class Thing : Entity
 		else
         {
 			var panel = Hud.Instance.GetGridPanel(GridPanelType);
-			DebugOverlay.ScreenText(text, panel.GetCellPos(GridPos), line, color, time);
+			if(panel != null)
+				DebugOverlay.ScreenText(text, panel.GetCellPos(GridPos), line, color, time);
 		}
 	}
 
@@ -283,4 +284,9 @@ public partial class Thing : Entity
 		scale.StartAngle = startAngle;
 		scale.EndAngle = endAngle;
 	}
+
+	public int GetInfoDisplayHash()
+    {
+		return HashCode.Combine(NetworkIdent, DisplayIcon);
+    }
 }

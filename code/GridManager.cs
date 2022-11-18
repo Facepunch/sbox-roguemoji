@@ -7,6 +7,14 @@ namespace Interfacer;
 
 public enum Direction { Left, Right, Down, Up }
 
+[Flags]
+public enum ThingFlags
+{
+	None = 0,
+	Solid = 1,
+	Selectable = 2,
+}
+
 public class GridManager
 {
 	public int GridWidth { get; private set; }
@@ -120,7 +128,7 @@ public class GridManager
 		return output;
 	}
 
-	public bool DoesThingExistAt(IntVector gridPos)
+	public bool DoesThingExistAt(IntVector gridPos, ThingFlags flags = ThingFlags.None)
 	{
 		if ( !GridThings.ContainsKey( gridPos ) )
 			return false;
@@ -129,10 +137,10 @@ public class GridManager
 		if ( things == null || things.Count == 0 )
 			return false;
 
-		return true;
+		return things.Where(x => (x.Flags & flags) == 0).Count() > 0;
 	}
 
-	public Thing GetThingAt(IntVector gridPos)
+	public Thing GetThingAt(IntVector gridPos, ThingFlags flags = ThingFlags.None)
 	{
 		if ( !GridThings.ContainsKey( gridPos ) )
 			return null;
@@ -141,7 +149,22 @@ public class GridManager
 		if ( things == null || things.Count == 0 )
 			return null;
 
-		return things[0];
+		Thing highestThing = null;
+		float highestDepth = -float.MaxValue;
+		
+		foreach ( var thing in things )
+        {
+			if ((thing.Flags & flags) == 0)
+				continue;
+
+			if(thing.IconDepth > highestDepth)
+            {
+				highestThing = thing;
+				highestDepth = thing.IconDepth;
+            }
+        }
+
+		return highestThing;
 	}
 
 	public List<Thing> GetThingsAt( IntVector gridPos )

@@ -34,7 +34,7 @@
     .player-8 { text-stroke-color: #ff8800; text-stroke-width: 4px; }
 </style>
 
-<root class="icon @GetPlayerClass()" style="z-index: @Index;">@Thing.DisplayIcon</root>
+<root class="icon @GetPlayerClass()" style="z-index: @(Index + Thing.IconDepth * 10);">@Thing.DisplayIcon</root>
 
 @code
 {
@@ -62,7 +62,7 @@
         if (Thing == null)
             return base.BuildHash();
 
-        return HashCode.Combine( Thing.DisplayIcon, Thing.PlayerNum, Thing.Offset, Thing.RotationDegrees, Thing.IconScale );
+        return HashCode.Combine( Thing.DisplayIcon, Thing.PlayerNum, Thing.Offset, Thing.RotationDegrees, Thing.IconScale, Thing.IconDepth );
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

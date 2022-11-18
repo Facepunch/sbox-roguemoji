@@ -9,12 +9,12 @@ public partial class InterfacerPlayer : Thing
 
 	public InterfacerPlayer()
 	{
-		ShouldUpdate = true;
 		DisplayIcon = "🙂";
-		//IconPriority = 2f;
+		IconDepth = 2;
 		ShouldLogBehaviour = true;
 		DisplayName = "Player";
 		Tooltip = "";
+		Flags = ThingFlags.Solid | ThingFlags.Selectable;
 	}
 
 	public override void Spawn()

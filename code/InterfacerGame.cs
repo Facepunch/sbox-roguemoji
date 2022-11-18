@@ -106,12 +106,25 @@ public partial class InterfacerGame : Sandbox.Game
 
 	public void CellClicked(GridPanelType gridPanelType, IntVector gridPos, InterfacerPlayer player)
     {
-		var thing = GetGridManager(gridPanelType).GetThingAt(gridPos);
+		var thing = GetGridManager(gridPanelType).GetThingAt(gridPos, ThingFlags.Selectable);
 
 		ThingManager.SelectThing(thing);
 		LogMessage(player.Client.Name + " clicked " + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + " in the " + gridPanelType + ".", player.PlayerNum);
 
-		//Instance.SpawnThing(TypeLibrary.GetDescription(typeof(Rock)), new IntVector(x, y), gridPanelType);
+		if(thing == null)
+        {
+			if (Rand.Float(0f, 1f) < 0.1f)
+			{
+				var rock = Instance.SpawnThing(TypeLibrary.GetDescription(typeof(Rock)), gridPos, gridPanelType);
+				LogMessage(player.Client.Name + " created " + rock.DisplayIcon + " at " + gridPos + " in the " + gridPanelType + "!", player.PlayerNum);
+			}
+			else
+            {
+				var explosion = InterfacerGame.Instance.SpawnThing(TypeLibrary.GetDescription(typeof(Explosion)), gridPos, gridPanelType);
+				explosion.VfxShake(0.15f, 4f);
+				explosion.VfxScale(0.15f, Rand.Float(0.6f, 0.8f), Rand.Float(0.3f, 0.4f));
+			}
+		}
 	}
 
 	public Thing SpawnThing(TypeDescription type, IntVector gridPos, GridPanelType gridPanelType)

@@ -9,5 +9,6 @@ public partial class Rock : Thing
 		DisplayIcon = "🗿";
 		ShouldLogBehaviour = true;
 		Tooltip = "A rock.";
+		Flags = ThingFlags.Solid | ThingFlags.Selectable;
 	}
 }

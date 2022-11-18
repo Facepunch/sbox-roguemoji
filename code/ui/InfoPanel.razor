@@ -1,4 +1,5 @@
-﻿@using Sandbox;
+﻿@using System;
+@using Sandbox;
 @using Sandbox.UI;
 
 @inherits Panel;
@@ -7,28 +8,46 @@
 <style>
     .info
     {
-        flex-direction:row;
-        justify-content:center;
+        flex-direction:column;
+        align-items: center;
+    }
+
+    .icon
+    {
+        margin: 10px 0 5px 0;
+        font-size: 35px;
     }
 
     .name_label
     {
-        color: #ffffff;
-        font-size: 30px;
+        margin: 0 0 5px 0;
+        font-size: 22px;
+        color: #ffffff55;
     }
 </style>
 
 <root class="info">
-    <div class="name_label"> Test </div>
+    @if(ThingManager.Instance.SelectedThing != null)
+    {
+        <div class="icon"> @ThingManager.Instance.SelectedThing.DisplayIcon </div>
+        <div class="name_label"> @ThingManager.Instance.SelectedThing.DisplayName </div>
+    }
+    else
+    {
+        
+    }
 </root>
 
 @code
 {
-    public override void Tick()
-    {
-        base.Tick();
+    //public override void Tick()
+    //{
+    //    base.Tick();
 
-        var selectedThing = ThingManager.Instance.SelectedThing;
-        Log.Info("Info: " + selectedThing + ", " + (selectedThing?.DisplayIcon ?? "") + (selectedThing?.GridPos.ToString() ?? ""));
+    //}
+
+    protected override int BuildHash()
+    {
+        return HashCode.Combine( ThingManager.Instance.SelectedThing?.GetInfoDisplayHash() ?? 0 );
     }
 }
