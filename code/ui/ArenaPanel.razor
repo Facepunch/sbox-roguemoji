@@ -41,8 +41,7 @@
 
     protected override IList<Thing> GetThings()
     {
-        return InterfacerGame.Instance.ArenaGridManager.Things;
-        //return InterfacerGame.Instance.ArenaGridManager?.Things ?? new List<Thing>();
+        return InterfacerGame.Instance.ArenaGridManager?.Things ?? new List<Thing>();
     }
 
     protected override void OnThingClicked(int index)

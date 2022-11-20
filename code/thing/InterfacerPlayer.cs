@@ -38,26 +38,25 @@ public partial class InterfacerPlayer : Thing
     {
         base.OnClientActive(client);
 
-		Log.Info("OnClientActive - client: " + client);
+		//Log.Info("OnClientActive - client: " + client);
 
 		DisplayName = Client.Name;
 		Tooltip = Client.Name;
 	}
 
-	[Event.Tick.Client]
-	public override void ClientTick()
-    {
-		base.ClientTick();
+	//[Event.Tick.Client]
+	//public override void ClientTick()
+ //   {
+	//	base.ClientTick();
 
-		Log.Info("Player:ClientTick - InventoryGridManager: " + InventoryGridManager);
-	
-	}
+	//	//Log.Info("Player:ClientTick - InventoryGridManager: " + InventoryGridManager);
+	//}
 
-	[Event.Tick.Server]
-	public void ServerTick()
-	{
-		Log.Info("Player:ServerTick - InventoryGridManager: " + InventoryGridManager);
-	}
+	//[Event.Tick.Server]
+	//public void ServerTick()
+	//{
+	//	//Log.Info("Player:ServerTick - InventoryGridManager: " + InventoryGridManager);
+	//}
 
 	public override void Update( float dt )
 	{

@@ -33,7 +33,7 @@ public partial class InterfacerGame : Sandbox.Game
 			ArenaGridManager = new();
 			ArenaGridManager.Init(ArenaWidth, ArenaHeight);
 
-			Log.Info("------------------ Game() - ArenaGridManager: " + ArenaGridManager);
+			//Log.Info("------------------ Game() - ArenaGridManager: " + ArenaGridManager);
 
 			SpawnThingArena(TypeLibrary.GetDescription(typeof(Rock)), new IntVector(10, 10));
         }
@@ -48,13 +48,13 @@ public partial class InterfacerGame : Sandbox.Game
     {
         base.Spawn();
 
-		Log.Info("Game:Spawn - ArenaGridManager: " + ArenaGridManager);
+		//Log.Info("Game:Spawn - ArenaGridManager: " + ArenaGridManager);
 	}
 
     [Event.Tick.Server]
 	public void ServerTick()
 	{
-		Log.Info("Game:ServerTick - ArenaGridManager: " + ArenaGridManager);
+		//Log.Info("Game:ServerTick - ArenaGridManager: " + ArenaGridManager);
 
 		if (ArenaGridManager == null)
 			return;
@@ -67,7 +67,7 @@ public partial class InterfacerGame : Sandbox.Game
 	[Event.Tick.Client]
 	public void ClientTick()
 	{
-		Log.Info("Game:ClientTick - ArenaGridManager: " + ArenaGridManager);
+		//Log.Info("Game:ClientTick - ArenaGridManager: " + ArenaGridManager);
 
 		if (Hud.MainPanel.LogPanel != null)
 		{
@@ -83,16 +83,11 @@ public partial class InterfacerGame : Sandbox.Game
 	{
 		base.ClientJoined(client);
 
-		Log.Info("Game:ClientJoined - 0 - ArenaGridManager: " + ArenaGridManager);
 		InterfacerPlayer player = SpawnThingArena(TypeLibrary.GetDescription(typeof(InterfacerPlayer)), new IntVector(5, 10)) as InterfacerPlayer;
 		player.PlayerNum = ++PlayerNum;
-
 		client.Pawn = player;
 
-
 		SpawnThingInventory(TypeLibrary.GetDescription(typeof(Rock)), new IntVector(4, 3), player);
-
-		Log.Info("Game:ClientJoined - 4 - ArenaGridManager: " + ArenaGridManager);
 	}
 
 	public override void ClientDisconnect(Client client, NetworkDisconnectionReason reason)
@@ -186,9 +181,7 @@ public partial class InterfacerGame : Sandbox.Game
 		var thing = type.Create<Thing>();
 		thing.GridPos = gridPos;
 
-		Log.Info("Game:SpawnThingArena - 0 - ArenaGridManager: " + ArenaGridManager);
 		ArenaGridManager.AddThing(thing);
-		Log.Info("Game:SpawnThingArena - 1 - ArenaGridManager: " + ArenaGridManager);
 
 		return thing;
     }

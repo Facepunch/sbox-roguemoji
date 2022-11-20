@@ -6,7 +6,7 @@ namespace Interfacer;
 public partial class Thing : Entity
 {
 	[Net] public IntVector GridPos { get; set; }
-	[Net] public GridManager GridManager { get; set; }
+	[Net] public GridManager ContainingGridManager { get; set; }
 
 	[Net] public string DisplayIcon { get; protected set; }
 	[Net] public string DisplayName { get; protected set; }
@@ -95,10 +95,10 @@ public partial class Thing : Entity
 		IntVector vec = GridManager.GetIntVectorForDirection(direction);
 		IntVector newGridPos = GridPos + vec;
 
-		if ( !GridManager.IsGridPosInBounds( newGridPos ) )
+		if ( !ContainingGridManager.IsGridPosInBounds( newGridPos ) )
 			return false;
 
-		var otherThing = GridManager.GetThingAt( newGridPos, ThingFlags.Solid );
+		var otherThing = ContainingGridManager.GetThingAt( newGridPos, ThingFlags.Solid );
 		if(otherThing != null)
 		{
 			var pushSuccess = otherThing.TryMove( direction );
@@ -112,7 +112,7 @@ public partial class Thing : Entity
 			if ( ShouldLogBehaviour )
 				InterfacerGame.Instance.LogMessage( DisplayIcon + "(" + DisplayName + ") pushed " + otherThing.DisplayIcon + " " + GridManager.GetDirectionText(direction) + "!", PlayerNum );
 
-			if (!GridManager.DoesThingExistAt(newGridPos))
+			if (!ContainingGridManager.DoesThingExistAt(newGridPos))
             {
 				var explosion = IsInInventory
 					? InterfacerGame.Instance.SpawnThingInventory(TypeLibrary.GetDescription(typeof(Explosion)), newGridPos, InventoryPlayer)
@@ -135,7 +135,7 @@ public partial class Thing : Entity
 		if ( GridPos.Equals( gridPos ) && !forceRefresh )
 			return;
 
-		GridManager.SetGridPos( this, gridPos );
+		ContainingGridManager.SetGridPos( this, gridPos );
 		GridPos = gridPos;
 
 		if(IsInInventory)
@@ -162,8 +162,8 @@ public partial class Thing : Entity
 				InterfacerGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") removed.", PlayerNum);
 		}
 			
-		GridManager.DeregisterGridPos( this, GridPos );
-		GridManager.RemoveThing( this );
+		ContainingGridManager.DeregisterGridPos( this, GridPos );
+		ContainingGridManager.RemoveThing( this );
 		Delete();
 	}
 
@@ -241,7 +241,7 @@ public partial class Thing : Entity
     {
 		if(Host.IsServer)
         {
-			DebugOverlay.ScreenText(text, GridManager.GetScreenPos(GridPos), 0, color, time);
+			DebugOverlay.ScreenText(text, ContainingGridManager.GetScreenPos(GridPos), 0, color, time);
 		}
 		else
         {

@@ -69,7 +69,7 @@ public partial class GridManager : Entity
 	public void AddThing(Thing thing)
 	{
 		Things.Add(thing);
-		thing.GridManager = this;
+		thing.ContainingGridManager = this;
     }
 
 	public void RemoveThing(Thing thing)
