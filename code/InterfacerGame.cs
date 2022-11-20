@@ -119,25 +119,25 @@ public partial class InterfacerGame : Sandbox.Game
 	}
 
 	[ConCmd.Server]
-	public static void CellClickedArenaCmd(int x, int y)
+	public static void CellClickedArenaCmd(int x, int y, bool rightClick)
 	{
 		var player = ConsoleSystem.Caller.Pawn as InterfacerPlayer;
-		Instance.CellClickedArena(new IntVector(x, y), player);
+		Instance.CellClickedArena(new IntVector(x, y), player, rightClick);
 	}
 
 	[ConCmd.Server]
-	public static void CellClickedInventoryCmd(int x, int y)
+	public static void CellClickedInventoryCmd(int x, int y, bool rightClick)
 	{
 		var player = ConsoleSystem.Caller.Pawn as InterfacerPlayer;
-		Instance.CellClickedInventory(new IntVector(x, y), player);
+		Instance.CellClickedInventory(new IntVector(x, y), player, rightClick);
 	}
 
-	public void CellClickedArena(IntVector gridPos, InterfacerPlayer player)
-    {
+	public void CellClickedArena(IntVector gridPos, InterfacerPlayer player, bool rightClick)
+	{
 		var thing = ArenaGridManager.GetThingAt(gridPos, ThingFlags.Selectable);
 
 		player.SelectThing(thing);
-		LogMessage(player.Client.Name + " clicked " + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + ".", player.PlayerNum);
+		LogMessage(player.Client.Name + (rightClick ? " right-clicked " : " clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + ".", player.PlayerNum);
 
 		if(thing == null)
         {
@@ -155,12 +155,12 @@ public partial class InterfacerGame : Sandbox.Game
 		}
 	}
 
-	public void CellClickedInventory(IntVector gridPos, InterfacerPlayer player)
+	public void CellClickedInventory(IntVector gridPos, InterfacerPlayer player, bool rightClick)
 	{
 		var thing = player.InventoryGridManager.GetThingAt(gridPos, ThingFlags.Selectable);
 
 		player.SelectThing(thing);
-		LogMessage(player.Client.Name + " clicked " + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + " in their inventory.", player.PlayerNum);
+		LogMessage(player.Client.Name + (rightClick ? " right-clicked " : " clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + " in their inventory.", player.PlayerNum);
 
 		if (thing == null)
 		{

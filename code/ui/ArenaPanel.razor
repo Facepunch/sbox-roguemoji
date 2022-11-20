@@ -47,11 +47,21 @@
     protected override void OnThingClicked(int index)
     {
         var gridPos = GridManager.GetGridPos(index, GridWidth);
-        Hud.Instance.GridCellClickedArena(gridPos);
+        Hud.Instance.GridCellClickedArena(gridPos, rightClick: false);
     }
 
     protected override void OnBgClicked()
     {
-        Hud.Instance.GridCellClickedArena(GetGridPos(MousePosition));
+        Hud.Instance.GridCellClickedArena(GetGridPos(MousePosition), rightClick: false);
+    }
+
+    protected override void OnMouseDown(MousePanelEvent e)
+    {
+        base.OnMouseDown(e);
+
+        if (e.Button == "mouseright")
+        {
+            Hud.Instance.GridCellClickedArena(GetGridPos(MousePosition), rightClick: true);
+        }
     }
 }

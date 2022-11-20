@@ -120,6 +120,9 @@ public partial class InterfacerPlayer : Thing
 		if (SelectedThing == thing)
 			return;
 
+		if (SelectedThing != null)
+			SelectedThing.RefreshPanelClient();
+
 		SelectedThing = thing;
 	}
 }

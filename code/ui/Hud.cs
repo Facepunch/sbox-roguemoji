@@ -22,13 +22,13 @@ public partial class Hud : RootPanel
 		MainPanel = AddChild<MainPanel>();
 	}
 
-	public void GridCellClickedArena(IntVector gridPos)
+	public void GridCellClickedArena(IntVector gridPos, bool rightClick)
 	{
-		InterfacerGame.CellClickedArenaCmd(gridPos.x, gridPos.y);
+		InterfacerGame.CellClickedArenaCmd(gridPos.x, gridPos.y, rightClick);
 	}
 
-	public void GridCellClickedInventory(IntVector gridPos)
+	public void GridCellClickedInventory(IntVector gridPos, bool rightClick)
 	{
-		InterfacerGame.CellClickedInventoryCmd(gridPos.x, gridPos.y);
+		InterfacerGame.CellClickedInventoryCmd(gridPos.x, gridPos.y, rightClick);
 	}
 }
