@@ -13,23 +13,72 @@ public enum ThingFlags
 	None = 0,
 	Solid = 1,
 	Selectable = 2,
-	Selected = 4,
 }
 
-public class GridManager
+public partial class GridManager : Entity
 {
-	public int GridWidth { get; private set; }
-	public int GridHeight { get; private set; }
+	[Net] public int GridWidth { get; private set; }
+	[Net] public int GridHeight { get; private set; }
 
-	public GridPanelType GridPanelType { get; private set; }
+	[Net] public IList<Thing> Things { get; private set; }
 
 	public Dictionary<IntVector, List<Thing>> GridThings = new Dictionary<IntVector, List<Thing>>();
 
-	public GridManager(int width, int height, GridPanelType gridPanelType)
+	public void Init(int width, int height)
 	{
 		GridWidth = width;
 		GridHeight = height;
-		GridPanelType = gridPanelType;
+
+		Transmit = TransmitType.Always;
+
+		Things = new List<Thing>();
+	}
+
+	[Event.Tick.Client]
+	public void ClientTick()
+	{
+		//Log.Info("GridManager:ClientTick");
+
+	}
+
+	[Event.Tick.Server]
+	public void ServerTick()
+	{
+		//Log.Info("GridManager:ServerTick");
+	}
+
+	public void Update(float dt)
+	{
+		UpdateThings(Things, dt);
+	}
+
+	void UpdateThings(IList<Thing> things, float dt)
+	{
+		for (int i = things.Count - 1; i >= 0; i--)
+		{
+			var thing = things[i];
+
+			if (!thing.DoneFirstUpdate)
+				thing.FirstUpdate();
+
+			if (thing.ShouldUpdate || thing.Statuses.Count > 0)
+				thing.Update(dt);
+		}
+	}
+
+	public void AddThing(Thing thing)
+	{
+		Things.Add(thing);
+		thing.GridManager = this;
+    }
+
+	public void RemoveThing(Thing thing)
+	{
+		if(Things.Contains(thing))
+        {
+			Things.Remove(thing);
+			//thing.GridManager = null;
+		}
 	}
 
 	public int GetIndex( int x, int y ) { return y * GridWidth + x; }

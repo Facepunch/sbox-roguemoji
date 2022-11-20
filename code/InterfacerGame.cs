@@ -11,9 +11,8 @@ public partial class InterfacerGame : Sandbox.Game
 	public static int PlayerNum { get; set; }
 
 	public Hud Hud { get; private set; }
-	public GridManager ArenaGridManager { get; private set; }
-	public GridManager InventoryGridManager { get; private set; }
-	[Net] public ThingManager ThingManager { get; private set; }
+
+	[Net] public GridManager ArenaGridManager { get; private set; }
 
 	public const int ArenaWidth = 30;
 	public const int ArenaHeight = 20;
@@ -23,19 +22,21 @@ public partial class InterfacerGame : Sandbox.Game
 	public record struct LogData(string text, int playerNum);
 	public Queue<LogData> LogMessageQueue = new Queue<LogData>();
 
+	public InterfacerPlayer LocalPlayer => Local.Client.Pawn as InterfacerPlayer; // Client-only
+
 	public InterfacerGame()
 	{
 		Instance = this;
 
 		if (Host.IsServer)
 		{
-			ThingManager = new ThingManager();
-			ArenaGridManager = new GridManager(ArenaWidth, ArenaHeight, GridPanelType.Arena);
-			InventoryGridManager = new GridManager(InventoryWidth, InventoryHeight, GridPanelType.Inventory);
+			ArenaGridManager = new();
+			ArenaGridManager.Init(ArenaWidth, ArenaHeight);
 
-			SpawnThing(TypeLibrary.GetDescription(typeof(Rock)), new IntVector(10, 10), GridPanelType.Arena);
-			SpawnThing(TypeLibrary.GetDescription(typeof(Rock)), new IntVector(4, 3), GridPanelType.Inventory);
-		}
+			Log.Info("------------------ Game() - ArenaGridManager: " + ArenaGridManager);
+
+			SpawnThingArena(TypeLibrary.GetDescription(typeof(Rock)), new IntVector(10, 10));
+        }
 
 		if (Host.IsClient)
 		{
@@ -43,17 +44,31 @@ public partial class InterfacerGame : Sandbox.Game
 		}
 	}
 
-	[Event.Tick.Server]
+    public override void Spawn()
+    {
+        base.Spawn();
+
+		Log.Info("Game:Spawn - ArenaGridManager: " + ArenaGridManager);
+	}
+
+    [Event.Tick.Server]
 	public void ServerTick()
 	{
-		float dt = Time.Delta;
+		Log.Info("Game:ServerTick - ArenaGridManager: " + ArenaGridManager);
 
-		ThingManager.Update(dt);
+		if (ArenaGridManager == null)
+			return;
+
+		float dt = Time.Delta;
+		
+		ArenaGridManager.Update(dt);
 	}
 
 	[Event.Tick.Client]
 	public void ClientTick()
 	{
+		Log.Info("Game:ClientTick - ArenaGridManager: " + ArenaGridManager);
+
 		if (Hud.MainPanel.LogPanel != null)
 		{
 			while (LogMessageQueue.Count > 0)
@@ -64,19 +79,25 @@ public partial class InterfacerGame : Sandbox.Game
 		}
 	}
 
-	public override void ClientJoined(Client client)
+	public override void ClientJoined(Client client) // Server-only
 	{
 		base.ClientJoined(client);
 
-		InterfacerPlayer player = SpawnThing(TypeLibrary.GetDescription(typeof(InterfacerPlayer)), new IntVector(5, 10), GridPanelType.Arena) as InterfacerPlayer;
+		Log.Info("Game:ClientJoined - 0 - ArenaGridManager: " + ArenaGridManager);
+		InterfacerPlayer player = SpawnThingArena(TypeLibrary.GetDescription(typeof(InterfacerPlayer)), new IntVector(5, 10)) as InterfacerPlayer;
 		player.PlayerNum = ++PlayerNum;
 
 		client.Pawn = player;
+
+
+		SpawnThingInventory(TypeLibrary.GetDescription(typeof(Rock)), new IntVector(4, 3), player);
+
+		Log.Info("Game:ClientJoined - 4 - ArenaGridManager: " + ArenaGridManager);
 	}
 
 	public override void ClientDisconnect(Client client, NetworkDisconnectionReason reason)
 	{
-		ThingManager.RemoveThing(client.Pawn as InterfacerPlayer);
+		ArenaGridManager.RemoveThing(client.Pawn as InterfacerPlayer);
 
 		base.ClientDisconnect(client, reason);
 	}
@@ -99,52 +120,87 @@ public partial class InterfacerGame : Sandbox.Game
 	}
 
 	[ConCmd.Server]
-	public static void CellClickedCmd(GridPanelType gridPanelType, int x, int y)
+	public static void CellClickedArenaCmd(int x, int y)
 	{
 		var player = ConsoleSystem.Caller.Pawn as InterfacerPlayer;
-		Instance.CellClicked(gridPanelType, new IntVector(x, y), player);
+		Instance.CellClickedArena(new IntVector(x, y), player);
 	}
 
-	public void CellClicked(GridPanelType gridPanelType, IntVector gridPos, InterfacerPlayer player)
-    {
-		var thing = GetGridManager(gridPanelType).GetThingAt(gridPos, ThingFlags.Selectable);
+	[ConCmd.Server]
+	public static void CellClickedInventoryCmd(int x, int y)
+	{
+		var player = ConsoleSystem.Caller.Pawn as InterfacerPlayer;
+		Instance.CellClickedInventory(new IntVector(x, y), player);
+	}
 
-		ThingManager.SelectThing(thing);
-		LogMessage(player.Client.Name + " clicked " + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + " in the " + gridPanelType + ".", player.PlayerNum);
+	public void CellClickedArena(IntVector gridPos, InterfacerPlayer player)
+    {
+		var thing = ArenaGridManager.GetThingAt(gridPos, ThingFlags.Selectable);
+
+		player.SelectThing(thing);
+		LogMessage(player.Client.Name + " clicked " + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + ".", player.PlayerNum);
 
 		if(thing == null)
         {
 			if (Rand.Float(0f, 1f) < 0.1f)
 			{
-				var rock = Instance.SpawnThing(TypeLibrary.GetDescription(typeof(Rock)), gridPos, gridPanelType);
-				LogMessage(player.Client.Name + " created " + rock.DisplayIcon + " at " + gridPos + " in the " + gridPanelType + "!", player.PlayerNum);
+				var rock = Instance.SpawnThingArena(TypeLibrary.GetDescription(typeof(Rock)), gridPos);
+				LogMessage(player.Client.Name + " created " + rock.DisplayIcon + " at " + gridPos + "!", player.PlayerNum);
 			}
 			else
             {
-				var explosion = InterfacerGame.Instance.SpawnThing(TypeLibrary.GetDescription(typeof(Explosion)), gridPos, gridPanelType);
+				var explosion = Instance.SpawnThingArena(TypeLibrary.GetDescription(typeof(Explosion)), gridPos);
 				explosion.VfxShake(0.15f, 4f);
 				explosion.VfxScale(0.15f, Rand.Float(0.6f, 0.8f), Rand.Float(0.3f, 0.4f));
 			}
 		}
 	}
 
-	public Thing SpawnThing(TypeDescription type, IntVector gridPos, GridPanelType gridPanelType)
+	public void CellClickedInventory(IntVector gridPos, InterfacerPlayer player)
+	{
+		var thing = player.InventoryGridManager.GetThingAt(gridPos, ThingFlags.Selectable);
+
+		player.SelectThing(thing);
+		LogMessage(player.Client.Name + " clicked " + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + " in their inventory.", player.PlayerNum);
+
+		if (thing == null)
+		{
+			if (Rand.Float(0f, 1f) < 0.1f)
+			{
+				var rock = Instance.SpawnThingInventory(TypeLibrary.GetDescription(typeof(Rock)), gridPos, player);
+				LogMessage(player.Client.Name + " created " + rock.DisplayIcon + " at " + gridPos + " in their inventory!", player.PlayerNum);
+			}
+			else
+			{
+				var explosion = Instance.SpawnThingInventory(TypeLibrary.GetDescription(typeof(Explosion)), gridPos, player);
+				explosion.VfxShake(0.15f, 4f);
+				explosion.VfxScale(0.15f, Rand.Float(0.6f, 0.8f), Rand.Float(0.3f, 0.4f));
+			}
+		}
+	}
+
+	public Thing SpawnThingArena(TypeDescription type, IntVector gridPos)
     {
+		Host.AssertServer();
+
 		var thing = type.Create<Thing>();
 		thing.GridPos = gridPos;
-		thing.GridPanelType = gridPanelType;
-		ThingManager.AddThing(thing);
+
+		Log.Info("Game:SpawnThingArena - 0 - ArenaGridManager: " + ArenaGridManager);
+		ArenaGridManager.AddThing(thing);
+		Log.Info("Game:SpawnThingArena - 1 - ArenaGridManager: " + ArenaGridManager);
 
 		return thing;
     }
 
-	public GridManager GetGridManager(GridPanelType gridPanelType)
+	public Thing SpawnThingInventory(TypeDescription type, IntVector gridPos, InterfacerPlayer player)
 	{
-		if (gridPanelType == GridPanelType.Arena)
-			return ArenaGridManager;
-		else if (gridPanelType == GridPanelType.Inventory)
-			return InventoryGridManager;
+		var thing = type.Create<Thing>();
+		thing.GridPos = gridPos;
+		thing.IsInInventory = true;
+		thing.InventoryPlayer = player;
+		player.InventoryGridManager.AddThing(thing);
 
-		return null;
+		return thing;
 	}
 }

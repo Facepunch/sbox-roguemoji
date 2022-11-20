@@ -64,7 +64,7 @@
 
     string GetSelectedClass()
     {
-        return (Thing.Flags & ThingFlags.Selected) != 0 ? "selected" : "";
+        return (Thing == InterfacerGame.Instance.LocalPlayer?.SelectedThing) ? "selected" : "";
     }
 
     protected override Panel CreateTooltipPanel()

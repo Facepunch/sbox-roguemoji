@@ -22,6 +22,11 @@
 <root class>
     <div class="grid_bg" style="background-image: url( textures/bg_tile.png );" @onclick=@OnBgClicked></div>
     
+    @if(InterfacerGame.Instance.ArenaGridManager?.Things == null)
+    {
+        return;
+    }
+
     @foreach(Thing thing in GetThings())
     {
         var index = GetIndex(thing.GridPos);
@@ -33,5 +38,21 @@
 {
     public override int GridWidth => InterfacerGame.ArenaWidth;
     public override int GridHeight => InterfacerGame.ArenaHeight;
-    public override GridPanelType GridPanelType => GridPanelType.Arena;
+
+    protected override IList<Thing> GetThings()
+    {
+        return InterfacerGame.Instance.ArenaGridManager.Things;
+        //return InterfacerGame.Instance.ArenaGridManager?.Things ?? new List<Thing>();
+    }
+
+    protected override void OnThingClicked(int index)
+    {
+        var gridPos = GridManager.GetGridPos(index, GridWidth);
+        Hud.Instance.GridCellClickedArena(gridPos);
+    }
+
+    protected override void OnBgClicked()
+    {
+        Hud.Instance.GridCellClickedArena(GetGridPos(MousePosition));
+    }
 }

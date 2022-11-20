@@ -24,6 +24,12 @@
 
 <root>
     <div class="inventory_bg" style="background-image: url( textures/bg_tile.png );" @onclick=@OnBgClicked></div>
+
+    @if(InterfacerGame.Instance.LocalPlayer?.GridManager?.Things == null)
+    {
+        return;
+    }
+
     @foreach(var thing in GetThings())
     {
         var index = GetIndex(thing.GridPos);
@@ -35,5 +41,21 @@
 {
     public override int GridWidth => InterfacerGame.InventoryWidth;
     public override int GridHeight => InterfacerGame.InventoryHeight;
-    public override GridPanelType GridPanelType => GridPanelType.Inventory;
+
+    protected override IList<Thing> GetThings()
+    {
+        return InterfacerGame.Instance.LocalPlayer.GridManager.Things;
+        //return InterfacerGame.Instance.LocalPlayer?.GridManager?.Things ?? new List<Thing>();
+    }
+
+    protected override void OnThingClicked(int index)
+    {
+        var gridPos = GridManager.GetGridPos(index, GridWidth);
+        Hud.Instance.GridCellClickedInventory(gridPos);
+    }
+
+    protected override void OnBgClicked()
+    {
+        Hud.Instance.GridCellClickedInventory(GetGridPos(MousePosition));
+    }
 }

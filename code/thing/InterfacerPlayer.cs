@@ -1,11 +1,16 @@
 ﻿using Sandbox;
 using System;
+using System.Collections.Generic;
 
 namespace Interfacer;
 public partial class InterfacerPlayer : Thing
 {
 	private TimeSince _inputRepeatTime;
 	private const float MOVE_DELAY = 0.3f;
+
+	[Net] public GridManager InventoryGridManager { get; private set; }
+
+	[Net] public Thing SelectedThing { get; private set; }
 
 	public InterfacerPlayer()
 	{
@@ -15,6 +20,12 @@ public partial class InterfacerPlayer : Thing
 		DisplayName = "Player";
 		Tooltip = "";
 		Flags = ThingFlags.Solid | ThingFlags.Selectable;
+
+		if(Host.IsServer)
+        {
+			InventoryGridManager = new();
+			InventoryGridManager.Init(InterfacerGame.InventoryWidth, InterfacerGame.InventoryHeight);
+		}
 	}
 
 	public override void Spawn()
@@ -27,17 +38,32 @@ public partial class InterfacerPlayer : Thing
     {
         base.OnClientActive(client);
 
+		Log.Info("OnClientActive - client: " + client);
+
 		DisplayName = Client.Name;
 		Tooltip = Client.Name;
 	}
 
-    public override void Update( float dt )
+	[Event.Tick.Client]
+	public override void ClientTick()
+    {
+		base.ClientTick();
+
+		Log.Info("Player:ClientTick - InventoryGridManager: " + InventoryGridManager);
+	
+	}
+
+	[Event.Tick.Server]
+	public void ServerTick()
+	{
+		Log.Info("Player:ServerTick - InventoryGridManager: " + InventoryGridManager);
+	}
+
+	public override void Update( float dt )
 	{
 		base.Update( dt );
 
-		//var sine = Utils.Map(MathF.Sin(Time.Now * 4f), -1f, 1f, -1f, 1f, EasingType.ExpoInOut);
-		//SetOffset(new Vector2(sine * 3f, 0f));
-		//SetRotation(sine * 25f);
+		InventoryGridManager.Update(dt);
 	}
 
 	public override void Simulate( Client cl )
@@ -74,5 +100,27 @@ public partial class InterfacerPlayer : Thing
 		_inputRepeatTime = 0f;
 
 		return success;
+	}
+
+	void UpdateThings(IList<Thing> things, float dt)
+	{
+		for (int i = things.Count - 1; i >= 0; i--)
+		{
+			var thing = things[i];
+
+			if (!thing.DoneFirstUpdate)
+				thing.FirstUpdate();
+
+			if (thing.ShouldUpdate || thing.Statuses.Count > 0)
+				thing.Update(dt);
+		}
+	}
+
+	public void SelectThing(Thing thing)
+	{
+		if (SelectedThing == thing)
+			return;
+
+		SelectedThing = thing;
 	}
 }

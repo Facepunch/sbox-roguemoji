@@ -6,8 +6,7 @@ namespace Interfacer;
 public partial class Thing : Entity
 {
 	[Net] public IntVector GridPos { get; set; }
-	[Net] public GridPanelType GridPanelType { get; set; }
-	public GridManager GridManager => InterfacerGame.Instance.GetGridManager(GridPanelType);
+	[Net] public GridManager GridManager { get; set; }
 
 	[Net] public string DisplayIcon { get; protected set; }
 	[Net] public string DisplayName { get; protected set; }
@@ -24,6 +23,9 @@ public partial class Thing : Entity
 	public Vector2 Offset { get; set; }
 	public float RotationDegrees { get; set; }
 	public float IconScale { get; set; }
+
+	[Net] public bool IsInInventory { get; set; }
+	[Net] public InterfacerPlayer InventoryPlayer { get; set; }
 
 	[Net] public string DebugText { get; set; }
 
@@ -112,7 +114,9 @@ public partial class Thing : Entity
 
 			if (!GridManager.DoesThingExistAt(newGridPos))
             {
-				var explosion = InterfacerGame.Instance.SpawnThing(TypeLibrary.GetDescription(typeof(Explosion)), newGridPos, GridPanelType);
+				var explosion = IsInInventory
+					? InterfacerGame.Instance.SpawnThingInventory(TypeLibrary.GetDescription(typeof(Explosion)), newGridPos, InventoryPlayer)
+					: InterfacerGame.Instance.SpawnThingArena(TypeLibrary.GetDescription(typeof(Explosion)), newGridPos);
                 explosion.VfxShake(0.15f, 6f);
                 explosion.VfxScale(0.15f, 0.5f, 1f);
 			}
@@ -131,40 +135,57 @@ public partial class Thing : Entity
 		if ( GridPos.Equals( gridPos ) && !forceRefresh )
 			return;
 
-		if (GridPanelType == GridPanelType.None)
-			Log.Error(DisplayName + " has no GridPanelType!");
-
 		GridManager.SetGridPos( this, gridPos );
 		GridPos = gridPos;
 
-		RefreshPanel();
+		if(IsInInventory)
+			RefreshPanelClient(To.Single(InventoryPlayer));
+		else
+			RefreshPanelClient();
 
 		if (ShouldLogBehaviour)
-			InterfacerGame.Instance.LogMessage( DisplayIcon + "(" + DisplayName + ") moved to (" + gridPos.x + ", " + gridPos.y + ").", PlayerNum);
+        {
+			if(IsInInventory)
+				InterfacerGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") moved to (" + gridPos.x + ", " + gridPos.y + ") in " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
+			else
+				InterfacerGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") moved to (" + gridPos.x + ", " + gridPos.y + ").", PlayerNum);
+		}
 	}
 
 	public void Remove()
 	{
 		if ( ShouldLogBehaviour )
-			InterfacerGame.Instance.LogMessage( DisplayIcon + "(" + DisplayName + ") removed.", PlayerNum );
-
+        {
+			if (IsInInventory)
+				InterfacerGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") removed from " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
+			else
+				InterfacerGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") removed.", PlayerNum);
+		}
+			
 		GridManager.DeregisterGridPos( this, GridPos );
-		ThingManager.Instance.RemoveThing( this );
+		GridManager.RemoveThing( this );
 		Delete();
 	}
 
 	[ClientRpc]
-    public void RefreshPanel()
+    public void RefreshPanelClient()
     {
         if (Hud.Instance == null)
             return;
 
-        var panel = Hud.Instance.GetGridPanel(GridPanelType);
+        GridPanel panel = GetGridPanel();
         if (panel == null)
             return;
 
         panel.Refresh();
     }
+
+	public GridPanel GetGridPanel()
+    {
+		Host.AssertClient();
+
+		return IsInInventory ? Hud.Instance.MainPanel.InventoryPanel : Hud.Instance.MainPanel.ArenaPanel;
+	}
 
     public void SetOffset(Vector2 offset)
     {
@@ -224,7 +245,7 @@ public partial class Thing : Entity
 		}
 		else
         {
-			var panel = Hud.Instance.GetGridPanel(GridPanelType);
+			var panel = GetGridPanel();
 			if(panel != null)
 				DebugOverlay.ScreenText(text, panel.GetCellPos(GridPos), line, color, time);
 		}
@@ -288,13 +309,5 @@ public partial class Thing : Entity
 	public int GetInfoDisplayHash()
     {
 		return HashCode.Combine(NetworkIdent, DisplayIcon);
-    }
-
-	public void SetSelected(bool selected)
-    {
-		if (selected)
-			Flags |= ThingFlags.Selected;
-		else
-			Flags &= (~ThingFlags.Selected);
     }
 }

@@ -27,10 +27,10 @@
 </style>
 
 <root class="info">
-    @if(ThingManager.Instance.SelectedThing != null)
+    @if(InterfacerGame.Instance.LocalPlayer?.SelectedThing != null)
     {
-        <div class="icon"> @ThingManager.Instance.SelectedThing.DisplayIcon </div>
-        <div class="name_label"> @ThingManager.Instance.SelectedThing.DisplayName </div>
+        <div class="icon"> @InterfacerGame.Instance.LocalPlayer.SelectedThing.DisplayIcon </div>
+        <div class="name_label"> @InterfacerGame.Instance.LocalPlayer.SelectedThing.DisplayName </div>
     }
     else
     {
@@ -48,6 +48,6 @@
 
     protected override int BuildHash()
     {
-        return HashCode.Combine( ThingManager.Instance.SelectedThing?.GetInfoDisplayHash() ?? 0 );
+        return HashCode.Combine( InterfacerGame.Instance.LocalPlayer?.SelectedThing?.GetInfoDisplayHash() ?? 0 );
     }
 }

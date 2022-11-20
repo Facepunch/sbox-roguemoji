@@ -9,17 +9,9 @@ public abstract class GridPanel : Panel
 {
     public virtual int GridWidth => 0;
     public virtual int GridHeight => 0;
-    public virtual GridPanelType GridPanelType => GridPanelType.None;
 
     public int HoveredCellIndex { get; set; }
     public int ClickedCellIndex { get; set; }
-
-    public override void Tick()
-    {
-        base.Tick();
-
-        //Log.Info(GridPanelType + " --- hovered: " + GetGridPos(HoveredCellIndex) + " clicked: " + GetGridPos(ClickedCellIndex));
-    }
 
     public string GetSelectedIndexString()
     {
@@ -49,19 +41,19 @@ public abstract class GridPanel : Panel
         return new IntVector(MathX.FloorToInt(screenPos.x / cellSize), MathX.FloorToInt(screenPos.y / cellSize));
     }
 
-    protected void OnThingClicked(int index)
+    protected virtual void OnThingClicked(int index)
     {
-        var gridPos = GridManager.GetGridPos(index, GridWidth);
-        Hud.Instance.GridCellClicked(GridPanelType, gridPos);
-    }
-    protected void OnBgClicked()
-    {
-        Hud.Instance.GridCellClicked(GridPanelType, GetGridPos(MousePosition));
+        
     }
 
-    public IList<Thing> GetThings()
+    protected virtual void OnBgClicked()
     {
-        return ThingManager.Instance.GetThings(GridPanelType);
+        
+    }
+
+    protected virtual IList<Thing> GetThings()
+    {
+        return null;
     }
 
     protected override int BuildHash()
