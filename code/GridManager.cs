@@ -77,7 +77,7 @@ public partial class GridManager : Entity
 		if(Things.Contains(thing))
         {
 			Things.Remove(thing);
-			//thing.GridManager = null;
+			thing.ContainingGridManager = null;
 		}
 	}
 

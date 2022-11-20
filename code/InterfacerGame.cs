@@ -92,7 +92,11 @@ public partial class InterfacerGame : Sandbox.Game
 
 	public override void ClientDisconnect(Client client, NetworkDisconnectionReason reason)
 	{
-		ArenaGridManager.RemoveThing(client.Pawn as InterfacerPlayer);
+		var player = client.Pawn as InterfacerPlayer;
+		ArenaGridManager.DeregisterGridPos(player, player.GridPos);
+		ArenaGridManager.RemoveThing(player);
+
+		// todo: drop or remove items in player's inventory
 
 		base.ClientDisconnect(client, reason);
 	}
