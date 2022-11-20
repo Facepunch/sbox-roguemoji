@@ -87,13 +87,12 @@ public partial class InterfacerGame : Sandbox.Game
 		player.PlayerNum = ++PlayerNum;
 		client.Pawn = player;
 
-		SpawnThingInventory(TypeLibrary.GetDescription(typeof(Rock)), new IntVector(4, 3), player);
+		SpawnThingInventory(TypeLibrary.GetDescription(typeof(Leaf)), new IntVector(4, 3), player);
 	}
 
 	public override void ClientDisconnect(Client client, NetworkDisconnectionReason reason)
 	{
 		var player = client.Pawn as InterfacerPlayer;
-		ArenaGridManager.DeregisterGridPos(player, player.GridPos);
 		ArenaGridManager.RemoveThing(player);
 
 		// todo: drop or remove items in player's inventory
@@ -176,6 +175,11 @@ public partial class InterfacerGame : Sandbox.Game
 				explosion.VfxScale(0.15f, Rand.Float(0.6f, 0.8f), Rand.Float(0.3f, 0.4f));
 			}
 		}
+		else
+		{
+			if(rightClick)
+				MoveThingToArena(thing, player.GridPos);
+		}
 	}
 
 	public Thing SpawnThingArena(TypeDescription type, IntVector gridPos)
@@ -200,4 +204,27 @@ public partial class InterfacerGame : Sandbox.Game
 
 		return thing;
 	}
+
+	public void MoveThingToArena(Thing thing, IntVector gridPos)
+	{
+		Assert.True(thing.ContainingGridManager != ArenaGridManager);
+
+		thing.ContainingGridManager?.RemoveThing(thing);
+
+		ArenaGridManager.AddThing(thing);
+		thing.SetGridPos(gridPos);
+		thing.IsInInventory = false;
+    }
+
+	public void MoveThingToInventory(Thing thing, IntVector gridPos, InterfacerPlayer player)
+	{
+		Assert.True(!thing.IsInInventory || thing.InventoryPlayer != player);
+
+		thing.ContainingGridManager?.RemoveThing(thing);
+
+        thing.InventoryPlayer = player;
+        thing.IsInInventory = true;
+        player.InventoryGridManager.AddThing(thing);
+		thing.SetGridPos(gridPos);
+    }
 }

@@ -74,7 +74,9 @@ public partial class GridManager : Entity
 
 	public void RemoveThing(Thing thing)
 	{
-		if(Things.Contains(thing))
+        DeregisterGridPos(thing, thing.GridPos);
+
+        if (Things.Contains(thing))
         {
 			Things.Remove(thing);
 			thing.ContainingGridManager = null;
