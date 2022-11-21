@@ -36,6 +36,8 @@ public partial class InterfacerGame : Sandbox.Game
 			//Log.Info("------------------ Game() - ArenaGridManager: " + ArenaGridManager);
 
 			SpawnThingArena(TypeLibrary.GetDescription(typeof(Rock)), new IntVector(10, 10));
+            SpawnThingArena(TypeLibrary.GetDescription(typeof(Leaf)), new IntVector(9, 10));
+            SpawnThingArena(TypeLibrary.GetDescription(typeof(Leaf)), new IntVector(21, 19));
         }
 
 		if (Host.IsClient)
@@ -83,12 +85,15 @@ public partial class InterfacerGame : Sandbox.Game
 	{
 		base.ClientJoined(client);
 
+        SpawnThingArena(TypeLibrary.GetDescription(typeof(Leaf)), new IntVector(4, 4));
+        
 		InterfacerPlayer player = SpawnThingArena(TypeLibrary.GetDescription(typeof(InterfacerPlayer)), new IntVector(5, 10)) as InterfacerPlayer;
 		player.PlayerNum = ++PlayerNum;
 		client.Pawn = player;
 
 		SpawnThingInventory(TypeLibrary.GetDescription(typeof(Leaf)), new IntVector(4, 3), player);
-	}
+        SpawnThingArena(TypeLibrary.GetDescription(typeof(Leaf)), new IntVector(5, 4));
+    }
 
 	public override void ClientDisconnect(Client client, NetworkDisconnectionReason reason)
 	{
@@ -197,12 +202,12 @@ public partial class InterfacerGame : Sandbox.Game
 	public Thing SpawnThingInventory(TypeDescription type, IntVector gridPos, InterfacerPlayer player)
 	{
 		var thing = type.Create<Thing>();
-		thing.GridPos = gridPos;
 		thing.IsInInventory = true;
 		thing.InventoryPlayer = player;
 		player.InventoryGridManager.AddThing(thing);
+		thing.SetGridPos(gridPos);
 
-		return thing;
+        return thing;
 	}
 
 	public void MoveThingToArena(Thing thing, IntVector gridPos)
@@ -211,9 +216,9 @@ public partial class InterfacerGame : Sandbox.Game
 
 		thing.ContainingGridManager?.RemoveThing(thing);
 
-		ArenaGridManager.AddThing(thing);
-		thing.SetGridPos(gridPos);
-		thing.IsInInventory = false;
+        thing.IsInInventory = false;
+        ArenaGridManager.AddThing(thing);
+        thing.SetGridPos(gridPos);
     }
 
 	public void MoveThingToInventory(Thing thing, IntVector gridPos, InterfacerPlayer player)

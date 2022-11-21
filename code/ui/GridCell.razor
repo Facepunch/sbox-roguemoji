@@ -47,7 +47,7 @@
 </style>
 
 <root class="icon @GetSelectedClass()">
-    <div class="@GetPlayerClass()" style="z-index: @(Index + Thing.IconDepth * 10);" @ref=IconPanel>@Thing.DisplayIcon</div>
+    <div class="@GetPlayerClass()" @ref=IconPanel>@Thing.DisplayIcon</div>
 </root>
 
 @code
@@ -55,7 +55,7 @@
     public Panel IconPanel { get; set; }
 
     public Thing Thing { get; set; }
-    public int Index { get; set; }
+    public int GridIndex { get; set; }
 
     string GetPlayerClass()
     {
@@ -85,7 +85,7 @@
         if (Thing == null)
             return base.BuildHash();
 
-        return HashCode.Combine( Thing.DisplayIcon, Thing.PlayerNum, Thing.Offset, Thing.RotationDegrees, Thing.IconScale, Thing.IconDepth, Thing.Flags, IsSelected() );
+        return HashCode.Combine( Thing.GetHashCode(), IsSelected() );
     }
 
     protected override void OnAfterTreeRender(bool firstTime)
@@ -95,8 +95,8 @@
         if (Thing == null)
             return;
 
-        Tooltip = Thing.Tooltip;
         SetTransform(Thing.Offset, Thing.RotationDegrees, Thing.IconScale);
+        Style.ZIndex = GridIndex + Thing.IconDepth;
     }
 
     public void SetTransform(Vector2 offset, float rotation, float scale)

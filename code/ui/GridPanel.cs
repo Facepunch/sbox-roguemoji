@@ -16,7 +16,7 @@ public abstract class GridPanel : Panel
     public string GetSelectedIndexString()
     {
         if (Hud.Instance.SelectedCell != null)
-            return Hud.Instance.SelectedCell.Index.ToString();
+            return Hud.Instance.SelectedCell.GridIndex.ToString();
         else
             return "None";
     }

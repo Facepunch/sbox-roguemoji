@@ -18,7 +18,8 @@ public partial class Thing : Entity
 	[Net] public int PlayerNum { get; set; }
 
 	[Net] public int IconDepth { get; set; }
-	public bool ShouldLogBehaviour { get; set; }
+	public int ZPos => ContainingGridManager.GetIndex(GridPos) + IconDepth;
+    public bool ShouldLogBehaviour { get; set; }
 
 	public Vector2 Offset { get; set; }
 	public float RotationDegrees { get; set; }
@@ -82,7 +83,7 @@ public partial class Thing : Entity
 		}
 
 		//DrawDebugText(Flags.ToString());
-    }
+	}
 
 	public virtual void FirstUpdate()
 	{
@@ -112,14 +113,11 @@ public partial class Thing : Entity
 			if ( ShouldLogBehaviour )
 				InterfacerGame.Instance.LogMessage( DisplayIcon + "(" + DisplayName + ") pushed " + otherThing.DisplayIcon + " " + GridManager.GetDirectionText(direction) + "!", PlayerNum );
 
-			if (!ContainingGridManager.DoesThingExistAt(newGridPos))
-            {
-				var explosion = IsInInventory
-					? InterfacerGame.Instance.SpawnThingInventory(TypeLibrary.GetDescription(typeof(Explosion)), newGridPos, InventoryPlayer)
-					: InterfacerGame.Instance.SpawnThingArena(TypeLibrary.GetDescription(typeof(Explosion)), newGridPos);
-                explosion.VfxShake(0.15f, 6f);
-                explosion.VfxScale(0.15f, 0.5f, 1f);
-			}
+			var explosion = IsInInventory
+				? InterfacerGame.Instance.SpawnThingInventory(TypeLibrary.GetDescription(typeof(Explosion)), newGridPos, InventoryPlayer)
+				: InterfacerGame.Instance.SpawnThingArena(TypeLibrary.GetDescription(typeof(Explosion)), newGridPos);
+            explosion.VfxShake(0.15f, 6f);
+            explosion.VfxScale(0.15f, 0.5f, 1f);
 
 			return false;
 		}
@@ -139,9 +137,9 @@ public partial class Thing : Entity
 		GridPos = gridPos;
 
 		if(IsInInventory)
-			RefreshPanelClient(To.Single(InventoryPlayer));
+            RefreshGridPanelClient(To.Single(InventoryPlayer));
 		else
-			RefreshPanelClient();
+			RefreshGridPanelClient();
 
 		if (ShouldLogBehaviour)
         {
@@ -162,13 +160,12 @@ public partial class Thing : Entity
 				InterfacerGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") removed.", PlayerNum);
 		}
 			
-		ContainingGridManager.DeregisterGridPos( this, GridPos );
 		ContainingGridManager.RemoveThing( this );
 		Delete();
 	}
 
 	[ClientRpc]
-    public void RefreshPanelClient()
+    public void RefreshGridPanelClient()
     {
         if (Hud.Instance == null)
             return;
@@ -305,6 +302,11 @@ public partial class Thing : Entity
 		scale.StartAngle = startAngle;
 		scale.EndAngle = endAngle;
 	}
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(DisplayIcon, PlayerNum, Offset, RotationDegrees, IconScale, IconDepth, Flags);
+    }
 
 	public int GetInfoDisplayHash()
     {

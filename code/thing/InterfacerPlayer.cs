@@ -15,7 +15,7 @@ public partial class InterfacerPlayer : Thing
 	public InterfacerPlayer()
 	{
 		DisplayIcon = "🙂";
-		IconDepth = 2;
+		IconDepth = 5;
 		ShouldLogBehaviour = true;
 		DisplayName = "Player";
 		Tooltip = "";
@@ -121,7 +121,7 @@ public partial class InterfacerPlayer : Thing
 			return;
 
 		if (SelectedThing != null)
-			SelectedThing.RefreshPanelClient();
+			SelectedThing.RefreshGridPanelClient();
 
 		SelectedThing = thing;
 	}
