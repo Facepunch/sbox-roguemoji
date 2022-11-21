@@ -111,7 +111,7 @@ public partial class Thing : Entity
 			}
 
 			if ( ShouldLogBehaviour )
-				InterfacerGame.Instance.LogMessage( DisplayIcon + "(" + DisplayName + ") pushed " + otherThing.DisplayIcon + " " + GridManager.GetDirectionText(direction) + "!", PlayerNum );
+				InterfacerGame.Instance.LogMessage( DisplayIcon + DisplayName + " pushed " + otherThing.DisplayIcon + " " + GridManager.GetDirectionText(direction) + "!", PlayerNum );
 
 			var explosion = IsInInventory
 				? InterfacerGame.Instance.SpawnThingInventory(TypeLibrary.GetDescription(typeof(Explosion)), newGridPos, InventoryPlayer)
@@ -144,9 +144,9 @@ public partial class Thing : Entity
 		if (ShouldLogBehaviour)
         {
 			if(IsInInventory)
-				InterfacerGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") moved to (" + gridPos.x + ", " + gridPos.y + ") in " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
+				InterfacerGame.Instance.LogMessage(DisplayIcon + DisplayName + " moved to (" + gridPos.x + ", " + gridPos.y + ") in " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
 			else
-				InterfacerGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") moved to (" + gridPos.x + ", " + gridPos.y + ").", PlayerNum);
+				InterfacerGame.Instance.LogMessage(DisplayIcon + DisplayName + " moved to (" + gridPos.x + ", " + gridPos.y + ").", PlayerNum);
 		}
 	}
 
@@ -155,9 +155,9 @@ public partial class Thing : Entity
 		if ( ShouldLogBehaviour )
         {
 			if (IsInInventory)
-				InterfacerGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") removed from " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
+				InterfacerGame.Instance.LogMessage(DisplayIcon + DisplayName + " removed from " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
 			else
-				InterfacerGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") removed.", PlayerNum);
+				InterfacerGame.Instance.LogMessage(DisplayIcon + DisplayName + " removed.", PlayerNum);
 		}
 			
 		ContainingGridManager.RemoveThing( this );

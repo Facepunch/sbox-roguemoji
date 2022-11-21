@@ -95,6 +95,7 @@
         if (Thing == null)
             return;
 
+        Tooltip = Thing.Tooltip;
         SetTransform(Thing.Offset, Thing.RotationDegrees, Thing.IconScale);
         Style.ZIndex = GridIndex + Thing.IconDepth;
     }

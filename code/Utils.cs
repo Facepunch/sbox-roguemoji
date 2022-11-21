@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 using Sandbox;
 
 namespace Interfacer;
@@ -25,6 +26,21 @@ public enum EasingType
 
 public static class Utils
 {
+    public static IEnumerable<Thing> WithAll(this IEnumerable<Thing> list, ThingFlags flags)
+    {
+        return list.Where(x => (x.Flags & flags) == flags);
+    }
+
+    public static IEnumerable<Thing> WithAny(this IEnumerable<Thing> list, ThingFlags flags)
+    {
+        return list.Where(x => (x.Flags & flags) != 0);
+    }
+
+    public static IEnumerable<Thing> WithNone(this IEnumerable<Thing> list, ThingFlags flags)
+    {
+        return list.Where(x => (x.Flags & flags) == 0);
+    }
+
     public static void DrawCircle(Vector2 pos, float radius, int num_segments, float starting_angle, Color color)
     {
         var step = 2f * MathF.PI / (float)num_segments;

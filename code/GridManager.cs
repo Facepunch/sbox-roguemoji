@@ -13,6 +13,7 @@ public enum ThingFlags
 	None = 0,
 	Solid = 1,
 	Selectable = 2,
+	VisualEffect = 4,
 }
 
 public partial class GridManager : Entity
@@ -194,6 +195,8 @@ public partial class GridManager : Entity
 
 	public Thing GetThingAt(IntVector gridPos, ThingFlags flags = ThingFlags.None)
 	{
+        Host.AssertServer();
+        
 		if ( !GridThings.ContainsKey( gridPos ) )
 			return null;
 
@@ -219,11 +222,15 @@ public partial class GridManager : Entity
 		return highestThing;
 	}
 
-	public List<Thing> GetThingsAt( IntVector gridPos )
-	{
-		if ( !GridThings.ContainsKey( gridPos ) )
-			return null;
+    public IEnumerable<Thing> GetThingsAt(IntVector gridPos)
+    {
+        Host.AssertServer();
+        return GridThings.TryGetValue(gridPos, out var list) ? list : Enumerable.Empty<Thing>();
+    }
 
-		return GridThings[gridPos];
-	}
+    public IEnumerable<Thing> GetThingsAtClient(IntVector gridPos)
+    {
+        Host.AssertClient();
+		return Things.Where(x => x.GridPos.Equals(gridPos));
+    }
 }

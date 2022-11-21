@@ -12,6 +12,7 @@ public partial class Explosion : Thing
         DisplayIcon = "💥";
 		IconDepth = 9;
 		_spawnTime = 0f;
+		Flags = ThingFlags.VisualEffect;
 	}
 
 	public override void Update( float dt )

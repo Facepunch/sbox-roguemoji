@@ -1,0 +1,75 @@
+﻿@using System;
+@using Sandbox;
+@using Sandbox.UI;
+
+@inherits Panel;
+@namespace Interfacer
+
+<style>
+    .nearby
+    {
+        flex-direction:column;
+        align-items:center;
+        pointer-events: all;
+    }
+
+    .icon
+    {
+        //margin: 0 0 5px 0;
+        font-size: 30px;
+    }
+</style>
+
+<root class="nearby">
+    @{
+        InterfacerPlayer player = InterfacerGame.Instance.LocalPlayer;
+    }
+
+    @if (player?.ContainingGridManager?.GetThingsAtClient(player.GridPos) == null)
+    {
+        return;
+    }
+
+    @foreach (var thing in player.ContainingGridManager.GetThingsAtClient(player.GridPos).WithNone(ThingFlags.Solid))
+    {
+        <div class="icon">@thing.DisplayIcon</div>
+    }
+</root>
+
+@code
+{
+    //public override void Tick()
+    //{
+    //    base.Tick();
+
+    //}
+
+    protected override int BuildHash()
+    {
+        var player = InterfacerGame.Instance.LocalPlayer;
+        if (player == null)
+            return 0;
+
+        var numItems = player.ContainingGridManager.GetThingsAtClient(player.GridPos).WithNone(ThingFlags.Solid).ToList().Count;
+
+        return HashCode.Combine( player.GridPos, numItems );
+    }
+
+    protected override Panel CreateTooltipPanel()
+    {
+        var panel = Hud.Instance.AddChild<CellTooltip>();
+        panel.Text = Tooltip;
+        panel.Style.Opacity = 0.25f;
+        return panel;
+    }
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        base.OnAfterTreeRender(firstTime);
+
+        var player = InterfacerGame.Instance.LocalPlayer;
+        var numItems = player?.ContainingGridManager.GetThingsAtClient(player.GridPos).WithNone(ThingFlags.Solid).ToList().Count ?? 0;
+
+        Tooltip = numItems == 0 ? "No items nearby." : "";
+    }
+}
