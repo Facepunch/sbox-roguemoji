@@ -10,13 +10,7 @@
     {
         flex-direction:column;
         align-items:center;
-        pointer-events: all;
-    }
-
-    .icon
-    {
-        //margin: 0 0 5px 0;
-        font-size: 30px;
+        overflow: scroll;
     }
 </style>
 
@@ -32,7 +26,7 @@
 
     @foreach (var thing in player.ContainingGridManager.GetThingsAtClient(player.GridPos).WithNone(ThingFlags.Solid))
     {
-        <div class="icon">@thing.DisplayIcon</div>
+        <NearbyCell Thing=@thing />
     }
 </root>
 
@@ -63,13 +57,13 @@
         return panel;
     }
 
-    protected override void OnAfterTreeRender(bool firstTime)
-    {
-        base.OnAfterTreeRender(firstTime);
+    //protected override void OnAfterTreeRender(bool firstTime)
+    //{
+    //    base.OnAfterTreeRender(firstTime);
 
-        var player = InterfacerGame.Instance.LocalPlayer;
-        var numItems = player?.ContainingGridManager.GetThingsAtClient(player.GridPos).WithNone(ThingFlags.Solid).ToList().Count ?? 0;
+    //    var player = InterfacerGame.Instance.LocalPlayer;
+    //    var numItems = player?.ContainingGridManager.GetThingsAtClient(player.GridPos).WithNone(ThingFlags.Solid).ToList().Count ?? 0;
 
-        Tooltip = numItems == 0 ? "No items nearby." : "";
-    }
+    //    Tooltip = numItems == 0 ? "No items nearby." : "";
+    //}
 }

@@ -77,11 +77,8 @@ public partial class GridManager : Entity
 	{
         DeregisterGridPos(thing, thing.GridPos);
 
-        if (Things.Contains(thing))
-        {
-			Things.Remove(thing);
-			thing.ContainingGridManager = null;
-		}
+		Things.Remove(thing);
+		thing.ContainingGridManager = null;
 	}
 
 	public int GetIndex( IntVector gridPos ) { return gridPos.y * GridWidth + gridPos.x; }
@@ -233,4 +230,20 @@ public partial class GridManager : Entity
         Host.AssertClient();
 		return Things.Where(x => x.GridPos.Equals(gridPos));
     }
+
+	public bool GetFirstEmptyGridPos(out IntVector gridPos)
+	{
+		for(int index = 0; index < GridWidth * GridHeight; index++)
+		{
+			var currGridPos = GetGridPos(index);
+            if (!DoesThingExistAt(currGridPos))
+			{
+				gridPos = currGridPos;
+				return true;
+			}
+		}
+
+		gridPos = IntVector.Zero;
+		return false;
+	}
 }

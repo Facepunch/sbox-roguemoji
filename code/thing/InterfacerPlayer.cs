@@ -44,21 +44,23 @@ public partial class InterfacerPlayer : Thing
 		Tooltip = Client.Name;
 	}
 
-	//[Event.Tick.Client]
-	//public override void ClientTick()
- //   {
-	//	base.ClientTick();
+	[Event.Tick.Client]
+	public override void ClientTick()
+	{
+		base.ClientTick();
 
-	//	//Log.Info("Player:ClientTick - InventoryGridManager: " + InventoryGridManager);
-	//}
+        //DrawDebugText("" + (SelectedThing == null ? "none" : SelectedThing.Name));
+        //DrawDebugText("# Things: " + InventoryGridManager.Things.Count);
+        //Log.Info("Player:ClientTick - InventoryGridManager: " + InventoryGridManager);
+    }
 
-	//[Event.Tick.Server]
-	//public void ServerTick()
-	//{
-	//	//Log.Info("Player:ServerTick - InventoryGridManager: " + InventoryGridManager);
-	//}
+    //[Event.Tick.Server]
+    //public void ServerTick()
+    //{
+    //	//Log.Info("Player:ServerTick - InventoryGridManager: " + InventoryGridManager);
+    //}
 
-	public override void Update( float dt )
+    public override void Update( float dt )
 	{
 		base.Update( dt );
 

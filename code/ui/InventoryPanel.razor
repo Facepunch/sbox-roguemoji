@@ -51,6 +51,7 @@
     protected override void OnThingClicked(int index)
     {
         var gridPos = GridManager.GetGridPos(index, GridWidth);
+        //Log.Info("OnThingClicked: " + gridPos);
         Hud.Instance.GridCellClickedInventory(gridPos, rightClick: false);
     }
 

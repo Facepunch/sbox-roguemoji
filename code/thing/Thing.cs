@@ -67,8 +67,9 @@ public partial class Thing : Entity
 		if(!string.IsNullOrEmpty(DebugText))
 			DrawDebugText(DebugText);
 
-		//DrawDebugText(Flags.ToString());
-	}
+        //DrawDebugText(ContainingGridManager?.Name.ToString() ?? "null");
+        //DrawDebugText(Flags.ToString());
+    }
 
 	public virtual void Update(float dt)
 	{

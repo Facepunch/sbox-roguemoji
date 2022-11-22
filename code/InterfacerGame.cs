@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿using System;
+using Sandbox;
 using Sandbox.UI;
 using System.Collections.Generic;
 
@@ -91,9 +92,31 @@ public partial class InterfacerGame : Sandbox.Game
 		player.PlayerNum = ++PlayerNum;
 		client.Pawn = player;
 
-		SpawnThingInventory(TypeLibrary.GetDescription(typeof(Leaf)), new IntVector(4, 3), player);
-        SpawnThingArena(TypeLibrary.GetDescription(typeof(Leaf)), new IntVector(5, 4));
+		for(int x = 0; x < 5; x++)
+		{
+            for (int y = 0; y < 5; y++)
+			{
+				//if(Rand.Float(0f, 1f) < 0.6f)
+					SpawnThingInventory(TypeLibrary.GetDescription(GetRandomType()), new IntVector(x, y), player);
+            }
+        }
+		
+        SpawnThingArena(TypeLibrary.GetDescription(GetRandomType()), new IntVector(5, 4));
     }
+
+	Type GetRandomType()
+	{
+		int rand = Rand.Int(0, 5);
+		switch (rand)
+		{
+			case 0: return typeof(Leaf);
+			case 1: return typeof(Potato);
+			case 2: return typeof(Nut);
+            case 3: return typeof(Mushroom);
+            case 4: return typeof(Trumpet);
+            case 5: default: return typeof(Cheese);
+		}
+	}
 
 	public override void ClientDisconnect(Client client, NetworkDisconnectionReason reason)
 	{
@@ -215,13 +238,44 @@ public partial class InterfacerGame : Sandbox.Game
 		Assert.True(thing.ContainingGridManager != ArenaGridManager);
 
 		thing.ContainingGridManager?.RemoveThing(thing);
+		RefreshGridPanelClient(inventory: true);
 
         thing.IsInInventory = false;
-        ArenaGridManager.AddThing(thing);
-        thing.SetGridPos(gridPos);
+		thing.InventoryPlayer = null;
+		ArenaGridManager.AddThing(thing);
+		thing.SetGridPos(gridPos);
     }
 
-	public void MoveThingToInventory(Thing thing, IntVector gridPos, InterfacerPlayer player)
+	[ClientRpc]
+	public void RefreshGridPanelClient(bool inventory)
+	{
+		GridPanel panel = inventory ? Hud.Instance.MainPanel.InventoryPanel : Hud.Instance.MainPanel.ArenaPanel;
+		panel.Refresh();
+	}
+
+    [ConCmd.Server]
+    public static void NearbyThingClickedCmd(int networkId, bool rightClick)
+    {
+        var player = ConsoleSystem.Caller.Pawn as InterfacerPlayer;
+        Thing thing = Entity.FindByIndex(networkId) as Thing;
+        Instance.NearbyThingClicked(thing, rightClick, player);
+    }
+
+	public void NearbyThingClicked(Thing thing, bool rightClick, InterfacerPlayer player)
+	{
+		Log.Info(thing.DisplayName + (rightClick ? " right-clicked by " : " clicked by ") + player.DisplayName);
+
+		if (rightClick)
+		{
+			var gridPos = IntVector.Zero;
+			if(player.InventoryGridManager.GetFirstEmptyGridPos(out gridPos))
+			{
+                MoveThingToInventory(thing, gridPos, player);
+            }
+		}
+	}
+
+    public void MoveThingToInventory(Thing thing, IntVector gridPos, InterfacerPlayer player)
 	{
 		Assert.True(!thing.IsInInventory || thing.InventoryPlayer != player);
 
