@@ -24,7 +24,7 @@
         return;
     }
 
-    @foreach (var thing in player.ContainingGridManager.GetThingsAtClient(player.GridPos).WithNone(ThingFlags.Solid))
+    @foreach (var thing in GetThings(player))
     {
         <NearbyCell Thing=@thing />
     }
@@ -38,32 +38,46 @@
 
     //}
 
+    IEnumerable<Thing> GetThings(InterfacerPlayer player)
+    {
+        return player.ContainingGridManager.GetThingsAtClient(player.GridPos).WithNone(ThingFlags.Solid).WithAll(ThingFlags.Selectable);
+    }
+
     protected override int BuildHash()
     {
         var player = InterfacerGame.Instance.LocalPlayer;
         if (player == null)
             return 0;
 
-        var numItems = player.ContainingGridManager.GetThingsAtClient(player.GridPos).WithNone(ThingFlags.Solid).ToList().Count;
+        //int combinedFlags = 0;
+        //foreach (var thing in GetThings(player))
+        //{
+        //    combinedFlags += (int)thing.Flags;
+        //}
+        var numThings = GetThings(player).ToList().Count;
 
-        return HashCode.Combine( player.GridPos, numItems );
+        return HashCode.Combine(player.GridPos, numThings, player.InventoryGridManager.Things.Count);
     }
 
-    protected override Panel CreateTooltipPanel()
-    {
-        var panel = Hud.Instance.AddChild<CellTooltip>();
-        panel.Text = Tooltip;
-        panel.Style.Opacity = 0.25f;
-        return panel;
-    }
+    //protected override Panel CreateTooltipPanel()
+    //{
+    //    var panel = Hud.Instance.AddChild<CellTooltip>();
+    //    panel.Text = Tooltip;
+    //    panel.Style.Opacity = 0.25f;
+    //    return panel;
+    //}
 
     //protected override void OnAfterTreeRender(bool firstTime)
     //{
     //    base.OnAfterTreeRender(firstTime);
 
-    //    var player = InterfacerGame.Instance.LocalPlayer;
-    //    var numItems = player?.ContainingGridManager.GetThingsAtClient(player.GridPos).WithNone(ThingFlags.Solid).ToList().Count ?? 0;
+    //}
 
-    //    Tooltip = numItems == 0 ? "No items nearby." : "";
+    //protected override void OnMouseDown(MousePanelEvent e)
+    //{
+    //    base.OnMouseDown(e);
+
+    //    bool rightClick = e.Button == "mouseright";
+    //    InterfacerGame.NearbyThingClickedCmd(Thing.NetworkIdent, rightClick);
     //}
 }

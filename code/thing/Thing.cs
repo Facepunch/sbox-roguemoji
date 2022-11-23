@@ -25,24 +25,26 @@ public partial class Thing : Entity
 	public float RotationDegrees { get; set; }
 	public float IconScale { get; set; }
 
-	[Net] public bool IsInInventory { get; set; }
 	[Net] public InterfacerPlayer InventoryPlayer { get; set; }
 
 	[Net] public string DebugText { get; set; }
 
-	public Dictionary<TypeDescription, ThingStatus> Statuses = new Dictionary<TypeDescription, ThingStatus>();
+    [Net] public int ThingId { get; private set; }
+
+    public Dictionary<TypeDescription, ThingStatus> Statuses = new Dictionary<TypeDescription, ThingStatus>();
 
 	[Net] public ThingFlags Flags { get; set; }
 
 	public Thing()
 	{
-		ShouldUpdate = true;
+        ShouldUpdate = true;
 		DisplayIcon = ".";
 		DisplayName = Name;
 		Tooltip = "";
 		IconDepth = 0;
 		ShouldLogBehaviour = false;
 		IconScale = 1f;
+		ThingId = InterfacerGame.ThingId++;
 	}
 
 	public override void Spawn()
@@ -114,8 +116,8 @@ public partial class Thing : Entity
 			if ( ShouldLogBehaviour )
 				InterfacerGame.Instance.LogMessage( DisplayIcon + DisplayName + " pushed " + otherThing.DisplayIcon + " " + GridManager.GetDirectionText(direction) + "!", PlayerNum );
 
-			var explosion = IsInInventory
-				? InterfacerGame.Instance.SpawnThingInventory(TypeLibrary.GetDescription(typeof(Explosion)), newGridPos, InventoryPlayer)
+			var explosion = Flags.HasFlag(ThingFlags.InInventory)
+                ? InterfacerGame.Instance.SpawnThingInventory(TypeLibrary.GetDescription(typeof(Explosion)), newGridPos, InventoryPlayer)
 				: InterfacerGame.Instance.SpawnThingArena(TypeLibrary.GetDescription(typeof(Explosion)), newGridPos);
             explosion.VfxShake(0.15f, 6f);
             explosion.VfxScale(0.15f, 0.5f, 1f);
@@ -137,14 +139,14 @@ public partial class Thing : Entity
 		ContainingGridManager.SetGridPos( this, gridPos );
 		GridPos = gridPos;
 
-		if(IsInInventory)
+		if(Flags.HasFlag(ThingFlags.InInventory))
             RefreshGridPanelClient(To.Single(InventoryPlayer));
 		else
 			RefreshGridPanelClient();
 
 		if (ShouldLogBehaviour)
         {
-			if(IsInInventory)
+			if(Flags.HasFlag(ThingFlags.InInventory))
 				InterfacerGame.Instance.LogMessage(DisplayIcon + DisplayName + " moved to (" + gridPos.x + ", " + gridPos.y + ") in " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
 			else
 				InterfacerGame.Instance.LogMessage(DisplayIcon + DisplayName + " moved to (" + gridPos.x + ", " + gridPos.y + ").", PlayerNum);
@@ -155,7 +157,7 @@ public partial class Thing : Entity
 	{
 		if ( ShouldLogBehaviour )
         {
-			if (IsInInventory)
+			if (Flags.HasFlag(ThingFlags.InInventory))
 				InterfacerGame.Instance.LogMessage(DisplayIcon + DisplayName + " removed from " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
 			else
 				InterfacerGame.Instance.LogMessage(DisplayIcon + DisplayName + " removed.", PlayerNum);
@@ -175,14 +177,14 @@ public partial class Thing : Entity
         if (panel == null)
             return;
 
-        panel.Refresh();
+		panel.StateHasChanged();
     }
 
 	public GridPanel GetGridPanel()
     {
 		Host.AssertClient();
 
-		return IsInInventory ? Hud.Instance.MainPanel.InventoryPanel : Hud.Instance.MainPanel.ArenaPanel;
+		return Flags.HasFlag(ThingFlags.InInventory) ? Hud.Instance.MainPanel.InventoryPanel : Hud.Instance.MainPanel.ArenaPanel;
 	}
 
     public void SetOffset(Vector2 offset)
@@ -306,11 +308,17 @@ public partial class Thing : Entity
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(DisplayIcon, PlayerNum, Offset, RotationDegrees, IconScale, IconDepth, Flags);
+        return HashCode.Combine(DisplayIcon, PlayerNum + ThingId, Offset, RotationDegrees, IconScale, IconDepth, Flags);
+        //return HashCode.Combine((DisplayIcon + ThingId.ToString()), PlayerNum, Offset, RotationDegrees, IconScale, IconDepth, Flags);
     }
 
 	public int GetInfoDisplayHash()
     {
 		return HashCode.Combine(NetworkIdent, DisplayIcon);
+    }
+
+    public int GetNearbyCellHash()
+    {
+        return HashCode.Combine(DisplayIcon, PlayerNum, IconDepth, Flags, NetworkIdent, ThingId);
     }
 }

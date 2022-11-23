@@ -47,7 +47,7 @@
 
     .nearby
     {
-        width: 40px;
+        width: 47px;
         margin: 0 0 0 20px;
         border: 1px solid #ffffff05;
         border-radius: 3px;
@@ -89,7 +89,7 @@
 
     <div class="lower_row">
         <div class="character"></div>
-        <NearbyPanel class="nearby"></NearbyPanel>
+        <NearbyPanel class="nearby" @ref=NearbyPanel></NearbyPanel>
         <InventoryPanel class="inventory" style="width: @(40 * InterfacerGame.InventoryWidth)px; height: @(40 * InterfacerGame.InventoryHeight)px;" @ref=InventoryPanel></InventoryPanel>
         <InfoPanel class="info"></InfoPanel>
         <div class="stats"></div>
@@ -100,6 +100,7 @@
 {
     public ArenaPanel ArenaPanel { get; set; }
     public LogPanel LogPanel { get; set; }
+    public NearbyPanel NearbyPanel { get; set; }
     public InventoryPanel InventoryPanel { get; set; }
 
     public string GetHoveredCoords()

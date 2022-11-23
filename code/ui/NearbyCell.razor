@@ -11,11 +11,13 @@
         pointer-events:all;
         font-size: 29px;
         flex-shrink: 0;
+        border: 1px solid #00000000;
+        justify-content:center;
     }
 
     .nearby_selected 
     {
-        border: 1px solid #bbbbff22;
+        border: 1px solid #bbbbff44;
         border-radius:3px;
     }
 
@@ -45,13 +47,20 @@
 
     string GetSelectedClass()
     {
-        return IsSelected() ? "selected" : "";
+        return IsSelected() ? "nearby_selected" : "";
     }
 
     bool IsSelected()
     {
         return Thing == InterfacerGame.Instance.LocalPlayer?.SelectedThing;
     }
+
+    //public override void Tick()
+    //{
+    //    base.Tick();
+
+    //    DrawDebugText(Thing.DisplayName);
+    //}
 
     protected override Panel CreateTooltipPanel()
     {
@@ -66,7 +75,7 @@
         if (Thing == null)
             return base.BuildHash();
 
-        return HashCode.Combine( Thing.GetHashCode(), IsSelected() );
+        return HashCode.Combine(Thing.GetNearbyCellHash(), IsSelected());
     }
 
     protected override void OnAfterTreeRender(bool firstTime)
@@ -83,7 +92,14 @@
     {
         base.OnMouseDown(e);
 
+        //Log.Info("NearbyCell:OnMouseDown - " + Thing.DisplayName);
+
         bool rightClick = e.Button == "mouseright";
         InterfacerGame.NearbyThingClickedCmd(Thing.NetworkIdent, rightClick);
+    }
+
+    void DrawDebugText(string text)
+    {
+        DebugOverlay.ScreenText(text, PanelPositionToScreenPosition(Vector2.Zero), 0, Color.White, 0f);
     }
 }

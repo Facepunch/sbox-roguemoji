@@ -60,9 +60,4 @@ public abstract class GridPanel : Panel
     {
         return HashCode.Combine(GetThings().Count);
     }
-
-    public void Refresh()
-    {
-        StateHasChanged();
-    }
 }

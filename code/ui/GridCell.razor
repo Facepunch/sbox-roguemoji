@@ -17,6 +17,7 @@
         pointer-events:all;
         font-size: 29px;
         padding-bottom: 4px;
+        border: 1px solid #00000000;
         //color: transparent;  
         //text-shadow: 0 0 0.01px #ff0000;
         //filter: contrast(0.5);
@@ -69,6 +70,14 @@
 
     bool IsSelected()
     {
+        var isSelected = Thing == InterfacerGame.Instance.LocalPlayer?.SelectedThing;
+        if(isSelected)
+        {
+            //Log.Info("selected: " + GridIndex + ", " + Thing.DisplayName + " -- " + Time.Now);
+
+
+        }
+
         return Thing == InterfacerGame.Instance.LocalPlayer?.SelectedThing;
     }
 
@@ -85,7 +94,7 @@
         if (Thing == null)
             return base.BuildHash();
 
-        return HashCode.Combine( Thing.GetHashCode(), IsSelected() );
+        return HashCode.Combine(Thing.GetHashCode(), IsSelected(), Thing.NetworkIdent, Thing.ThingId);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

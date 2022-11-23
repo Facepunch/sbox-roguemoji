@@ -5,13 +5,26 @@ using System.Collections.Generic;
 
 namespace Interfacer;
 
+public class PanelFlickerData
+{
+    public Panel panel;
+    public int numFrames;
+
+    public PanelFlickerData(Panel _panel)
+    {
+        panel = _panel;
+        numFrames = 0;
+    }
+}
+
 public partial class InterfacerGame : Sandbox.Game
 {
 	public static InterfacerGame Instance { get; private set; }
 
 	public static int PlayerNum { get; set; }
+    public static int ThingId { get; set; }
 
-	public Hud Hud { get; private set; }
+    public Hud Hud { get; private set; }
 
 	[Net] public GridManager ArenaGridManager { get; private set; }
 
@@ -25,7 +38,9 @@ public partial class InterfacerGame : Sandbox.Game
 
 	public InterfacerPlayer LocalPlayer => Local.Client.Pawn as InterfacerPlayer; // Client-only
 
-	public InterfacerGame()
+    public List<PanelFlickerData> _panelsToFlicker;
+
+    public InterfacerGame()
 	{
 		Instance = this;
 
@@ -44,7 +59,8 @@ public partial class InterfacerGame : Sandbox.Game
 		if (Host.IsClient)
 		{
 			Hud = new Hud();
-		}
+            _panelsToFlicker = new List<PanelFlickerData>();
+        }
 	}
 
     public override void Spawn()
@@ -80,7 +96,21 @@ public partial class InterfacerGame : Sandbox.Game
 				Hud.MainPanel.LogPanel.WriteMessage(data.text, data.playerNum);
 			}
 		}
-	}
+
+        for (int i = _panelsToFlicker.Count - 1; i >= 0; i--)
+        {
+            var data = _panelsToFlicker[i];
+            data.numFrames++;
+
+            if (data.numFrames >= 2)
+            {
+                if (data.panel != null)
+                    data.panel.Style.PointerEvents = PointerEvents.All;
+
+                _panelsToFlicker.RemoveAt(i);
+            }
+        }
+    }
 
 	public override void ClientJoined(Client client) // Server-only
 	{
@@ -163,10 +193,12 @@ public partial class InterfacerGame : Sandbox.Game
 	{
 		var thing = ArenaGridManager.GetThingAt(gridPos, ThingFlags.Selectable);
 
-		player.SelectThing(thing);
+		if(!rightClick)
+			player.SelectThing(thing);
+
 		LogMessage(player.Client.Name + (rightClick ? " right-clicked " : " clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + ".", player.PlayerNum);
 
-		if(thing == null)
+        if (thing == null)
         {
 			if (Rand.Float(0f, 1f) < 0.1f)
 			{
@@ -175,8 +207,8 @@ public partial class InterfacerGame : Sandbox.Game
 			}
 			else
             {
-				var explosion = Instance.SpawnThingArena(TypeLibrary.GetDescription(typeof(Explosion)), gridPos);
-				explosion.VfxShake(0.15f, 4f);
+                var explosion = Instance.SpawnThingArena(TypeLibrary.GetDescription(typeof(Explosion)), gridPos);
+                explosion.VfxShake(0.15f, 4f);
 				explosion.VfxScale(0.15f, Rand.Float(0.6f, 0.8f), Rand.Float(0.3f, 0.4f));
 			}
 		}
@@ -186,7 +218,9 @@ public partial class InterfacerGame : Sandbox.Game
 	{
 		var thing = player.InventoryGridManager.GetThingAt(gridPos, ThingFlags.Selectable);
 
-		player.SelectThing(thing);
+		if(!rightClick)
+			player.SelectThing(thing);
+
 		LogMessage(player.Client.Name + (rightClick ? " right-clicked " : " clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + " in their inventory.", player.PlayerNum);
 
 		if (thing == null)
@@ -225,7 +259,7 @@ public partial class InterfacerGame : Sandbox.Game
 	public Thing SpawnThingInventory(TypeDescription type, IntVector gridPos, InterfacerPlayer player)
 	{
 		var thing = type.Create<Thing>();
-		thing.IsInInventory = true;
+		thing.Flags |= ThingFlags.InInventory;
 		thing.InventoryPlayer = player;
 		player.InventoryGridManager.AddThing(thing);
 		thing.SetGridPos(gridPos);
@@ -240,7 +274,7 @@ public partial class InterfacerGame : Sandbox.Game
 		thing.ContainingGridManager?.RemoveThing(thing);
 		RefreshGridPanelClient(inventory: true);
 
-        thing.IsInInventory = false;
+        thing.Flags &= ~ThingFlags.InInventory;
 		thing.InventoryPlayer = null;
 		ArenaGridManager.AddThing(thing);
 		thing.SetGridPos(gridPos);
@@ -250,7 +284,7 @@ public partial class InterfacerGame : Sandbox.Game
 	public void RefreshGridPanelClient(bool inventory)
 	{
 		GridPanel panel = inventory ? Hud.Instance.MainPanel.InventoryPanel : Hud.Instance.MainPanel.ArenaPanel;
-		panel.Refresh();
+		panel.StateHasChanged();
 	}
 
     [ConCmd.Server]
@@ -258,13 +292,18 @@ public partial class InterfacerGame : Sandbox.Game
     {
         var player = ConsoleSystem.Caller.Pawn as InterfacerPlayer;
         Thing thing = Entity.FindByIndex(networkId) as Thing;
+
+		if (thing.Flags.HasFlag(ThingFlags.InInventory))
+		{
+			Log.Info(thing.Name + " " + thing.NetworkIdent + "!!!!");
+            return;
+        }
+
         Instance.NearbyThingClicked(thing, rightClick, player);
     }
 
 	public void NearbyThingClicked(Thing thing, bool rightClick, InterfacerPlayer player)
 	{
-		Log.Info(thing.DisplayName + (rightClick ? " right-clicked by " : " clicked by ") + player.DisplayName);
-
 		if (rightClick)
 		{
 			var gridPos = IntVector.Zero;
@@ -273,17 +312,49 @@ public partial class InterfacerGame : Sandbox.Game
                 MoveThingToInventory(thing, gridPos, player);
             }
 		}
+		else
+		{
+            player.SelectThing(thing);
+        }
 	}
 
     public void MoveThingToInventory(Thing thing, IntVector gridPos, InterfacerPlayer player)
 	{
-		Assert.True(!thing.IsInInventory || thing.InventoryPlayer != player);
+		if(thing.Flags.HasFlag(ThingFlags.InInventory))
+		{
+			Log.Error(thing.DisplayName + " at " + gridPos + " is already in inventory of " + player.DisplayName + "!");
+		}
+
+        if (thing.InventoryPlayer == player)
+        {
+            Log.Error(thing.DisplayName + " has same InventoryPlayer!");
+        }
+
+        Assert.True(!thing.Flags.HasFlag(ThingFlags.InInventory) || thing.InventoryPlayer != player);
 
 		thing.ContainingGridManager?.RemoveThing(thing);
+		RefreshNearbyPanelClient();
 
         thing.InventoryPlayer = player;
-        thing.IsInInventory = true;
+        thing.Flags |= ThingFlags.InInventory;
         player.InventoryGridManager.AddThing(thing);
 		thing.SetGridPos(gridPos);
     }
+
+    [ClientRpc]
+    public void RefreshNearbyPanelClient()
+    {
+		Hud.Instance.MainPanel.NearbyPanel.StateHasChanged();
+    }
+
+	public void FlickerPanel(Panel panel)
+	{
+		Host.AssertClient();
+
+		if (panel == null)
+			return;
+
+		panel.Style.PointerEvents = PointerEvents.None;
+		_panelsToFlicker.Add(new PanelFlickerData(panel));
+	}
 }

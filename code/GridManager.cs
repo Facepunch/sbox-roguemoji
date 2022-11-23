@@ -14,6 +14,7 @@ public enum ThingFlags
 	Solid = 1,
 	Selectable = 2,
 	VisualEffect = 4,
+	InInventory = 8,
 }
 
 public partial class GridManager : Entity
