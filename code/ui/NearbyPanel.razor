@@ -43,6 +43,20 @@
         return player.ContainingGridManager.GetThingsAtClient(player.GridPos).WithNone(ThingFlags.Solid).WithAll(ThingFlags.Selectable);
     }
 
+    public void Refresh()
+    {
+        //var player = InterfacerGame.Instance.LocalPlayer;
+        //if (player == null)
+        //    return;
+
+        //var numThings = GetThings(player).ToList().Count;
+        //Style.Overflow = numThings < 5 ? OverflowMode.Hidden : OverflowMode.Scroll;
+        //TryScroll(0f);
+        //TryScroll(0f);
+
+        StateHasChanged();
+    }
+
     protected override int BuildHash()
     {
         var player = InterfacerGame.Instance.LocalPlayer;
@@ -55,6 +69,17 @@
         //    combinedFlags += (int)thing.Flags;
         //}
         var numThings = GetThings(player).ToList().Count;
+
+        if(numThings < 5)
+        {
+            Style.Overflow = OverflowMode.Hidden;
+            ScrollOffset = Vector2.Zero;
+        }
+        else
+        {
+            Style.Overflow = OverflowMode.Scroll;
+        }
+        //Style.Overflow = numThings < 5 ? OverflowMode.Hidden : OverflowMode.Scroll;
 
         return HashCode.Combine(player.GridPos, numThings, player.InventoryGridManager.Things.Count);
     }
@@ -71,6 +96,15 @@
     //{
     //    base.OnAfterTreeRender(firstTime);
 
+    //    Log.Info("OnAfterTreeRender " + Time.Now);
+
+    //    var player = InterfacerGame.Instance.LocalPlayer;
+    //    if (player == null)
+    //        return;
+
+    //    var numThings = GetThings(player).ToList().Count;
+    //    Style.Overflow = numThings < 5 ? OverflowMode.Hidden : OverflowMode.Scroll;
+    //    TryScroll(0f);
     //}
 
     //protected override void OnMouseDown(MousePanelEvent e)

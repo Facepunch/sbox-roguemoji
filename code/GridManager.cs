@@ -82,6 +82,17 @@ public partial class GridManager : Entity
 		thing.ContainingGridManager = null;
 	}
 
+	void RefreshStackNums(IntVector gridPos)
+	{
+        var things = GridThings[gridPos];
+		if (things == null || things.Count == 0)
+			return;
+
+		int stackNum = 0;
+		foreach(var thing in things)
+			thing.StackNum = stackNum++;
+    }
+
 	public int GetIndex( IntVector gridPos ) { return gridPos.y * GridWidth + gridPos.x; }
 	public IntVector GetGridPos( int index ) { return new IntVector( index % GridWidth, ((float)index / (float)GridWidth).FloorToInt() ); }
 	public Vector2 GetScreenPos(IntVector gridPos) { return new Vector2(gridPos.x, gridPos.y) * 40f; }
@@ -123,6 +134,8 @@ public partial class GridManager : Entity
             GridThings[gridPos].Add(thing);
         else
             GridThings[gridPos] = new List<Thing> { thing };
+
+        RefreshStackNums(gridPos);
     }
 
     public void DeregisterGridPos(Thing thing, IntVector gridPos)
@@ -130,6 +143,7 @@ public partial class GridManager : Entity
         if (GridThings.ContainsKey(gridPos))
         {
             GridThings[gridPos].Remove(thing);
+			RefreshStackNums(gridPos);
         }
     }
 

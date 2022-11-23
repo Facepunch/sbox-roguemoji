@@ -273,6 +273,7 @@ public partial class InterfacerGame : Sandbox.Game
 
 		thing.ContainingGridManager?.RemoveThing(thing);
 		RefreshGridPanelClient(inventory: true);
+        RefreshNearbyPanelClient();
 
         thing.Flags &= ~ThingFlags.InInventory;
 		thing.InventoryPlayer = null;
@@ -344,7 +345,7 @@ public partial class InterfacerGame : Sandbox.Game
     [ClientRpc]
     public void RefreshNearbyPanelClient()
     {
-		Hud.Instance.MainPanel.NearbyPanel.StateHasChanged();
+		Hud.Instance.MainPanel.NearbyPanel.Refresh();
     }
 
 	public void FlickerPanel(Panel panel)

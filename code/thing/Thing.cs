@@ -18,8 +18,8 @@ public partial class Thing : Entity
 	[Net] public int PlayerNum { get; set; }
 
 	[Net] public int IconDepth { get; set; }
-	public int ZPos => ContainingGridManager.GetIndex(GridPos) + IconDepth;
     public bool ShouldLogBehaviour { get; set; }
+	[Net] public int StackNum { get; set; }
 
 	public Vector2 Offset { get; set; }
 	public float RotationDegrees { get; set; }
@@ -131,7 +131,7 @@ public partial class Thing : Entity
 		return true;
 	}
 
-	public void SetGridPos( IntVector gridPos, bool forceRefresh = false )
+	public virtual void SetGridPos( IntVector gridPos, bool forceRefresh = false )
 	{
 		if ( GridPos.Equals( gridPos ) && !forceRefresh )
 			return;

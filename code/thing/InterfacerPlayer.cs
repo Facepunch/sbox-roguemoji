@@ -103,21 +103,31 @@ public partial class InterfacerPlayer : Thing
 		return success;
 	}
 
-	void UpdateThings(IList<Thing> things, float dt)
-	{
-		for (int i = things.Count - 1; i >= 0; i--)
-		{
-			var thing = things[i];
+ //   public override void SetGridPos(IntVector gridPos, bool forceRefresh = false)
+	//{
+ //       if (GridPos.Equals(gridPos) && !forceRefresh)
+ //           return;
 
-			if (!thing.DoneFirstUpdate)
-				thing.FirstUpdate();
+ //       base.SetGridPos(gridPos, forceRefresh);
 
-			if (thing.ShouldUpdate || thing.Statuses.Count > 0)
-				thing.Update(dt);
-		}
-	}
+	//	InterfacerGame.Instance.RefreshNearbyPanelClient();
+	//}
 
-	public void SelectThing(Thing thing)
+    //void UpdateThings(IList<Thing> things, float dt)
+    //{
+    //	for (int i = things.Count - 1; i >= 0; i--)
+    //	{
+    //		var thing = things[i];
+
+    //		if (!thing.DoneFirstUpdate)
+    //			thing.FirstUpdate();
+
+    //		if (thing.ShouldUpdate || thing.Statuses.Count > 0)
+    //			thing.Update(dt);
+    //	}
+    //}
+
+    public void SelectThing(Thing thing)
 	{
 		if (SelectedThing == thing)
 			return;
