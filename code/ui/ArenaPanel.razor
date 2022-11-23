@@ -30,7 +30,7 @@
     @foreach(Thing thing in GetThings())
     {
         var index = GetIndex(thing.GridPos);
-        <GridCell style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40);" Thing=@thing GridIndex=@index @onmouseover=@(() => HoveredCellIndex = index ) @onclick=@(() => OnThingClicked(index)) />
+        <GridCell style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40);" Thing=@thing GridIndex=@index @onmouseover=@(() => HoveredCellIndex = index )) />
     }
 </root>
 
@@ -44,24 +44,15 @@
         return InterfacerGame.Instance.ArenaGridManager?.Things ?? new List<Thing>();
     }
 
-    protected override void OnThingClicked(int index)
-    {
-        var gridPos = GridManager.GetGridPos(index, GridWidth);
-        Hud.Instance.GridCellClickedArena(gridPos, rightClick: false);
-    }
-
     protected override void OnBgClicked()
     {
-        Hud.Instance.GridCellClickedArena(GetGridPos(MousePosition), rightClick: false);
+        Hud.Instance.GridCellClickedArena(GetGridPos(MousePosition), rightClick: false, shift: Input.Down(InputButton.Run));
     }
 
     protected override void OnMouseDown(MousePanelEvent e)
     {
         base.OnMouseDown(e);
 
-        if (e.Button == "mouseright")
-        {
-            Hud.Instance.GridCellClickedArena(GetGridPos(MousePosition), rightClick: true);
-        }
+        Hud.Instance.GridCellClickedArena(GetGridPos(MousePosition), rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run));
     }
 }

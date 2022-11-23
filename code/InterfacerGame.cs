@@ -163,27 +163,27 @@ public partial class InterfacerGame : Sandbox.Game
 	}
 
 	[ConCmd.Server]
-	public static void CellClickedArenaCmd(int x, int y, bool rightClick)
+	public static void CellClickedArenaCmd(int x, int y, bool rightClick, bool shift)
 	{
 		var player = ConsoleSystem.Caller.Pawn as InterfacerPlayer;
-		Instance.CellClickedArena(new IntVector(x, y), player, rightClick);
+		Instance.CellClickedArena(new IntVector(x, y), player, rightClick, shift);
 	}
 
 	[ConCmd.Server]
-	public static void CellClickedInventoryCmd(int x, int y, bool rightClick)
+	public static void CellClickedInventoryCmd(int x, int y, bool rightClick, bool shift)
 	{
 		var player = ConsoleSystem.Caller.Pawn as InterfacerPlayer;
-		Instance.CellClickedInventory(new IntVector(x, y), player, rightClick);
+		Instance.CellClickedInventory(new IntVector(x, y), player, rightClick, shift);
 	}
 
-	public void CellClickedArena(IntVector gridPos, InterfacerPlayer player, bool rightClick)
+	public void CellClickedArena(IntVector gridPos, InterfacerPlayer player, bool rightClick, bool shift)
 	{
 		var thing = ArenaGridManager.GetThingAt(gridPos, ThingFlags.Selectable);
 
-		if(!rightClick)
-			player.SelectThing(thing);
+        LogMessage(player.Client.Name + (shift ? " shift-" : " ") + (rightClick ? "right-clicked " : "clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + ".", player.PlayerNum);
 
-		LogMessage(player.Client.Name + (rightClick ? " right-clicked " : " clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + ".", player.PlayerNum);
+        if (!rightClick)
+			player.SelectThing(thing);
 
   //      if (thing == null)
   //      {
@@ -201,17 +201,22 @@ public partial class InterfacerGame : Sandbox.Game
 		//}
 	}
 
-	public void CellClickedInventory(IntVector gridPos, InterfacerPlayer player, bool rightClick)
+	public void CellClickedInventory(IntVector gridPos, InterfacerPlayer player, bool rightClick, bool shift)
 	{
 		var thing = player.InventoryGridManager.GetThingAt(gridPos, ThingFlags.Selectable);
+        LogMessage(player.Client.Name + (shift ? " shift-" : " ") + (rightClick ? "right-clicked " : "clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + " in their inventory.", player.PlayerNum);
 
-		if(!rightClick)
-			player.SelectThing(thing);
-
-		LogMessage(player.Client.Name + (rightClick ? " right-clicked " : " clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + " in their inventory.", player.PlayerNum);
-
-		if(rightClick && thing != null)
-			MoveThingToArena(thing, player.GridPos);
+        if (!rightClick)
+		{
+			if(shift && thing != null)
+            {
+                MoveThingToArena(thing, player.GridPos);
+            }
+			else
+			{
+                player.SelectThing(thing);
+            }
+		}
 	}
 
 	public Thing SpawnThingArena(TypeDescription type, IntVector gridPos)
@@ -259,7 +264,7 @@ public partial class InterfacerGame : Sandbox.Game
 	}
 
     [ConCmd.Server]
-    public static void NearbyThingClickedCmd(int networkId, bool rightClick)
+    public static void NearbyThingClickedCmd(int networkId, bool rightClick, bool shift)
     {
         var player = ConsoleSystem.Caller.Pawn as InterfacerPlayer;
         Thing thing = Entity.FindByIndex(networkId) as Thing;
@@ -270,24 +275,33 @@ public partial class InterfacerGame : Sandbox.Game
             return;
         }
 
-        Instance.NearbyThingClicked(thing, rightClick, player);
+        Instance.NearbyThingClicked(thing, rightClick, player, shift);
     }
 
-	public void NearbyThingClicked(Thing thing, bool rightClick, InterfacerPlayer player)
+	public void NearbyThingClicked(Thing thing, bool rightClick, InterfacerPlayer player, bool shift)
 	{
-		if (rightClick)
+        LogMessage(player.Client.Name + (shift ? " shift-" : " ") + (rightClick ? "right-clicked " : "clicked ") + thing.DisplayIcon + " nearby them.", player.PlayerNum);
+
+        if (!rightClick)
 		{
-			var gridPos = IntVector.Zero;
-			if(player.InventoryGridManager.GetFirstEmptyGridPos(out gridPos))
+			if(shift)
 			{
-                MoveThingToInventory(thing, gridPos, player);
+                var gridPos = IntVector.Zero;
+                if (player.InventoryGridManager.GetFirstEmptyGridPos(out gridPos))
+                {
+                    MoveThingToInventory(thing, gridPos, player);
+                }
+            }
+			else
+			{
+                player.SelectThing(thing);
             }
 		}
 		else
 		{
-            player.SelectThing(thing);
+            
         }
-	}
+    }
 
     public void MoveThingToInventory(Thing thing, IntVector gridPos, InterfacerPlayer player)
 	{

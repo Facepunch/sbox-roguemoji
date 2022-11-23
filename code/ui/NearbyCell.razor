@@ -84,11 +84,7 @@
     protected override void OnMouseDown(MousePanelEvent e)
     {
         base.OnMouseDown(e);
-
-        //Log.Info("NearbyCell:OnMouseDown - " + Thing.DisplayName);
-
-        bool rightClick = e.Button == "mouseright";
-        InterfacerGame.NearbyThingClickedCmd(Thing.NetworkIdent, rightClick);
+        InterfacerGame.NearbyThingClickedCmd(Thing.NetworkIdent, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run));
     }
 
     void DrawDebugText(string text)

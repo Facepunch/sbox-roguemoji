@@ -33,7 +33,7 @@
     @foreach(var thing in GetThings())
     {
         var index = GetIndex(thing.GridPos);
-        <GridCell style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40);" Thing=@thing GridIndex=@index @onmouseover=@(() => HoveredCellIndex = index ) @onclick=@(() => OnThingClicked(index)) />
+        <GridCell style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40);" Thing=@thing GridIndex=@index @onmouseover=@(() => HoveredCellIndex = index )) />
     }
 </root>
 
@@ -45,28 +45,34 @@
     protected override IList<Thing> GetThings()
     {
         return InterfacerGame.Instance.LocalPlayer.InventoryGridManager.Things;
-        //return InterfacerGame.Instance.LocalPlayer?.GridManager?.Things ?? new List<Thing>();
-    }
-
-    protected override void OnThingClicked(int index)
-    {
-        var gridPos = GridManager.GetGridPos(index, GridWidth);
-        //Log.Info("OnThingClicked: " + gridPos);
-        Hud.Instance.GridCellClickedInventory(gridPos, rightClick: false);
     }
 
     protected override void OnBgClicked()
     {
-        Hud.Instance.GridCellClickedInventory(GetGridPos(MousePosition), rightClick: false);
+        Hud.Instance.GridCellClickedInventory(GetGridPos(MousePosition), rightClick: false, shift: Input.Down(InputButton.Run));
     }
 
     protected override void OnMouseDown(MousePanelEvent e)
     {
         base.OnMouseDown(e);
+        Hud.Instance.GridCellClickedInventory(GetGridPos(MousePosition), rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run));
+    }
 
-        if (e.Button == "mouseright")
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        if (firstTime)
         {
-            Hud.Instance.GridCellClickedInventory(GetGridPos(MousePosition), rightClick: true);
+            //Tooltip = "Your inventory.";
         }
+
+        base.OnAfterTreeRender(firstTime);
+    }
+
+    protected override Panel CreateTooltipPanel()
+    {
+        var panel = Hud.Instance.AddChild<CellTooltip>();
+        panel.Text = Tooltip;
+        panel.Style.Opacity = 0.5f;
+        return panel;
     }
 }
