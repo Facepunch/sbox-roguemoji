@@ -103,31 +103,17 @@ public partial class InterfacerPlayer : Thing
 		return success;
 	}
 
- //   public override void SetGridPos(IntVector gridPos, bool forceRefresh = false)
-	//{
- //       if (GridPos.Equals(gridPos) && !forceRefresh)
- //           return;
+    public override void SetGridPos(IntVector gridPos, bool forceRefresh = false)
+	{
+		if (GridPos.Equals(gridPos) && !forceRefresh)
+			return;
 
- //       base.SetGridPos(gridPos, forceRefresh);
+		base.SetGridPos(gridPos, forceRefresh);
 
-	//	InterfacerGame.Instance.RefreshNearbyPanelClient();
-	//}
+        InterfacerGame.Instance.FlickerNearbyPanelCellsClient();
+    }
 
-    //void UpdateThings(IList<Thing> things, float dt)
-    //{
-    //	for (int i = things.Count - 1; i >= 0; i--)
-    //	{
-    //		var thing = things[i];
-
-    //		if (!thing.DoneFirstUpdate)
-    //			thing.FirstUpdate();
-
-    //		if (thing.ShouldUpdate || thing.Statuses.Count > 0)
-    //			thing.Update(dt);
-    //	}
-    //}
-
-    public void SelectThing(Thing thing)
+	public void SelectThing(Thing thing)
 	{
 		if (SelectedThing == thing)
 			return;

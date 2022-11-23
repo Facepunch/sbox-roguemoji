@@ -55,13 +55,6 @@
         return Thing == InterfacerGame.Instance.LocalPlayer?.SelectedThing;
     }
 
-    //public override void Tick()
-    //{
-    //    base.Tick();
-
-    //    DrawDebugText(Thing.DisplayName);
-    //}
-
     protected override Panel CreateTooltipPanel()
     {
         var panel = Hud.Instance.AddChild<CellTooltip>();

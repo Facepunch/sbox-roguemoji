@@ -49,8 +49,6 @@ public partial class InterfacerGame : Sandbox.Game
 			ArenaGridManager = new();
 			ArenaGridManager.Init(ArenaWidth, ArenaHeight);
 
-			//Log.Info("------------------ Game() - ArenaGridManager: " + ArenaGridManager);
-
 			SpawnThingArena(TypeLibrary.GetDescription(typeof(Rock)), new IntVector(10, 10));
             SpawnThingArena(TypeLibrary.GetDescription(typeof(Leaf)), new IntVector(9, 10));
             SpawnThingArena(TypeLibrary.GetDescription(typeof(Leaf)), new IntVector(21, 19));
@@ -63,18 +61,9 @@ public partial class InterfacerGame : Sandbox.Game
         }
 	}
 
-    public override void Spawn()
-    {
-        base.Spawn();
-
-		//Log.Info("Game:Spawn - ArenaGridManager: " + ArenaGridManager);
-	}
-
     [Event.Tick.Server]
 	public void ServerTick()
 	{
-		//Log.Info("Game:ServerTick - ArenaGridManager: " + ArenaGridManager);
-
 		if (ArenaGridManager == null)
 			return;
 
@@ -86,8 +75,6 @@ public partial class InterfacerGame : Sandbox.Game
 	[Event.Tick.Client]
 	public void ClientTick()
 	{
-		//Log.Info("Game:ClientTick - ArenaGridManager: " + ArenaGridManager);
-
 		if (Hud.MainPanel.LogPanel != null)
 		{
 			while (LogMessageQueue.Count > 0)
@@ -126,8 +113,7 @@ public partial class InterfacerGame : Sandbox.Game
 		{
             for (int y = 0; y < 5; y++)
 			{
-				//if(Rand.Float(0f, 1f) < 0.6f)
-					SpawnThingInventory(TypeLibrary.GetDescription(GetRandomType()), new IntVector(x, y), player);
+				SpawnThingInventory(TypeLibrary.GetDescription(GetRandomType()), new IntVector(x, y), player);
             }
         }
 		
@@ -345,10 +331,16 @@ public partial class InterfacerGame : Sandbox.Game
     [ClientRpc]
     public void RefreshNearbyPanelClient()
     {
-		Hud.Instance.MainPanel.NearbyPanel.Refresh();
+		Hud.Instance.MainPanel.NearbyPanel.StateHasChanged();
     }
 
-	public void FlickerPanel(Panel panel)
+    [ClientRpc]
+    public void FlickerNearbyPanelCellsClient()
+    {
+        Hud.Instance.MainPanel.NearbyPanel.FlickerCells();
+    }
+
+    public void FlickerPanel(Panel panel)
 	{
 		Host.AssertClient();
 

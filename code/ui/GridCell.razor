@@ -81,14 +81,6 @@
 
     bool IsSelected()
     {
-        var isSelected = Thing == InterfacerGame.Instance.LocalPlayer?.SelectedThing;
-        if(isSelected)
-        {
-            //Log.Info("selected: " + GridIndex + ", " + Thing.DisplayName + " -- " + Time.Now);
-
-
-        }
-
         return Thing == InterfacerGame.Instance.LocalPlayer?.SelectedThing;
     }
 

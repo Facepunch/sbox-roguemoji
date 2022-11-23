@@ -24,6 +24,11 @@
         return;
     }
 
+    @if(FlickerFrames < 1)
+    {
+        return;
+    }
+
     @foreach (var thing in GetThings(player))
     {
         <NearbyCell Thing=@thing />
@@ -32,29 +37,20 @@
 
 @code
 {
-    //public override void Tick()
-    //{
-    //    base.Tick();
-
-    //}
+    public int FlickerFrames { get; set; }
 
     IEnumerable<Thing> GetThings(InterfacerPlayer player)
     {
         return player.ContainingGridManager.GetThingsAtClient(player.GridPos).WithNone(ThingFlags.Solid).WithAll(ThingFlags.Selectable);
     }
 
-    public void Refresh()
+    public override void Tick()
     {
-        //var player = InterfacerGame.Instance.LocalPlayer;
-        //if (player == null)
-        //    return;
+        base.Tick();
 
-        //var numThings = GetThings(player).ToList().Count;
-        //Style.Overflow = numThings < 5 ? OverflowMode.Hidden : OverflowMode.Scroll;
-        //TryScroll(0f);
-        //TryScroll(0f);
-
-        StateHasChanged();
+        FlickerFrames++;
+        if (FlickerFrames == 1)
+            StateHasChanged();
     }
 
     protected override int BuildHash()
@@ -63,11 +59,6 @@
         if (player == null)
             return 0;
 
-        //int combinedFlags = 0;
-        //foreach (var thing in GetThings(player))
-        //{
-        //    combinedFlags += (int)thing.Flags;
-        //}
         var numThings = GetThings(player).ToList().Count;
 
         if(numThings < 5)
@@ -79,39 +70,12 @@
         {
             Style.Overflow = OverflowMode.Scroll;
         }
-        //Style.Overflow = numThings < 5 ? OverflowMode.Hidden : OverflowMode.Scroll;
 
         return HashCode.Combine(player.GridPos, numThings, player.InventoryGridManager.Things.Count);
     }
 
-    //protected override Panel CreateTooltipPanel()
-    //{
-    //    var panel = Hud.Instance.AddChild<CellTooltip>();
-    //    panel.Text = Tooltip;
-    //    panel.Style.Opacity = 0.25f;
-    //    return panel;
-    //}
-
-    //protected override void OnAfterTreeRender(bool firstTime)
-    //{
-    //    base.OnAfterTreeRender(firstTime);
-
-    //    Log.Info("OnAfterTreeRender " + Time.Now);
-
-    //    var player = InterfacerGame.Instance.LocalPlayer;
-    //    if (player == null)
-    //        return;
-
-    //    var numThings = GetThings(player).ToList().Count;
-    //    Style.Overflow = numThings < 5 ? OverflowMode.Hidden : OverflowMode.Scroll;
-    //    TryScroll(0f);
-    //}
-
-    //protected override void OnMouseDown(MousePanelEvent e)
-    //{
-    //    base.OnMouseDown(e);
-
-    //    bool rightClick = e.Button == "mouseright";
-    //    InterfacerGame.NearbyThingClickedCmd(Thing.NetworkIdent, rightClick);
-    //}
+    public void FlickerCells()
+    {
+        FlickerFrames = 0;
+    }
 }

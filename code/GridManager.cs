@@ -36,19 +36,6 @@ public partial class GridManager : Entity
 		Things = new List<Thing>();
 	}
 
-	[Event.Tick.Client]
-	public void ClientTick()
-	{
-		//Log.Info("GridManager:ClientTick");
-
-	}
-
-	[Event.Tick.Server]
-	public void ServerTick()
-	{
-		//Log.Info("GridManager:ServerTick");
-	}
-
 	public void Update(float dt)
 	{
 		UpdateThings(Things, dt);
