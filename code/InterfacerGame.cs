@@ -109,9 +109,9 @@ public partial class InterfacerGame : Sandbox.Game
 		player.PlayerNum = ++PlayerNum;
 		client.Pawn = player;
 
-		for(int x = 0; x < 5; x++)
+		for(int x = 0; x < InventoryWidth; x++)
 		{
-            for (int y = 0; y < 5; y++)
+            for (int y = 0; y < InventoryHeight; y++)
 			{
 				SpawnThingInventory(TypeLibrary.GetDescription(GetRandomType()), new IntVector(x, y), player);
             }
@@ -122,7 +122,7 @@ public partial class InterfacerGame : Sandbox.Game
 
 	Type GetRandomType()
 	{
-		int rand = Rand.Int(0, 5);
+		int rand = Rand.Int(0, 6);
 		switch (rand)
 		{
 			case 0: return typeof(Leaf);
@@ -130,7 +130,8 @@ public partial class InterfacerGame : Sandbox.Game
 			case 2: return typeof(Nut);
             case 3: return typeof(Mushroom);
             case 4: return typeof(Trumpet);
-            case 5: default: return typeof(Cheese);
+            case 5: return typeof(Bouquet);
+            case 6: default: return typeof(Cheese);
 		}
 	}
 
@@ -184,20 +185,20 @@ public partial class InterfacerGame : Sandbox.Game
 
 		LogMessage(player.Client.Name + (rightClick ? " right-clicked " : " clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + ".", player.PlayerNum);
 
-        if (thing == null)
-        {
-			if (Rand.Float(0f, 1f) < 0.1f)
-			{
-				var rock = Instance.SpawnThingArena(TypeLibrary.GetDescription(typeof(Rock)), gridPos);
-				LogMessage(player.Client.Name + " created " + rock.DisplayIcon + " at " + gridPos + "!", player.PlayerNum);
-			}
-			else
-            {
-                var explosion = Instance.SpawnThingArena(TypeLibrary.GetDescription(typeof(Explosion)), gridPos);
-                explosion.VfxShake(0.15f, 4f);
-				explosion.VfxScale(0.15f, Rand.Float(0.6f, 0.8f), Rand.Float(0.3f, 0.4f));
-			}
-		}
+  //      if (thing == null)
+  //      {
+		//	if (Rand.Float(0f, 1f) < 0.1f)
+		//	{
+		//		var rock = Instance.SpawnThingArena(TypeLibrary.GetDescription(typeof(Rock)), gridPos);
+		//		LogMessage(player.Client.Name + " created " + rock.DisplayIcon + " at " + gridPos + "!", player.PlayerNum);
+		//	}
+		//	else
+  //          {
+  //              var explosion = Instance.SpawnThingArena(TypeLibrary.GetDescription(typeof(Explosion)), gridPos);
+  //              explosion.VfxShake(0.15f, 4f);
+		//		explosion.VfxScale(0.15f, Rand.Float(0.6f, 0.8f), Rand.Float(0.3f, 0.4f));
+		//	}
+		//}
 	}
 
 	public void CellClickedInventory(IntVector gridPos, InterfacerPlayer player, bool rightClick)
@@ -209,25 +210,8 @@ public partial class InterfacerGame : Sandbox.Game
 
 		LogMessage(player.Client.Name + (rightClick ? " right-clicked " : " clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + " in their inventory.", player.PlayerNum);
 
-		if (thing == null)
-		{
-			if (Rand.Float(0f, 1f) < 0.1f)
-			{
-				var rock = Instance.SpawnThingInventory(TypeLibrary.GetDescription(typeof(Rock)), gridPos, player);
-				LogMessage(player.Client.Name + " created " + rock.DisplayIcon + " at " + gridPos + " in their inventory!", player.PlayerNum);
-			}
-			else
-			{
-				var explosion = Instance.SpawnThingInventory(TypeLibrary.GetDescription(typeof(Explosion)), gridPos, player);
-				explosion.VfxShake(0.15f, 4f);
-				explosion.VfxScale(0.15f, Rand.Float(0.6f, 0.8f), Rand.Float(0.3f, 0.4f));
-			}
-		}
-		else
-		{
-			if(rightClick)
-				MoveThingToArena(thing, player.GridPos);
-		}
+		if(rightClick && thing != null)
+			MoveThingToArena(thing, player.GridPos);
 	}
 
 	public Thing SpawnThingArena(TypeDescription type, IntVector gridPos)
@@ -337,7 +321,11 @@ public partial class InterfacerGame : Sandbox.Game
     [ClientRpc]
     public void FlickerNearbyPanelCellsClient()
     {
-        Hud.Instance.MainPanel.NearbyPanel.FlickerCells();
+		var nearbyPanel = Hud.Instance.MainPanel?.NearbyPanel;
+        if (nearbyPanel == null)
+			return;
+
+        nearbyPanel.FlickerCells();
     }
 
     public void FlickerPanel(Panel panel)

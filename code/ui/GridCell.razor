@@ -40,7 +40,11 @@
 
     .solid
     {
-        text-shadow: 0px 0px 2px #000000;
+        text-shadow: 0px 0px 14px #000000;
+        //background-color: #ffffff11;
+        //filter: blur(10px);
+        //box-shadow: 0 0 12px #ffffff11;
+        //border-radius:3px;
     }
 
     .player-1 { text-stroke-color: #3333ff; text-stroke-width: 4px; }
@@ -53,8 +57,8 @@
     .player-8 { text-stroke-color: #ff8800; text-stroke-width: 4px; }
 </style>
 
-<root class="icon @GetSelectedClass()">
-    <div class="@GetPlayerClass() @GetSolidClass()" @ref=IconPanel>@Thing.DisplayIcon</div>
+<root class="icon @GetSelectedClass() @GetSolidClass()">
+    <div class="@GetPlayerClass()" @ref=IconPanel>@Thing.DisplayIcon</div>
 </root>
 
 @code
