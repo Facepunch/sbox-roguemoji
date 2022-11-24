@@ -238,15 +238,9 @@ public partial class GridManager : Entity
 
 	public bool GetFirstEmptyGridPos(out IntVector gridPos)
 	{
-		Log.Info("---------------- GetFirstEmptyGridPos -----------");
 		for(int index = 0; index < GridWidth * GridHeight; index++) 
 		{
 			var currGridPos = GetGridPos(index);
-
-			var thing = GetThingAt(currGridPos);
-
-			Log.Info("currGridPos: " + currGridPos + " - " + DoesThingExistAt(currGridPos) + " - " + (thing?.DisplayName ?? "") );
-
             if (!DoesThingExistAt(currGridPos))
 			{
 				gridPos = currGridPos;

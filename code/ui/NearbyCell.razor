@@ -24,7 +24,7 @@
     .dragging
     {
         opacity: 0.2;
-        transition: opacity 0.4s ease-in;
+        transition: opacity 0.1s ease-in;
     }
 
     .player-1 { text-stroke-color: #3333ff; text-stroke-width: 4px; }
@@ -99,21 +99,23 @@
     {
         base.OnMouseDown(e);
 
+        bool rightClick = e.Button == "mouseright";
         bool shift = Input.Down(InputButton.Run);
-        if(shift)
-            InterfacerGame.NearbyThingClickedCmd(Thing.NetworkIdent, rightClick: e.Button == "mouseright", shift);
+
+        if(shift || rightClick)
+            InterfacerGame.NearbyThingClickedCmd(Thing.NetworkIdent, rightClick, shift);
         else
             Hud.Instance.StartDragging(Thing, this);
         
         //Log.Info("NearbyCell:OnMouseDown: " + Thing.GridPos);
     }
 
-    protected override void OnMouseUp(MousePanelEvent e)
-    {
-        base.OnMouseDown(e);
-        InterfacerGame.NearbyThingClickedCmd(Thing.NetworkIdent, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run));
-        Log.Info("NearbyCell:OnMouseUp: " + Thing.GridPos);
-    }
+    //protected override void OnMouseUp(MousePanelEvent e)
+    //{
+    //    base.OnMouseDown(e);
+    //    InterfacerGame.NearbyThingClickedCmd(Thing.NetworkIdent, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run));
+    //    Log.Info("NearbyCell:OnMouseUp: " + Thing.GridPos);
+    //}
 
     void DrawDebugText(string text)
     {
