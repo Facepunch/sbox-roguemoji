@@ -32,13 +32,6 @@ public partial class Hud : RootPanel
 		MainPanel = AddChild<MainPanel>();
 	}
 
-    //public override void Tick()
-    //{
-    //    base.Tick();
-
-    //    DebugOverlay.ScreenText("dragging: " + (Instance.IsDraggingThing ? DraggedThing.DisplayName : ""), Instance.MousePosition);
-    //}
-
     public void GridCellClickedArena(IntVector gridPos, bool rightClick, bool shift)
 	{
 		InterfacerGame.CellClickedArenaCmd(gridPos.x, gridPos.y, rightClick, shift);
@@ -48,13 +41,6 @@ public partial class Hud : RootPanel
 	{
 		InterfacerGame.CellClickedInventoryCmd(gridPos.x, gridPos.y, rightClick, shift);
 	}
-
-    //protected override void OnMouseDown(MousePanelEvent e)
-    //{
-    //    base.OnMouseDown(e);
-
-    //    //Log.Info("Hud:OnMouseDown");
-    //}
 
     protected override void OnMouseUp(MousePanelEvent e)
     {

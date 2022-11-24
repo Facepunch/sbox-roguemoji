@@ -50,28 +50,4 @@ public abstract class GridPanel : Panel
     {
         return HashCode.Combine(GetThings().Count);
     }
-
-    public void OnBgMouseDown()
-    {
-        //Log.Info("GridPanel:OnBgMouseDown: " + GetGridPos(MousePosition));
-    }
-
-    public void OnBgMouseUp()
-    {
-        //Log.Info("GridPanel:OnBgMouseUp: " + GetGridPos(MousePosition));
-    }
-
-    //protected override void OnMouseDown(MousePanelEvent e)
-    //{
-    //    base.OnMouseDown(e);
-
-    //    Log.Info("GridPanel:OnMouseDown: " + GetGridPos(MousePosition));
-    //}
-
-    //protected override void OnMouseUp(MousePanelEvent e)
-    //{
-    //    base.OnMouseUp(e);
-
-    //    Log.Info("GridPanel:OnMouseUp: " + GetGridPos(MousePosition));
-    //}
 }

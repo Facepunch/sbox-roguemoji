@@ -157,14 +157,5 @@
             var gridPanel = Hud.Instance.GetPanel(PanelType.ArenaGrid) as GridPanel;
             Hud.Instance.GridCellClickedArena(Thing.GridPos, rightClick, shift);
         }
-
-        //Log.Info("GridCell:OnMouseDown: " + Thing.GridPos);
-    }
-
-    protected override void OnMouseUp(MousePanelEvent e)
-    {
-        base.OnMouseUp(e);
-
-        //Log.Info("GridCell:OnMouseUp: " + Thing.GridPos);
     }
 }

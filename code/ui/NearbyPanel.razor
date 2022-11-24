@@ -23,7 +23,7 @@
 </style>
 
 <root class="nearby">
-    <div class="nearby_bg" @onmousedown=@OnBgMouseDown @onmouseup=@OnBgMouseUp></div> 
+    <div class="nearby_bg"></div> 
 
     @{
         InterfacerPlayer player = InterfacerGame.Instance.LocalPlayer;
@@ -105,15 +105,5 @@
         panel.Text = Tooltip;
         panel.Style.Opacity = 0.5f;
         return panel;
-    }
-
-    public void OnBgMouseDown()
-    {
-        //Log.Info("NearbyPanel:OnBgMouseDown");
-    }
-
-    public void OnBgMouseUp()
-    {
-        //Log.Info("NearbyPanel:OnBgMouseUp");
     }
 }
