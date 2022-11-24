@@ -18,6 +18,7 @@ public partial class Hud : RootPanel
 
 	public bool IsDraggingThing { get; set; }
 	public Thing DraggedThing { get; set; }
+    public Panel DraggedPanel { get; set; }
     public DragIcon DragIcon { get; private set; }
 
 	public Vector2 GetMousePos() { return MousePosition / ScaleToScreen; }
@@ -83,10 +84,11 @@ public partial class Hud : RootPanel
 		}
     }
 
-	public void StartDragging(Thing thing)
+	public void StartDragging(Thing thing, Panel panel)
 	{
 		IsDraggingThing = true;
 		DraggedThing = thing;
+		DraggedPanel = panel;
 
 		CreateDragIcon(thing.DisplayIcon);
 	}
@@ -95,6 +97,12 @@ public partial class Hud : RootPanel
 	{
 		IsDraggingThing = false;
 		DraggedThing = null;
+
+		if(DraggedPanel != null)
+		{
+			DraggedPanel.SkipTransitions();
+			DraggedPanel = null;
+		}
 
 		RemoveDragIcon();
 	}
@@ -109,7 +117,10 @@ public partial class Hud : RootPanel
 	void RemoveDragIcon()
 	{
         if (DragIcon != null)
+		{
+			DragIcon.SkipTransitions();
             DragIcon.Delete();
+        }
     }
 
 	public PanelType GetContainingPanelType(Vector2 pos)

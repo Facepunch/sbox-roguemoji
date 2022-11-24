@@ -21,6 +21,12 @@
         border-radius:3px;
     }
 
+    .dragging
+    {
+        opacity: 0.2;
+        transition: opacity 0.4s ease-in;
+    }
+
     .player-1 { text-stroke-color: #3333ff; text-stroke-width: 4px; }
     .player-2 { text-stroke-color: #ff0000; text-stroke-width: 4px; }
     .player-3 { text-stroke-color: #009900; text-stroke-width: 4px; }
@@ -32,7 +38,7 @@
 </style>
 
 <root class="nearby_icon @GetSelectedClass()">
-    <div class="@GetPlayerClass()" @ref=IconPanel>@Thing.DisplayIcon</div>
+    <div class="@GetPlayerClass() @GetDraggingClass()" @ref=IconPanel>@Thing.DisplayIcon</div>
 </root>
 
 @code
@@ -48,6 +54,11 @@
     string GetSelectedClass()
     {
         return IsSelected() ? "nearby_selected" : "";
+    }
+
+    string GetDraggingClass()
+    {
+        return Thing == Hud.Instance.DraggedThing ? "dragging" : "";
     }
 
     bool IsSelected()
@@ -92,7 +103,7 @@
         if(shift)
             InterfacerGame.NearbyThingClickedCmd(Thing.NetworkIdent, rightClick: e.Button == "mouseright", shift);
         else
-            Hud.Instance.StartDragging(Thing);
+            Hud.Instance.StartDragging(Thing, this);
         
         //Log.Info("NearbyCell:OnMouseDown: " + Thing.GridPos);
     }
