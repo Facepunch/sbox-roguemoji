@@ -189,7 +189,10 @@ public partial class GridManager : Entity
 		if ( things == null || things.Count == 0 )
 			return false;
 
-		return things.Where(x => (x.Flags & flags) == 0).Count() > 0;
+		if (flags == ThingFlags.None)
+			return true;
+		else
+			return things.Where(x => (x.Flags & flags) != 0).Count() > 0;
 	}
 
 	public Thing GetThingAt(IntVector gridPos, ThingFlags flags = ThingFlags.None)
@@ -208,7 +211,7 @@ public partial class GridManager : Entity
 		
 		foreach ( var thing in things )
         {
-			if ((thing.Flags & flags) == 0)
+			if (flags != ThingFlags.None && (thing.Flags & flags) == 0)
 				continue;
 
 			if(thing.IconDepth > highestDepth)
@@ -235,9 +238,15 @@ public partial class GridManager : Entity
 
 	public bool GetFirstEmptyGridPos(out IntVector gridPos)
 	{
-		for(int index = 0; index < GridWidth * GridHeight; index++)
+		Log.Info("---------------- GetFirstEmptyGridPos -----------");
+		for(int index = 0; index < GridWidth * GridHeight; index++) 
 		{
 			var currGridPos = GetGridPos(index);
+
+			var thing = GetThingAt(currGridPos);
+
+			Log.Info("currGridPos: " + currGridPos + " - " + DoesThingExistAt(currGridPos) + " - " + (thing?.DisplayName ?? "") );
+
             if (!DoesThingExistAt(currGridPos))
 			{
 				gridPos = currGridPos;

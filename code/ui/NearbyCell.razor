@@ -75,6 +75,9 @@
     {
         base.OnAfterTreeRender(firstTime);
 
+        //if (firstTime)
+        //    AddEventListener("onmouseup", StopDragging);
+
         if (Thing == null)
             return;
 
@@ -84,11 +87,30 @@
     protected override void OnMouseDown(MousePanelEvent e)
     {
         base.OnMouseDown(e);
+
+        bool shift = Input.Down(InputButton.Run);
+        if(shift)
+            InterfacerGame.NearbyThingClickedCmd(Thing.NetworkIdent, rightClick: e.Button == "mouseright", shift);
+        else
+            Hud.Instance.StartDragging(Thing);
+        
+        //Log.Info("NearbyCell:OnMouseDown: " + Thing.GridPos);
+    }
+
+    protected override void OnMouseUp(MousePanelEvent e)
+    {
+        base.OnMouseDown(e);
         InterfacerGame.NearbyThingClickedCmd(Thing.NetworkIdent, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run));
+        Log.Info("NearbyCell:OnMouseUp: " + Thing.GridPos);
     }
 
     void DrawDebugText(string text)
     {
         DebugOverlay.ScreenText(text, PanelPositionToScreenPosition(Vector2.Zero), 0, Color.White, 0f);
     }
+
+    //private void StopDragging(PanelEvent e)
+    //{
+    //    Log.Info("NearbyCell:StopDragging: " + Thing.GridPos);
+    //}
 }

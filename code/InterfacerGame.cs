@@ -244,7 +244,7 @@ public partial class InterfacerGame : Sandbox.Game
 
 	public void MoveThingToArena(Thing thing, IntVector gridPos)
 	{
-		Assert.True(thing.ContainingGridManager != ArenaGridManager);
+        Assert.True(thing.ContainingGridManager != ArenaGridManager);
 
 		thing.ContainingGridManager?.RemoveThing(thing);
 		RefreshGridPanelClient(inventory: true);
@@ -264,10 +264,10 @@ public partial class InterfacerGame : Sandbox.Game
 	}
 
     [ConCmd.Server]
-    public static void NearbyThingClickedCmd(int networkId, bool rightClick, bool shift)
+    public static void NearbyThingClickedCmd(int networkIdent, bool rightClick, bool shift)
     {
         var player = ConsoleSystem.Caller.Pawn as InterfacerPlayer;
-        Thing thing = Entity.FindByIndex(networkId) as Thing;
+        Thing thing = FindByIndex(networkIdent) as Thing;
 
 		if (thing.Flags.HasFlag(ThingFlags.InInventory))
 		{
@@ -282,30 +282,23 @@ public partial class InterfacerGame : Sandbox.Game
 	{
         LogMessage(player.Client.Name + (shift ? " shift-" : " ") + (rightClick ? "right-clicked " : "clicked ") + thing.DisplayIcon + " nearby them.", player.PlayerNum);
 
-        if (!rightClick)
+        if (shift || rightClick)
 		{
-			if(shift)
-			{
-                var gridPos = IntVector.Zero;
-                if (player.InventoryGridManager.GetFirstEmptyGridPos(out gridPos))
-                {
-                    MoveThingToInventory(thing, gridPos, player);
-                }
+            IntVector gridPos;
+            if (player.InventoryGridManager.GetFirstEmptyGridPos(out gridPos))
+            {
+                MoveThingToInventory(thing, gridPos, player);
             }
-			else
-			{
-                player.SelectThing(thing);
-            }
-		}
+        }
 		else
 		{
-            
+            player.SelectThing(thing);
         }
     }
 
     public void MoveThingToInventory(Thing thing, IntVector gridPos, InterfacerPlayer player)
 	{
-		if(thing.Flags.HasFlag(ThingFlags.InInventory))
+        if (thing.Flags.HasFlag(ThingFlags.InInventory))
 		{
 			Log.Error(thing.DisplayName + " at " + gridPos + " is already in inventory of " + player.DisplayName + "!");
 		}
@@ -324,6 +317,25 @@ public partial class InterfacerGame : Sandbox.Game
         thing.Flags |= ThingFlags.InInventory;
         player.InventoryGridManager.AddThing(thing);
 		thing.SetGridPos(gridPos);
+    }
+
+	public void ChangeInventoryPos(Thing thing, IntVector targetGridPos, InterfacerPlayer player)
+	{
+		IntVector currGridPos = thing.GridPos;
+		GridManager inventoryGridManager = player.InventoryGridManager;
+        Thing otherThing = inventoryGridManager.GetThingAt(targetGridPos);
+
+        inventoryGridManager.DeregisterGridPos(thing, thing.GridPos);
+        thing.SetGridPos(targetGridPos);
+
+        if(otherThing != null)
+		{
+			//Log.Info("otherThing: " + otherThing.DisplayName);
+            inventoryGridManager.DeregisterGridPos(otherThing, otherThing.GridPos);
+			otherThing.SetGridPos(currGridPos);
+        }
+
+        RefreshGridPanelClient(To.Single(player), inventory: true);
     }
 
     [ClientRpc]
@@ -352,4 +364,53 @@ public partial class InterfacerGame : Sandbox.Game
 		panel.Style.PointerEvents = PointerEvents.None;
 		_panelsToFlicker.Add(new PanelFlickerData(panel));
 	}
+
+    [ConCmd.Server]
+    public static void InventoryThingDraggedCmd(int networkIdent, PanelType destinationPanelType, int x, int y)
+	{
+        var player = ConsoleSystem.Caller.Pawn as InterfacerPlayer;
+        Thing thing = FindByIndex(networkIdent) as Thing;
+		Instance.InventoryThingDragged(thing, destinationPanelType, new IntVector(x, y), player);
+    }
+
+    public void InventoryThingDragged(Thing thing, PanelType destinationPanelType, IntVector targetGridPos, InterfacerPlayer player)
+	{
+        if (destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.Nearby || destinationPanelType == PanelType.None)
+		{
+            MoveThingToArena(thing, player.GridPos);
+        }
+		else if(destinationPanelType == PanelType.InventoryGrid)
+		{
+			if (!thing.GridPos.Equals(targetGridPos))
+				ChangeInventoryPos(thing, targetGridPos, player);
+			else
+				player.SelectThing(thing);
+		}
+    }
+
+    [ConCmd.Server]
+    public static void NearbyThingDraggedCmd(int networkIdent, PanelType destinationPanelType, int x, int y)
+    {
+        var player = ConsoleSystem.Caller.Pawn as InterfacerPlayer;
+        Thing thing = FindByIndex(networkIdent) as Thing;
+        Instance.NearbyThingDragged(thing, destinationPanelType, new IntVector(x, y), player);
+    }
+
+    public void NearbyThingDragged(Thing thing, PanelType destinationPanelType, IntVector targetGridPos, InterfacerPlayer player)
+    {
+        if (destinationPanelType == PanelType.InventoryGrid)
+        {
+            GridManager inventoryGridManager = player.InventoryGridManager;
+            Thing otherThing = inventoryGridManager.GetThingAt(targetGridPos);
+
+            if (otherThing != null)
+                MoveThingToArena(otherThing, player.GridPos);
+
+            MoveThingToInventory(thing, targetGridPos, player);
+        }
+        else if (destinationPanelType == PanelType.Nearby)
+        {
+            player.SelectThing(thing);
+        }
+    }
 }

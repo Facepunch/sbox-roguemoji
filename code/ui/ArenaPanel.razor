@@ -20,7 +20,7 @@
 </style>
 
 <root class>
-    <div class="grid_bg" style="background-image: url( textures/bg_tile.png );" @onclick=@OnBgClicked></div>
+    <div class="grid_bg" style="background-image: url( textures/bg_tile.png );" @onmousedown=@OnBgMouseDown @onmouseup=@OnBgMouseUp></div>
     
     @if(InterfacerGame.Instance.ArenaGridManager?.Things == null)
     {
@@ -42,11 +42,6 @@
     protected override IList<Thing> GetThings()
     {
         return InterfacerGame.Instance.ArenaGridManager?.Things ?? new List<Thing>();
-    }
-
-    protected override void OnBgClicked()
-    {
-        Hud.Instance.GridCellClickedArena(GetGridPos(MousePosition), rightClick: false, shift: Input.Down(InputButton.Run));
     }
 
     protected override void OnMouseDown(MousePanelEvent e)

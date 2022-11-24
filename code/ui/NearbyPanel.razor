@@ -12,9 +12,19 @@
         align-items:center;
         overflow: scroll;
     }
+
+    .nearby_bg
+    {
+        pointer-events: all;
+        width:100%;
+        height:100%;
+        position:absolute;
+    }
 </style>
 
 <root class="nearby">
+    <div class="nearby_bg" @onmousedown=@OnBgMouseDown @onmouseup=@OnBgMouseUp></div> 
+
     @{
         InterfacerPlayer player = InterfacerGame.Instance.LocalPlayer;
     }
@@ -95,5 +105,15 @@
         panel.Text = Tooltip;
         panel.Style.Opacity = 0.5f;
         return panel;
+    }
+
+    public void OnBgMouseDown()
+    {
+        //Log.Info("NearbyPanel:OnBgMouseDown");
+    }
+
+    public void OnBgMouseUp()
+    {
+        //Log.Info("NearbyPanel:OnBgMouseUp");
     }
 }

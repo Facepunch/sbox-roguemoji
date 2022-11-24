@@ -23,7 +23,7 @@
 </style>
 
 <root>
-    <div class="inventory_bg" style="background-image: url( textures/bg_tile.png );" @onclick=@OnBgClicked></div>
+    <div class="inventory_bg" style="background-image: url( textures/bg_tile.png );" @onmousedown=@OnBgMouseDown @onmouseup=@OnBgMouseUp></div>
 
     @if(InterfacerGame.Instance.LocalPlayer?.InventoryGridManager?.Things == null)
     {
@@ -47,16 +47,11 @@
         return InterfacerGame.Instance.LocalPlayer.InventoryGridManager.Things;
     }
 
-    protected override void OnBgClicked()
-    {
-        Hud.Instance.GridCellClickedInventory(GetGridPos(MousePosition), rightClick: false, shift: Input.Down(InputButton.Run));
-    }
-
-    protected override void OnMouseDown(MousePanelEvent e)
-    {
-        base.OnMouseDown(e);
-        Hud.Instance.GridCellClickedInventory(GetGridPos(MousePosition), rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run));
-    }
+    //protected override void OnMouseDown(MousePanelEvent e)
+    //{
+    //    base.OnMouseDown(e);
+    //    Hud.Instance.GridCellClickedInventory(GetGridPos(MousePosition), rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run));
+    //}
 
     protected override void OnAfterTreeRender(bool firstTime)
     {

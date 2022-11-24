@@ -124,4 +124,37 @@
         tr.AddScale(scale);
         IconPanel.Style.Transform = tr;
     }
+
+    protected override void OnMouseDown(MousePanelEvent e)
+    {
+        base.OnMouseDown(e);
+
+        bool shift = Input.Down(InputButton.Run);
+        bool rightClick = e.Button == "mouseright";
+
+        if(Thing.Flags.HasFlag(ThingFlags.InInventory))
+        {
+            var gridPanel = Hud.Instance.GetPanel(PanelType.InventoryGrid) as GridPanel;
+
+            if(shift)
+                Hud.Instance.GridCellClickedInventory(Thing.GridPos, rightClick, shift);
+            else
+                Hud.Instance.StartDragging(Thing);
+        }
+        else
+        {
+            var gridPanel = Hud.Instance.GetPanel(PanelType.ArenaGrid) as GridPanel;
+            Hud.Instance.GridCellClickedArena(Thing.GridPos, rightClick, shift);
+        }
+
+
+        //Log.Info("GridCell:OnMouseDown: " + Thing.GridPos);
+    }
+
+    protected override void OnMouseUp(MousePanelEvent e)
+    {
+        base.OnMouseUp(e);
+
+        //Log.Info("GridCell:OnMouseUp: " + Thing.GridPos);
+    }
 }
