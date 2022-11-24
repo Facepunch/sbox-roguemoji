@@ -18,8 +18,11 @@ public partial class Hud : RootPanel
 
 	public bool IsDraggingThing { get; set; }
 	public Thing DraggedThing { get; set; }
+    public DragIcon DragIcon { get; private set; }
 
-	public Hud()
+	public Vector2 GetMousePos() { return MousePosition / ScaleToScreen; }
+
+    public Hud()
 	{
 		Instance = this;
 
@@ -84,13 +87,30 @@ public partial class Hud : RootPanel
 	{
 		IsDraggingThing = true;
 		DraggedThing = thing;
+
+		CreateDragIcon(thing.DisplayIcon);
 	}
 
 	public void StopDragging() 
 	{
 		IsDraggingThing = false;
 		DraggedThing = null;
+
+		RemoveDragIcon();
 	}
+
+	void CreateDragIcon(string icon)
+	{
+		RemoveDragIcon();
+        DragIcon = AddChild<DragIcon>();
+		DragIcon.Text = icon;
+    }
+
+	void RemoveDragIcon()
+	{
+        if (DragIcon != null)
+            DragIcon.Delete();
+    }
 
 	public PanelType GetContainingPanelType(Vector2 pos)
 	{
