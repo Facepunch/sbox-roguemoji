@@ -48,6 +48,7 @@
 @code
 {
     public int FlickerFrames { get; set; }
+    Vector2 _scrollOffset;
 
     IEnumerable<Thing> GetThings(InterfacerPlayer player)
     {
@@ -59,6 +60,9 @@
         base.Tick();
 
         FlickerFrames++;
+        if (FlickerFrames == 1 || FlickerFrames == 2)
+            ScrollOffset = _scrollOffset;
+
         if (FlickerFrames == 1)
             StateHasChanged();
     }
@@ -86,6 +90,7 @@
 
     public void FlickerCells()
     {
+        _scrollOffset = ScrollOffset;
         FlickerFrames = 0;
     }
 

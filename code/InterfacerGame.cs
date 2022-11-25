@@ -314,6 +314,7 @@ public partial class InterfacerGame : Sandbox.Game
 
 		thing.ContainingGridManager?.RemoveThing(thing);
 		RefreshNearbyPanelClient(To.Single(player));
+        FlickerNearbyPanelCellsClient(To.Single(player));
 
         thing.InventoryPlayer = player;
         thing.Flags |= ThingFlags.InInventory;
