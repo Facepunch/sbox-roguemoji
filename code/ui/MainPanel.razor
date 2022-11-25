@@ -64,7 +64,6 @@
     {
         width: 400px;
         border-radius: 3px;
-        border: 1px solid #ffffff05;
         margin-right: 20px;
     }
 
@@ -88,7 +87,7 @@
      </div>
 
     <div class="lower_row">
-        <div class="character"></div>
+        <CharacterPanel class="character"></CharacterPanel>
         <NearbyPanel class="nearby" @ref=NearbyPanel></NearbyPanel>
         <InventoryPanel class="inventory" style="width: @(40 * InterfacerGame.InventoryWidth)px; height: @(40 * InterfacerGame.InventoryHeight)px;" @ref=InventoryPanel></InventoryPanel>
         <InfoPanel class="info"></InfoPanel>
@@ -100,6 +99,7 @@
 {
     public ArenaPanel ArenaPanel { get; set; }
     public LogPanel LogPanel { get; set; }
+    public CharacterPanel CharacterPanel { get; set; }
     public NearbyPanel NearbyPanel { get; set; }
     public InventoryPanel InventoryPanel { get; set; }
 

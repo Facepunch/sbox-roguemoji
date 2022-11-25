@@ -11,6 +11,7 @@
         flex-direction:column;
         align-items:center;
         justify-content:center;
+        border: 1px solid #ffffff05;
     }
 
     .icon
@@ -25,17 +26,18 @@
         font-size: 22px;
         color: #ffffff55;
     }
+
+    .thing_selected
+    {
+        border: 1px solid #bbbbff44;
+    }
 </style>
 
-<root class="info">
+<root class="info @GetSelectedClass()">
     @if(InterfacerGame.Instance.LocalPlayer?.SelectedThing != null)
     {
         <div class="icon"> @InterfacerGame.Instance.LocalPlayer.SelectedThing.DisplayIcon </div>
         <div class="name_label"> @InterfacerGame.Instance.LocalPlayer.SelectedThing.DisplayName </div>
-    }
-    else
-    {
-        
     }
 </root>
 
@@ -44,5 +46,10 @@
     protected override int BuildHash()
     {
         return HashCode.Combine( InterfacerGame.Instance.LocalPlayer?.SelectedThing?.GetInfoDisplayHash() ?? 0 );
+    }
+
+    string GetSelectedClass()
+    {
+        return InterfacerGame.Instance.LocalPlayer?.SelectedThing != null ? "thing_selected" : "";
     }
 }

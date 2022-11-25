@@ -1,0 +1,46 @@
+﻿@using System;
+@using Sandbox;
+@using Sandbox.UI;
+
+@inherits Panel;
+@namespace Interfacer
+
+<style>
+    .character
+    {
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+    }
+
+    .char_icon
+    {
+        margin: 0 0 5px 0;
+        font-size: 45px;
+    }
+
+    .name_label
+    {
+        margin: 0 0 5px 0;
+        font-size: 22px;
+        color: #ffffff55;
+    }
+</style>
+
+<root class="character">
+    @if(InterfacerGame.Instance.LocalPlayer == null)
+    {
+        return;
+    }
+
+    <div class="char_icon"> @InterfacerGame.Instance.LocalPlayer.DisplayIcon </div>
+    <div class="name_label"> @InterfacerGame.Instance.LocalPlayer.DisplayName </div>
+</root>
+
+@code
+{
+    protected override int BuildHash()
+    {
+        return HashCode.Combine(InterfacerGame.Instance.LocalPlayer?.GetHashCode() ?? 0);
+    }
+}
