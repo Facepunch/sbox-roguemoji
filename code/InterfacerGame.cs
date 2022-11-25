@@ -210,7 +210,7 @@ public partial class InterfacerGame : Sandbox.Game
 		{
 			if(shift && thing != null)
             {
-                MoveThingToArena(thing, player.GridPos);
+                MoveThingToArena(thing, player.GridPos, player);
             }
 			else
 			{
@@ -242,13 +242,13 @@ public partial class InterfacerGame : Sandbox.Game
         return thing;
 	}
 
-	public void MoveThingToArena(Thing thing, IntVector gridPos)
+	public void MoveThingToArena(Thing thing, IntVector gridPos, InterfacerPlayer player)
 	{
         Assert.True(thing.ContainingGridManager != ArenaGridManager);
 
 		thing.ContainingGridManager?.RemoveThing(thing);
-		RefreshGridPanelClient(inventory: true);
-        RefreshNearbyPanelClient();
+		RefreshGridPanelClient(To.Single(player), inventory: true);
+        RefreshNearbyPanelClient(To.Single(player));
 
         thing.Flags &= ~ThingFlags.InInventory;
 		thing.InventoryPlayer = null;
@@ -311,7 +311,7 @@ public partial class InterfacerGame : Sandbox.Game
         Assert.True(!thing.Flags.HasFlag(ThingFlags.InInventory) || thing.InventoryPlayer != player);
 
 		thing.ContainingGridManager?.RemoveThing(thing);
-		RefreshNearbyPanelClient();
+		RefreshNearbyPanelClient(To.Single(player));
 
         thing.InventoryPlayer = player;
         thing.Flags |= ThingFlags.InInventory;
@@ -377,7 +377,7 @@ public partial class InterfacerGame : Sandbox.Game
 	{
         if (destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.Nearby || destinationPanelType == PanelType.None)
 		{
-            MoveThingToArena(thing, player.GridPos);
+            MoveThingToArena(thing, player.GridPos, player);
         }
 		else if(destinationPanelType == PanelType.InventoryGrid)
 		{
@@ -404,7 +404,7 @@ public partial class InterfacerGame : Sandbox.Game
             Thing otherThing = inventoryGridManager.GetThingAt(targetGridPos);
 
             if (otherThing != null)
-                MoveThingToArena(otherThing, player.GridPos);
+                MoveThingToArena(otherThing, player.GridPos, player);
 
             MoveThingToInventory(thing, targetGridPos, player);
         }
