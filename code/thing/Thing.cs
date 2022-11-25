@@ -105,7 +105,9 @@ public partial class Thing : Entity
 		var otherThing = ContainingGridManager.GetThingAt( newGridPos, ThingFlags.Solid );
 		if(otherThing != null)
 		{
-			var pushSuccess = otherThing.TryMove( direction );
+            InterfacerGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") bumped into " + otherThing.DisplayIcon + "(" + otherThing.DisplayName + ")", PlayerNum);
+
+            var pushSuccess = otherThing.TryMove( direction );
 			if ( !pushSuccess )
             {
                 otherThing.VfxShake(0.2f, 4f);
@@ -113,8 +115,8 @@ public partial class Thing : Entity
 				return false;
 			}
 
-			if ( ShouldLogBehaviour )
-				InterfacerGame.Instance.LogMessage( DisplayIcon + DisplayName + " pushed " + otherThing.DisplayIcon + " " + GridManager.GetDirectionText(direction) + "!", PlayerNum );
+			//if ( ShouldLogBehaviour )
+			//	InterfacerGame.Instance.LogMessage( DisplayIcon + DisplayName + " pushed " + otherThing.DisplayIcon + " " + GridManager.GetDirectionText(direction) + "!", PlayerNum );
 
 			var explosion = Flags.HasFlag(ThingFlags.InInventory)
                 ? InterfacerGame.Instance.SpawnThingInventory(TypeLibrary.GetDescription(typeof(Explosion)), newGridPos, InventoryPlayer)
@@ -144,24 +146,24 @@ public partial class Thing : Entity
 		else
 			RefreshGridPanelClient();
 
-		if (ShouldLogBehaviour)
-        {
-			if(Flags.HasFlag(ThingFlags.InInventory))
-				InterfacerGame.Instance.LogMessage(DisplayIcon + DisplayName + " moved to (" + gridPos.x + ", " + gridPos.y + ") in " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
-			else
-				InterfacerGame.Instance.LogMessage(DisplayIcon + DisplayName + " moved to (" + gridPos.x + ", " + gridPos.y + ").", PlayerNum);
-		}
+		//if (ShouldLogBehaviour)
+  //      {
+		//	if(Flags.HasFlag(ThingFlags.InInventory))
+		//		InterfacerGame.Instance.LogMessage(DisplayIcon + DisplayName + " moved to (" + gridPos.x + ", " + gridPos.y + ") in " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
+		//	else
+		//		InterfacerGame.Instance.LogMessage(DisplayIcon + DisplayName + " moved to (" + gridPos.x + ", " + gridPos.y + ").", PlayerNum);
+		//}
 	}
 
 	public void Remove()
 	{
-		if ( ShouldLogBehaviour )
-        {
-			if (Flags.HasFlag(ThingFlags.InInventory))
-				InterfacerGame.Instance.LogMessage(DisplayIcon + DisplayName + " removed from " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
-			else
-				InterfacerGame.Instance.LogMessage(DisplayIcon + DisplayName + " removed.", PlayerNum);
-		}
+		//if ( ShouldLogBehaviour )
+  //      {
+		//	if (Flags.HasFlag(ThingFlags.InInventory))
+		//		InterfacerGame.Instance.LogMessage(DisplayIcon + DisplayName + " removed from " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
+		//	else
+		//		InterfacerGame.Instance.LogMessage(DisplayIcon + DisplayName + " removed.", PlayerNum);
+		//}
 			
 		ContainingGridManager.RemoveThing( this );
 		Delete();

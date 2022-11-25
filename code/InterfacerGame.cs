@@ -180,7 +180,7 @@ public partial class InterfacerGame : Sandbox.Game
 	{
 		var thing = ArenaGridManager.GetThingAt(gridPos, ThingFlags.Selectable);
 
-        LogMessage(player.Client.Name + (shift ? " shift-" : " ") + (rightClick ? "right-clicked " : "clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + ".", player.PlayerNum);
+        //LogMessage(player.Client.Name + (shift ? " shift-" : " ") + (rightClick ? "right-clicked " : "clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + ".", player.PlayerNum);
 
         if (!rightClick)
 			player.SelectThing(thing);
@@ -204,7 +204,7 @@ public partial class InterfacerGame : Sandbox.Game
 	public void CellClickedInventory(IntVector gridPos, InterfacerPlayer player, bool rightClick, bool shift)
 	{
 		var thing = player.InventoryGridManager.GetThingAt(gridPos, ThingFlags.Selectable);
-        LogMessage(player.Client.Name + (shift ? " shift-" : " ") + (rightClick ? "right-clicked " : "clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + " in their inventory.", player.PlayerNum);
+        //LogMessage(player.Client.Name + (shift ? " shift-" : " ") + (rightClick ? "right-clicked " : "clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + " in their inventory.", player.PlayerNum);
 
         if (!rightClick)
 		{
@@ -254,6 +254,8 @@ public partial class InterfacerGame : Sandbox.Game
 		thing.InventoryPlayer = null;
 		ArenaGridManager.AddThing(thing);
 		thing.SetGridPos(gridPos);
+
+        LogMessage(player.DisplayIcon + "(" + player.DisplayName + ") dropped " + thing.DisplayIcon, player.PlayerNum);
     }
 
 	[ClientRpc]
@@ -280,7 +282,7 @@ public partial class InterfacerGame : Sandbox.Game
 
 	public void NearbyThingClicked(Thing thing, bool rightClick, InterfacerPlayer player, bool shift)
 	{
-        LogMessage(player.Client.Name + (shift ? " shift-" : " ") + (rightClick ? "right-clicked " : "clicked ") + thing.DisplayIcon + " nearby them.", player.PlayerNum);
+        //LogMessage(player.Client.Name + (shift ? " shift-" : " ") + (rightClick ? "right-clicked " : "clicked ") + thing.DisplayIcon + " nearby them.", player.PlayerNum);
 
         if (shift || rightClick)
 		{
@@ -317,6 +319,8 @@ public partial class InterfacerGame : Sandbox.Game
         thing.Flags |= ThingFlags.InInventory;
         player.InventoryGridManager.AddThing(thing);
 		thing.SetGridPos(gridPos);
+
+        LogMessage(player.DisplayIcon + "(" + player.DisplayName + ") picked up " + thing.DisplayIcon, player.PlayerNum);
     }
 
 	public void ChangeInventoryPos(Thing thing, IntVector targetGridPos, InterfacerPlayer player)
