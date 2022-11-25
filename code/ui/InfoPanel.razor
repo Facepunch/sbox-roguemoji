@@ -36,20 +36,25 @@
 <root class="info @GetSelectedClass()">
     @if(InterfacerGame.Instance.LocalPlayer?.SelectedThing != null)
     {
-        <div class="icon"> @InterfacerGame.Instance.LocalPlayer.SelectedThing.DisplayIcon </div>
+        <div class="icon @GetPlayerClass()"> @InterfacerGame.Instance.LocalPlayer.SelectedThing.DisplayIcon </div>
         <div class="name_label"> @InterfacerGame.Instance.LocalPlayer.SelectedThing.DisplayName </div>
     }
 </root>
 
 @code
 {
-    protected override int BuildHash()
-    {
-        return HashCode.Combine( InterfacerGame.Instance.LocalPlayer?.SelectedThing?.GetInfoDisplayHash() ?? 0 );
-    }
-
     string GetSelectedClass()
     {
         return InterfacerGame.Instance.LocalPlayer?.SelectedThing != null ? "thing_selected" : "";
+    }
+
+    string GetPlayerClass()
+    {
+        return (InterfacerGame.Instance.LocalPlayer?.SelectedThing?.PlayerNum ?? 0) > 0 ? $"icon-player-{InterfacerGame.Instance.LocalPlayer.SelectedThing.PlayerNum}" : "";
+    }
+
+    protected override int BuildHash()
+    {
+        return HashCode.Combine( InterfacerGame.Instance.LocalPlayer?.SelectedThing?.GetInfoDisplayHash() ?? 0 );
     }
 }

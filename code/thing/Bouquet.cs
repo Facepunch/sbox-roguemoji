@@ -11,5 +11,6 @@ public partial class Bouquet : Thing
         ShouldLogBehaviour = true;
 		Tooltip = "A bouquet of flowers.";
 		Flags = ThingFlags.Selectable;
+		PlayerNum = 6;
     }
 }

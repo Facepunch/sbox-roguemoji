@@ -92,7 +92,7 @@ public partial class Hud : RootPanel
 		DraggedPanel = panel;
 		_dragStartPlayerGridPos = InterfacerGame.Instance.LocalPlayer.GridPos;
 
-        CreateDragIcon(thing.DisplayIcon);
+        CreateDragIcon(thing);
 	}
 
 	public void StopDragging() 
@@ -109,11 +109,12 @@ public partial class Hud : RootPanel
 		RemoveDragIcon();
 	}
 
-	void CreateDragIcon(string icon)
+	void CreateDragIcon(Thing thing)
 	{
 		RemoveDragIcon();
         DragIcon = AddChild<DragIcon>();
-		DragIcon.Text = icon;
+		DragIcon.Thing = thing;
+		DragIcon.Text = thing.DisplayIcon;
     }
 
 	void RemoveDragIcon()

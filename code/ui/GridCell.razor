@@ -52,15 +52,6 @@
         opacity: 0.2;
         transition: opacity 0.1s ease-in;
     }
-
-    .player-1 { text-stroke-color: #3333ff; text-stroke-width: 4px; }
-    .player-2 { text-stroke-color: #ff0000; text-stroke-width: 4px; }
-    .player-3 { text-stroke-color: #009900; text-stroke-width: 4px; }
-    .player-4 { text-stroke-color: #ff00ff; text-stroke-width: 4px; }
-    .player-5 { text-stroke-color: #ffff00; text-stroke-width: 4px; }
-    .player-6 { text-stroke-color: #2299ff; text-stroke-width: 4px; }
-    .player-7 { text-stroke-color: #8800bb; text-stroke-width: 4px; }
-    .player-8 { text-stroke-color: #ff8800; text-stroke-width: 4px; }
 </style>
 
 <root class="icon @GetSelectedClass() @GetSolidClass()">
@@ -76,7 +67,7 @@
 
     string GetPlayerClass()
     {
-        return Thing.PlayerNum > 0 ? $"player-{Thing.PlayerNum}" : "";
+        return Thing.PlayerNum > 0 ? $"icon-player-{Thing.PlayerNum}" : "";
     }
 
     string GetSelectedClass()

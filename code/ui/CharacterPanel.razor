@@ -33,12 +33,17 @@
         return;
     }
 
-    <div class="char_icon"> @InterfacerGame.Instance.LocalPlayer.DisplayIcon </div>
+    <div class="char_icon @GetPlayerClass()"> @InterfacerGame.Instance.LocalPlayer.DisplayIcon </div>
     <div class="name_label"> @InterfacerGame.Instance.LocalPlayer.DisplayName </div>
 </root>
 
 @code
 {
+    string GetPlayerClass()
+    {
+        return (InterfacerGame.Instance.LocalPlayer?.PlayerNum ?? 0) > 0 ? $"icon-player-{InterfacerGame.Instance.LocalPlayer.PlayerNum}" : "";
+    }
+
     protected override int BuildHash()
     {
         return HashCode.Combine(InterfacerGame.Instance.LocalPlayer?.GetHashCode() ?? 0);

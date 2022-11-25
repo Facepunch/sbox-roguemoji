@@ -18,22 +18,13 @@
     {
         transition: opacity 0.4s ease;
     }
-
-    .player-0 { background-color: #000000aa; }
-    .player-1 { background-color: #3333ffaa; }
-    .player-2 { background-color: #ff0000aa; }
-    .player-3 { background-color: #009900aa; }
-    .player-4 { background-color: #cc00cc99; }
-    .player-5 { background-color: #ffff00aa; color: black; }
-    .player-6 { background-color: #2299ffaa; }
-    .player-7 { background-color: #8800bbaa; }
-    .player-8 { background-color: #ff8800aa; }
 </style>
 
-<root class="drag_icon">@Text</root>
+<root class="drag_icon @GetPlayerClass()">@Text</root>
 
 @code
 {
+    public Thing Thing { get; set; }
     public string Text { get; set; }
     public int UpdateCount { get; set; }
 
@@ -64,5 +55,10 @@
         }     
 
         UpdateCount++;
+    }
+
+    string GetPlayerClass()
+    {
+        return Thing.PlayerNum > 0 ? $"icon-player-{Thing.PlayerNum}" : "";
     }
 }
