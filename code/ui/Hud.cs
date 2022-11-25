@@ -20,6 +20,7 @@ public partial class Hud : RootPanel
 	public Thing DraggedThing { get; set; }
     public Panel DraggedPanel { get; set; }
     public DragIcon DragIcon { get; private set; }
+	private IntVector _dragStartPlayerGridPos;
 
 	public Vector2 GetMousePos() { return MousePosition / ScaleToScreen; }
 
@@ -31,6 +32,20 @@ public partial class Hud : RootPanel
 
 		MainPanel = AddChild<MainPanel>();
 	}
+
+    public override void Tick()
+    {
+        base.Tick();
+
+		// if dragging a nearby thing, stop when moving
+		if(IsDraggingThing && !_dragStartPlayerGridPos.Equals(InterfacerGame.Instance.LocalPlayer.GridPos))
+		{
+			if(DraggedThing != null && !DraggedThing.Flags.HasFlag(ThingFlags.InInventory))
+			{
+				StopDragging();
+			}
+		}
+    }
 
     public void GridCellClickedArena(IntVector gridPos, bool rightClick, bool shift)
 	{
@@ -75,8 +90,9 @@ public partial class Hud : RootPanel
 		IsDraggingThing = true;
 		DraggedThing = thing;
 		DraggedPanel = panel;
+		_dragStartPlayerGridPos = InterfacerGame.Instance.LocalPlayer.GridPos;
 
-		CreateDragIcon(thing.DisplayIcon);
+        CreateDragIcon(thing.DisplayIcon);
 	}
 
 	public void StopDragging() 

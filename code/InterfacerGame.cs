@@ -398,6 +398,10 @@ public partial class InterfacerGame : Sandbox.Game
 
     public void NearbyThingDragged(Thing thing, PanelType destinationPanelType, IntVector targetGridPos, InterfacerPlayer player)
     {
+		// dont allow dragging nearby thing from different cells, or if the thing has been picked up by someone else
+		if (!player.GridPos.Equals(thing.GridPos) || thing.Flags.HasFlag(ThingFlags.InInventory))
+			return;
+
         if (destinationPanelType == PanelType.InventoryGrid)
         {
             GridManager inventoryGridManager = player.InventoryGridManager;
