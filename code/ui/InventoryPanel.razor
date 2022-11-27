@@ -47,12 +47,12 @@
         return InterfacerGame.Instance.LocalPlayer.InventoryGridManager.Things;
     }
 
-    protected override void OnMouseDown(MousePanelEvent e)
-    {
-        base.OnMouseDown(e);
+    //protected override void OnMouseDown(MousePanelEvent e)
+    //{
+    //    base.OnMouseDown(e);
 
-        Hud.Instance.GridCellClickedInventory(GetGridPos(MousePosition), rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run));
-    }
+    //    Hud.Instance.GridCellClickedInventory(GetGridPos(MousePosition), rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run));
+    //}
 
     protected override void OnAfterTreeRender(bool firstTime)
     {

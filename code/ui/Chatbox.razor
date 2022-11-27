@@ -1,0 +1,106 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+
+@inherits Panel;
+@namespace Interfacer
+
+<style>
+    .chatbox 
+    {
+        width:100%;
+        height:22px;
+        font-size: 16px;
+        pointer-events: all;
+        opacity: 0.05;
+        border: 1px solid #ffffff15;
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    .textentry
+    {
+        color: #999999;
+        white-space: nowrap;
+    }
+
+	.open 
+    {
+        pointer-events: all;
+        opacity: 1;
+        cursor: text;
+
+        > .textentry 
+        {
+            padding-left:6px;
+        }
+    }
+</style>
+
+<root class="chatbox">
+    <TextEntry @ref=Input></TextEntry>
+</root>
+
+@code
+{
+    public TextEntry Input { get; protected set; }
+    string DefaultText = "Press Enter to chat...";
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        base.OnAfterTreeRender(firstTime);
+
+        Input.AddEventListener("onsubmit", () => Submit());
+        Input.AddEventListener("onblur", () => Blur());
+        Input.AddEventListener("onclick", () => Click());
+        Input.AcceptsFocus = true;
+        Input.AllowEmojiReplace = true;
+        Input.Multiline = false;
+    }
+    public override void Tick()
+    {
+        if (Sandbox.Input.Pressed(InputButton.Chat))
+            Open();
+
+        Input.Placeholder = string.IsNullOrEmpty(Input.Text) ? DefaultText : string.Empty;
+    }
+
+    void Open()
+    {
+        AddClass("open");
+        Input.Focus();
+    }
+
+    void Close()
+    {
+        RemoveClass("open");
+        Input.Blur();
+    }
+
+    void Submit()
+    {
+        Close();
+
+        var msg = Input.Text.Trim();
+        Input.Text = "";
+
+        if (string.IsNullOrWhiteSpace(msg))
+            return;
+
+        var player = InterfacerGame.Instance.LocalPlayer;
+        if (player == null)
+            return;
+
+        InterfacerGame.Instance.LogMessage(player.DisplayIcon + "(" + player.DisplayName + ") says: \"" + msg + "\"", player.PlayerNum);
+    }
+
+    void Blur()
+    {
+        //Input.Text = DefaultText;
+        Close();
+    }
+
+    void Click()
+    {
+        Open();
+    }
+}

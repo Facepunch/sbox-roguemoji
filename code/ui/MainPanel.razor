@@ -7,6 +7,8 @@
 <style>
     .root
     {
+        width: 100%;
+        height: 100%;
         flex-direction:column;
         background-color: #050505;
     }
@@ -17,7 +19,17 @@
         width: 100%;
         //height: 100%;
         //background-color: #002200;
-        padding:20px;
+        margin:20px;
+        padding-right: 40px;
+    }
+
+    .upper_right_column
+    {
+        margin-left: 20px;
+        flex-grow: 1;
+        flex-direction: column;
+        //align-items: stretch;
+        flex-wrap: nowrap;
     }
 
     .lower_row
@@ -31,10 +43,16 @@
 
     .log
     {
-        //width: 20%;
-        margin-left:20px;
-        //background-color: #000055;
+        width: 100%;
+        height: 100%;
         flex-grow: 1;
+        min-height: 10px;
+        margin-bottom:5px;
+    }
+
+    .chatbox
+    {
+        
     }
 
     .character
@@ -79,11 +97,14 @@
 </style>
 
 <root class="root">
-    <div class="upper_row">
-        <ArenaPanel style="width: @(40 * InterfacerGame.ArenaWidth)px; height: @(40 * InterfacerGame.ArenaHeight)px;" @ref=ArenaPanel></ArenaPanel>
+    <div class="upper_row" style="height: @(40 * InterfacerGame.ArenaHeight)px;">
+        <ArenaPanel style="width: @(40 * InterfacerGame.ArenaWidth)px;" @ref=ArenaPanel></ArenaPanel>
             <!-- <p style="color: #ffffff33;"> Hovered: @ArenaPanel.HoveredCellIndex @GetHoveredCoords() ----- Clicked: @ArenaPanel.GetSelectedIndexString() ----- # Cells: @ArenaPanel.Cells.Count() ----- # Things: @InterfacerGame.Instance.NumThings</p> -->
 
-        <LogPanel class="log" @ref=LogPanel></LogPanel>
+        <div class="upper_right_column">
+            <LogPanel class="log" @ref=LogPanel></LogPanel>
+            <Chatbox class="chatbox" @ref=Chatbox></Chatbox>
+        </div>
      </div>
 
     <div class="lower_row">
@@ -99,6 +120,7 @@
 {
     public ArenaPanel ArenaPanel { get; set; }
     public LogPanel LogPanel { get; set; }
+    public Chatbox Chatbox { get; set; }
     public CharacterPanel CharacterPanel { get; set; }
     public NearbyPanel NearbyPanel { get; set; }
     public InventoryPanel InventoryPanel { get; set; }
