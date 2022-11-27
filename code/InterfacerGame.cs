@@ -28,8 +28,8 @@ public partial class InterfacerGame : Sandbox.Game
 
 	[Net] public GridManager ArenaGridManager { get; private set; }
 
-	public const int ArenaWidth = 30;
-	public const int ArenaHeight = 20;
+	public const int ArenaWidth = 29;
+	public const int ArenaHeight = 19;
 	public const int InventoryWidth = 10;
 	public const int InventoryHeight = 5;
 

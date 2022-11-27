@@ -94,8 +94,19 @@ public partial class InterfacerPlayer : Thing
 		{
 			SetIcon("😀");
 
-			SetCameraGridOffset(CameraGridOffset + GridManager.GetIntVectorForDirection(direction));
-		}
+			var middleCell = new IntVector(MathX.FloorToInt((float)InterfacerGame.ArenaWidth / 2f), MathX.FloorToInt((float)InterfacerGame.ArenaHeight / 2f));
+            var offsetGridPos = GridPos - CameraGridOffset;
+
+            if (offsetGridPos.x < middleCell.x)
+                SetCameraGridOffset(CameraGridOffset + new IntVector(-1, 0));
+			else if (offsetGridPos.x > middleCell.x)
+                SetCameraGridOffset(CameraGridOffset + new IntVector(1, 0));
+
+            if (offsetGridPos.y < middleCell.y)
+                SetCameraGridOffset(CameraGridOffset + new IntVector(0, -1));
+            else if (offsetGridPos.y > middleCell.y)
+                SetCameraGridOffset(CameraGridOffset + new IntVector(0, 1));
+        }
 		else 
 		{
 			SetIcon("🤨");
