@@ -31,7 +31,7 @@ public partial class InterfacerGame : Sandbox.Game
 	public const int ArenaWidth = 29;
 	public const int ArenaHeight = 19;
 	public const int InventoryWidth = 10;
-	public const int InventoryHeight = 5;
+	public const int InventoryHeight = 6;
 
     public int LevelWidth { get; set; }
     public int LevelHeight { get; set; }
