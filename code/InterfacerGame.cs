@@ -49,7 +49,19 @@ public partial class InterfacerGame : Sandbox.Game
 			ArenaGridManager = new();
 			ArenaGridManager.Init(ArenaWidth, ArenaHeight);
 
-			SpawnThingArena(TypeLibrary.GetDescription(typeof(Rock)), new IntVector(10, 10));
+			for(int x = 0; x < ArenaWidth; x++)
+			{
+                SpawnThingArena(TypeLibrary.GetDescription(typeof(OilBarrel)), new IntVector(x, 0));
+                SpawnThingArena(TypeLibrary.GetDescription(typeof(OilBarrel)), new IntVector(x, ArenaHeight - 1));
+            }
+
+            for (int y = 1; y < ArenaHeight - 1; y++)
+            {
+                SpawnThingArena(TypeLibrary.GetDescription(typeof(OilBarrel)), new IntVector(0, y));
+                SpawnThingArena(TypeLibrary.GetDescription(typeof(OilBarrel)), new IntVector(ArenaWidth - 1, y));
+            }
+
+            SpawnThingArena(TypeLibrary.GetDescription(typeof(Rock)), new IntVector(10, 10));
             SpawnThingArena(TypeLibrary.GetDescription(typeof(Leaf)), new IntVector(9, 10));
             SpawnThingArena(TypeLibrary.GetDescription(typeof(Leaf)), new IntVector(21, 19));
         }

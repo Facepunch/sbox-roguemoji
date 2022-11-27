@@ -19,8 +19,8 @@ public enum ThingFlags
 
 public partial class GridManager : Entity
 {
-	[Net] public int GridWidth { get; private set; }
-	[Net] public int GridHeight { get; private set; }
+	[Net] public int LevelWidth { get; private set; }
+	[Net] public int LevelHeight { get; private set; }
 
 	[Net] public IList<Thing> Things { get; private set; }
 
@@ -28,8 +28,8 @@ public partial class GridManager : Entity
 
 	public void Init(int width, int height)
 	{
-		GridWidth = width;
-		GridHeight = height;
+		LevelWidth = width;
+		LevelHeight = height;
 
 		Transmit = TransmitType.Always;
 
@@ -80,8 +80,8 @@ public partial class GridManager : Entity
 			thing.StackNum = stackNum++;
     }
 
-	public int GetIndex( IntVector gridPos ) { return gridPos.y * GridWidth + gridPos.x; }
-	public IntVector GetGridPos( int index ) { return new IntVector( index % GridWidth, ((float)index / (float)GridWidth).FloorToInt() ); }
+	public int GetIndex( IntVector gridPos ) { return gridPos.y * LevelWidth + gridPos.x; }
+	public IntVector GetGridPos( int index ) { return new IntVector( index % LevelWidth, ((float)index / (float)LevelWidth).FloorToInt() ); }
 	public Vector2 GetScreenPos(IntVector gridPos) { return new Vector2(gridPos.x, gridPos.y) * 40f; }
 
 	public static int GetIndex( int x, int y, int width) { return y * width + x; }
@@ -91,18 +91,18 @@ public partial class GridManager : Entity
 	{
 		return
 			x >= 0 &&
-			x < GridWidth &&
+			x < LevelWidth &&
 			y >= 0 &&
-			y < GridHeight;
+			y < LevelHeight;
 	}
 
 	public bool IsGridPosInBounds( IntVector gridPos )
 	{
 		return
 			gridPos.x >= 0 &&
-			gridPos.x < GridWidth &&
+			gridPos.x < LevelWidth &&
 			gridPos.y >= 0 &&
-			gridPos.y < GridHeight;
+			gridPos.y < LevelHeight;
 	}
 
     public void SetGridPos(Thing thing, IntVector gridPos)
@@ -238,7 +238,7 @@ public partial class GridManager : Entity
 
 	public bool GetFirstEmptyGridPos(out IntVector gridPos)
 	{
-		for(int index = 0; index < GridWidth * GridHeight; index++) 
+		for(int index = 0; index < LevelWidth * LevelHeight; index++) 
 		{
 			var currGridPos = GetGridPos(index);
             if (!DoesThingExistAt(currGridPos))

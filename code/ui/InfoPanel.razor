@@ -24,7 +24,15 @@
     {
         margin: 0 0 5px 0;
         font-size: 22px;
-        color: #ffffff55;
+        color: #ffffff77;
+    }
+
+    .tooltip_label
+    {
+        //margin: 0 0 5px 0;
+        font-size: 18px;
+        color: #ffffff44;
+        font-style: italic;
     }
 
     .thing_selected
@@ -38,6 +46,7 @@
     {
         <div class="icon @GetPlayerClass()"> @InterfacerGame.Instance.LocalPlayer.SelectedThing.DisplayIcon </div>
         <div class="name_label"> @InterfacerGame.Instance.LocalPlayer.SelectedThing.DisplayName </div>
+        <div class="tooltip_label"> @InterfacerGame.Instance.LocalPlayer.SelectedThing.Tooltip </div>
     }
 </root>
 
