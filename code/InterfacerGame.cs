@@ -33,7 +33,10 @@ public partial class InterfacerGame : Sandbox.Game
 	public const int InventoryWidth = 10;
 	public const int InventoryHeight = 5;
 
-	public record struct LogData(string text, int playerNum);
+    public int LevelWidth { get; set; }
+    public int LevelHeight { get; set; }
+
+    public record struct LogData(string text, int playerNum);
 	public Queue<LogData> LogMessageQueue = new Queue<LogData>();
 
 	public InterfacerPlayer LocalPlayer => Local.Client.Pawn as InterfacerPlayer; // Client-only
@@ -46,19 +49,21 @@ public partial class InterfacerGame : Sandbox.Game
 
 		if (Host.IsServer)
 		{
-			ArenaGridManager = new();
-			ArenaGridManager.Init(ArenaWidth, ArenaHeight);
+			LevelWidth = 40;
+			LevelHeight = 25;
+            ArenaGridManager = new();
+			ArenaGridManager.Init(LevelWidth, LevelHeight);
 
-			for(int x = 0; x < ArenaWidth; x++)
+			for(int x = 0; x < LevelWidth; x++)
 			{
                 SpawnThingArena(TypeLibrary.GetDescription(typeof(OilBarrel)), new IntVector(x, 0));
-                SpawnThingArena(TypeLibrary.GetDescription(typeof(OilBarrel)), new IntVector(x, ArenaHeight - 1));
+                SpawnThingArena(TypeLibrary.GetDescription(typeof(OilBarrel)), new IntVector(x, LevelHeight - 1));
             }
 
-            for (int y = 1; y < ArenaHeight - 1; y++)
+            for (int y = 1; y < LevelHeight - 1; y++)
             {
                 SpawnThingArena(TypeLibrary.GetDescription(typeof(OilBarrel)), new IntVector(0, y));
-                SpawnThingArena(TypeLibrary.GetDescription(typeof(OilBarrel)), new IntVector(ArenaWidth - 1, y));
+                SpawnThingArena(TypeLibrary.GetDescription(typeof(OilBarrel)), new IntVector(LevelWidth - 1, y));
             }
 
             SpawnThingArena(TypeLibrary.GetDescription(typeof(Rock)), new IntVector(10, 10));

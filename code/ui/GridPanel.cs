@@ -45,9 +45,4 @@ public abstract class GridPanel : Panel
     {
         return null;
     }
-
-    protected override int BuildHash()
-    {
-        return HashCode.Combine(GetThings().Count);
-    }
 }

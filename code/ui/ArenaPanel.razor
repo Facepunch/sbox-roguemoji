@@ -1,4 +1,5 @@
-﻿@using Sandbox;
+﻿@using System;
+@using Sandbox;
 @using Sandbox.UI;
 
 @inherits GridPanel;
@@ -29,8 +30,13 @@
 
     @foreach(Thing thing in GetThings())
     {
-        var index = GetIndex(thing.GridPos);
-        <GridCell style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40);" Thing=@thing GridIndex=@index @onmouseover=@(() => HoveredCellIndex = index )) />
+        var player = InterfacerGame.Instance.LocalPlayer;
+        if(player.IsGridPosVisible(thing.GridPos))
+        {
+            var offsetGridPos = thing.GridPos - player.CameraGridOffset;
+            var index = GetIndex(offsetGridPos);
+            <GridCell style="left: @(offsetGridPos.x * 40); top: @(offsetGridPos.y * 40);" Thing=@thing GridIndex=@index @onmouseover=@(() => HoveredCellIndex = index )) />    
+        }
     }
 </root>
 
@@ -48,6 +54,13 @@
     {
         base.OnMouseDown(e);
 
-        Hud.Instance.GridCellClickedArena(GetGridPos(MousePosition), rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run));
+        var player = InterfacerGame.Instance.LocalPlayer;
+        Hud.Instance.GridCellClickedArena(GetGridPos(MousePosition) + player.CameraGridOffset, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run));
+    }
+
+    protected override int BuildHash()
+    {
+        var player = InterfacerGame.Instance.LocalPlayer;
+        return HashCode.Combine(GetThings().Count, player.CameraGridOffset);
     }
 }

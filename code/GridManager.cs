@@ -22,7 +22,7 @@ public partial class GridManager : Entity
 	[Net] public int LevelWidth { get; private set; }
 	[Net] public int LevelHeight { get; private set; }
 
-	[Net] public IList<Thing> Things { get; private set; }
+    [Net] public IList<Thing> Things { get; private set; }
 
 	public Dictionary<IntVector, List<Thing>> GridThings = new Dictionary<IntVector, List<Thing>>();
 
@@ -86,15 +86,6 @@ public partial class GridManager : Entity
 
 	public static int GetIndex( int x, int y, int width) { return y * width + x; }
 	public static IntVector GetGridPos( int index, int width) { return new IntVector( index % width, ((float)index / (float)width).FloorToInt() ); }
-
-	public bool IsGridPosInBounds( int x, int y )
-	{
-		return
-			x >= 0 &&
-			x < LevelWidth &&
-			y >= 0 &&
-			y < LevelHeight;
-	}
 
 	public bool IsGridPosInBounds( IntVector gridPos )
 	{

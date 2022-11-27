@@ -8,7 +8,9 @@ public partial class InterfacerPlayer : Thing
 	private TimeSince _inputRepeatTime;
 	private const float MOVE_DELAY = 0.3f;
 
-	[Net] public GridManager InventoryGridManager { get; private set; }
+    [Net] public IntVector CameraGridOffset { get; set; }
+
+    [Net] public GridManager InventoryGridManager { get; private set; }
 
 	[Net] public Thing SelectedThing { get; private set; }
 
@@ -91,6 +93,8 @@ public partial class InterfacerPlayer : Thing
 		if (success)
 		{
 			SetIcon("😀");
+
+			SetCameraGridOffset(CameraGridOffset + GridManager.GetIntVectorForDirection(direction));
 		}
 		else 
 		{
@@ -123,4 +127,21 @@ public partial class InterfacerPlayer : Thing
 
 		SelectedThing = thing;
 	}
+
+    public void SetCameraGridOffset(IntVector offset)
+    {
+        CameraGridOffset = new IntVector(
+            Math.Clamp(offset.x, 0, ContainingGridManager.LevelWidth - InterfacerGame.ArenaWidth),
+            Math.Clamp(offset.y, 0, ContainingGridManager.LevelHeight - InterfacerGame.ArenaHeight)
+        );
+    }
+
+    public bool IsGridPosVisible(IntVector gridPos)
+    {
+        return
+            gridPos.x >= CameraGridOffset.x &&
+            gridPos.x < CameraGridOffset.x + InterfacerGame.ArenaWidth &&
+            gridPos.y >= CameraGridOffset.y &&
+            gridPos.y < CameraGridOffset.y + InterfacerGame.ArenaHeight;
+    }
 }

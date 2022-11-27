@@ -146,7 +146,8 @@
         else
         {
             var gridPanel = Hud.Instance.GetPanel(PanelType.ArenaGrid) as GridPanel;
-            Hud.Instance.GridCellClickedArena(Thing.GridPos, rightClick, shift);
+            var player = InterfacerGame.Instance.LocalPlayer;
+            Hud.Instance.GridCellClickedArena(Thing.GridPos - player.CameraGridOffset, rightClick, shift);
         }
     }
 }
