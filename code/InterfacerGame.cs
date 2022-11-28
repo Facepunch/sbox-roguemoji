@@ -352,7 +352,6 @@ public partial class InterfacerGame : Sandbox.Game
 
         if(otherThing != null)
 		{
-			//Log.Info("otherThing: " + otherThing.DisplayName);
             inventoryGridManager.DeregisterGridPos(otherThing, otherThing.GridPos);
 			otherThing.SetGridPos(currGridPos);
         }

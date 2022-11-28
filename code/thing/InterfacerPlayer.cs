@@ -43,8 +43,6 @@ public partial class InterfacerPlayer : Thing
     {
         base.OnClientActive(client);
 
-		//Log.Info("OnClientActive - client: " + client);
-
 		DisplayName = Client.Name;
 		Tooltip = Client.Name;
 	}
@@ -78,9 +76,6 @@ public partial class InterfacerPlayer : Thing
 		base.Update( dt );
 
 		InventoryGridManager.Update(dt);
-
-        //var t = Time.Now * 0.4f;
-        //CameraPixelOffset = new Vector2(MathF.Sin(t) * 40f, MathF.Sin(t) * 40f);
 
         foreach (KeyValuePair<TypeDescription, PlayerStatus> pair in PlayerStatuses)
         {
@@ -177,7 +172,7 @@ public partial class InterfacerPlayer : Thing
 
     public void SetCameraPixelOffset(Vector2 offset)
     {
-        CameraPixelOffset = offset;
+        CameraPixelOffset = new Vector2(MathF.Round(offset.x), MathF.Round(offset.y));
     }
 
     public bool IsGridPosVisible(IntVector gridPos)

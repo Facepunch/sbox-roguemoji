@@ -13,11 +13,10 @@
 
     .grid_bg 
     {
-        opacity: 0.04;
+        opacity: 1;
         position:absolute;
         pointer-events:all;
         background-repeat: repeat;
-        //background-position: -73px -73px;
         background-size: 80px;
         border-radius:3px;
         width:100%;
@@ -26,7 +25,7 @@
 </style>
 
 <root class="arena_panel">
-    <div class="grid_bg" style="background-image: url( textures/bg_tile2.png );" @ref=GridBg></div>
+    <div class="grid_bg" style="background-image: url( textures/bg_tile_green.png );" @ref=GridBg></div>
     
     @if(InterfacerGame.Instance.ArenaGridManager?.Things == null)
     {
@@ -52,15 +51,6 @@
     public override int GridWidth => InterfacerGame.ArenaWidth;
     public override int GridHeight => InterfacerGame.ArenaHeight;
 
-    public override void Tick()
-    {
-        base.Tick();
-
-
-        //var offset = -36f + MathF.Sin(Time.Now) * 36f;
-        //GridBg.Style.Set($"background-position: {offset}px {offset}px;");
-    }
-
     protected override IList<Thing> GetThings()
     {
         return InterfacerGame.Instance.ArenaGridManager?.Things ?? new List<Thing>();
@@ -85,15 +75,7 @@
         base.OnAfterTreeRender(firstTime);
 
         var player = InterfacerGame.Instance.LocalPlayer;
-        //Log.Info("IsOdd: " + IsOdd(player.GridPos));
-        //Log.Info("player.CameraPixelOffset: " + player.CameraPixelOffset + " , " + player.DisplayName);
-
-        //GridBg.Style.Set($"background-position: {-73f + player.CameraPixelOffset.x * 0.9f}px {-73f + player.CameraPixelOffset.y * 0.9f}px;");
-        //GridBg.Style.Set($"background-position: {(player.CameraGridOffset.x % 2 == 0 ? -36f : -73f) + player.CameraPixelOffset.x * 0.9f}px {(player.CameraGridOffset.y % 2 == 0 ? -36f : -73f) + player.CameraPixelOffset.y * 0.9f}px;");
         GridBg.Style.Set($"background-position: {((player.CameraGridOffset.x % 2 == 0 ? -40f : -80f) + player.CameraPixelOffset.x * 0.9f) * ScaleToScreen}px {((player.CameraGridOffset.y % 2 == 0 ? -40f : -80f) + player.CameraPixelOffset.y * 0.9f) * ScaleToScreen}px;");
-
-        //GridBg.Style.Set($"background-position: {(IsOdd(player.GridPos) ? -109f : -73f) + player.CameraPixelOffset.x * 0.9f}px {(IsOdd(player.GridPos) ? -109f : -73f) + player.CameraPixelOffset.y * 0.9f}px;");
-        //GridBg.Style.Set($"background-position: {player.CameraPixelOffset.x * 0.9f}px {player.CameraPixelOffset.y * 0.9f}px;");
     }
 
     bool IsOdd(IntVector gridPos)

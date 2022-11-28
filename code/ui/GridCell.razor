@@ -115,7 +115,7 @@
             return;
 
         Tooltip = Thing.Tooltip;
-        SetTransform(Thing.Offset, Thing.RotationDegrees, Thing.IconScale);
+        SetTransform(Thing.Offset * ScaleToScreen, Thing.RotationDegrees, Thing.IconScale);
         Style.ZIndex = GridIndex + (Thing.IconDepth * 100) + Thing.StackNum;
     }
 
