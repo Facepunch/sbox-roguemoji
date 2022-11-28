@@ -178,10 +178,10 @@ public partial class InterfacerPlayer : Thing
     public bool IsGridPosVisible(IntVector gridPos)
     {
         return
-            gridPos.x >= CameraGridOffset.x &&
-            gridPos.x < CameraGridOffset.x + InterfacerGame.ArenaWidth &&
-            gridPos.y >= CameraGridOffset.y &&
-            gridPos.y < CameraGridOffset.y + InterfacerGame.ArenaHeight;
+            (gridPos.x >= CameraGridOffset.x - 1) &&
+            (gridPos.x < CameraGridOffset.x + InterfacerGame.ArenaWidth + 1) &&
+            (gridPos.y >= CameraGridOffset.y - 1) &&
+            (gridPos.y < CameraGridOffset.y + InterfacerGame.ArenaHeight + 1);
     }
 
     public PlayerStatus AddPlayerStatus(TypeDescription type)
