@@ -100,10 +100,11 @@
 
     protected override int BuildHash()
     {
-        if (Thing == null)
+        var player = InterfacerGame.Instance.LocalPlayer;
+        if (Thing == null || player == null)
             return base.BuildHash();
 
-        return HashCode.Combine( Thing.GetHashCode(), IsSelected(), Thing.NetworkIdent );
+        return HashCode.Combine( Thing.GetHashCode(), IsSelected(), Thing.NetworkIdent, player.CameraPixelOffset );
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

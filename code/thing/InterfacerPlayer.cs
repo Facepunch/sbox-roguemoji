@@ -9,6 +9,7 @@ public partial class InterfacerPlayer : Thing
 	private const float MOVE_DELAY = 0.3f;
 
     [Net] public IntVector CameraGridOffset { get; set; }
+    [Net] public Vector2 CameraPixelOffset { get; set; }
 
     [Net] public GridManager InventoryGridManager { get; private set; }
 
@@ -67,7 +68,10 @@ public partial class InterfacerPlayer : Thing
 		base.Update( dt );
 
 		InventoryGridManager.Update(dt);
-	}
+
+		var t = Time.Now * 0.4f;
+        CameraPixelOffset = new Vector2(MathF.Sin(t) * 40f, MathF.Sin(t) * 40f);
+    }
 
 	public override void Simulate( Client cl )
 	{

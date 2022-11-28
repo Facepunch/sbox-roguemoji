@@ -6,13 +6,18 @@
 @namespace Interfacer
 
 <style>
+    .arena_panel
+    {
+        overflow: hidden;
+    }
+
     .grid_bg 
     {
         opacity: 0.04;
         position:absolute;
         pointer-events:all;
         background-repeat: repeat;
-        background-position: 0 0;
+        background-position: -73px -73px;
         background-size: 80px;
         border-radius:3px;
         width:100%;
@@ -20,8 +25,8 @@
     }
 </style>
 
-<root class>
-    <div class="grid_bg" style="background-image: url( textures/bg_tile.png );"></div>
+<root class="arena_panel">
+    <div class="grid_bg" style="background-image: url( textures/bg_tile.png );" @ref=GridBg></div>
     
     @if(InterfacerGame.Instance.ArenaGridManager?.Things == null)
     {
@@ -35,15 +40,25 @@
         {
             var offsetGridPos = thing.GridPos - player.CameraGridOffset;
             var index = GetIndex(offsetGridPos);
-            <GridCell style="left: @(offsetGridPos.x * 40); top: @(offsetGridPos.y * 40);" Thing=@thing GridIndex=@index @onmouseover=@(() => HoveredCellIndex = index )) />    
+            <GridCell style="left: @((offsetGridPos.x * 40) + player.CameraPixelOffset.x); top: @((offsetGridPos.y * 40) + player.CameraPixelOffset.y);" Thing=@thing GridIndex=@index @onmouseover=@(() => HoveredCellIndex = index )) />    
         }
     }
 </root>
 
 @code
 {
+    public Panel GridBg { get; protected set; }
+
     public override int GridWidth => InterfacerGame.ArenaWidth;
     public override int GridHeight => InterfacerGame.ArenaHeight;
+
+    public override void Tick()
+    {
+        base.Tick();
+
+        var offset = -36f + MathF.Sin(Time.Now) * 36f;
+        //GridBg.Style.Set($"background-position: {offset}px {offset}px;");
+    }
 
     protected override IList<Thing> GetThings()
     {
@@ -61,6 +76,14 @@
     protected override int BuildHash()
     {
         var player = InterfacerGame.Instance.LocalPlayer;
-        return HashCode.Combine(GetThings().Count, player.CameraGridOffset);
+        return HashCode.Combine(GetThings().Count, player.CameraGridOffset, player.CameraPixelOffset);
+    }
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        base.OnAfterTreeRender(firstTime);
+
+        var player = InterfacerGame.Instance.LocalPlayer;
+        GridBg.Style.Set($"background-position: {-73f + player.CameraPixelOffset.x * 0.9f}px {-73f + player.CameraPixelOffset.y * 0.9f}px;");
     }
 }

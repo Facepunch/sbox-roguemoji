@@ -128,7 +128,7 @@ public partial class Thing : Entity
 		}
 
 		SetGridPos(newGridPos);
-		//VfxSlide(direction, 0.2f, 20f);
+		//VfxSlide(direction, 0.1f, 10f);
 
 		return true;
 	}
