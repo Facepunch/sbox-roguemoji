@@ -128,7 +128,7 @@ public partial class Thing : Entity
 		}
 
 		SetGridPos(newGridPos);
-		//VfxSlide(direction, 0.1f, 10f);
+		VfxSlide(direction, 0.15f, 40f);
 
 		return true;
 	}
@@ -241,15 +241,18 @@ public partial class Thing : Entity
 
 	public void DrawDebugText(string text, Color color, int line = 0, float time = 0f)
     {
-		if(Host.IsServer)
+        var player = InterfacerGame.Instance.LocalPlayer;
+		var offsetGridPos = GridPos - player.CameraGridOffset;
+
+		if (Host.IsServer)
         {
-			DebugOverlay.ScreenText(text, ContainingGridManager.GetScreenPos(GridPos), 0, color, time);
+			DebugOverlay.ScreenText(text, ContainingGridManager.GetScreenPos(offsetGridPos), 0, color, time);
 		}
 		else
         {
 			var panel = GetGridPanel();
 			if(panel != null)
-				DebugOverlay.ScreenText(text, panel.GetCellPos(GridPos), line, color, time);
+				DebugOverlay.ScreenText(text, panel.GetCellPos(offsetGridPos), line, color, time);
 		}
 	}
 
