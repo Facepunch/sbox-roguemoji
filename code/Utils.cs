@@ -24,6 +24,25 @@ public enum EasingType
     BounceIn, BounceOut, BounceInOut
 };
 
+public struct AStarEdge<T>
+{
+    /// <summary>
+    /// The node this connection leads to.
+    /// </summary>
+    public readonly T Dest;
+
+    /// <summary>
+    /// The cost of using this connection.
+    /// </summary>
+    public readonly float Cost;
+
+    internal AStarEdge(T dest, float cost)
+    {
+        Dest = dest;
+        Cost = cost;
+    }
+}
+
 public static class Utils
 {
     public static IEnumerable<Thing> WithAll(this IEnumerable<Thing> list, ThingFlags flags)
@@ -335,5 +354,206 @@ public static class Utils
     {
         if (t < 0.5) return BounceIn(t * 2f) * 0.5f;
         else return BounceOut(t * 2f - 1f) * 0.5f + 0.5f;
+    }
+
+    private class NodeInfo<T>
+    {
+        private const int MaxPoolSize = 8192;
+
+        private static List<NodeInfo<T>> _sPool;
+
+        internal static NodeInfo<T> Create(T node, NodeInfo<T> prev = null, float costAdd = 0f)
+        {
+            NodeInfo<T> nodeInfo;
+
+            if (_sPool == null || _sPool.Count == 0)
+            {
+                nodeInfo = new NodeInfo<T>();
+            }
+            else
+            {
+                nodeInfo = _sPool[_sPool.Count - 1];
+                _sPool.RemoveAt(_sPool.Count - 1);
+            }
+
+            nodeInfo.Node = node;
+            nodeInfo.Prev = prev;
+
+            if (prev == null)
+            {
+                nodeInfo.Depth = 0;
+                nodeInfo.Cost = 0f;
+            }
+            else
+            {
+                nodeInfo.Depth = prev.Depth + 1;
+                nodeInfo.Cost = prev.Cost + costAdd;
+            }
+
+            return nodeInfo;
+        }
+
+        internal static void Pool(NodeInfo<T> nodeInfo)
+        {
+            if (_sPool == null) _sPool = new List<NodeInfo<T>>(MaxPoolSize);
+            if (_sPool.Count >= MaxPoolSize) return;
+
+            _sPool.Add(nodeInfo);
+        }
+
+        private float _heuristic;
+
+        public T Node { get; private set; }
+        public NodeInfo<T> Prev { get; private set; }
+        public int Depth { get; private set; }
+        public float Cost { get; private set; }
+        public float Total { get; private set; }
+
+        public float Heuristic
+        {
+            get { return _heuristic; }
+            set
+            {
+                _heuristic = value;
+                Total = Cost + value;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Convenience method to produce a graph connection for use when calling AStar().
+    /// </summary>
+    /// <typeparam name="T">Graph node type.</typeparam>
+    /// <param name="dest">Destination node of the connection.</param>
+    /// <param name="cost">Cost of taking the connection.</param>
+    public static AStarEdge<T> Edge<T>(T dest, float cost)
+    {
+        return new AStarEdge<T>(dest, cost);
+    }
+
+    private static class AStarWrapper<T>
+        where T : IEquatable<T>
+    {
+        public static NodeInfo<T> FirstMatchOrDefault(List<NodeInfo<T>> list, T toCompare)
+        {
+            var count = list.Count;
+
+            for (var i = count - 1; i >= 0; --i)
+            {
+                var item = list[i];
+                if (item.Node.Equals(toCompare))
+                    return item;
+            }
+
+            return null;
+        }
+
+        private static List<NodeInfo<T>> _sOpen;
+        private static List<NodeInfo<T>> _sClosed;
+
+        public static bool AStar(T origin, T target, List<T> destList,
+            Func<T, IEnumerable<AStarEdge<T>>> adjFunc, Func<T, T, float> heuristicFunc)
+        {
+            var open = _sOpen ?? (_sOpen = new List<NodeInfo<T>>());
+            var clsd = _sClosed ?? (_sClosed = new List<NodeInfo<T>>());
+
+            open.Clear();
+            clsd.Clear();
+
+            var first = NodeInfo<T>.Create(origin);
+            first.Heuristic = heuristicFunc(origin, target);
+
+            open.Add(first);
+
+            try
+            {
+                while (open.Count > 0)
+                {
+                    NodeInfo<T> cur = null;
+                    foreach (var node in open)
+                    {
+                        if (cur == null || node.Total < cur.Total) cur = node;
+                    }
+
+                    if (cur.Node.Equals(target))
+                    {
+                        for (var i = cur.Depth; i >= 0; --i)
+                        {
+                            destList.Add(cur.Node);
+                            cur = cur.Prev;
+                        }
+                        destList.Reverse();
+                        return true;
+                    }
+
+                    open.Remove(cur);
+                    clsd.Add(cur);
+
+                    foreach (var adj in adjFunc(cur.Node))
+                    {
+                        var node = NodeInfo<T>.Create(adj.Dest, cur, adj.Cost);
+                        var existing = FirstMatchOrDefault(clsd, adj.Dest);
+
+                        if (existing != null)
+                        {
+                            if (existing.Cost <= node.Cost) continue;
+
+                            clsd.Remove(existing);
+                            node.Heuristic = existing.Heuristic;
+
+                            NodeInfo<T>.Pool(existing);
+                        }
+
+                        existing = FirstMatchOrDefault(open, adj.Dest);
+
+                        if (existing != null)
+                        {
+                            if (existing.Cost <= node.Cost) continue;
+
+                            open.Remove(existing);
+                            node.Heuristic = existing.Heuristic;
+
+                            NodeInfo<T>.Pool(existing);
+                        }
+                        else
+                        {
+                            node.Heuristic = heuristicFunc(node.Node, target);
+                        }
+
+                        open.Add(node);
+                    }
+                }
+                return false;
+
+            }
+            finally
+            {
+                foreach (var nodeInfo in open)
+                {
+                    NodeInfo<T>.Pool(nodeInfo);
+                }
+
+                foreach (var nodeInfo in clsd)
+                {
+                    NodeInfo<T>.Pool(nodeInfo);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// An implementation of the AStar path finding algorithm.
+    /// </summary>
+    /// <typeparam name="T">Graph node type.</typeparam>
+    /// <param name="origin">Node to start path finding from.</param>
+    /// <param name="target">The goal node to reach.</param>
+    /// <param name="adjFunc">Function returning the neighbouring connections for a node.</param>
+    /// <param name="heuristicFunc">Function returning the estimated cost of travelling between two nodes.</param>
+    /// <returns>A sequence of nodes representing a path if one is found, otherwise an empty array.</returns>
+    public static bool AStar<T>(T origin, T target, List<T> destPath,
+        Func<T, IEnumerable<AStarEdge<T>>> adjFunc, Func<T, T, float> heuristicFunc)
+        where T : IEquatable<T>
+    {
+        return AStarWrapper<T>.AStar(origin, target, destPath, adjFunc, heuristicFunc);
     }
 }

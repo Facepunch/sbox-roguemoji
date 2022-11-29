@@ -6,7 +6,7 @@ namespace Interfacer;
 /// <summary>
 /// A two component vector of integers.
 /// </summary>
-public struct IntVector
+public struct IntVector : IEquatable<IntVector>
 {
 	public static implicit operator Vector2( IntVector vec )
 	{

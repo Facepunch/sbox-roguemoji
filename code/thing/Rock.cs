@@ -11,5 +11,6 @@ public partial class Rock : Thing
         ShouldLogBehaviour = true;
 		Tooltip = "A rock.";
 		Flags = ThingFlags.Solid | ThingFlags.Selectable;
+        PathfindMovementCost = 15f;
     }
 }

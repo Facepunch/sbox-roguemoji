@@ -39,9 +39,12 @@ public partial class InterfacerGame : Sandbox.Game
     public record struct LogData(string text, int playerNum);
 	public Queue<LogData> LogMessageQueue = new Queue<LogData>();
 
+    public List<InterfacerPlayer> Players = new List<InterfacerPlayer>();
+    
 	public InterfacerPlayer LocalPlayer => Local.Client.Pawn as InterfacerPlayer; // Client-only
 
     public List<PanelFlickerData> _panelsToFlicker;
+
 
     public InterfacerGame()
 	{
@@ -69,6 +72,18 @@ public partial class InterfacerGame : Sandbox.Game
             SpawnThingArena(TypeLibrary.GetDescription(typeof(Rock)), new IntVector(10, 10));
             SpawnThingArena(TypeLibrary.GetDescription(typeof(Leaf)), new IntVector(9, 10));
             SpawnThingArena(TypeLibrary.GetDescription(typeof(Leaf)), new IntVector(21, 19));
+
+			for(int i = 0; i < 20; i++)
+			{
+                if(ArenaGridManager.GetRandomEmptyGridPos(out var gridPos))
+					SpawnThingArena(TypeLibrary.GetDescription(typeof(TreeEvergreen)), gridPos);
+            }
+
+            for (int i = 0; i < 8; i++)
+            {
+                if (ArenaGridManager.GetRandomEmptyGridPos(out var gridPos))
+                    SpawnThingArena(TypeLibrary.GetDescription(typeof(Squirrel)), gridPos);
+            }
         }
 
 		if (Host.IsClient)
@@ -121,36 +136,26 @@ public partial class InterfacerGame : Sandbox.Game
 		base.ClientJoined(client);
 
         SpawnThingArena(TypeLibrary.GetDescription(typeof(Leaf)), new IntVector(4, 4));
-        
-		InterfacerPlayer player = SpawnThingArena(TypeLibrary.GetDescription(typeof(InterfacerPlayer)), new IntVector(5, 10)) as InterfacerPlayer;
+
+		ArenaGridManager.GetRandomEmptyGridPos(out var gridPos);
+        InterfacerPlayer player = SpawnThingArena(TypeLibrary.GetDescription(typeof(InterfacerPlayer)), gridPos) as InterfacerPlayer;
 		player.PlayerNum = ++PlayerNum;
+
+        var middleCell = new IntVector(MathX.FloorToInt((float)ArenaWidth / 2f), MathX.FloorToInt((float)ArenaHeight / 2f));
+		player.SetCameraGridOffset(gridPos - middleCell);
+
 		client.Pawn = player;
 
-		for(int x = 0; x < InventoryWidth; x++)
+		Players.Add(player);
+
+        for (int x = 0; x < InventoryWidth; x++)
 		{
             for (int y = 0; y < InventoryHeight; y++)
 			{
 				SpawnThingInventory(TypeLibrary.GetDescription(GetRandomType()), new IntVector(x, y), player);
             }
         }
-		
-        SpawnThingArena(TypeLibrary.GetDescription(GetRandomType()), new IntVector(5, 4));
     }
-
-	Type GetRandomType()
-	{
-		int rand = Rand.Int(0, 6);
-		switch (rand)
-		{
-			case 0: return typeof(Leaf);
-			case 1: return typeof(Potato);
-			case 2: return typeof(Nut);
-            case 3: return typeof(Mushroom);
-            case 4: return typeof(Trumpet);
-            case 5: return typeof(Bouquet);
-            case 6: default: return typeof(Cheese);
-		}
-	}
 
 	public override void ClientDisconnect(Client client, NetworkDisconnectionReason reason)
 	{
@@ -159,10 +164,27 @@ public partial class InterfacerGame : Sandbox.Game
 
 		// todo: drop or remove items in player's inventory
 
+		Players.Remove(player);
+
 		base.ClientDisconnect(client, reason);
 	}
 
-	public void LogMessage(string text, int playerNum)
+    Type GetRandomType()
+    {
+        int rand = Rand.Int(0, 6);
+        switch (rand)
+        {
+            case 0: return typeof(Leaf);
+            case 1: return typeof(Potato);
+            case 2: return typeof(Nut);
+            case 3: return typeof(Mushroom);
+            case 4: return typeof(Trumpet);
+            case 5: return typeof(Bouquet);
+            case 6: default: return typeof(Cheese);
+        }
+    }
+
+    public void LogMessage(string text, int playerNum)
 	{
 		LogMessageClient(text, playerNum);
 	}
@@ -438,4 +460,25 @@ public partial class InterfacerGame : Sandbox.Game
             player.SelectThing(thing);
         }
     }
+
+	public InterfacerPlayer GetClosestPlayer(IntVector gridPos)
+	{
+		int closestDistance = int.MaxValue;
+		InterfacerPlayer closestPlayer = null;
+
+		foreach (var player in Players) 
+		{
+			if (!player.IsValid)
+				continue;
+
+			int dist = (player.GridPos - gridPos).ManhattanLength;
+			if(dist < closestDistance )
+			{
+				closestDistance = dist;
+				closestPlayer = player;
+			}
+		}
+
+		return closestPlayer;
+	}
 }

@@ -5,7 +5,7 @@ using Sandbox;
 
 namespace Interfacer;
 
-public enum Direction { Left, Right, Down, Up }
+public enum Direction { None, Left, Right, Down, Up }
 
 [Flags]
 public enum ThingFlags
@@ -50,6 +50,7 @@ public partial class GridManager : Entity
 			if (!thing.DoneFirstUpdate)
 				thing.FirstUpdate();
 
+			// todo: only update if a status needs updating
 			if (thing.ShouldUpdate || thing.Statuses.Count > 0)
 				thing.Update(dt);
 		}
@@ -132,8 +133,10 @@ public partial class GridManager : Entity
 			case Direction.Left:  return new IntVector( -1, 0 );
 			case Direction.Right: return new IntVector( 1, 0 );
 			case Direction.Down: return new IntVector( 0, 1 );
-			case Direction.Up: default: return new IntVector( 0, -1 );
+			case Direction.Up: return new IntVector( 0, -1 );
 		}
+
+		return IntVector.Zero;
 	}
 
 	public static Vector2 GetVectorForDirection(Direction direction)
@@ -143,11 +146,27 @@ public partial class GridManager : Entity
 			case Direction.Left: return new Vector2(-1f, 0f);
 			case Direction.Right: return new Vector2(1f, 0f);
 			case Direction.Down: return new Vector2(0f, 1f);
-			case Direction.Up: default: return new Vector2(0f, -1f);
+			case Direction.Up: return new Vector2(0f, -1f);
 		}
+
+		return Vector2.Zero;
 	}
 
-	public static string GetDirectionText(Direction direction)
+    public static Direction GetDirectionForIntVector(IntVector vec)
+    {
+		if (vec.x == -1 && vec.y == 0)
+			return Direction.Left;
+		else if (vec.x == 1 && vec.y == 0)
+            return Direction.Right;
+        else if (vec.x == 0 && vec.y == -1)
+            return Direction.Up;
+        else if (vec.x == 0 && vec.y == 1)
+            return Direction.Down;
+
+		return Direction.None;
+    }
+
+    public static string GetDirectionText(Direction direction)
 	{
 		string output = "";
 
@@ -163,7 +182,6 @@ public partial class GridManager : Entity
 				output = "down";
 				break;
 			case Direction.Up:
-			default:
 				output = "up";
 				break;
 		}
@@ -227,6 +245,18 @@ public partial class GridManager : Entity
 		return Things.Where(x => x.GridPos.Equals(gridPos));
     }
 
+	public float GetPathfindMovementCost(IntVector gridPos)
+	{
+		float movementCost = 0f;
+		var things = GetThingsAt(gridPos);
+		foreach(var thing in things)
+		{
+			movementCost += thing.PathfindMovementCost;
+		}
+
+		return movementCost;
+	}
+
 	public bool GetFirstEmptyGridPos(out IntVector gridPos)
 	{
 		for(int index = 0; index < LevelWidth * LevelHeight; index++) 
@@ -242,4 +272,21 @@ public partial class GridManager : Entity
 		gridPos = IntVector.Zero;
 		return false;
 	}
+
+	public bool GetRandomEmptyGridPos(out IntVector gridPos)
+	{
+		int NUM_TRIES = 100;
+		for(int i = 0; i < NUM_TRIES; i++)
+		{
+			var currGridPos = new IntVector(Rand.Int(0, LevelWidth - 1), Rand.Int(0, LevelHeight - 1));
+            if (!DoesThingExistAt(currGridPos))
+            {
+                gridPos = currGridPos;
+                return true;
+            }
+        }
+
+        gridPos = IntVector.Zero;
+        return false;
+    }
 }

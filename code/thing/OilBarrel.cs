@@ -11,5 +11,6 @@ public partial class OilBarrel : Thing
         ShouldLogBehaviour = true;
 		Tooltip = "A flammable barrel of oil.";
         Flags = ThingFlags.Solid | ThingFlags.Selectable;
+        PathfindMovementCost = 20f;
     }
 }

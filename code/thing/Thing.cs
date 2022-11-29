@@ -20,8 +20,9 @@ public partial class Thing : Entity
 	[Net] public int IconDepth { get; set; }
     public bool ShouldLogBehaviour { get; set; }
 	[Net] public int StackNum { get; set; }
+    [Net] public float PathfindMovementCost { get; set; }
 
-	public Vector2 Offset { get; set; }
+    public Vector2 Offset { get; set; }
 	public float RotationDegrees { get; set; }
 	public float IconScale { get; set; }
 
@@ -96,6 +97,8 @@ public partial class Thing : Entity
 
 	public virtual bool TryMove(Direction direction)
 	{
+		Assert.True(direction != Direction.None);
+
 		IntVector vec = GridManager.GetIntVectorForDirection(direction);
 		IntVector newGridPos = GridPos + vec;
 
@@ -111,7 +114,7 @@ public partial class Thing : Entity
 			if ( !pushSuccess )
             {
                 otherThing.VfxShake(0.2f, 4f);
-				otherThing.VfxSpin(0.6f, 0f, 360f);
+				//otherThing.VfxSpin(0.6f, 0f, 360f);
 				return false;
 			}
 
@@ -221,6 +224,11 @@ public partial class Thing : Entity
 		}
 	}
 
+	public T AddStatus<T>() where T : ThingStatus
+	{
+		return AddStatus(TypeLibrary.GetDescription(typeof(T))) as T;
+	}
+
 	public void RemoveStatus(TypeDescription type)
     {
 		if(Statuses.ContainsKey(type))
@@ -230,6 +238,18 @@ public partial class Thing : Entity
 			Statuses.Remove(type);
         }
     }
+
+	public bool GetStatus(TypeDescription type, out ThingStatus status)
+	{
+		if (Statuses.ContainsKey(type))
+		{
+			status = Statuses[type];
+			return true;
+		}
+
+		status = null;
+		return false;
+	}
 
 	public void ForEachStatus(Action<ThingStatus> action)
 	{
@@ -241,15 +261,15 @@ public partial class Thing : Entity
 
 	public void DrawDebugText(string text, Color color, int line = 0, float time = 0f)
     {
-        var player = InterfacerGame.Instance.LocalPlayer;
-		var offsetGridPos = GridPos - player.CameraGridOffset;
-
 		if (Host.IsServer)
         {
-			DebugOverlay.ScreenText(text, ContainingGridManager.GetScreenPos(offsetGridPos), 0, color, time);
+			DebugOverlay.ScreenText(text, new Vector2(20f, 20f), 0, color, time);
 		}
 		else
         {
+            var player = InterfacerGame.Instance.LocalPlayer;
+            var offsetGridPos = GridPos - player.CameraGridOffset;
+            
 			var panel = GetGridPanel();
 			if(panel != null)
 				DebugOverlay.ScreenText(text, panel.GetCellPos(offsetGridPos), line, color, time);
@@ -270,7 +290,7 @@ public partial class Thing : Entity
 	[ClientRpc]
 	public void VfxNudge(Direction direction, float lifetime, float distance)
 	{
-		var nudge = AddStatus(TypeLibrary.GetDescription(typeof(VfxNudgeStatus))) as VfxNudgeStatus;
+		var nudge = AddStatus<VfxNudgeStatus>();
         nudge.Direction = direction;
         nudge.Lifetime = lifetime;
         nudge.Distance = distance;
@@ -279,7 +299,7 @@ public partial class Thing : Entity
 	[ClientRpc]
 	public void VfxSlide(Direction direction, float lifetime, float distance)
     {
-		var slide = AddStatus(TypeLibrary.GetDescription(typeof(VfxSlideStatus))) as VfxSlideStatus;
+		var slide = AddStatus<VfxSlideStatus>();
 		slide.Direction = direction;
 		slide.Lifetime = lifetime;
 		slide.Distance = distance;
@@ -288,7 +308,7 @@ public partial class Thing : Entity
 	[ClientRpc]
 	public void VfxShake(float lifetime, float distance)
 	{
-		var shake = AddStatus(TypeLibrary.GetDescription(typeof(VfxShakeStatus))) as VfxShakeStatus;
+		var shake = AddStatus<VfxShakeStatus>();
 		shake.Lifetime = lifetime;
 		shake.Distance = distance;
 	}
@@ -296,7 +316,7 @@ public partial class Thing : Entity
 	[ClientRpc]
 	public void VfxScale(float lifetime, float startScale, float endScale)
 	{
-		var scale = AddStatus(TypeLibrary.GetDescription(typeof(VfxScaleStatus))) as VfxScaleStatus;
+		var scale = AddStatus<VfxScaleStatus>();
 		scale.Lifetime = lifetime;
 		scale.StartScale = startScale;
 		scale.EndScale = endScale;
@@ -305,7 +325,7 @@ public partial class Thing : Entity
 	[ClientRpc]
 	public void VfxSpin(float lifetime, float startAngle, float endAngle)
 	{
-		var scale = AddStatus(TypeLibrary.GetDescription(typeof(VfxSpinStatus))) as VfxSpinStatus;
+		var scale = AddStatus<VfxSpinStatus>();
 		scale.Lifetime = lifetime;
 		scale.StartAngle = startAngle;
 		scale.EndAngle = endAngle;

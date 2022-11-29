@@ -25,6 +25,7 @@ public partial class InterfacerPlayer : Thing
 		DisplayName = "Player";
 		Tooltip = "";
 		Flags = ThingFlags.Solid | ThingFlags.Selectable;
+        PathfindMovementCost = 10f;
 
 		if(Host.IsServer)
         {
@@ -64,12 +65,6 @@ public partial class InterfacerPlayer : Thing
         //DrawDebugText("# Things: " + InventoryGridManager.Things.Count);
         //Log.Info("Player:ClientTick - InventoryGridManager: " + InventoryGridManager);
     }
-
-    //[Event.Tick.Server]
-    //public void ServerTick()
-    //{
-    //	//Log.Info("Player:ServerTick - InventoryGridManager: " + InventoryGridManager);
-    //}
 
     public override void Update( float dt )
 	{
@@ -129,7 +124,7 @@ public partial class InterfacerPlayer : Thing
 		{
 			SetIcon("🤨");
             VfxNudge(direction, 0.1f, 10f);
-		}
+        }
 			
 		_inputRepeatTime = 0f;
 
@@ -226,5 +221,13 @@ public partial class InterfacerPlayer : Thing
         slide.Direction = direction;
         slide.Lifetime = lifetime;
         slide.Distance = distance;
+    }
+
+    [ClientRpc]
+    public void VfxShakeCamera(float lifetime, float distance)
+    {
+        var shake = AddPlayerStatus(TypeLibrary.GetDescription(typeof(VfxPlayerShakeCameraStatus))) as VfxPlayerShakeCameraStatus;
+        shake.Lifetime = lifetime;
+        shake.Distance = distance;
     }
 }
