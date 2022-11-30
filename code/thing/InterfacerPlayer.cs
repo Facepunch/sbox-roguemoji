@@ -122,7 +122,7 @@ public partial class InterfacerPlayer : Thing
 				else if (Input.Down(InputButton.Forward))   TryMove(Direction.Up);
 			}
 
-            if(Input.Pressed(InputButton.Run))
+            if(Input.Pressed(InputButton.Reload))
             {
                 InterfacerGame.Instance.Restart();
             }

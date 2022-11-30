@@ -1,6 +1,7 @@
 ﻿using Sandbox;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Interfacer;
 public partial class Thing : Entity
@@ -107,8 +108,8 @@ public partial class Thing : Entity
 		if ( !ContainingGridManager.IsGridPosInBounds( newGridPos ) )
 			return false;
 
-		Thing other = ContainingGridManager.GetThingAt( newGridPos, ThingFlags.Solid );
-		if(other != null)
+		Thing other = ContainingGridManager.GetThingsAt(newGridPos).WithAll(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+        if (other != null)
 		{
             Interact(other, direction);
             InterfacerGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") bumped into " + other.DisplayIcon + "(" + other.DisplayName + ")", PlayerNum);
@@ -361,5 +362,10 @@ public partial class Thing : Entity
     public int GetNearbyCellHash()
     {
         return HashCode.Combine(DisplayIcon, PlayerNum, IconDepth, Flags, NetworkIdent, ThingId);
+    }
+
+	public int GetZPos()
+	{
+		return (IconDepth * 100) + StackNum;
     }
 }

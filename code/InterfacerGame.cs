@@ -2,6 +2,7 @@
 using Sandbox;
 using Sandbox.UI;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Interfacer;
 
@@ -197,7 +198,7 @@ public partial class InterfacerGame : Sandbox.Game
 
 	public void CellClickedArena(IntVector gridPos, InterfacerPlayer player, bool rightClick, bool shift)
 	{
-		var thing = ArenaGridManager.GetThingAt(gridPos, ThingFlags.Selectable);
+		var thing = ArenaGridManager.GetThingsAt(gridPos).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 
         //LogMessage(player.Client.Name + (shift ? " shift-" : " ") + (rightClick ? "right-clicked " : "clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + ".", player.PlayerNum);
 
@@ -222,12 +223,12 @@ public partial class InterfacerGame : Sandbox.Game
 
 	public void CellClickedInventory(IntVector gridPos, InterfacerPlayer player, bool rightClick, bool shift)
 	{
-		var thing = player.InventoryGridManager.GetThingAt(gridPos, ThingFlags.Selectable);
+		var thing = player.InventoryGridManager.GetThingsAt(gridPos).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
         //LogMessage(player.Client.Name + (shift ? " shift-" : " ") + (rightClick ? "right-clicked " : "clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + " in their inventory.", player.PlayerNum);
 
-        if (!rightClick)
+        if (!rightClick && thing != null)
 		{
-			if(shift && thing != null)
+			if(shift)
             {
                 MoveThingToArena(thing, player.GridPos, player);
             }
@@ -354,7 +355,7 @@ public partial class InterfacerGame : Sandbox.Game
 	{
 		IntVector currGridPos = thing.GridPos;
 		GridManager inventoryGridManager = player.InventoryGridManager;
-        Thing otherThing = inventoryGridManager.GetThingAt(targetGridPos);
+        Thing otherThing = inventoryGridManager.GetThingsAt(targetGridPos).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 
         inventoryGridManager.DeregisterGridPos(thing, thing.GridPos);
         thing.SetGridPos(targetGridPos);
@@ -435,7 +436,7 @@ public partial class InterfacerGame : Sandbox.Game
         if (destinationPanelType == PanelType.InventoryGrid)
         {
             GridManager inventoryGridManager = player.InventoryGridManager;
-            Thing otherThing = inventoryGridManager.GetThingAt(targetGridPos);
+            Thing otherThing = inventoryGridManager.GetThingsAt(targetGridPos).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 
             if (otherThing != null)
                 MoveThingToArena(otherThing, player.GridPos, player);
@@ -485,7 +486,5 @@ public partial class InterfacerGame : Sandbox.Game
 			player.GridPos = gridPos;
 			player.SetCameraGridOffset(gridPos - middleCell);
 		}
-
-		//RefreshGridPanelClient(inventory: false);
     }
 }

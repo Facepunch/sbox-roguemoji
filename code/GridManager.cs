@@ -13,8 +13,7 @@ public enum ThingFlags
 	None = 0,
 	Solid = 1,
 	Selectable = 2,
-	VisualEffect = 4,
-	InInventory = 8,
+	InInventory = 4,
 }
 
 public partial class GridManager : Entity
@@ -189,50 +188,6 @@ public partial class GridManager : Entity
 		return output;
 	}
 
-	public bool DoesThingExistAt(IntVector gridPos, ThingFlags flags = ThingFlags.None)
-	{
-		if ( !GridThings.ContainsKey( gridPos ) )
-			return false;
-
-		var things = GridThings[gridPos];
-		if ( things == null || things.Count == 0 )
-			return false;
-
-		if (flags == ThingFlags.None)
-			return true;
-		else
-			return things.Where(x => (x.Flags & flags) != 0).Count() > 0;
-	}
-
-	public Thing GetThingAt(IntVector gridPos, ThingFlags flags = ThingFlags.None)
-	{
-        Host.AssertServer();
-        
-		if ( !GridThings.ContainsKey( gridPos ) )
-			return null;
-
-		var things = GridThings[gridPos];
-		if ( things == null || things.Count == 0 )
-			return null;
-
-		Thing highestThing = null;
-		float highestDepth = -float.MaxValue;
-		
-		foreach ( var thing in things )
-        {
-			if (flags != ThingFlags.None && (thing.Flags & flags) == 0)
-				continue;
-
-			if(thing.IconDepth > highestDepth)
-            {
-				highestThing = thing;
-				highestDepth = thing.IconDepth;
-            }
-        }
-
-		return highestThing;
-	}
-
     public IEnumerable<Thing> GetThingsAt(IntVector gridPos)
     {
         Host.AssertServer();
@@ -248,7 +203,7 @@ public partial class GridManager : Entity
 	public float GetPathfindMovementCost(IntVector gridPos)
 	{
 		float movementCost = 0f;
-		var things = GetThingsAt(gridPos);
+		var things = GetThingsAt(gridPos).WithAll(ThingFlags.Solid);
 		foreach(var thing in things)
 		{
 			movementCost += thing.PathfindMovementCost;
@@ -262,7 +217,8 @@ public partial class GridManager : Entity
 		for(int index = 0; index < LevelWidth * LevelHeight; index++) 
 		{
 			var currGridPos = GetGridPos(index);
-            if (!DoesThingExistAt(currGridPos))
+            var things = GetThingsAt(currGridPos);
+            if (things.Count() == 0)
 			{
 				gridPos = currGridPos;
 				return true;
@@ -279,7 +235,8 @@ public partial class GridManager : Entity
 		for(int i = 0; i < NUM_TRIES; i++)
 		{
 			var currGridPos = new IntVector(Rand.Int(0, LevelWidth - 1), Rand.Int(0, LevelHeight - 1));
-            if (!DoesThingExistAt(currGridPos))
+			var things = GetThingsAt(currGridPos);
+            if (things.Count() == 0)
             {
                 gridPos = currGridPos;
                 return true;
