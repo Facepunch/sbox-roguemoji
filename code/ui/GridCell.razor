@@ -104,7 +104,7 @@
         if (Thing == null || player == null)
             return base.BuildHash();
 
-        return HashCode.Combine( Thing.GetHashCode(), IsSelected(), Thing.NetworkIdent, player.CameraPixelOffset );
+        return HashCode.Combine( Thing.GetHashCode(), IsSelected(), Thing.NetworkIdent );
     }
 
     protected override void OnAfterTreeRender(bool firstTime)
@@ -122,7 +122,7 @@
     public void SetTransform(Vector2 offset, float rotation, float scale)
     {
         var tr = new PanelTransform();
-        tr.AddTranslate(offset.x, offset.y);
+        //tr.AddTranslate(offset.x, offset.y);
         tr.AddRotation(0f, 0f, rotation);
         tr.AddScale(scale);
         IconPanel.Style.Transform = tr;

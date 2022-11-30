@@ -25,6 +25,13 @@
         font-size: 22px;
         color: #ffffff55;
     }
+
+    .hp_label
+    {
+        margin: 0 0 5px 0;
+        font-size: 22px;
+        color: #ffffff77;
+    }
 </style>
 
 <root class="character">
@@ -33,8 +40,13 @@
         return;
     }
 
-    <div class="char_icon @GetPlayerClass()"> @InterfacerGame.Instance.LocalPlayer.DisplayIcon </div>
-    <div class="name_label"> @InterfacerGame.Instance.LocalPlayer.DisplayName </div>
+    @{
+        var player = InterfacerGame.Instance.LocalPlayer;
+    }
+
+    <div class="char_icon @GetPlayerClass()"> @player.DisplayIcon </div>
+    <div class="name_label"> @player.DisplayName </div>
+    <div class="hp_label"> @($"{player.Hp}/{player.MaxHp}❤️") </div>
 </root>
 
 @code

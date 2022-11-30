@@ -35,8 +35,10 @@ public partial class Thing : Entity
     public Dictionary<TypeDescription, ThingStatus> Statuses = new Dictionary<TypeDescription, ThingStatus>();
 
 	[Net] public ThingFlags Flags { get; set; }
+    [Net] public int Hp { get; set; }
+    [Net] public int MaxHp { get; set; }
 
-	public Thing()
+    public Thing()
 	{
         ShouldUpdate = true;
 		DisplayIcon = ".";
@@ -105,35 +107,49 @@ public partial class Thing : Entity
 		if ( !ContainingGridManager.IsGridPosInBounds( newGridPos ) )
 			return false;
 
-		var otherThing = ContainingGridManager.GetThingAt( newGridPos, ThingFlags.Solid );
-		if(otherThing != null)
+		Thing other = ContainingGridManager.GetThingAt( newGridPos, ThingFlags.Solid );
+		if(other != null)
 		{
-            InterfacerGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") bumped into " + otherThing.DisplayIcon + "(" + otherThing.DisplayName + ")", PlayerNum);
-
-            var pushSuccess = otherThing.TryMove( direction );
-			if ( !pushSuccess )
-            {
-                otherThing.VfxShake(0.2f, 4f);
-				//otherThing.VfxSpin(0.6f, 0f, 360f);
-				return false;
-			}
-
-			//if ( ShouldLogBehaviour )
-			//	InterfacerGame.Instance.LogMessage( DisplayIcon + DisplayName + " pushed " + otherThing.DisplayIcon + " " + GridManager.GetDirectionText(direction) + "!", PlayerNum );
-
-			var explosion = Flags.HasFlag(ThingFlags.InInventory)
-                ? InterfacerGame.Instance.SpawnThingInventory(TypeLibrary.GetDescription(typeof(Explosion)), newGridPos, InventoryPlayer)
-				: InterfacerGame.Instance.SpawnThingArena(TypeLibrary.GetDescription(typeof(Explosion)), newGridPos);
-            explosion.VfxShake(0.15f, 6f);
-            explosion.VfxScale(0.15f, 0.5f, 1f);
+            Interact(other, direction);
+            InterfacerGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") bumped into " + other.DisplayIcon + "(" + other.DisplayName + ")", PlayerNum);
 
 			return false;
 		}
 
 		SetGridPos(newGridPos);
-		VfxSlide(direction, 0.15f, 40f);
+		VfxSlide(direction, 0.2f, 40f);
 
 		return true;
+	}
+
+	public virtual void Interact(Thing other, Direction direction)
+	{
+        VfxNudge(direction, 0.1f, 10f);
+        other.VfxShake(0.2f, 4f);
+
+        var explosion = InterfacerGame.Instance.SpawnThingArena<Explosion>(other.GridPos);
+        explosion.VfxShake(0.15f, 6f);
+        explosion.VfxScale(0.15f, 0.5f, 1f);
+
+		if (other.MaxHp > 0)
+		{
+			other.Damage(1, this);
+		}
+    }
+
+	public virtual void Damage(int amount, Thing source)
+	{
+		Hp = Math.Clamp(Hp - amount, 0, MaxHp);
+
+		if(Hp <= 0)
+		{
+			Destroy();
+		}
+	}
+
+	public virtual void Destroy()
+	{
+		Remove();
 	}
 
 	public virtual void SetGridPos( IntVector gridPos, bool forceRefresh = false )
@@ -339,7 +355,7 @@ public partial class Thing : Entity
 
 	public int GetInfoDisplayHash()
     {
-		return HashCode.Combine(NetworkIdent, DisplayIcon);
+		return HashCode.Combine(NetworkIdent, DisplayIcon, Hp, MaxHp);
     }
 
     public int GetNearbyCellHash()

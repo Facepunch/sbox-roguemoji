@@ -39,7 +39,7 @@
         {
             var offsetGridPos = thing.GridPos - player.CameraGridOffset;
             var index = GetIndex(offsetGridPos);
-            <GridCell style="left: @((offsetGridPos.x * 40) + player.CameraPixelOffset.x); top: @((offsetGridPos.y * 40) + player.CameraPixelOffset.y);" Thing=@thing GridIndex=@index @onmouseover=@(() => HoveredCellIndex = index )) />    
+            <GridCell style="left: @((offsetGridPos.x * 40) + player.CameraPixelOffset.x + thing.Offset.x * ScaleToScreen); top: @((offsetGridPos.y * 40) + player.CameraPixelOffset.y + thing.Offset.y * ScaleToScreen);" Thing=@thing GridIndex=@index @onmouseover=@(() => HoveredCellIndex = index )) />    
         }
     }
 </root>
@@ -54,6 +54,13 @@
     protected override IList<Thing> GetThings()
     {
         return InterfacerGame.Instance.ArenaGridManager?.Things ?? new List<Thing>();
+    }
+
+    public override void Tick()
+    {
+        base.Tick();
+
+        StateHasChanged();
     }
 
     protected override void OnMouseDown(MousePanelEvent e)

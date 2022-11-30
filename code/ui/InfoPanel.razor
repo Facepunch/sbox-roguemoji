@@ -27,6 +27,13 @@
         color: #ffffff77;
     }
 
+    .hp_label
+    {
+        margin: 0 0 5px 0;
+        font-size: 22px;
+        color: #ffffff77;
+    }
+
     .tooltip_label
     {
         //margin: 0 0 5px 0;
@@ -42,11 +49,21 @@
 </style>
 
 <root class="info @GetSelectedClass()">
-    @if(InterfacerGame.Instance.LocalPlayer?.SelectedThing != null)
+    @{
+        var thing = InterfacerGame.Instance.LocalPlayer?.SelectedThing;
+    }
+
+    @if(thing != null)
     {
-        <div class="icon @GetPlayerClass()"> @InterfacerGame.Instance.LocalPlayer.SelectedThing.DisplayIcon </div>
-        <div class="name_label"> @InterfacerGame.Instance.LocalPlayer.SelectedThing.DisplayName </div>
-        <div class="tooltip_label"> @InterfacerGame.Instance.LocalPlayer.SelectedThing.Tooltip </div>
+        <div class="icon @GetPlayerClass()"> @thing.DisplayIcon </div>
+        <div class="name_label"> @thing.DisplayName </div>
+
+        @if(thing.MaxHp > 0)
+        {
+            <div class="hp_label"> @($"{thing.Hp}/{thing.MaxHp}❤️") </div>
+        }
+
+        <div class="tooltip_label"> @thing.Tooltip </div>
     }
 </root>
 

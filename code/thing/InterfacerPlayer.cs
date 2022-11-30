@@ -6,7 +6,7 @@ namespace Interfacer;
 public partial class InterfacerPlayer : Thing
 {
 	private TimeSince _inputRepeatTime;
-	private const float MOVE_DELAY = 0.3f;
+	private const float MOVE_DELAY = 0.4f;
 
     [Net] public IntVector CameraGridOffset { get; set; }
     public Vector2 CameraPixelOffset { get; set; }
@@ -14,6 +14,8 @@ public partial class InterfacerPlayer : Thing
     [Net] public GridManager InventoryGridManager { get; private set; }
 
 	[Net] public Thing SelectedThing { get; private set; }
+
+    [Net] public bool IsDead { get; set; }
 
     public Dictionary<TypeDescription, PlayerStatus> PlayerStatuses = new Dictionary<TypeDescription, PlayerStatus>();
 
@@ -26,8 +28,9 @@ public partial class InterfacerPlayer : Thing
 		Tooltip = "";
 		Flags = ThingFlags.Solid | ThingFlags.Selectable;
         PathfindMovementCost = 10f;
+        Hp = MaxHp = 10;
 
-		if(Host.IsServer)
+        if (Host.IsServer)
         {
 			InventoryGridManager = new();
 			InventoryGridManager.Init(InterfacerGame.InventoryWidth, InterfacerGame.InventoryHeight);
@@ -84,7 +87,7 @@ public partial class InterfacerPlayer : Thing
 	{
 		if(Host.IsServer)
 		{
-			if (_inputRepeatTime > MOVE_DELAY)
+			if (_inputRepeatTime > MOVE_DELAY && !IsDead)
             {
 				if (Input.Down(InputButton.Left))           TryMove(Direction.Left);
 				else if (Input.Down(InputButton.Right))     TryMove(Direction.Right);
@@ -123,7 +126,6 @@ public partial class InterfacerPlayer : Thing
 		else 
 		{
 			SetIcon("🤨");
-            VfxNudge(direction, 0.1f, 10f);
         }
 			
 		_inputRepeatTime = 0f;
@@ -229,5 +231,22 @@ public partial class InterfacerPlayer : Thing
         var shake = AddPlayerStatus(TypeLibrary.GetDescription(typeof(VfxPlayerShakeCameraStatus))) as VfxPlayerShakeCameraStatus;
         shake.Lifetime = lifetime;
         shake.Distance = distance;
+    }
+
+    public override void Damage(int amount, Thing source)
+    {
+        if (IsDead)
+            return;
+
+        base.Damage(amount, source);
+    }
+
+    public override void Destroy()
+    {
+        if (IsDead)
+            return;
+
+        IsDead = true;
+        DisplayIcon = "😑";
     }
 }

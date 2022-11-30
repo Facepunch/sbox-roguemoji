@@ -59,30 +59,30 @@ public partial class InterfacerGame : Sandbox.Game
 
 			for(int x = 0; x < LevelWidth; x++)
 			{
-                SpawnThingArena(TypeLibrary.GetDescription(typeof(OilBarrel)), new IntVector(x, 0));
-                SpawnThingArena(TypeLibrary.GetDescription(typeof(OilBarrel)), new IntVector(x, LevelHeight - 1));
+                SpawnThingArena<OilBarrel>(new IntVector(x, 0));
+                SpawnThingArena<OilBarrel>(new IntVector(x, LevelHeight - 1));
             }
 
             for (int y = 1; y < LevelHeight - 1; y++)
             {
-                SpawnThingArena(TypeLibrary.GetDescription(typeof(OilBarrel)), new IntVector(0, y));
-                SpawnThingArena(TypeLibrary.GetDescription(typeof(OilBarrel)), new IntVector(LevelWidth - 1, y));
+                SpawnThingArena<OilBarrel>(new IntVector(0, y));
+                SpawnThingArena<OilBarrel>(new IntVector(LevelWidth - 1, y));
             }
 
-            SpawnThingArena(TypeLibrary.GetDescription(typeof(Rock)), new IntVector(10, 10));
-            SpawnThingArena(TypeLibrary.GetDescription(typeof(Leaf)), new IntVector(9, 10));
-            SpawnThingArena(TypeLibrary.GetDescription(typeof(Leaf)), new IntVector(21, 19));
+            SpawnThingArena<Rock>(new IntVector(10, 10));
+            SpawnThingArena<Leaf>(new IntVector(9, 10));
+            SpawnThingArena<Leaf>(new IntVector(21, 19));
 
 			for(int i = 0; i < 20; i++)
 			{
                 if(ArenaGridManager.GetRandomEmptyGridPos(out var gridPos))
-					SpawnThingArena(TypeLibrary.GetDescription(typeof(TreeEvergreen)), gridPos);
+                    SpawnThingArena<TreeEvergreen>(gridPos);
             }
 
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 5; i++)
             {
                 if (ArenaGridManager.GetRandomEmptyGridPos(out var gridPos))
-                    SpawnThingArena(TypeLibrary.GetDescription(typeof(Squirrel)), gridPos);
+                    SpawnThingArena<Squirrel>(gridPos);
             }
         }
 
@@ -135,10 +135,8 @@ public partial class InterfacerGame : Sandbox.Game
 	{
 		base.ClientJoined(client);
 
-        SpawnThingArena(TypeLibrary.GetDescription(typeof(Leaf)), new IntVector(4, 4));
-
 		ArenaGridManager.GetRandomEmptyGridPos(out var gridPos);
-        InterfacerPlayer player = SpawnThingArena(TypeLibrary.GetDescription(typeof(InterfacerPlayer)), gridPos) as InterfacerPlayer;
+        InterfacerPlayer player = SpawnThingArena<InterfacerPlayer>(gridPos);
 		player.PlayerNum = ++PlayerNum;
 
         var middleCell = new IntVector(MathX.FloorToInt((float)ArenaWidth / 2f), MathX.FloorToInt((float)ArenaHeight / 2f));
@@ -258,21 +256,23 @@ public partial class InterfacerGame : Sandbox.Game
 		}
 	}
 
-	public Thing SpawnThingArena(TypeDescription type, IntVector gridPos)
+    public T SpawnThingArena<T>(IntVector gridPos) where T : Thing
     {
-		Host.AssertServer();
+        Host.AssertServer();
 
-		var thing = type.Create<Thing>();
+		var thing = TypeLibrary.GetDescription(typeof(T)).Create<T>();
 		thing.GridPos = gridPos;
 
-		ArenaGridManager.AddThing(thing);
+        ArenaGridManager.AddThing(thing);
 
 		return thing;
     }
 
-	public Thing SpawnThingInventory(TypeDescription type, IntVector gridPos, InterfacerPlayer player)
+    public Thing SpawnThingInventory(TypeDescription type, IntVector gridPos, InterfacerPlayer player)
 	{
-		var thing = type.Create<Thing>();
+        Host.AssertServer();
+
+        var thing = type.Create<Thing>();
 		thing.Flags |= ThingFlags.InInventory;
 		thing.InventoryPlayer = player;
 		player.InventoryGridManager.AddThing(thing);
@@ -281,7 +281,12 @@ public partial class InterfacerGame : Sandbox.Game
         return thing;
 	}
 
-	public void MoveThingToArena(Thing thing, IntVector gridPos, InterfacerPlayer player)
+    public T SpawnThingInventory<T>(IntVector gridPos, InterfacerPlayer player) where T : Thing
+    {
+		return SpawnThingInventory(TypeLibrary.GetDescription(typeof(T)), gridPos, player) as T;
+    }
+
+    public void MoveThingToArena(Thing thing, IntVector gridPos, InterfacerPlayer player)
 	{
         Assert.True(thing.ContainingGridManager != ArenaGridManager);
 

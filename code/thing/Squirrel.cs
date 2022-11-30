@@ -20,6 +20,7 @@ public partial class Squirrel : Thing
         PathfindMovementCost = 5f;
         TimeSinceAction = 0f;
         ActionDelay = Rand.Float(1f, 3f);
+        Hp = MaxHp = 3;
     }
 
     public override void Spawn()
