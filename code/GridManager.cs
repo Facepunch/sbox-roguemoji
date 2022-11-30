@@ -289,4 +289,16 @@ public partial class GridManager : Entity
         gridPos = IntVector.Zero;
         return false;
     }
+
+	public void Restart()
+	{
+        foreach (var thing in Things)
+        {
+            if (thing is not InterfacerPlayer)
+                thing.Delete();
+        }
+		Things.Clear();
+
+		GridThings.Clear();
+    }
 }

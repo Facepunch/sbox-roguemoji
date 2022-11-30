@@ -13,7 +13,7 @@ public partial class Thing : Entity
 	[Net] public string Tooltip { get; protected set; }
 
 	public bool ShouldUpdate { get; set; }
-	public bool DoneFirstUpdate { get; private set; }
+	public bool DoneFirstUpdate { get; protected set; }
 
 	[Net] public int PlayerNum { get; set; }
 
@@ -355,7 +355,7 @@ public partial class Thing : Entity
 
 	public int GetInfoDisplayHash()
     {
-		return HashCode.Combine(NetworkIdent, DisplayIcon, Hp, MaxHp);
+		return HashCode.Combine(NetworkIdent, DisplayIcon, Hp, MaxHp, Flags);
     }
 
     public int GetNearbyCellHash()

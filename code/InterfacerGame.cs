@@ -22,9 +22,9 @@ public partial class InterfacerGame : Sandbox.Game
 	public static InterfacerGame Instance { get; private set; }
 
 	public static int PlayerNum { get; set; }
-    public static int ThingId { get; set; }
+	public static int ThingId { get; set; }
 
-    public Hud Hud { get; private set; }
+	public Hud Hud { get; private set; }
 
 	[Net] public GridManager ArenaGridManager { get; private set; }
 
@@ -33,20 +33,20 @@ public partial class InterfacerGame : Sandbox.Game
 	public const int InventoryWidth = 10;
 	public const int InventoryHeight = 6;
 
-    public int LevelWidth { get; set; }
-    public int LevelHeight { get; set; }
+	public int LevelWidth { get; set; }
+	public int LevelHeight { get; set; }
 
-    public record struct LogData(string text, int playerNum);
+	public record struct LogData(string text, int playerNum);
 	public Queue<LogData> LogMessageQueue = new Queue<LogData>();
 
-    public List<InterfacerPlayer> Players = new List<InterfacerPlayer>();
-    
+	public List<InterfacerPlayer> Players = new List<InterfacerPlayer>();
+
 	public InterfacerPlayer LocalPlayer => Local.Client.Pawn as InterfacerPlayer; // Client-only
 
-    public List<PanelFlickerData> _panelsToFlicker;
+	public List<PanelFlickerData> _panelsToFlicker;
 
 
-    public InterfacerGame()
+	public InterfacerGame()
 	{
 		Instance = this;
 
@@ -54,44 +54,49 @@ public partial class InterfacerGame : Sandbox.Game
 		{
 			LevelWidth = 40;
 			LevelHeight = 25;
-            ArenaGridManager = new();
+			ArenaGridManager = new();
 			ArenaGridManager.Init(LevelWidth, LevelHeight);
 
-			for(int x = 0; x < LevelWidth; x++)
-			{
-                SpawnThingArena<OilBarrel>(new IntVector(x, 0));
-                SpawnThingArena<OilBarrel>(new IntVector(x, LevelHeight - 1));
-            }
-
-            for (int y = 1; y < LevelHeight - 1; y++)
-            {
-                SpawnThingArena<OilBarrel>(new IntVector(0, y));
-                SpawnThingArena<OilBarrel>(new IntVector(LevelWidth - 1, y));
-            }
-
-            SpawnThingArena<Rock>(new IntVector(10, 10));
-            SpawnThingArena<Leaf>(new IntVector(9, 10));
-            SpawnThingArena<Leaf>(new IntVector(21, 19));
-
-			for(int i = 0; i < 20; i++)
-			{
-                if(ArenaGridManager.GetRandomEmptyGridPos(out var gridPos))
-                    SpawnThingArena<TreeEvergreen>(gridPos);
-            }
-
-            for (int i = 0; i < 5; i++)
-            {
-                if (ArenaGridManager.GetRandomEmptyGridPos(out var gridPos))
-                    SpawnThingArena<Squirrel>(gridPos);
-            }
-        }
+			SpawnStartingThings();
+		}
 
 		if (Host.IsClient)
 		{
 			Hud = new Hud();
-            _panelsToFlicker = new List<PanelFlickerData>();
-        }
+			_panelsToFlicker = new List<PanelFlickerData>();
+		}
 	}
+
+	void SpawnStartingThings()
+	{
+        for (int x = 0; x < LevelWidth; x++)
+        {
+            SpawnThingArena<OilBarrel>(new IntVector(x, 0));
+            SpawnThingArena<OilBarrel>(new IntVector(x, LevelHeight - 1));
+        }
+
+        for (int y = 1; y < LevelHeight - 1; y++)
+        {
+            SpawnThingArena<OilBarrel>(new IntVector(0, y));
+            SpawnThingArena<OilBarrel>(new IntVector(LevelWidth - 1, y));
+        }
+
+        SpawnThingArena<Rock>(new IntVector(10, 10));
+        SpawnThingArena<Leaf>(new IntVector(9, 10));
+        SpawnThingArena<Leaf>(new IntVector(21, 19));
+
+        for (int i = 0; i < 20; i++)
+        {
+            if (ArenaGridManager.GetRandomEmptyGridPos(out var gridPos))
+                SpawnThingArena<TreeEvergreen>(gridPos);
+        }
+
+        for (int i = 0; i < 5; i++)
+        {
+            if (ArenaGridManager.GetRandomEmptyGridPos(out var gridPos))
+                SpawnThingArena<Squirrel>(gridPos);
+        }
+    }
 
     [Event.Tick.Server]
 	public void ServerTick()
@@ -145,14 +150,6 @@ public partial class InterfacerGame : Sandbox.Game
 		client.Pawn = player;
 
 		Players.Add(player);
-
-        for (int x = 0; x < InventoryWidth; x++)
-		{
-            for (int y = 0; y < InventoryHeight; y++)
-			{
-				SpawnThingInventory(TypeLibrary.GetDescription(GetRandomType()), new IntVector(x, y), player);
-            }
-        }
     }
 
 	public override void ClientDisconnect(Client client, NetworkDisconnectionReason reason)
@@ -166,21 +163,6 @@ public partial class InterfacerGame : Sandbox.Game
 
 		base.ClientDisconnect(client, reason);
 	}
-
-    Type GetRandomType()
-    {
-        int rand = Rand.Int(0, 6);
-        switch (rand)
-        {
-            case 0: return typeof(Leaf);
-            case 1: return typeof(Potato);
-            case 2: return typeof(Nut);
-            case 3: return typeof(Mushroom);
-            case 4: return typeof(Trumpet);
-            case 5: return typeof(Bouquet);
-            case 6: default: return typeof(Cheese);
-        }
-    }
 
     public void LogMessage(string text, int playerNum)
 	{
@@ -486,4 +468,24 @@ public partial class InterfacerGame : Sandbox.Game
 
 		return closestPlayer;
 	}
+
+	public void Restart()
+	{
+		ArenaGridManager.Restart();
+
+		SpawnStartingThings();
+
+		foreach (InterfacerPlayer player in Players)
+		{
+			player.Restart();
+
+			ArenaGridManager.AddThing(player);
+            ArenaGridManager.GetRandomEmptyGridPos(out var gridPos);
+			var middleCell = new IntVector(MathX.FloorToInt((float)ArenaWidth / 2f), MathX.FloorToInt((float)ArenaHeight / 2f));
+			player.GridPos = gridPos;
+			player.SetCameraGridOffset(gridPos - middleCell);
+		}
+
+		//RefreshGridPanelClient(inventory: false);
+    }
 }

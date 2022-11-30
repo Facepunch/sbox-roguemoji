@@ -26,22 +26,49 @@ public partial class InterfacerPlayer : Thing
 		ShouldLogBehaviour = true;
 		DisplayName = "Player";
 		Tooltip = "";
-		Flags = ThingFlags.Solid | ThingFlags.Selectable;
         PathfindMovementCost = 10f;
-        Hp = MaxHp = 10;
 
         if (Host.IsServer)
         {
 			InventoryGridManager = new();
 			InventoryGridManager.Init(InterfacerGame.InventoryWidth, InterfacerGame.InventoryHeight);
-		}
+
+            SetStartingValues();
+        }
 	}
 
-	public override void Spawn()
-	{
-		base.Spawn();
+    void SetStartingValues()
+    {
+        Flags = ThingFlags.Solid | ThingFlags.Selectable;
+        Hp = MaxHp = 10;
+        IsDead = false;
+        DoneFirstUpdate = false;
 
-	}
+        InventoryGridManager.Restart();
+
+        for (int x = 0; x < InterfacerGame.InventoryWidth; x++)
+        {
+            for (int y = 0; y < InterfacerGame.InventoryHeight; y++)
+            {
+                InterfacerGame.Instance.SpawnThingInventory(TypeLibrary.GetDescription(GetRandomType()), new IntVector(x, y), this);
+            }
+        }
+    }
+
+    Type GetRandomType()
+    {
+        int rand = Rand.Int(0, 6);
+        switch (rand)
+        {
+            case 0: return typeof(Leaf);
+            case 1: return typeof(Potato);
+            case 2: return typeof(Nut);
+            case 3: return typeof(Mushroom);
+            case 4: return typeof(Trumpet);
+            case 5: return typeof(Bouquet);
+            case 6: default: return typeof(Cheese);
+        }
+    }
 
     public override void OnClientActive(Client client)
     {
@@ -94,7 +121,12 @@ public partial class InterfacerPlayer : Thing
 				else if (Input.Down(InputButton.Back))      TryMove(Direction.Down);
 				else if (Input.Down(InputButton.Forward))   TryMove(Direction.Up);
 			}
-		}
+
+            if(Input.Pressed(InputButton.Run))
+            {
+                InterfacerGame.Instance.Restart();
+            }
+        }
 	}
 
 	public override bool TryMove( Direction direction )
@@ -248,5 +280,10 @@ public partial class InterfacerPlayer : Thing
 
         IsDead = true;
         DisplayIcon = "😑";
+    }
+
+    public void Restart()
+    {
+        SetStartingValues();
     }
 }
