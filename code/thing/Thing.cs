@@ -9,7 +9,8 @@ public partial class Thing : Entity
 	[Net] public IntVector GridPos { get; set; }
 	[Net] public GridManager ContainingGridManager { get; set; }
 
-	[Net] public string DisplayIcon { get; protected set; }
+	//[Net] public string DisplayImagePath { get; protected set; }
+    [Net] public string DisplayIcon { get; protected set; }
 	[Net] public string DisplayName { get; protected set; }
 	[Net] public string Tooltip { get; protected set; }
 
@@ -26,8 +27,9 @@ public partial class Thing : Entity
     public Vector2 Offset { get; set; }
 	public float RotationDegrees { get; set; }
 	public float IconScale { get; set; }
+    public int CharSkip { get; set; } // Client-only
 
-	[Net] public InterfacerPlayer InventoryPlayer { get; set; }
+    [Net] public InterfacerPlayer InventoryPlayer { get; set; }
 
 	[Net] public string DebugText { get; set; }
 
@@ -49,7 +51,8 @@ public partial class Thing : Entity
 		ShouldLogBehaviour = false;
 		IconScale = 1f;
 		ThingId = InterfacerGame.ThingId++;
-	}
+		//DisplayImagePath = "textures/emoji/hole.png";
+    }
 
 	public override void Spawn()
 	{
@@ -96,7 +99,7 @@ public partial class Thing : Entity
 	{
 		SetGridPos(GridPos, forceRefresh: true);
 		DoneFirstUpdate = true;
-	}
+    }
 
 	public virtual bool TryMove(Direction direction)
 	{

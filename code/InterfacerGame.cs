@@ -86,6 +86,16 @@ public partial class InterfacerGame : Sandbox.Game
         ArenaGridManager.SpawnThing<Leaf>(new IntVector(9, 10));
         ArenaGridManager.SpawnThing<Leaf>(new IntVector(21, 19));
 
+        {
+            if (ArenaGridManager.GetRandomEmptyGridPos(out var gridPos))
+                ArenaGridManager.SpawnThing<Door>(gridPos);
+        }
+
+        {
+            if (ArenaGridManager.GetRandomEmptyGridPos(out var gridPos))
+                ArenaGridManager.SpawnThing<Hole>(gridPos);
+        }
+
         for (int i = 0; i < 20; i++)
         {
             if (ArenaGridManager.GetRandomEmptyGridPos(out var gridPos))

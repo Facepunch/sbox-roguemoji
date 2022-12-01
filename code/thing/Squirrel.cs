@@ -47,7 +47,7 @@ public partial class Squirrel : Thing
             if (TimeSinceAction > ActionDelay)
             {
                 var path = Pathfinding.GetPathTo(GridPos, Targeting.Target.GridPos);
-                if (path != null && path.Count > 0)
+                if (path != null && path.Count > 0 && !path[0].Equals(GridPos))
                 {
                     var dir = GridManager.GetDirectionForIntVector(path[0] - GridPos);
                     TryMove(dir);
