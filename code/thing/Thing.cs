@@ -128,7 +128,7 @@ public partial class Thing : Entity
         VfxNudge(direction, 0.1f, 10f);
         other.VfxShake(0.2f, 4f);
 
-        var explosion = InterfacerGame.Instance.SpawnThingArena<Explosion>(other.GridPos);
+        var explosion = ContainingGridManager.SpawnThing<Explosion>(other.GridPos);
         explosion.VfxShake(0.15f, 6f);
         explosion.VfxScale(0.15f, 0.5f, 1f);
 

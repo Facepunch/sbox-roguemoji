@@ -55,7 +55,19 @@ public partial class GridManager : Entity
 		}
 	}
 
-	public void AddThing(Thing thing)
+    public T SpawnThing<T>(IntVector gridPos) where T : Thing
+    {
+        Host.AssertServer();
+
+        var thing = TypeLibrary.GetDescription(typeof(T)).Create<T>();
+        thing.GridPos = gridPos;
+
+        AddThing(thing);
+
+        return thing;
+    }
+
+    public void AddThing(Thing thing)
 	{
 		Things.Add(thing);
 		thing.ContainingGridManager = this;

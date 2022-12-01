@@ -57,4 +57,17 @@ public partial class Squirrel : Thing
             }
         }
     }
+
+    public override void Damage(int amount, Thing source)
+    {
+        base.Damage(amount, source);
+        //Tooltip = $"A squirrel.\n{Hp}/{MaxHp}❤️";
+    }
+
+    public override void Destroy()
+    {
+        ContainingGridManager.SpawnThing<Bone>(GridPos);
+
+        base.Destroy();
+    }
 }

@@ -21,7 +21,6 @@ public partial class InterfacerPlayer : Thing
 
     public InterfacerPlayer()
 	{
-		DisplayIcon = "🙂";
 		IconDepth = 5;
 		ShouldLogBehaviour = true;
 		DisplayName = "Player";
@@ -39,6 +38,7 @@ public partial class InterfacerPlayer : Thing
 
     void SetStartingValues()
     {
+        DisplayIcon = "🙂";
         Flags = ThingFlags.Solid | ThingFlags.Selectable;
         Hp = MaxHp = 10;
         IsDead = false;

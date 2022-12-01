@@ -72,30 +72,30 @@ public partial class InterfacerGame : Sandbox.Game
 	{
         for (int x = 0; x < LevelWidth; x++)
         {
-            SpawnThingArena<OilBarrel>(new IntVector(x, 0));
-            SpawnThingArena<OilBarrel>(new IntVector(x, LevelHeight - 1));
+            ArenaGridManager.SpawnThing<OilBarrel>(new IntVector(x, 0));
+            ArenaGridManager.SpawnThing<OilBarrel>(new IntVector(x, LevelHeight - 1));
         }
 
         for (int y = 1; y < LevelHeight - 1; y++)
         {
-            SpawnThingArena<OilBarrel>(new IntVector(0, y));
-            SpawnThingArena<OilBarrel>(new IntVector(LevelWidth - 1, y));
+            ArenaGridManager.SpawnThing<OilBarrel>(new IntVector(0, y));
+            ArenaGridManager.SpawnThing<OilBarrel>(new IntVector(LevelWidth - 1, y));
         }
 
-        SpawnThingArena<Rock>(new IntVector(10, 10));
-        SpawnThingArena<Leaf>(new IntVector(9, 10));
-        SpawnThingArena<Leaf>(new IntVector(21, 19));
+        ArenaGridManager.SpawnThing<Rock>(new IntVector(10, 10));
+        ArenaGridManager.SpawnThing<Leaf>(new IntVector(9, 10));
+        ArenaGridManager.SpawnThing<Leaf>(new IntVector(21, 19));
 
         for (int i = 0; i < 20; i++)
         {
             if (ArenaGridManager.GetRandomEmptyGridPos(out var gridPos))
-                SpawnThingArena<TreeEvergreen>(gridPos);
+                ArenaGridManager.SpawnThing<TreeEvergreen>(gridPos);
         }
 
         for (int i = 0; i < 5; i++)
         {
             if (ArenaGridManager.GetRandomEmptyGridPos(out var gridPos))
-                SpawnThingArena<Squirrel>(gridPos);
+                ArenaGridManager.SpawnThing<Squirrel>(gridPos);
         }
     }
 
@@ -142,7 +142,7 @@ public partial class InterfacerGame : Sandbox.Game
 		base.ClientJoined(client);
 
 		ArenaGridManager.GetRandomEmptyGridPos(out var gridPos);
-        InterfacerPlayer player = SpawnThingArena<InterfacerPlayer>(gridPos);
+        InterfacerPlayer player = ArenaGridManager.SpawnThing<InterfacerPlayer>(gridPos);
 		player.PlayerNum = ++PlayerNum;
 
         var middleCell = new IntVector(MathX.FloorToInt((float)ArenaWidth / 2f), MathX.FloorToInt((float)ArenaHeight / 2f));
@@ -238,18 +238,6 @@ public partial class InterfacerGame : Sandbox.Game
             }
 		}
 	}
-
-    public T SpawnThingArena<T>(IntVector gridPos) where T : Thing
-    {
-        Host.AssertServer();
-
-		var thing = TypeLibrary.GetDescription(typeof(T)).Create<T>();
-		thing.GridPos = gridPos;
-
-        ArenaGridManager.AddThing(thing);
-
-		return thing;
-    }
 
     public Thing SpawnThingInventory(TypeDescription type, IntVector gridPos, InterfacerPlayer player)
 	{
