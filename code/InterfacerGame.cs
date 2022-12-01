@@ -239,26 +239,11 @@ public partial class InterfacerGame : Sandbox.Game
 		}
 	}
 
-    public Thing SpawnThingInventory(TypeDescription type, IntVector gridPos, InterfacerPlayer player)
-	{
-        Host.AssertServer();
-
-        var thing = type.Create<Thing>();
-		thing.Flags |= ThingFlags.InInventory;
-		thing.InventoryPlayer = player;
-		player.InventoryGridManager.AddThing(thing);
-		thing.SetGridPos(gridPos);
-
-        return thing;
-	}
-
-    public T SpawnThingInventory<T>(IntVector gridPos, InterfacerPlayer player) where T : Thing
-    {
-		return SpawnThingInventory(TypeLibrary.GetDescription(typeof(T)), gridPos, player) as T;
-    }
-
     public void MoveThingToArena(Thing thing, IntVector gridPos, InterfacerPlayer player)
 	{
+        if (player.IsDead)
+            return;
+
         Assert.True(thing.ContainingGridManager != ArenaGridManager);
 
 		thing.ContainingGridManager?.RemoveThing(thing);
@@ -315,6 +300,9 @@ public partial class InterfacerGame : Sandbox.Game
 
     public void MoveThingToInventory(Thing thing, IntVector gridPos, InterfacerPlayer player)
 	{
+        if (player.IsDead)
+            return;
+
         if (thing.Flags.HasFlag(ThingFlags.InInventory))
 		{
 			Log.Error(thing.DisplayName + " at " + gridPos + " is already in inventory of " + player.DisplayName + "!");
@@ -341,7 +329,10 @@ public partial class InterfacerGame : Sandbox.Game
 
 	public void ChangeInventoryPos(Thing thing, IntVector targetGridPos, InterfacerPlayer player)
 	{
-		IntVector currGridPos = thing.GridPos;
+        if (player.IsDead)
+            return;
+
+        IntVector currGridPos = thing.GridPos;
 		GridManager inventoryGridManager = player.InventoryGridManager;
         Thing otherThing = inventoryGridManager.GetThingsAt(targetGridPos).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 

@@ -22,8 +22,10 @@ public partial class GridManager : Entity
 	[Net] public int LevelHeight { get; private set; }
 
     [Net] public IList<Thing> Things { get; private set; }
+	[Net] public bool IsInventory { get; private set; }
+    [Net] public InterfacerPlayer InventoryPlayer { get; private set; }
 
-	public Dictionary<IntVector, List<Thing>> GridThings = new Dictionary<IntVector, List<Thing>>();
+    public Dictionary<IntVector, List<Thing>> GridThings = new Dictionary<IntVector, List<Thing>>();
 
 	public void Init(int width, int height)
 	{
@@ -34,6 +36,12 @@ public partial class GridManager : Entity
 
 		Things = new List<Thing>();
 	}
+
+	public void SetAsInventory(InterfacerPlayer player)
+	{
+		InventoryPlayer = player;
+        IsInventory = true;
+    }
 
 	public void Update(float dt)
 	{
@@ -61,6 +69,12 @@ public partial class GridManager : Entity
 
         var thing = TypeLibrary.GetDescription(typeof(T)).Create<T>();
         thing.GridPos = gridPos;
+
+        if (IsInventory)
+        {
+            thing.Flags |= ThingFlags.InInventory;
+            thing.InventoryPlayer = InventoryPlayer;
+        }
 
         AddThing(thing);
 

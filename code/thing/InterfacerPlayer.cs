@@ -31,6 +31,7 @@ public partial class InterfacerPlayer : Thing
         {
 			InventoryGridManager = new();
 			InventoryGridManager.Init(InterfacerGame.InventoryWidth, InterfacerGame.InventoryHeight);
+            InventoryGridManager.SetAsInventory(player: this);
 
             SetStartingValues();
         }
@@ -46,27 +47,27 @@ public partial class InterfacerPlayer : Thing
 
         InventoryGridManager.Restart();
 
-        for (int x = 0; x < InterfacerGame.InventoryWidth; x++)
+        for (int x = 0; x < 4; x++)
         {
-            for (int y = 0; y < InterfacerGame.InventoryHeight; y++)
+            for (int y = 0; y < 4; y++)
             {
-                InterfacerGame.Instance.SpawnThingInventory(TypeLibrary.GetDescription(GetRandomType()), new IntVector(x, y), this);
+                SpawnRandomThing(new IntVector(x, y));
             }
         }
     }
 
-    Type GetRandomType()
+    void SpawnRandomThing(IntVector gridPos)
     {
         int rand = Rand.Int(0, 6);
         switch (rand)
         {
-            case 0: return typeof(Leaf);
-            case 1: return typeof(Potato);
-            case 2: return typeof(Nut);
-            case 3: return typeof(Mushroom);
-            case 4: return typeof(Trumpet);
-            case 5: return typeof(Bouquet);
-            case 6: default: return typeof(Cheese);
+            case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
+            case 1: InventoryGridManager.SpawnThing<Potato>(gridPos); break;
+            case 2: InventoryGridManager.SpawnThing<Nut>(gridPos); break;
+            case 3: InventoryGridManager.SpawnThing<Mushroom>(gridPos); break;
+            case 4: InventoryGridManager.SpawnThing<Trumpet>(gridPos); break;
+            case 5: InventoryGridManager.SpawnThing<Bouquet>(gridPos); break;
+            case 6: InventoryGridManager.SpawnThing<Cheese>(gridPos); break;
         }
     }
 
