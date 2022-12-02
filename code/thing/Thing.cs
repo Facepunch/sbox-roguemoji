@@ -6,7 +6,7 @@ using System.Linq;
 namespace Interfacer;
 public partial class Thing : Entity
 {
-	[Net] public IntVector GridPos { get; set; }
+	[Net] public IntVector GridPos { get; protected set; }
 	[Net] public GridManager ContainingGridManager { get; set; }
 
 	//[Net] public string DisplayImagePath { get; protected set; }

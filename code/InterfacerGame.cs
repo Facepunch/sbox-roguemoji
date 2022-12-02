@@ -62,15 +62,7 @@ public partial class InterfacerGame : Sandbox.Game
 		{
             Levels = new Dictionary<LevelId, Level>();
 
-			var level0 = new Level();
-			level0.Init(LevelId.Forest0);
-			Levels.Add(LevelId.Forest0, level0);
-   //         LevelWidth = 40;
-			//LevelHeight = 25;
-			//ArenaGridManager = new();
-			//ArenaGridManager.Init(LevelWidth, LevelHeight);
-
-			//SpawnStartingThings();
+			CreateLevel(LevelId.Forest0);
 		}
 
 		if (Host.IsClient)
@@ -79,47 +71,6 @@ public partial class InterfacerGame : Sandbox.Game
 			_panelsToFlicker = new List<PanelFlickerData>();
 		}
 	}
-
-	//void SpawnStartingThings()
-	//{
- //       for (int x = 0; x < LevelWidth; x++)
- //       {
- //           ArenaGridManager.SpawnThing<OilBarrel>(new IntVector(x, 0));
- //           ArenaGridManager.SpawnThing<OilBarrel>(new IntVector(x, LevelHeight - 1));
- //       }
-
- //       for (int y = 1; y < LevelHeight - 1; y++)
- //       {
- //           ArenaGridManager.SpawnThing<OilBarrel>(new IntVector(0, y));
- //           ArenaGridManager.SpawnThing<OilBarrel>(new IntVector(LevelWidth - 1, y));
- //       }
-
- //       ArenaGridManager.SpawnThing<Rock>(new IntVector(10, 10));
- //       ArenaGridManager.SpawnThing<Leaf>(new IntVector(9, 10));
- //       ArenaGridManager.SpawnThing<Leaf>(new IntVector(21, 19));
-
- //       {
- //           if (ArenaGridManager.GetRandomEmptyGridPos(out var gridPos))
- //               ArenaGridManager.SpawnThing<Door>(gridPos);
- //       }
-
- //       {
- //           if (ArenaGridManager.GetRandomEmptyGridPos(out var gridPos))
- //               ArenaGridManager.SpawnThing<Hole>(gridPos);
- //       }
-
- //       for (int i = 0; i < 20; i++)
- //       {
- //           if (ArenaGridManager.GetRandomEmptyGridPos(out var gridPos))
- //               ArenaGridManager.SpawnThing<TreeEvergreen>(gridPos);
- //       }
-
- //       for (int i = 0; i < 5; i++)
- //       {
- //           if (ArenaGridManager.GetRandomEmptyGridPos(out var gridPos))
- //               ArenaGridManager.SpawnThing<Squirrel>(gridPos);
- //       }
- //   }
 
     [Event.Tick.Server]
 	public void ServerTick()
@@ -503,13 +454,38 @@ public partial class InterfacerGame : Sandbox.Game
 		{
 			player.Restart();
 
-			var level0 = Levels[LevelId.Forest0];
-            level0.GridManager.AddThing(player);
-            player.CurrentLevelId = LevelId.Forest0;
-            level0.GridManager.GetRandomEmptyGridPos(out var gridPos);
-			var middleCell = new IntVector(MathX.FloorToInt((float)ArenaWidth / 2f), MathX.FloorToInt((float)ArenaHeight / 2f));
-			player.GridPos = gridPos;
-			player.SetCameraGridOffset(gridPos - middleCell);
+			SpawnPlayerOnLevel(player, LevelId.Forest0);
 		}
+    }
+
+	public void SetPlayerLevel(InterfacerPlayer player, LevelId levelId)
+	{
+		if(player.CurrentLevelId != LevelId.None)
+		{
+			var oldLevel = Levels[player.CurrentLevelId];
+			oldLevel.GridManager.RemoveThing(player);
+		}
+
+		SpawnPlayerOnLevel(player, levelId);
+    }
+
+	void SpawnPlayerOnLevel(InterfacerPlayer player, LevelId levelId)
+	{
+		var level = Levels.ContainsKey(levelId) ? Levels[levelId] : CreateLevel(levelId);
+        level.GridManager.AddThing(player);
+        player.CurrentLevelId = levelId;
+        level.GridManager.GetRandomEmptyGridPos(out var gridPos);
+        player.SetGridPos(gridPos);
+        var middleCell = new IntVector(MathX.FloorToInt((float)ArenaWidth / 2f), MathX.FloorToInt((float)ArenaHeight / 2f));
+        player.SetCameraGridOffset(gridPos - middleCell);
+    }
+
+	Level CreateLevel(LevelId levelId)
+	{
+        var level = new Level();
+        level.Init(levelId);
+        Levels.Add(levelId, level);
+
+		return level;
     }
 }

@@ -9,7 +9,7 @@ public partial class InterfacerPlayer : Thing
 	private const float MOVE_DELAY = 0.4f;
 
     [Net] public IntVector CameraGridOffset { get; set; }
-    public Vector2 CameraPixelOffset { get; set; }
+    public Vector2 CameraPixelOffset { get; set; } // Client-only
 
     [Net] public GridManager InventoryGridManager { get; private set; }
 
@@ -46,6 +46,7 @@ public partial class InterfacerPlayer : Thing
         Hp = MaxHp = 10;
         IsDead = false;
         DoneFirstUpdate = false;
+        CurrentLevelId = LevelId.None;
 
         InventoryGridManager.Restart();
 
@@ -167,6 +168,20 @@ public partial class InterfacerPlayer : Thing
 
 		return success;
 	}
+
+    public override void Interact(Thing other, Direction direction)
+    {
+        base.Interact(other, direction);
+
+        if(other is Hole)
+        {
+            InterfacerGame.Instance.SetPlayerLevel(this, LevelId.Forest1);
+        }
+        else if(other is Door)
+        {
+            InterfacerGame.Instance.SetPlayerLevel(this, LevelId.Forest0);
+        }
+    }
 
     public override void SetGridPos(IntVector gridPos, bool forceRefresh = false)
 	{

@@ -78,11 +78,6 @@ public partial class Level : Entity
 
             {
                 if (GridManager.GetRandomEmptyGridPos(out var gridPos))
-                    GridManager.SpawnThing<Door>(gridPos);
-            }
-
-            {
-                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
                     GridManager.SpawnThing<Hole>(gridPos);
             }
 
@@ -98,6 +93,11 @@ public partial class Level : Entity
             {
                 if (GridManager.GetRandomEmptyGridPos(out var gridPos))
                     GridManager.SpawnThing<Squirrel>(gridPos);
+            }
+
+            {
+                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
+                    GridManager.SpawnThing<Door>(gridPos);
             }
         }
     }
