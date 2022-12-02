@@ -229,6 +229,12 @@ public partial class Thing : Entity
 
 	public ThingStatus AddStatus(TypeDescription type)
 	{
+		if(type == null)
+		{
+			Log.Info("type is null!");
+			return null;
+		}
+
 		if(Statuses.ContainsKey(type))
         {
 			var status = Statuses[type];

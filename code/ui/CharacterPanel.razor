@@ -32,6 +32,13 @@
         font-size: 22px;
         color: #ffffff77;
     }
+
+    .level_label
+    {
+        margin: 0 0 5px 0;
+        font-size: 22px;
+        color: #ffffff44;
+    }
 </style>
 
 <root class="character">
@@ -47,6 +54,7 @@
     <div class="char_icon @GetPlayerClass()"> @player.DisplayIcon </div>
     <div class="name_label"> @player.DisplayName </div>
     <div class="hp_label"> @($"{player.Hp}/{player.MaxHp}❤️") </div>
+    <div class="level_label"> @($"Level: {player.CurrentLevelId}") </div>
 </root>
 
 @code

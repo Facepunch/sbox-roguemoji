@@ -49,6 +49,10 @@ public partial class Level : Entity
                 width = 30;
                 height = 22;
                 break;
+            case LevelId.Forest2:
+                width = 30;
+                height = 22;
+                break;
             default:
                 width = 0;
                 height = 0;
@@ -93,6 +97,24 @@ public partial class Level : Entity
             {
                 if (GridManager.GetRandomEmptyGridPos(out var gridPos))
                     GridManager.SpawnThing<Squirrel>(gridPos);
+            }
+
+            {
+                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
+                    GridManager.SpawnThing<Hole>(gridPos);
+            }
+
+            {
+                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
+                    GridManager.SpawnThing<Door>(gridPos);
+            }
+        }
+        else if (levelId == LevelId.Forest2)
+        {
+            for (int i = 0; i < 25; i++)
+            {
+                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
+                    GridManager.SpawnThing<Cheese>(gridPos);
             }
 
             {

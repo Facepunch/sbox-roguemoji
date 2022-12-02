@@ -464,7 +464,9 @@ public partial class InterfacerGame : Sandbox.Game
 		{
 			var oldLevel = Levels[player.CurrentLevelId];
 			oldLevel.GridManager.RemoveThing(player);
-		}
+
+            LogMessage(player.Client.Name + " entered " + levelId, player.PlayerNum);
+        }
 
 		SpawnPlayerOnLevel(player, levelId);
     }

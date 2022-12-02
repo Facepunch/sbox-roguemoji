@@ -175,11 +175,17 @@ public partial class InterfacerPlayer : Thing
 
         if(other is Hole)
         {
-            InterfacerGame.Instance.SetPlayerLevel(this, LevelId.Forest1);
+            if(CurrentLevelId == LevelId.Forest0)
+                InterfacerGame.Instance.SetPlayerLevel(this, LevelId.Forest1);
+            else if (CurrentLevelId == LevelId.Forest1)
+                InterfacerGame.Instance.SetPlayerLevel(this, LevelId.Forest2);
         }
         else if(other is Door)
         {
-            InterfacerGame.Instance.SetPlayerLevel(this, LevelId.Forest0);
+            if (CurrentLevelId == LevelId.Forest1)
+                InterfacerGame.Instance.SetPlayerLevel(this, LevelId.Forest0);
+            else if (CurrentLevelId == LevelId.Forest2)
+                InterfacerGame.Instance.SetPlayerLevel(this, LevelId.Forest1);
         }
     }
 
