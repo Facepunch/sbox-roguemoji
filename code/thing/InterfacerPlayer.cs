@@ -19,6 +19,8 @@ public partial class InterfacerPlayer : Thing
 
     public Dictionary<TypeDescription, PlayerStatus> PlayerStatuses = new Dictionary<TypeDescription, PlayerStatus>();
 
+    [Net] public LevelId CurrentLevelId { get; set; }
+
     public InterfacerPlayer()
 	{
 		IconDepth = 5;

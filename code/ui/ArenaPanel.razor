@@ -27,14 +27,17 @@
 <root class="arena_panel">
     <div class="grid_bg" style="background-image: url( textures/bg_tile_green.png );" @ref=GridBg></div>
     
-    @if(InterfacerGame.Instance.ArenaGridManager?.Things == null)
+    @{
+        var player = InterfacerGame.Instance.LocalPlayer;
+    }
+
+    @if (InterfacerGame.Instance.Levels[player.CurrentLevelId].GridManager?.Things == null)
     {
         return;
     }
 
     @foreach(Thing thing in GetThings())
     {
-        var player = InterfacerGame.Instance.LocalPlayer;
         if(player.IsGridPosVisible(thing.GridPos))
         {
             var offsetGridPos = thing.GridPos - player.CameraGridOffset;
@@ -53,7 +56,8 @@
 
     protected override IList<Thing> GetThings()
     {
-        return InterfacerGame.Instance.ArenaGridManager?.Things ?? new List<Thing>();
+        var player = InterfacerGame.Instance.LocalPlayer;
+        return InterfacerGame.Instance.Levels[player.CurrentLevelId].GridManager?.Things ?? new List<Thing>();
     }
 
     public override void Tick()

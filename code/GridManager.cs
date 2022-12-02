@@ -68,15 +68,16 @@ public partial class GridManager : Entity
         Host.AssertServer();
 
         var thing = TypeLibrary.GetDescription(typeof(T)).Create<T>();
-        thing.GridPos = gridPos;
+        AddThing(thing);
+
+        //thing.GridPos = gridPos;
+        thing.SetGridPos(gridPos);
 
         if (IsInventory)
         {
             thing.Flags |= ThingFlags.InInventory;
             thing.InventoryPlayer = InventoryPlayer;
         }
-
-        AddThing(thing);
 
         return thing;
     }
