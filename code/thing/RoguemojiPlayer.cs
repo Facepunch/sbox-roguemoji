@@ -47,6 +47,7 @@ public partial class RoguemojiPlayer : Thing
         IsDead = false;
         DoneFirstUpdate = false;
         CurrentLevelId = LevelId.None;
+        EquippedThing = null;
 
         InventoryGridManager.Restart();
 

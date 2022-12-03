@@ -93,7 +93,7 @@
         if(shift || rightClick)
             RoguemojiGame.NearbyThingClickedCmd(Thing.NetworkIdent, rightClick, shift);
         else
-            Hud.Instance.StartDragging(Thing, this);
+            Hud.Instance.StartDragging(Thing, this, rightClick);
     }
 
     void DrawDebugText(string text)

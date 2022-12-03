@@ -193,34 +193,17 @@ public partial class RoguemojiGame : Sandbox.Game
 		var level = Levels[player.CurrentLevelId];
 		var thing = level.GridManager.GetThingsAt(gridPos).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 
-		Log.Info("CellClickedArena: " + gridPos + " thing: " + thing);
+		//Log.Info("CellClickedArena: " + gridPos + " thing: " + thing);
         //LogMessage(player.Client.Name + (shift ? " shift-" : " ") + (rightClick ? "right-clicked " : "clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + ".", player.PlayerNum);
 
         if (!rightClick)
 			player.SelectThing(thing);
-
-  //      if (thing == null)
-  //      {
-		//	if (Rand.Float(0f, 1f) < 0.1f)
-		//	{
-		//		var rock = Instance.SpawnThingArena(TypeLibrary.GetDescription(typeof(Rock)), gridPos);
-		//		LogMessage(player.Client.Name + " created " + rock.DisplayIcon + " at " + gridPos + "!", player.PlayerNum);
-		//	}
-		//	else
-  //          {
-  //              var explosion = Instance.SpawnThingArena(TypeLibrary.GetDescription(typeof(Explosion)), gridPos);
-  //              explosion.VfxShake(0.15f, 4f);
-		//		explosion.VfxScale(0.15f, Rand.Float(0.6f, 0.8f), Rand.Float(0.3f, 0.4f));
-		//	}
-		//}
 	}
 
 	public void CellClickedInventory(IntVector gridPos, RoguemojiPlayer player, bool rightClick, bool shift)
 	{
 		var thing = player.InventoryGridManager.GetThingsAt(gridPos).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
-        //LogMessage(player.Client.Name + (shift ? " shift-" : " ") + (rightClick ? "right-clicked " : "clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + " in their inventory.", player.PlayerNum);
-
-        Log.Info("CellClickedInventory: " + gridPos + " thing: " + thing);
+		//LogMessage(player.Client.Name + (shift ? " shift-" : " ") + (rightClick ? "right-clicked " : "clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + " in their inventory.", player.PlayerNum);
 
         if (!rightClick)
 		{
@@ -232,6 +215,10 @@ public partial class RoguemojiGame : Sandbox.Game
 			{
                 player.SelectThing(thing);
             }
+		}
+		else
+		{
+			player.EquipThing(thing);
 		}
 	}
 

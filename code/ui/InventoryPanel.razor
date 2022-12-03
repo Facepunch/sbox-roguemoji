@@ -52,8 +52,6 @@
     {
         base.OnMouseDown(e);
 
-        Log.Info("InventoryPanel:OnMouseDown");
-
         Hud.Instance.GridCellClickedInventory(GetGridPos(MousePosition), rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run));
     }
 

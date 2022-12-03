@@ -71,8 +71,6 @@
     {
         base.OnMouseDown(e);
 
-        Log.Info("ArenaPanel:OnMouseDown");
-
         var player = RoguemojiGame.Instance.LocalPlayer;
         Hud.Instance.GridCellClickedArena(GetGridPos(MousePosition) + player.CameraGridOffset, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run));
     }

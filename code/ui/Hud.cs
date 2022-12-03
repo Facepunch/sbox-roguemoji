@@ -17,7 +17,8 @@ public partial class Hud : RootPanel
 	public MainPanel MainPanel { get; private set; }
 
 	public bool IsDraggingThing { get; set; }
-	public Thing DraggedThing { get; set; }
+    public bool IsDraggingRightClick { get; set; }
+    public Thing DraggedThing { get; set; }
     public Panel DraggedPanel { get; set; }
     public DragIcon DragIcon { get; private set; }
 	private IntVector _dragStartPlayerGridPos;
@@ -85,9 +86,10 @@ public partial class Hud : RootPanel
 		}
     }
 
-	public void StartDragging(Thing thing, Panel panel)
+	public void StartDragging(Thing thing, Panel panel, bool rightClick)
 	{
 		IsDraggingThing = true;
+		IsDraggingRightClick = rightClick;
 		DraggedThing = thing;
 		DraggedPanel = panel;
 		_dragStartPlayerGridPos = RoguemojiGame.Instance.LocalPlayer.GridPos;
