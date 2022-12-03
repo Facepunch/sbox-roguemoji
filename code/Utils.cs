@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Sandbox;
 
-namespace Interfacer;
+namespace Roguemoji;
 
 public enum EasingType
 {

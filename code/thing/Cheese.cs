@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 using System;
 
-namespace Interfacer;
+namespace Roguemoji;
 public partial class Cheese : Thing
 {
 	public Cheese()

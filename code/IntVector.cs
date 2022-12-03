@@ -1,7 +1,7 @@
 ﻿using System;
 using Sandbox;
 
-namespace Interfacer;
+namespace Roguemoji;
 
 /// <summary>
 /// A two component vector of integers.

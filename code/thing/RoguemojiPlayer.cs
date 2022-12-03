@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 
-namespace Interfacer;
-public partial class InterfacerPlayer : Thing
+namespace Roguemoji;
+public partial class RoguemojiPlayer : Thing
 {
 	private TimeSince _inputRepeatTime;
 	private const float MOVE_DELAY = 0.4f;
@@ -21,7 +21,7 @@ public partial class InterfacerPlayer : Thing
 
     [Net] public LevelId CurrentLevelId { get; set; }
 
-    public InterfacerPlayer()
+    public RoguemojiPlayer()
 	{
 		IconDepth = 5;
 		ShouldLogBehaviour = true;
@@ -32,7 +32,7 @@ public partial class InterfacerPlayer : Thing
         if (Host.IsServer)
         {
 			InventoryGridManager = new();
-			InventoryGridManager.Init(InterfacerGame.InventoryWidth, InterfacerGame.InventoryHeight);
+			InventoryGridManager.Init(RoguemojiGame.InventoryWidth, RoguemojiGame.InventoryHeight);
             InventoryGridManager.SetAsInventory(player: this);
 
             SetStartingValues();
@@ -128,19 +128,19 @@ public partial class InterfacerPlayer : Thing
 
             if(Input.Pressed(InputButton.Reload))
             {
-                InterfacerGame.Instance.Restart();
+                RoguemojiGame.Instance.Restart();
             }
         }
 	}
 
-	public override bool TryMove( Direction direction )
+	public override bool TryMove( Direction direction, bool shouldAnimate = true )
 	{
-		var success = base.TryMove( direction );
+		var success = base.TryMove( direction, shouldAnimate: false );
 		if (success)
 		{
 			SetIcon("😀");
 
-			var middleCell = new IntVector(MathX.FloorToInt((float)InterfacerGame.ArenaWidth / 2f), MathX.FloorToInt((float)InterfacerGame.ArenaHeight / 2f));
+			var middleCell = new IntVector(MathX.FloorToInt((float)RoguemojiGame.ArenaWidth / 2f), MathX.FloorToInt((float)RoguemojiGame.ArenaHeight / 2f));
             var offsetGridPos = GridPos - CameraGridOffset;
             var movedCamera = false;
 
@@ -157,7 +157,15 @@ public partial class InterfacerPlayer : Thing
             }
 
             if(movedCamera)
+            {
                 VfxSlideCamera(direction, 0.25f, 40f);
+                VfxSlide(direction, 0.1f, 40f);
+            }
+            else
+            {
+                VfxSlide(direction, 0.2f, 40f);
+            }
+                
         }
 		else 
 		{
@@ -176,16 +184,16 @@ public partial class InterfacerPlayer : Thing
         if(other is Hole)
         {
             if(CurrentLevelId == LevelId.Forest0)
-                InterfacerGame.Instance.SetPlayerLevel(this, LevelId.Forest1);
+                RoguemojiGame.Instance.SetPlayerLevel(this, LevelId.Forest1);
             else if (CurrentLevelId == LevelId.Forest1)
-                InterfacerGame.Instance.SetPlayerLevel(this, LevelId.Forest2);
+                RoguemojiGame.Instance.SetPlayerLevel(this, LevelId.Forest2);
         }
         else if(other is Door)
         {
             if (CurrentLevelId == LevelId.Forest1)
-                InterfacerGame.Instance.SetPlayerLevel(this, LevelId.Forest0);
+                RoguemojiGame.Instance.SetPlayerLevel(this, LevelId.Forest0);
             else if (CurrentLevelId == LevelId.Forest2)
-                InterfacerGame.Instance.SetPlayerLevel(this, LevelId.Forest1);
+                RoguemojiGame.Instance.SetPlayerLevel(this, LevelId.Forest1);
         }
     }
 
@@ -196,7 +204,7 @@ public partial class InterfacerPlayer : Thing
 
 		base.SetGridPos(gridPos, forceRefresh);
 
-        InterfacerGame.Instance.FlickerNearbyPanelCellsClient();
+        RoguemojiGame.Instance.FlickerNearbyPanelCellsClient();
     }
 
 	public void SelectThing(Thing thing)
@@ -216,8 +224,8 @@ public partial class InterfacerPlayer : Thing
         var currOffset = CameraGridOffset;
 
         CameraGridOffset = new IntVector(
-            Math.Clamp(offset.x, 0, ContainingGridManager.LevelWidth - InterfacerGame.ArenaWidth),
-            Math.Clamp(offset.y, 0, ContainingGridManager.LevelHeight - InterfacerGame.ArenaHeight)
+            Math.Clamp(offset.x, 0, ContainingGridManager.LevelWidth - RoguemojiGame.ArenaWidth),
+            Math.Clamp(offset.y, 0, ContainingGridManager.LevelHeight - RoguemojiGame.ArenaHeight)
         );
 
         return !CameraGridOffset.Equals(currOffset);
@@ -232,9 +240,9 @@ public partial class InterfacerPlayer : Thing
     {
         return
             (gridPos.x >= CameraGridOffset.x - 1) &&
-            (gridPos.x < CameraGridOffset.x + InterfacerGame.ArenaWidth + 1) &&
+            (gridPos.x < CameraGridOffset.x + RoguemojiGame.ArenaWidth + 1) &&
             (gridPos.y >= CameraGridOffset.y - 1) &&
-            (gridPos.y < CameraGridOffset.y + InterfacerGame.ArenaHeight + 1);
+            (gridPos.y < CameraGridOffset.y + RoguemojiGame.ArenaHeight + 1);
     }
 
     public PlayerStatus AddPlayerStatus(TypeDescription type)

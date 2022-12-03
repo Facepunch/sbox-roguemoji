@@ -2,7 +2,7 @@
 @using Sandbox.UI;
 
 @inherits Panel;
-@namespace Interfacer
+@namespace Roguemoji
 
 <style>
     .root
@@ -97,9 +97,9 @@
 </style>
 
 <root class="root">
-    <div class="upper_row" style="height: @(40 * InterfacerGame.ArenaHeight)px;">
-        <ArenaPanel style="width: @(40 * InterfacerGame.ArenaWidth)px;" @ref=ArenaPanel></ArenaPanel>
-            <!-- <p style="color: #ffffff33;"> Hovered: @ArenaPanel.HoveredCellIndex @GetHoveredCoords() ----- Clicked: @ArenaPanel.GetSelectedIndexString() ----- # Cells: @ArenaPanel.Cells.Count() ----- # Things: @InterfacerGame.Instance.NumThings</p> -->
+    <div class="upper_row" style="height: @(40 * RoguemojiGame.ArenaHeight)px;">
+        <ArenaPanel style="width: @(40 * RoguemojiGame.ArenaWidth)px;" @ref=ArenaPanel></ArenaPanel>
+            <!-- <p style="color: #ffffff33;"> Hovered: @ArenaPanel.HoveredCellIndex @GetHoveredCoords() ----- Clicked: @ArenaPanel.GetSelectedIndexString() ----- # Cells: @ArenaPanel.Cells.Count() ----- # Things: @RoguemojiGame.Instance.NumThings</p> -->
 
         <div class="upper_right_column">
             <LogPanel class="log" @ref=LogPanel></LogPanel>
@@ -110,7 +110,7 @@
     <div class="lower_row">
         <CharacterPanel class="character"></CharacterPanel>
         <NearbyPanel class="nearby" @ref=NearbyPanel></NearbyPanel>
-        <InventoryPanel class="inventory" style="width: @(40 * InterfacerGame.InventoryWidth)px; height: @(40 * InterfacerGame.InventoryHeight)px;" @ref=InventoryPanel></InventoryPanel>
+        <InventoryPanel class="inventory" style="width: @(40 * RoguemojiGame.InventoryWidth)px; height: @(40 * RoguemojiGame.InventoryHeight)px;" @ref=InventoryPanel></InventoryPanel>
         <InfoPanel class="info"></InfoPanel>
         <div class="stats"></div>
     </div>
@@ -127,7 +127,7 @@
 
     public string GetHoveredCoords()
     {
-        var gridPos = GridManager.GetGridPos(ArenaPanel.HoveredCellIndex, InterfacerGame.ArenaWidth);
+        var gridPos = GridManager.GetGridPos(ArenaPanel.HoveredCellIndex, RoguemojiGame.ArenaWidth);
         return gridPos.ToString();
     }
 }

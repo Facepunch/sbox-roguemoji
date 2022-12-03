@@ -3,7 +3,7 @@
 @using Sandbox.UI;
 
 @inherits GridPanel;
-@namespace Interfacer
+@namespace Roguemoji
 
 <style>
     .inventory_bg 
@@ -26,7 +26,7 @@
 <root>
     <div class="inventory_bg" style="background-image: url( textures/bg_tile.png );"></div>
 
-    @if(InterfacerGame.Instance.LocalPlayer?.InventoryGridManager?.Things == null)
+    @if(RoguemojiGame.Instance.LocalPlayer?.InventoryGridManager?.Things == null)
     {
         return;
     }
@@ -40,20 +40,22 @@
 
 @code
 {
-    public override int GridWidth => InterfacerGame.InventoryWidth;
-    public override int GridHeight => InterfacerGame.InventoryHeight;
+    public override int GridWidth => RoguemojiGame.InventoryWidth;
+    public override int GridHeight => RoguemojiGame.InventoryHeight;
 
     protected override IList<Thing> GetThings()
     {
-        return InterfacerGame.Instance.LocalPlayer.InventoryGridManager.Things;
+        return RoguemojiGame.Instance.LocalPlayer.InventoryGridManager.Things;
     }
 
-    //protected override void OnMouseDown(MousePanelEvent e)
-    //{
-    //    base.OnMouseDown(e);
+    protected override void OnMouseDown(MousePanelEvent e)
+    {
+        base.OnMouseDown(e);
 
-    //    Hud.Instance.GridCellClickedInventory(GetGridPos(MousePosition), rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run));
-    //}
+        Log.Info("InventoryPanel:OnMouseDown");
+
+        Hud.Instance.GridCellClickedInventory(GetGridPos(MousePosition), rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run));
+    }
 
     protected override void OnAfterTreeRender(bool firstTime)
     {

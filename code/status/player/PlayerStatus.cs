@@ -1,18 +1,18 @@
 ﻿using Sandbox;
 using System;
 
-namespace Interfacer;
+namespace Roguemoji;
 
 public abstract class PlayerStatus
 {
-    public InterfacerPlayer Player { get; private set; }
+    public RoguemojiPlayer Player { get; private set; }
 
     public bool ShouldUpdate { get; protected set; }
 
     public TimeSince TimeSinceStart { get; protected set; }
     public bool IsClientStatus { get; protected set; }
 
-    public virtual void Init(InterfacerPlayer player)
+    public virtual void Init(RoguemojiPlayer player)
     {
         Player = player;
         ShouldUpdate = false;

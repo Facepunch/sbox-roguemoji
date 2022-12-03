@@ -3,7 +3,7 @@
 @using System;
 
 @inherits Panel;
-@namespace Interfacer
+@namespace Roguemoji
 
 <style>
     .nearby_icon
@@ -54,7 +54,7 @@
 
     bool IsSelected()
     {
-        return Thing == InterfacerGame.Instance.LocalPlayer?.SelectedThing;
+        return Thing == RoguemojiGame.Instance.LocalPlayer?.SelectedThing;
     }
 
     protected override Panel CreateTooltipPanel()
@@ -91,7 +91,7 @@
         bool shift = Input.Down(InputButton.Run);
 
         if(shift || rightClick)
-            InterfacerGame.NearbyThingClickedCmd(Thing.NetworkIdent, rightClick, shift);
+            RoguemojiGame.NearbyThingClickedCmd(Thing.NetworkIdent, rightClick, shift);
         else
             Hud.Instance.StartDragging(Thing, this);
     }

@@ -3,7 +3,7 @@
 @using Sandbox.UI;
 
 @inherits GridPanel;
-@namespace Interfacer
+@namespace Roguemoji
 
 <style>
     .arena_panel
@@ -28,10 +28,10 @@
     <div class="grid_bg" style="background-image: url( textures/bg_tile_green.png );" @ref=GridBg></div>
     
     @{
-        var player = InterfacerGame.Instance.LocalPlayer;
+        var player = RoguemojiGame.Instance.LocalPlayer;
     }
 
-    @if (InterfacerGame.Instance.Levels[player.CurrentLevelId].GridManager?.Things == null)
+    @if (RoguemojiGame.Instance.Levels[player.CurrentLevelId].GridManager?.Things == null)
     {
         return;
     }
@@ -51,13 +51,13 @@
 {
     public Panel GridBg { get; protected set; }
 
-    public override int GridWidth => InterfacerGame.ArenaWidth;
-    public override int GridHeight => InterfacerGame.ArenaHeight;
+    public override int GridWidth => RoguemojiGame.ArenaWidth;
+    public override int GridHeight => RoguemojiGame.ArenaHeight;
 
     protected override IList<Thing> GetThings()
     {
-        var player = InterfacerGame.Instance.LocalPlayer;
-        return InterfacerGame.Instance.Levels[player.CurrentLevelId].GridManager?.Things ?? new List<Thing>();
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        return RoguemojiGame.Instance.Levels[player.CurrentLevelId].GridManager?.Things ?? new List<Thing>();
     }
 
     public override void Tick()
@@ -71,13 +71,15 @@
     {
         base.OnMouseDown(e);
 
-        var player = InterfacerGame.Instance.LocalPlayer;
+        Log.Info("ArenaPanel:OnMouseDown");
+
+        var player = RoguemojiGame.Instance.LocalPlayer;
         Hud.Instance.GridCellClickedArena(GetGridPos(MousePosition) + player.CameraGridOffset, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run));
     }
 
     protected override int BuildHash()
     {
-        var player = InterfacerGame.Instance.LocalPlayer;
+        var player = RoguemojiGame.Instance.LocalPlayer;
         return HashCode.Combine(GetThings().Count, player.CameraGridOffset, player.CameraPixelOffset);
     }
 
@@ -85,7 +87,7 @@
     {
         base.OnAfterTreeRender(firstTime);
 
-        var player = InterfacerGame.Instance.LocalPlayer;
+        var player = RoguemojiGame.Instance.LocalPlayer;
         GridBg.Style.Set($"background-position: {((player.CameraGridOffset.x % 2 == 0 ? -40f : -80f) + player.CameraPixelOffset.x * 0.9f) * ScaleToScreen}px {((player.CameraGridOffset.y % 2 == 0 ? -40f : -80f) + player.CameraPixelOffset.y * 0.9f) * ScaleToScreen}px;");
     }
 

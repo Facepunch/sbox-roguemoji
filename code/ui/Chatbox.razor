@@ -2,7 +2,7 @@
 @using Sandbox.UI;
 
 @inherits Panel;
-@namespace Interfacer
+@namespace Roguemoji
 
 <style>
     .chatbox 
@@ -86,11 +86,11 @@
         if (string.IsNullOrWhiteSpace(msg))
             return;
 
-        var player = InterfacerGame.Instance.LocalPlayer;
+        var player = RoguemojiGame.Instance.LocalPlayer;
         if (player == null)
             return;
 
-        InterfacerGame.Instance.LogMessage(player.DisplayIcon + "(" + player.DisplayName + ") says: \"" + msg + "\"", player.PlayerNum);
+        RoguemojiGame.Instance.LogMessage(player.DisplayIcon + "(" + player.DisplayName + ") says: \"" + msg + "\"", player.PlayerNum);
     }
 
     void Blur()

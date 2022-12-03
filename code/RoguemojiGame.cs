@@ -4,7 +4,7 @@ using Sandbox.UI;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Interfacer;
+namespace Roguemoji;
 
 public class PanelFlickerData
 {
@@ -24,9 +24,9 @@ public enum LevelId
 	Forest0, Forest1, Forest2, Forest3,
 }
 
-public partial class InterfacerGame : Sandbox.Game
+public partial class RoguemojiGame : Sandbox.Game
 {
-	public static InterfacerGame Instance { get; private set; }
+	public static RoguemojiGame Instance { get; private set; }
 
 	public static int PlayerNum { get; set; }
 	public static int ThingId { get; set; }
@@ -46,15 +46,15 @@ public partial class InterfacerGame : Sandbox.Game
 	public record struct LogData(string text, int playerNum);
 	public Queue<LogData> LogMessageQueue = new Queue<LogData>();
 
-	public List<InterfacerPlayer> Players = new List<InterfacerPlayer>();
+	public List<RoguemojiPlayer> Players = new List<RoguemojiPlayer>();
 
-	public InterfacerPlayer LocalPlayer => Local.Client.Pawn as InterfacerPlayer; // Client-only
+	public RoguemojiPlayer LocalPlayer => Local.Client.Pawn as RoguemojiPlayer; // Client-only
 
 	public List<PanelFlickerData> _panelsToFlicker;
 
     [Net] public IDictionary<LevelId, Level> Levels { get; private set; }
 
-    public InterfacerGame()
+    public RoguemojiGame()
 	{
 		Instance = this;
 
@@ -84,7 +84,7 @@ public partial class InterfacerGame : Sandbox.Game
 
 		HashSet<LevelId> occupiedLevelIds = new();
 
-		foreach(InterfacerPlayer player in Players)
+		foreach(RoguemojiPlayer player in Players)
 		{
 			if(player != null && player.IsValid)
 				occupiedLevelIds.Add(player.CurrentLevelId);
@@ -131,7 +131,7 @@ public partial class InterfacerGame : Sandbox.Game
 		var level0 = Levels[LevelId.Forest0];
 
         level0.GridManager.GetRandomEmptyGridPos(out var gridPos);
-        InterfacerPlayer player = level0.GridManager.SpawnThing<InterfacerPlayer>(gridPos);
+        RoguemojiPlayer player = level0.GridManager.SpawnThing<RoguemojiPlayer>(gridPos);
 		player.CurrentLevelId = LevelId.Forest0;
 		player.PlayerNum = ++PlayerNum;
 
@@ -145,7 +145,7 @@ public partial class InterfacerGame : Sandbox.Game
 
 	public override void ClientDisconnect(Client client, NetworkDisconnectionReason reason)
 	{
-		var player = client.Pawn as InterfacerPlayer;
+		var player = client.Pawn as RoguemojiPlayer;
 
 		var level = Levels[player.CurrentLevelId];
 		level.GridManager.RemoveThing(player);
@@ -177,22 +177,23 @@ public partial class InterfacerGame : Sandbox.Game
 	[ConCmd.Server]
 	public static void CellClickedArenaCmd(int x, int y, bool rightClick, bool shift)
 	{
-		var player = ConsoleSystem.Caller.Pawn as InterfacerPlayer;
+		var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
 		Instance.CellClickedArena(new IntVector(x, y), player, rightClick, shift);
 	}
 
 	[ConCmd.Server]
 	public static void CellClickedInventoryCmd(int x, int y, bool rightClick, bool shift)
 	{
-		var player = ConsoleSystem.Caller.Pawn as InterfacerPlayer;
+		var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
 		Instance.CellClickedInventory(new IntVector(x, y), player, rightClick, shift);
 	}
 
-	public void CellClickedArena(IntVector gridPos, InterfacerPlayer player, bool rightClick, bool shift)
+	public void CellClickedArena(IntVector gridPos, RoguemojiPlayer player, bool rightClick, bool shift)
 	{
 		var level = Levels[player.CurrentLevelId];
 		var thing = level.GridManager.GetThingsAt(gridPos).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 
+		Log.Info("CellClickedArena: " + gridPos + " thing: " + thing);
         //LogMessage(player.Client.Name + (shift ? " shift-" : " ") + (rightClick ? "right-clicked " : "clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + ".", player.PlayerNum);
 
         if (!rightClick)
@@ -214,14 +215,16 @@ public partial class InterfacerGame : Sandbox.Game
 		//}
 	}
 
-	public void CellClickedInventory(IntVector gridPos, InterfacerPlayer player, bool rightClick, bool shift)
+	public void CellClickedInventory(IntVector gridPos, RoguemojiPlayer player, bool rightClick, bool shift)
 	{
 		var thing = player.InventoryGridManager.GetThingsAt(gridPos).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
         //LogMessage(player.Client.Name + (shift ? " shift-" : " ") + (rightClick ? "right-clicked " : "clicked ") + (thing != null ? (thing.DisplayIcon + " at ") : "") + gridPos + " in their inventory.", player.PlayerNum);
 
-        if (!rightClick && thing != null)
+        Log.Info("CellClickedInventory: " + gridPos + " thing: " + thing);
+
+        if (!rightClick)
 		{
-			if(shift)
+			if(shift && thing != null)
             {
                 MoveThingToArena(thing, player.GridPos, player);
             }
@@ -232,7 +235,7 @@ public partial class InterfacerGame : Sandbox.Game
 		}
 	}
 
-    public void MoveThingToArena(Thing thing, IntVector gridPos, InterfacerPlayer player)
+    public void MoveThingToArena(Thing thing, IntVector gridPos, RoguemojiPlayer player)
 	{
         if (player.IsDead)
             return;
@@ -262,7 +265,7 @@ public partial class InterfacerGame : Sandbox.Game
     [ConCmd.Server]
     public static void NearbyThingClickedCmd(int networkIdent, bool rightClick, bool shift)
     {
-        var player = ConsoleSystem.Caller.Pawn as InterfacerPlayer;
+        var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
         Thing thing = FindByIndex(networkIdent) as Thing;
 
 		if (thing.Flags.HasFlag(ThingFlags.InInventory))
@@ -274,7 +277,7 @@ public partial class InterfacerGame : Sandbox.Game
         Instance.NearbyThingClicked(thing, rightClick, player, shift);
     }
 
-	public void NearbyThingClicked(Thing thing, bool rightClick, InterfacerPlayer player, bool shift)
+	public void NearbyThingClicked(Thing thing, bool rightClick, RoguemojiPlayer player, bool shift)
 	{
         //LogMessage(player.Client.Name + (shift ? " shift-" : " ") + (rightClick ? "right-clicked " : "clicked ") + thing.DisplayIcon + " nearby them.", player.PlayerNum);
 
@@ -292,7 +295,7 @@ public partial class InterfacerGame : Sandbox.Game
         }
     }
 
-    public void MoveThingToInventory(Thing thing, IntVector gridPos, InterfacerPlayer player)
+    public void MoveThingToInventory(Thing thing, IntVector gridPos, RoguemojiPlayer player)
 	{
         if (player.IsDead)
             return;
@@ -321,7 +324,7 @@ public partial class InterfacerGame : Sandbox.Game
         LogMessage(player.DisplayIcon + "(" + player.DisplayName + ") picked up " + thing.DisplayIcon, player.PlayerNum);
     }
 
-	public void ChangeInventoryPos(Thing thing, IntVector targetGridPos, InterfacerPlayer player)
+	public void ChangeInventoryPos(Thing thing, IntVector targetGridPos, RoguemojiPlayer player)
 	{
         if (player.IsDead)
             return;
@@ -372,12 +375,12 @@ public partial class InterfacerGame : Sandbox.Game
     [ConCmd.Server]
     public static void InventoryThingDraggedCmd(int networkIdent, PanelType destinationPanelType, int x, int y)
 	{
-        var player = ConsoleSystem.Caller.Pawn as InterfacerPlayer;
+        var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
         Thing thing = FindByIndex(networkIdent) as Thing;
 		Instance.InventoryThingDragged(thing, destinationPanelType, new IntVector(x, y), player);
     }
 
-    public void InventoryThingDragged(Thing thing, PanelType destinationPanelType, IntVector targetGridPos, InterfacerPlayer player)
+    public void InventoryThingDragged(Thing thing, PanelType destinationPanelType, IntVector targetGridPos, RoguemojiPlayer player)
 	{
         if (destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.Nearby || destinationPanelType == PanelType.None)
 		{
@@ -395,12 +398,12 @@ public partial class InterfacerGame : Sandbox.Game
     [ConCmd.Server]
     public static void NearbyThingDraggedCmd(int networkIdent, PanelType destinationPanelType, int x, int y)
     {
-        var player = ConsoleSystem.Caller.Pawn as InterfacerPlayer;
+        var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
         Thing thing = FindByIndex(networkIdent) as Thing;
         Instance.NearbyThingDragged(thing, destinationPanelType, new IntVector(x, y), player);
     }
 
-    public void NearbyThingDragged(Thing thing, PanelType destinationPanelType, IntVector targetGridPos, InterfacerPlayer player)
+    public void NearbyThingDragged(Thing thing, PanelType destinationPanelType, IntVector targetGridPos, RoguemojiPlayer player)
     {
 		// dont allow dragging nearby thing from different cells, or if the thing has been picked up by someone else
 		if (!player.GridPos.Equals(thing.GridPos) || thing.Flags.HasFlag(ThingFlags.InInventory))
@@ -422,10 +425,10 @@ public partial class InterfacerGame : Sandbox.Game
         }
     }
 
-	public InterfacerPlayer GetClosestPlayer(IntVector gridPos)
+	public RoguemojiPlayer GetClosestPlayer(IntVector gridPos)
 	{
 		int closestDistance = int.MaxValue;
-		InterfacerPlayer closestPlayer = null;
+		RoguemojiPlayer closestPlayer = null;
 
 		foreach (var player in Players) 
 		{
@@ -450,7 +453,7 @@ public partial class InterfacerGame : Sandbox.Game
 			pair.Value.Restart();
 		}
 
-		foreach (InterfacerPlayer player in Players)
+		foreach (RoguemojiPlayer player in Players)
 		{
 			player.Restart();
 
@@ -458,7 +461,7 @@ public partial class InterfacerGame : Sandbox.Game
 		}
     }
 
-	public void SetPlayerLevel(InterfacerPlayer player, LevelId levelId)
+	public void SetPlayerLevel(RoguemojiPlayer player, LevelId levelId)
 	{
 		if(player.CurrentLevelId != LevelId.None)
 		{
@@ -471,7 +474,7 @@ public partial class InterfacerGame : Sandbox.Game
 		SpawnPlayerOnLevel(player, levelId);
     }
 
-	void SpawnPlayerOnLevel(InterfacerPlayer player, LevelId levelId)
+	void SpawnPlayerOnLevel(RoguemojiPlayer player, LevelId levelId)
 	{
 		var level = Levels.ContainsKey(levelId) ? Levels[levelId] : CreateLevel(levelId);
         level.GridManager.AddThing(player);

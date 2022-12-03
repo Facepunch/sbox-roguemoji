@@ -3,7 +3,7 @@
 @using System;
 
 @inherits Panel;
-@namespace Interfacer
+@namespace Roguemoji
 
 <style>
     .icon
@@ -100,7 +100,7 @@
 
     bool IsSelected()
     {
-        return Thing == InterfacerGame.Instance.LocalPlayer?.SelectedThing;
+        return Thing == RoguemojiGame.Instance.LocalPlayer?.SelectedThing;
     }
 
     protected override Panel CreateTooltipPanel()
@@ -113,7 +113,7 @@
 
     protected override int BuildHash()
     {
-        var player = InterfacerGame.Instance.LocalPlayer;
+        var player = RoguemojiGame.Instance.LocalPlayer;
         if (Thing == null || player == null)
             return base.BuildHash();
 
@@ -148,20 +148,25 @@
         bool shift = Input.Down(InputButton.Run);
         bool rightClick = e.Button == "mouseright";
 
+        Log.Info("GridCell:OnMouseDown");
+
         if(Thing.Flags.HasFlag(ThingFlags.InInventory))
         {
             var gridPanel = Hud.Instance.GetPanel(PanelType.InventoryGrid) as GridPanel;
 
             if(shift)
                 Hud.Instance.GridCellClickedInventory(Thing.GridPos, rightClick, shift);
-            else
+            else if (!rightClick)
                 Hud.Instance.StartDragging(Thing, this);
         }
         else
         {
             var gridPanel = Hud.Instance.GetPanel(PanelType.ArenaGrid) as GridPanel;
-            var player = InterfacerGame.Instance.LocalPlayer;
-            Hud.Instance.GridCellClickedArena(Thing.GridPos - player.CameraGridOffset, rightClick, shift);
+            var player = RoguemojiGame.Instance.LocalPlayer;
+
+            Hud.Instance.GridCellClickedArena(Thing.GridPos, rightClick, shift);
         }
+
+        e.StopPropagation();
     }
 }

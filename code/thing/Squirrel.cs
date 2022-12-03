@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 using System;
 
-namespace Interfacer;
+namespace Roguemoji;
 public partial class Squirrel : Thing
 {
     public TargetingStatus Targeting { get; private set; }
@@ -40,7 +40,7 @@ public partial class Squirrel : Thing
 
         if (Targeting.Target == null)
         {
-            Targeting.Target = InterfacerGame.Instance.GetClosestPlayer(GridPos);
+            Targeting.Target = RoguemojiGame.Instance.GetClosestPlayer(GridPos);
         }
         else
         {

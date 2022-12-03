@@ -3,7 +3,7 @@ using Sandbox;
 using Sandbox.UI;
 using System.Collections.Generic;
 
-namespace Interfacer;
+namespace Roguemoji;
 
 public abstract class GridPanel : Panel
 {

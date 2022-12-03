@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Interfacer;
+namespace Roguemoji;
 
 public class PathfindingStatus : ThingStatus
 {

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Interfacer;
+namespace Roguemoji;
 public partial class Thing : Entity
 {
 	[Net] public IntVector GridPos { get; protected set; }
@@ -25,11 +25,12 @@ public partial class Thing : Entity
     [Net] public float PathfindMovementCost { get; set; }
 
     public Vector2 Offset { get; set; }
-	public float RotationDegrees { get; set; }
+    public Vector2 TargetOffset { get; set; }
+    public float RotationDegrees { get; set; }
 	public float IconScale { get; set; }
     public int CharSkip { get; set; } // Client-only
 
-    [Net] public InterfacerPlayer InventoryPlayer { get; set; }
+    [Net] public RoguemojiPlayer InventoryPlayer { get; set; }
 
 	[Net] public string DebugText { get; set; }
 
@@ -50,7 +51,7 @@ public partial class Thing : Entity
 		IconDepth = 0;
 		ShouldLogBehaviour = false;
 		IconScale = 1f;
-		ThingId = InterfacerGame.ThingId++;
+		ThingId = RoguemojiGame.ThingId++;
 		//DisplayImagePath = "textures/emoji/hole.png";
     }
 
@@ -75,6 +76,8 @@ public partial class Thing : Entity
 
 		if(!string.IsNullOrEmpty(DebugText))
 			DrawDebugText(DebugText);
+
+        Offset = Utils.DynamicEaseTo(Offset, TargetOffset, 0.6f, dt);
 
         //DrawDebugText(ContainingGridManager?.Name.ToString() ?? "null");
         //DrawDebugText(Flags.ToString());
@@ -101,7 +104,7 @@ public partial class Thing : Entity
 		DoneFirstUpdate = true;
     }
 
-	public virtual bool TryMove(Direction direction)
+	public virtual bool TryMove(Direction direction, bool shouldAnimate = true)
 	{
 		Assert.True(direction != Direction.None);
 
@@ -115,13 +118,15 @@ public partial class Thing : Entity
         if (other != null)
 		{
             Interact(other, direction);
-            InterfacerGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") bumped into " + other.DisplayIcon + "(" + other.DisplayName + ")", PlayerNum);
+            RoguemojiGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") bumped into " + other.DisplayIcon + "(" + other.DisplayName + ")", PlayerNum);
 
 			return false;
 		}
 
 		SetGridPos(newGridPos);
-		VfxSlide(direction, 0.2f, 40f);
+
+		if(shouldAnimate)
+			VfxSlide(direction, 0.2f, 40f);
 
 		return true;
 	}
@@ -172,9 +177,9 @@ public partial class Thing : Entity
 		//if (ShouldLogBehaviour)
   //      {
 		//	if(Flags.HasFlag(ThingFlags.InInventory))
-		//		InterfacerGame.Instance.LogMessage(DisplayIcon + DisplayName + " moved to (" + gridPos.x + ", " + gridPos.y + ") in " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
+		//		RoguemojiGame.Instance.LogMessage(DisplayIcon + DisplayName + " moved to (" + gridPos.x + ", " + gridPos.y + ") in " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
 		//	else
-		//		InterfacerGame.Instance.LogMessage(DisplayIcon + DisplayName + " moved to (" + gridPos.x + ", " + gridPos.y + ").", PlayerNum);
+		//		RoguemojiGame.Instance.LogMessage(DisplayIcon + DisplayName + " moved to (" + gridPos.x + ", " + gridPos.y + ").", PlayerNum);
 		//}
 	}
 
@@ -183,9 +188,9 @@ public partial class Thing : Entity
 		//if ( ShouldLogBehaviour )
   //      {
 		//	if (Flags.HasFlag(ThingFlags.InInventory))
-		//		InterfacerGame.Instance.LogMessage(DisplayIcon + DisplayName + " removed from " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
+		//		RoguemojiGame.Instance.LogMessage(DisplayIcon + DisplayName + " removed from " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
 		//	else
-		//		InterfacerGame.Instance.LogMessage(DisplayIcon + DisplayName + " removed.", PlayerNum);
+		//		RoguemojiGame.Instance.LogMessage(DisplayIcon + DisplayName + " removed.", PlayerNum);
 		//}
 			
 		ContainingGridManager.RemoveThing( this );
@@ -214,7 +219,7 @@ public partial class Thing : Entity
 
     public void SetOffset(Vector2 offset)
     {
-		Offset = offset;
+		TargetOffset = offset;
     }
 
 	public void SetRotation(float rotationDegrees)
@@ -293,7 +298,7 @@ public partial class Thing : Entity
 		}
 		else
         {
-            var player = InterfacerGame.Instance.LocalPlayer;
+            var player = RoguemojiGame.Instance.LocalPlayer;
             var offsetGridPos = GridPos - player.CameraGridOffset;
             
 			var panel = GetGridPanel();

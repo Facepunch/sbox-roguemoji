@@ -2,7 +2,7 @@
 using Sandbox.UI;
 using System.Diagnostics.SymbolStore;
 
-namespace Interfacer;
+namespace Roguemoji;
 
 public enum PanelType { None, ArenaGrid, InventoryGrid, Log, Nearby, Info, Character, Stats };
 
@@ -38,7 +38,7 @@ public partial class Hud : RootPanel
         base.Tick();
 
 		// if dragging a nearby thing, stop when moving
-		if(IsDraggingThing && !_dragStartPlayerGridPos.Equals(InterfacerGame.Instance.LocalPlayer.GridPos))
+		if(IsDraggingThing && !_dragStartPlayerGridPos.Equals(RoguemojiGame.Instance.LocalPlayer.GridPos))
 		{
 			if(DraggedThing != null && !DraggedThing.Flags.HasFlag(ThingFlags.InInventory))
 			{
@@ -49,12 +49,12 @@ public partial class Hud : RootPanel
 
     public void GridCellClickedArena(IntVector gridPos, bool rightClick, bool shift)
 	{
-		InterfacerGame.CellClickedArenaCmd(gridPos.x, gridPos.y, rightClick, shift);
+		RoguemojiGame.CellClickedArenaCmd(gridPos.x, gridPos.y, rightClick, shift);
 	}
 
 	public void GridCellClickedInventory(IntVector gridPos, bool rightClick, bool shift)
 	{
-		InterfacerGame.CellClickedInventoryCmd(gridPos.x, gridPos.y, rightClick, shift);
+		RoguemojiGame.CellClickedInventoryCmd(gridPos.x, gridPos.y, rightClick, shift);
 	}
 
     protected override void OnMouseUp(MousePanelEvent e)
@@ -74,11 +74,11 @@ public partial class Hud : RootPanel
 
 			if(DraggedThing.Flags.HasFlag(ThingFlags.InInventory))
 			{
-				InterfacerGame.InventoryThingDraggedCmd(DraggedThing.NetworkIdent, destinationPanelType, targetGridPos.x, targetGridPos.y);
+				RoguemojiGame.InventoryThingDraggedCmd(DraggedThing.NetworkIdent, destinationPanelType, targetGridPos.x, targetGridPos.y);
             }
 			else
 			{
-				InterfacerGame.NearbyThingDraggedCmd(DraggedThing.NetworkIdent, destinationPanelType, targetGridPos.x, targetGridPos.y);
+				RoguemojiGame.NearbyThingDraggedCmd(DraggedThing.NetworkIdent, destinationPanelType, targetGridPos.x, targetGridPos.y);
 			}
 
             StopDragging();
@@ -90,7 +90,7 @@ public partial class Hud : RootPanel
 		IsDraggingThing = true;
 		DraggedThing = thing;
 		DraggedPanel = panel;
-		_dragStartPlayerGridPos = InterfacerGame.Instance.LocalPlayer.GridPos;
+		_dragStartPlayerGridPos = RoguemojiGame.Instance.LocalPlayer.GridPos;
 
         CreateDragIcon(thing);
 	}

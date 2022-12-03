@@ -3,7 +3,7 @@
 @using Sandbox.UI;
 
 @inherits Panel;
-@namespace Interfacer
+@namespace Roguemoji
 
 <style>
     .info
@@ -50,7 +50,7 @@
 
 <root class="info @GetSelectedClass()">
     @{
-        var thing = InterfacerGame.Instance.LocalPlayer?.SelectedThing;
+        var thing = RoguemojiGame.Instance.LocalPlayer?.SelectedThing;
     }
 
     @if(thing != null)
@@ -71,16 +71,16 @@
 {
     string GetSelectedClass()
     {
-        return InterfacerGame.Instance.LocalPlayer?.SelectedThing != null ? "thing_selected" : "";
+        return RoguemojiGame.Instance.LocalPlayer?.SelectedThing != null ? "thing_selected" : "";
     }
 
     string GetPlayerClass()
     {
-        return (InterfacerGame.Instance.LocalPlayer?.SelectedThing?.PlayerNum ?? 0) > 0 ? $"icon-player-{InterfacerGame.Instance.LocalPlayer.SelectedThing.PlayerNum}" : "";
+        return (RoguemojiGame.Instance.LocalPlayer?.SelectedThing?.PlayerNum ?? 0) > 0 ? $"icon-player-{RoguemojiGame.Instance.LocalPlayer.SelectedThing.PlayerNum}" : "";
     }
 
     protected override int BuildHash()
     {
-        return HashCode.Combine( InterfacerGame.Instance.LocalPlayer?.SelectedThing?.GetInfoDisplayHash() ?? 0 );
+        return HashCode.Combine( RoguemojiGame.Instance.LocalPlayer?.SelectedThing?.GetInfoDisplayHash() ?? 0 );
     }
 }

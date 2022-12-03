@@ -1,14 +1,14 @@
 ﻿using Sandbox;
 using System;
 
-namespace Interfacer;
+namespace Roguemoji;
 
 public class VfxPlayerShakeCameraStatus : PlayerStatus
 {
     public float Lifetime { get; set; }
     public float Distance { get; set; }
 
-    public override void Init(InterfacerPlayer player)
+    public override void Init(RoguemojiPlayer player)
     {
         base.Init(player);
 

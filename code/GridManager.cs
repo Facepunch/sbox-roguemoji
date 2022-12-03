@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Sandbox;
 
-namespace Interfacer;
+namespace Roguemoji;
 
 public enum Direction { None, Left, Right, Down, Up }
+
+public enum GridType { None, Arena, Inventory }
 
 [Flags]
 public enum ThingFlags
@@ -22,8 +24,8 @@ public partial class GridManager : Entity
 	[Net] public int LevelHeight { get; private set; }
 
     [Net] public IList<Thing> Things { get; private set; }
-	[Net] public bool IsInventory { get; private set; }
-    [Net] public InterfacerPlayer InventoryPlayer { get; private set; }
+	[Net] public GridType GridType { get; private set; }
+    [Net] public RoguemojiPlayer InventoryPlayer { get; private set; }
 
     public Dictionary<IntVector, List<Thing>> GridThings = new Dictionary<IntVector, List<Thing>>();
 
@@ -37,10 +39,10 @@ public partial class GridManager : Entity
 		Things = new List<Thing>();
 	}
 
-	public void SetAsInventory(InterfacerPlayer player)
+	public void SetAsInventory(RoguemojiPlayer player)
 	{
 		InventoryPlayer = player;
-        IsInventory = true;
+        GridType = GridType.Inventory;
     }
 
 	public void Update(float dt)
@@ -73,7 +75,7 @@ public partial class GridManager : Entity
         //thing.GridPos = gridPos;
         thing.SetGridPos(gridPos);
 
-        if (IsInventory)
+        if (GridType == GridType.Inventory)
         {
             thing.Flags |= ThingFlags.InInventory;
             thing.InventoryPlayer = InventoryPlayer;
@@ -278,7 +280,7 @@ public partial class GridManager : Entity
 	{
         foreach (var thing in Things)
         {
-            if (thing is not InterfacerPlayer)
+            if (thing is not RoguemojiPlayer)
                 thing.Delete();
         }
 		Things.Clear();
