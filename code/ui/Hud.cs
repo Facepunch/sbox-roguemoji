@@ -4,7 +4,7 @@ using System.Diagnostics.SymbolStore;
 
 namespace Roguemoji;
 
-public enum PanelType { None, ArenaGrid, InventoryGrid, Log, Nearby, Info, Character, Stats };
+public enum PanelType { None, ArenaGrid, InventoryGrid, EquipmentGrid, Wielding, Log, Nearby, Info, Character, Stats };
 
 public partial class Hud : RootPanel
 {
@@ -55,11 +55,13 @@ public partial class Hud : RootPanel
 
 	public void GridCellClickedInventory(IntVector gridPos, bool rightClick, bool shift)
 	{
-		RoguemojiGame.CellClickedInventoryCmd(gridPos.x, gridPos.y, rightClick, shift);
+        Log.Info("Hud:GridCellClickedInventory: " + gridPos);
+        RoguemojiGame.CellClickedInventoryCmd(gridPos.x, gridPos.y, rightClick, shift);
 	}
 
     public void GridCellClickedEquipment(IntVector gridPos, bool rightClick, bool shift)
     {
+		Log.Info("Hud:GridCellClickedEquipment: " + gridPos);
         RoguemojiGame.CellClickedEquipmentCmd(gridPos.x, gridPos.y, rightClick, shift);
     }
 
@@ -72,17 +74,23 @@ public partial class Hud : RootPanel
 			PanelType destinationPanelType = GetContainingPanelType(MousePosition);
 
 			IntVector targetGridPos = IntVector.Zero;
-			if(destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.InventoryGrid)
+			if(destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.InventoryGrid || destinationPanelType == PanelType.EquipmentGrid)
 			{
 				GridPanel gridPanel = GetPanel(destinationPanelType) as GridPanel;
 				targetGridPos = gridPanel.GetGridPos(gridPanel.MousePosition);
 			}
 
+			Log.Info(DraggedThing.DisplayIcon + " DraggedThing.ContainingGridManager.GridType: " + DraggedThing.ContainingGridManager.GridType);
+
 			if(DraggedThing.ContainingGridManager.GridType == GridType.Inventory)
 			{
 				RoguemojiGame.InventoryThingDraggedCmd(DraggedThing.NetworkIdent, destinationPanelType, targetGridPos.x, targetGridPos.y);
             }
-			else
+			else if (DraggedThing.ContainingGridManager.GridType == GridType.Equipment)
+            {
+                RoguemojiGame.EquipmentThingDraggedCmd(DraggedThing.NetworkIdent, destinationPanelType, targetGridPos.x, targetGridPos.y);
+            }
+            else
 			{
 				RoguemojiGame.NearbyThingDraggedCmd(DraggedThing.NetworkIdent, destinationPanelType, targetGridPos.x, targetGridPos.y);
 			}
@@ -143,6 +151,12 @@ public partial class Hud : RootPanel
 			return PanelType.Nearby;
         else if (Contains(GetRect(PanelType.Log), pos))
             return PanelType.Log;
+        else if (Contains(GetRect(PanelType.EquipmentGrid), pos))
+            return PanelType.EquipmentGrid;
+        else if (Contains(GetRect(PanelType.Wielding), pos))
+            return PanelType.Wielding;
+        else if (Contains(GetRect(PanelType.Character), pos))
+            return PanelType.Character;
 
         return PanelType.None;
 	}
@@ -154,7 +168,7 @@ public partial class Hud : RootPanel
 
 	public Panel GetPanel(PanelType panelType)
 	{
-		switch(panelType)
+        switch (panelType)
 		{
 			case PanelType.ArenaGrid:
 				return MainPanel.ArenaPanel;
@@ -164,12 +178,35 @@ public partial class Hud : RootPanel
                 return MainPanel.LogPanel;
 			case PanelType.Nearby:
                 return MainPanel.NearbyPanel;
+			case PanelType.Character:
+				return MainPanel.CharacterPanel;
+            case PanelType.EquipmentGrid:
+                return MainPanel.CharacterPanel.EquipmentPanel;
+            case PanelType.Wielding:
+                return MainPanel.CharacterPanel.WieldingPanel;
         }
 
 		return null;
 	}
 
-	bool Contains(Rect rect, Vector2 point)
+    public GridPanel GetGridPanel(GridType gridType)
+    {
+        Host.AssertClient();
+
+        switch (gridType)
+        {
+            case GridType.Arena:
+                return MainPanel?.ArenaPanel ?? null;
+            case GridType.Inventory:
+                return MainPanel?.InventoryPanel ?? null;
+            case GridType.Equipment:
+                return MainPanel.CharacterPanel?.EquipmentPanel ?? null;
+        }
+
+		return null;
+    }
+
+    bool Contains(Rect rect, Vector2 point)
 	{
 		return point.x > rect.Left && point.x < rect.Right && point.y > rect.Top && point.y < rect.Bottom;
 	}

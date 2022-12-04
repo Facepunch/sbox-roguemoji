@@ -9,14 +9,6 @@ public enum Direction { None, Left, Right, Down, Up }
 
 public enum GridType { None, Arena, Inventory, Equipment }
 
-[Flags]
-public enum ThingFlags
-{
-	None = 0,
-	Solid = 1,
-	Selectable = 2,
-}
-
 public partial class GridManager : Entity
 {
 	[Net] public int LevelWidth { get; private set; }

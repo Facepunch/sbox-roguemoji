@@ -4,6 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Roguemoji;
+
+[Flags]
+public enum ThingFlags
+{
+    None = 0,
+    Solid = 1,
+    Selectable = 2,
+	Equipment = 4,
+}
 public partial class Thing : Entity
 {
 	[Net] public IntVector GridPos { get; protected set; }
@@ -171,7 +180,7 @@ public partial class Thing : Entity
 		ContainingGridManager.SetGridPos( this, gridPos );
 		GridPos = gridPos;
 
-		if(ContainingGridManager.GridType == GridType.Inventory)
+		if(ContainingGridManager.GridType == GridType.Inventory || ContainingGridManager.GridType == GridType.Equipment)
             RefreshGridPanelClient(To.Single(InventoryPlayer));
 		else
 			RefreshGridPanelClient();
@@ -205,19 +214,12 @@ public partial class Thing : Entity
         if (Hud.Instance == null)
             return;
 
-        GridPanel panel = GetGridPanel();
+		GridPanel panel = Hud.Instance.GetGridPanel(ContainingGridManager.GridType);
         if (panel == null)
             return;
 
 		panel.StateHasChanged();
     }
-
-	public GridPanel GetGridPanel()
-    {
-		Host.AssertClient();
-
-		return ContainingGridManager.GridType == GridType.Inventory ? Hud.Instance.MainPanel.InventoryPanel : Hud.Instance.MainPanel.ArenaPanel;
-	}
 
     public void SetOffset(Vector2 offset)
     {
@@ -303,8 +305,8 @@ public partial class Thing : Entity
             var player = RoguemojiGame.Instance.LocalPlayer;
             var offsetGridPos = GridPos - player.CameraGridOffset;
             
-			var panel = GetGridPanel();
-			if(panel != null)
+			var panel = Hud.Instance.GetGridPanel(ContainingGridManager.GridType);
+            if (panel != null)
 				DebugOverlay.ScreenText(text, panel.GetCellPos(offsetGridPos), line, color, time);
 		}
 	}

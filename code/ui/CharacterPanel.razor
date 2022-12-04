@@ -17,6 +17,7 @@
     {
         flex-direction:column;       
         align-items: center;
+        padding: 10px;
     }
 
     .char_icon
@@ -51,6 +52,7 @@
         border: 1px solid #ffffff05;
         border-radius: 3px;
         margin: 10px;
+        pointer-events: all;
     }
 
     .wielding
@@ -63,6 +65,8 @@
         border: 1px solid #ffffff05;
         border-radius: 3px;
         padding-bottom: 4px;
+        pointer-events: all;
+        margin-bottom: 10px;
     }
 </style>
 
@@ -84,7 +88,7 @@
         <div class="level_label"> @($"Level: {player.CurrentLevelId}") </div>
     </div>
      <div class="column">
-        <div class="wielding"> @(player.EquippedThing?.DisplayIcon.Substring(player.EquippedThing.CharSkip) ?? "") </div>
+        <div class="wielding" @ref=WieldingPanel> @(player.EquippedThing?.DisplayIcon.Substring(player.EquippedThing.CharSkip) ?? "")</div>
         <EquipmentPanel class="equipment" style="width: @(40 * RoguemojiGame.EquipmentWidth)px; height: @(40 * RoguemojiGame.EquipmentHeight)px;" @ref=EquipmentPanel></EquipmentPanel>
      </div>
 </root>
@@ -92,6 +96,7 @@
 @code
 {
     public EquipmentPanel EquipmentPanel { get; set; }
+    public Panel WieldingPanel { get; set; }
 
     string GetPlayerClass()
     {

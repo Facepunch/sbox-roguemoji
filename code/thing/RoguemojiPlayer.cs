@@ -55,19 +55,24 @@ public partial class RoguemojiPlayer : Thing
         EquippedThing = null;
 
         InventoryGridManager.Restart();
+        EquipmentGridManager.Restart();
 
-        for (int x = 0; x < 4; x++)
-        {
-            for (int y = 0; y < 4; y++)
-            {
-                SpawnRandomThing(new IntVector(x, y));
-            }
-        }
+        for (int x = 0; x < RoguemojiGame.InventoryWidth; x++)
+            for (int y = 0; y < RoguemojiGame.InventoryHeight; y++)
+                SpawnRandomInventoryThing(new IntVector(x, y));
+
+        for (int x = 0; x < 3; x++)
+            for (int y = 0; y < 2; y++)
+                SpawnRandomEquipmentThing(new IntVector(x, y));
+
+        RoguemojiGame.Instance.RefreshGridPanelClient(GridType.Inventory);
+        RoguemojiGame.Instance.RefreshGridPanelClient(GridType.Equipment);
+        RoguemojiGame.Instance.RefreshNearbyPanelClient();
     }
 
-    void SpawnRandomThing(IntVector gridPos)
+    void SpawnRandomInventoryThing(IntVector gridPos)
     {
-        int rand = Rand.Int(0, 6);
+        int rand = Rand.Int(0, 8);
         switch (rand)
         {
             case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -77,6 +82,18 @@ public partial class RoguemojiPlayer : Thing
             case 4: InventoryGridManager.SpawnThing<Trumpet>(gridPos); break;
             case 5: InventoryGridManager.SpawnThing<Bouquet>(gridPos); break;
             case 6: InventoryGridManager.SpawnThing<Cheese>(gridPos); break;
+            case 7: InventoryGridManager.SpawnThing<Coat>(gridPos); break;
+            case 8: InventoryGridManager.SpawnThing<SafetyVest>(gridPos); break;
+        }
+    }
+
+    void SpawnRandomEquipmentThing(IntVector gridPos)
+    {
+        int rand = Rand.Int(0, 1);
+        switch (rand)
+        {
+            case 0: EquipmentGridManager.SpawnThing<Coat>(gridPos); break;
+            case 1: EquipmentGridManager.SpawnThing<SafetyVest>(gridPos); break;
         }
     }
 

@@ -108,10 +108,10 @@
      </div>
 
     <div class="lower_row">
-        <CharacterPanel class="character"></CharacterPanel>
+        <CharacterPanel class="character" @ref=CharacterPanel></CharacterPanel>
         <InventoryPanel class="inventory" style="width: @(40 * RoguemojiGame.InventoryWidth)px; height: @(40 * RoguemojiGame.InventoryHeight)px;" @ref=InventoryPanel></InventoryPanel>
         <NearbyPanel class="nearby" @ref=NearbyPanel></NearbyPanel>
-        <InfoPanel class="info"></InfoPanel>
+        <InfoPanel class="info" @ref=InfoPanel></InfoPanel>
         <div class="stats"></div>
     </div>
 </root>
@@ -124,6 +124,7 @@
     public CharacterPanel CharacterPanel { get; set; }
     public NearbyPanel NearbyPanel { get; set; }
     public InventoryPanel InventoryPanel { get; set; }
+    public InfoPanel InfoPanel { get; set; }
 
     public string GetHoveredCoords()
     {

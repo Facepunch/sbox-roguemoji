@@ -168,6 +168,15 @@
             else
                 Hud.Instance.StartDragging(Thing, this, rightClick);
         }
+        else if(Thing.ContainingGridManager.GridType == GridType.Equipment)
+        {
+            var gridPanel = Hud.Instance.GetPanel(PanelType.EquipmentGrid) as GridPanel;
+
+            if(shift || rightClick)
+                Hud.Instance.GridCellClickedEquipment(Thing.GridPos, rightClick, shift);
+            else
+                Hud.Instance.StartDragging(Thing, this, rightClick);
+        }
         else
         {
             var gridPanel = Hud.Instance.GetPanel(PanelType.ArenaGrid) as GridPanel;
