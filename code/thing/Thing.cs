@@ -171,7 +171,7 @@ public partial class Thing : Entity
 		ContainingGridManager.SetGridPos( this, gridPos );
 		GridPos = gridPos;
 
-		if(Flags.HasFlag(ThingFlags.InInventory))
+		if(ContainingGridManager.GridType == GridType.Inventory)
             RefreshGridPanelClient(To.Single(InventoryPlayer));
 		else
 			RefreshGridPanelClient();
@@ -216,7 +216,7 @@ public partial class Thing : Entity
     {
 		Host.AssertClient();
 
-		return Flags.HasFlag(ThingFlags.InInventory) ? Hud.Instance.MainPanel.InventoryPanel : Hud.Instance.MainPanel.ArenaPanel;
+		return ContainingGridManager.GridType == GridType.Inventory ? Hud.Instance.MainPanel.InventoryPanel : Hud.Instance.MainPanel.ArenaPanel;
 	}
 
     public void SetOffset(Vector2 offset)
@@ -385,7 +385,7 @@ public partial class Thing : Entity
 		return (IconDepth * 100) + StackNum;
     }
 
-	public void EquipThing(Thing thing)
+	public virtual void EquipThing(Thing thing)
 	{
 		EquippedThing = thing;
 	}

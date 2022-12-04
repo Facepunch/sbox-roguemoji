@@ -1,0 +1,62 @@
+﻿@using System;
+@using Sandbox;
+@using Sandbox.UI;
+
+@inherits GridPanel;
+@namespace Roguemoji
+
+<style>
+    .equipment_bg 
+    {
+        opacity: 0.005;
+        background-color: transparent;
+        box-shadow: 0px 0px 0px #0000ff;
+
+        position:absolute;
+        pointer-events:all;
+        background-repeat: repeat;
+        background-position: 0 0;
+        background-size: 80px;
+        border-radius:3px;
+        width:100%;
+        height:100%;
+    }
+</style>
+
+<root>
+    <div class="equipment_bg" style="background-image: url( textures/bg_tile.png );"></div>
+
+    @if(RoguemojiGame.Instance.LocalPlayer?.EquipmentGridManager?.Things == null)
+    {
+        return;
+    }
+
+    @foreach(var thing in GetThings())
+    {
+        var index = GetIndex(thing.GridPos);
+        <GridCell style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40);" Thing=@thing GridIndex=@index @onmouseover=@(() => HoveredCellIndex = index )) />
+    }
+</root>
+
+@code
+{
+    public override int GridWidth => RoguemojiGame.EquipmentWidth;
+    public override int GridHeight => RoguemojiGame.EquipmentHeight;
+
+    protected override IList<Thing> GetThings()
+    {
+        return RoguemojiGame.Instance.LocalPlayer.EquipmentGridManager.Things;
+    }
+
+    protected override void OnMouseDown(MousePanelEvent e)
+    {
+        base.OnMouseDown(e);
+
+        Hud.Instance.GridCellClickedInventory(GetGridPos(MousePosition), rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run));
+    }
+
+    protected override int BuildHash()
+    {
+        return HashCode.Combine(GetThings().Count);
+    }
+}

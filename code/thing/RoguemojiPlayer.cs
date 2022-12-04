@@ -12,8 +12,9 @@ public partial class RoguemojiPlayer : Thing
     public Vector2 CameraPixelOffset { get; set; } // Client-only
 
     [Net] public GridManager InventoryGridManager { get; private set; }
+    [Net] public GridManager EquipmentGridManager { get; private set; }
 
-	[Net] public Thing SelectedThing { get; private set; }
+    [Net] public Thing SelectedThing { get; private set; }
 
     [Net] public bool IsDead { get; set; }
 
@@ -33,7 +34,11 @@ public partial class RoguemojiPlayer : Thing
         {
 			InventoryGridManager = new();
 			InventoryGridManager.Init(RoguemojiGame.InventoryWidth, RoguemojiGame.InventoryHeight);
-            InventoryGridManager.SetAsInventory(player: this);
+            InventoryGridManager.GridType = GridType.Inventory;
+
+            EquipmentGridManager = new();
+            EquipmentGridManager.Init(RoguemojiGame.EquipmentWidth, RoguemojiGame.EquipmentHeight);
+            EquipmentGridManager.GridType = GridType.Equipment;
 
             SetStartingValues();
         }
@@ -304,6 +309,14 @@ public partial class RoguemojiPlayer : Thing
             return;
 
         base.Damage(amount, source);
+    }
+
+    public override void EquipThing(Thing thing)
+    {
+        if(IsDead)
+            return;
+
+        base.EquipThing(thing);
     }
 
     public override void Destroy()

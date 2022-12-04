@@ -39,8 +39,10 @@ public partial class RoguemojiGame : Sandbox.Game
 	public const int ArenaHeight = 19;
 	public const int InventoryWidth = 10;
 	public const int InventoryHeight = 6;
+    public const int EquipmentWidth = 4;
+    public const int EquipmentHeight = 2;
 
-	public int LevelWidth { get; set; }
+    public int LevelWidth { get; set; }
 	public int LevelHeight { get; set; }
 
 	public record struct LogData(string text, int playerNum);
@@ -188,7 +190,14 @@ public partial class RoguemojiGame : Sandbox.Game
 		Instance.CellClickedInventory(new IntVector(x, y), player, rightClick, shift);
 	}
 
-	public void CellClickedArena(IntVector gridPos, RoguemojiPlayer player, bool rightClick, bool shift)
+    [ConCmd.Server]
+    public static void CellClickedEquipmentCmd(int x, int y, bool rightClick, bool shift)
+    {
+        var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
+        Instance.CellClickedEquipment(new IntVector(x, y), player, rightClick, shift);
+    }
+
+    public void CellClickedArena(IntVector gridPos, RoguemojiPlayer player, bool rightClick, bool shift)
 	{
 		var level = Levels[player.CurrentLevelId];
 		var thing = level.GridManager.GetThingsAt(gridPos).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
@@ -222,6 +231,11 @@ public partial class RoguemojiGame : Sandbox.Game
 		}
 	}
 
+    public void CellClickedEquipment(IntVector gridPos, RoguemojiPlayer player, bool rightClick, bool shift)
+    {
+		Log.Info("CellClickedEquipment: " + gridPos);
+    }
+
     public void MoveThingToArena(Thing thing, IntVector gridPos, RoguemojiPlayer player)
 	{
         if (player.IsDead)
@@ -234,7 +248,6 @@ public partial class RoguemojiGame : Sandbox.Game
 		RefreshGridPanelClient(To.Single(player), inventory: true);
         RefreshNearbyPanelClient(To.Single(player));
 
-        thing.Flags &= ~ThingFlags.InInventory;
 		thing.InventoryPlayer = null;
         gridManager.AddThing(thing);
 		thing.SetGridPos(gridPos);
@@ -255,7 +268,7 @@ public partial class RoguemojiGame : Sandbox.Game
         var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
         Thing thing = FindByIndex(networkIdent) as Thing;
 
-		if (thing.Flags.HasFlag(ThingFlags.InInventory))
+		if (thing.ContainingGridManager.GridType == GridType.Arena)
 		{
 			Log.Info(thing.Name + " " + thing.NetworkIdent + "!!!!");
             return;
@@ -287,7 +300,7 @@ public partial class RoguemojiGame : Sandbox.Game
         if (player.IsDead)
             return;
 
-        if (thing.Flags.HasFlag(ThingFlags.InInventory))
+        if (thing.ContainingGridManager.GridType == GridType.Inventory)
 		{
 			Log.Error(thing.DisplayName + " at " + gridPos + " is already in inventory of " + player.DisplayName + "!");
 		}
@@ -297,14 +310,13 @@ public partial class RoguemojiGame : Sandbox.Game
             Log.Error(thing.DisplayName + " has same InventoryPlayer!");
         }
 
-        Assert.True(!thing.Flags.HasFlag(ThingFlags.InInventory) || thing.InventoryPlayer != player);
+        Assert.True(!(thing.ContainingGridManager.GridType == GridType.Inventory) || thing.InventoryPlayer != player);
 
 		thing.ContainingGridManager?.RemoveThing(thing);
 		RefreshNearbyPanelClient(To.Single(player));
         FlickerNearbyPanelCellsClient(To.Single(player));
 
         thing.InventoryPlayer = player;
-        thing.Flags |= ThingFlags.InInventory;
         player.InventoryGridManager.AddThing(thing);
 		thing.SetGridPos(gridPos);
 
@@ -393,7 +405,7 @@ public partial class RoguemojiGame : Sandbox.Game
     public void NearbyThingDragged(Thing thing, PanelType destinationPanelType, IntVector targetGridPos, RoguemojiPlayer player)
     {
 		// dont allow dragging nearby thing from different cells, or if the thing has been picked up by someone else
-		if (!player.GridPos.Equals(thing.GridPos) || thing.Flags.HasFlag(ThingFlags.InInventory))
+		if (!player.GridPos.Equals(thing.GridPos) || thing.ContainingGridManager.GridType == GridType.Inventory)
 			return;
 
         if (destinationPanelType == PanelType.InventoryGrid)

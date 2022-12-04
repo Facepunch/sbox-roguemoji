@@ -39,8 +39,8 @@
         height: 20px;
         position: absolute;
         left: 20px;
-        top: 20px;
-        font-size: 17px;
+        top: 17px;
+        font-size: 18px;
         pointer-events: none;
         //background-color: #ff000088;
     }
@@ -159,7 +159,7 @@
         bool shift = Input.Down(InputButton.Run);
         bool rightClick = e.Button == "mouseright";
 
-        if(Thing.Flags.HasFlag(ThingFlags.InInventory))
+        if(Thing.ContainingGridManager.GridType == GridType.Inventory)
         {
             var gridPanel = Hud.Instance.GetPanel(PanelType.InventoryGrid) as GridPanel;
 

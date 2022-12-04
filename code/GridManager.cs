@@ -7,7 +7,7 @@ namespace Roguemoji;
 
 public enum Direction { None, Left, Right, Down, Up }
 
-public enum GridType { None, Arena, Inventory }
+public enum GridType { None, Arena, Inventory, Equipment }
 
 [Flags]
 public enum ThingFlags
@@ -15,7 +15,6 @@ public enum ThingFlags
 	None = 0,
 	Solid = 1,
 	Selectable = 2,
-	InInventory = 4,
 }
 
 public partial class GridManager : Entity
@@ -24,8 +23,8 @@ public partial class GridManager : Entity
 	[Net] public int LevelHeight { get; private set; }
 
     [Net] public IList<Thing> Things { get; private set; }
-	[Net] public GridType GridType { get; private set; }
-    [Net] public RoguemojiPlayer InventoryPlayer { get; private set; }
+	[Net] public GridType GridType { get; set; }
+    //[Net] public RoguemojiPlayer InventoryPlayer { get; private set; }
 
     public Dictionary<IntVector, List<Thing>> GridThings = new Dictionary<IntVector, List<Thing>>();
 
@@ -39,11 +38,11 @@ public partial class GridManager : Entity
 		Things = new List<Thing>();
 	}
 
-	public void SetAsInventory(RoguemojiPlayer player)
-	{
-		InventoryPlayer = player;
-        GridType = GridType.Inventory;
-    }
+	//public void SetAsInventory(RoguemojiPlayer player)
+	//{
+	//	InventoryPlayer = player;
+ //       GridType = GridType.Inventory;
+ //   }
 
 	public void Update(float dt)
 	{
@@ -72,14 +71,7 @@ public partial class GridManager : Entity
         var thing = TypeLibrary.GetDescription(typeof(T)).Create<T>();
         AddThing(thing);
 
-        //thing.GridPos = gridPos;
         thing.SetGridPos(gridPos);
-
-        if (GridType == GridType.Inventory)
-        {
-            thing.Flags |= ThingFlags.InInventory;
-            thing.InventoryPlayer = InventoryPlayer;
-        }
 
         return thing;
     }
