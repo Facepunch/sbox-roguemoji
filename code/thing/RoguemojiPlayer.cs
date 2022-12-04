@@ -57,13 +57,13 @@ public partial class RoguemojiPlayer : Thing
         InventoryGridManager.Restart();
         EquipmentGridManager.Restart();
 
-        for (int x = 0; x < RoguemojiGame.InventoryWidth; x++)
-            for (int y = 0; y < RoguemojiGame.InventoryHeight; y++)
+        for (int x = 0; x < RoguemojiGame.InventoryWidth - 2; x++)
+            for (int y = 0; y < RoguemojiGame.InventoryHeight - 2; y++)
                 SpawnRandomInventoryThing(new IntVector(x, y));
 
-        for (int x = 0; x < 3; x++)
-            for (int y = 0; y < 2; y++)
-                SpawnRandomEquipmentThing(new IntVector(x, y));
+        //for (int x = 0; x < 3; x++)
+        //    for (int y = 0; y < 2; y++)
+        //        SpawnRandomEquipmentThing(new IntVector(x, y));
 
         RoguemojiGame.Instance.RefreshGridPanelClient(GridType.Inventory);
         RoguemojiGame.Instance.RefreshGridPanelClient(GridType.Equipment);
