@@ -71,9 +71,9 @@
         <div class="icon @GetPlayerClass()"> 
             @thing.DisplayIcon
 
-            @if (thing.EquippedThing != null)
+            @if (thing.WieldingThing != null)
             {
-                <div class="equipped"> @thing.EquippedThing.DisplayIcon.Substring(thing.EquippedThing.CharSkip) </div>
+                <div class="equipped"> @thing.WieldingThing.DisplayIcon.Substring(thing.WieldingThing.CharSkip) </div>
             }
         </div>
         <div class="name_label"> @thing.DisplayName </div>

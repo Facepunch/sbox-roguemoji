@@ -52,7 +52,7 @@ public partial class RoguemojiPlayer : Thing
         IsDead = false;
         DoneFirstUpdate = false;
         CurrentLevelId = LevelId.None;
-        EquippedThing = null;
+        WieldingThing = null;
 
         InventoryGridManager.Restart();
         EquipmentGridManager.Restart();
@@ -328,12 +328,12 @@ public partial class RoguemojiPlayer : Thing
         base.Damage(amount, source);
     }
 
-    public override void EquipThing(Thing thing)
+    public override void WieldThing(Thing thing)
     {
         if(IsDead)
             return;
 
-        base.EquipThing(thing);
+        base.WieldThing(thing);
     }
 
     public override void Destroy()

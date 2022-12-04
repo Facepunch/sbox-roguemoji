@@ -51,7 +51,7 @@ public partial class Thing : Entity
     [Net] public int Hp { get; set; }
     [Net] public int MaxHp { get; set; }
 
-    [Net] public Thing EquippedThing { get; protected set; }
+    [Net] public Thing WieldingThing { get; protected set; }
 
     public Thing()
 	{
@@ -368,13 +368,13 @@ public partial class Thing : Entity
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(DisplayIcon, EquippedThing?.DisplayIcon ?? "", PlayerNum + ThingId, RotationDegrees, IconScale, IconDepth, Flags);
+        return HashCode.Combine(DisplayIcon, WieldingThing?.DisplayIcon ?? "", PlayerNum + ThingId, RotationDegrees, IconScale, IconDepth, Flags);
         //return HashCode.Combine((DisplayIcon + ThingId.ToString()), PlayerNum, Offset, RotationDegrees, IconScale, IconDepth, Flags);
     }
 
 	public int GetInfoDisplayHash()
     {
-		return HashCode.Combine(NetworkIdent, DisplayIcon, EquippedThing?.DisplayIcon ?? "", Hp, MaxHp, Flags);
+		return HashCode.Combine(NetworkIdent, DisplayIcon, WieldingThing?.DisplayIcon ?? "", Hp, MaxHp, Flags);
     }
 
     public int GetNearbyCellHash()
@@ -387,8 +387,8 @@ public partial class Thing : Entity
 		return (IconDepth * 100) + StackNum;
     }
 
-	public virtual void EquipThing(Thing thing)
+	public virtual void WieldThing(Thing thing)
 	{
-		EquippedThing = thing;
+        WieldingThing = thing;
 	}
 }

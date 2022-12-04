@@ -88,7 +88,7 @@
         <div class="level_label"> @($"Level: {player.CurrentLevelId}") </div>
     </div>
      <div class="column">
-        <div class="wielding" @ref=WieldingPanel> @(player.EquippedThing?.DisplayIcon.Substring(player.EquippedThing.CharSkip) ?? "")</div>
+        <div class="wielding" @ref=WieldingPanel @onmousedown=@((PanelEvent e) => OnMouseDownWieldable(e as MousePanelEvent) )> @(player.WieldingThing?.DisplayIcon.Substring(player.WieldingThing.CharSkip) ?? "")</div>
         <EquipmentPanel class="equipment" style="width: @(40 * RoguemojiGame.EquipmentWidth)px; height: @(40 * RoguemojiGame.EquipmentHeight)px;" @ref=EquipmentPanel></EquipmentPanel>
      </div>
 </root>
@@ -107,4 +107,18 @@
     {
         return HashCode.Combine(RoguemojiGame.Instance.LocalPlayer?.GetInfoDisplayHash() ?? 0);
     }
+
+    public void OnMouseDownWieldable(MousePanelEvent e)
+    {
+        bool rightClick = e.Button == "mouseright";
+        bool shift = Input.Down(InputButton.Run);
+
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        if (player == null || player.WieldingThing == null)
+            return;
+
+        Hud.Instance.WieldingClicked(rightClick, shift);
+    }
 }
+
+    

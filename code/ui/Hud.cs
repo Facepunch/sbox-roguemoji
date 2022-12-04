@@ -55,14 +55,17 @@ public partial class Hud : RootPanel
 
 	public void GridCellClickedInventory(IntVector gridPos, bool rightClick, bool shift)
 	{
-        Log.Info("Hud:GridCellClickedInventory: " + gridPos);
         RoguemojiGame.CellClickedInventoryCmd(gridPos.x, gridPos.y, rightClick, shift);
 	}
 
     public void GridCellClickedEquipment(IntVector gridPos, bool rightClick, bool shift)
     {
-		Log.Info("Hud:GridCellClickedEquipment: " + gridPos);
         RoguemojiGame.CellClickedEquipmentCmd(gridPos.x, gridPos.y, rightClick, shift);
+    }
+
+    public void WieldingClicked(bool rightClick, bool shift)
+    {
+        RoguemojiGame.WieldingClickedCmd(rightClick, shift);
     }
 
     protected override void OnMouseUp(MousePanelEvent e)
@@ -79,8 +82,6 @@ public partial class Hud : RootPanel
 				GridPanel gridPanel = GetPanel(destinationPanelType) as GridPanel;
 				targetGridPos = gridPanel.GetGridPos(gridPanel.MousePosition);
 			}
-
-			Log.Info(DraggedThing.DisplayIcon + " DraggedThing.ContainingGridManager.GridType: " + DraggedThing.ContainingGridManager.GridType);
 
 			if(DraggedThing.ContainingGridManager.GridType == GridType.Inventory)
 			{

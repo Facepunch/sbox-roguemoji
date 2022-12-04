@@ -76,9 +76,9 @@
 <root class="icon @GetSelectedClass() @GetSolidClass()">
     <div class="image @GetPlayerClass() @GetDraggingClass()" @ref=IconPanel>@Thing.DisplayIcon.Substring(Thing.CharSkip) </div>
 
-    @if(Thing.EquippedThing != null)
+    @if (Thing.WieldingThing != null)
     {
-        <div class="equipped"> @Thing.EquippedThing.DisplayIcon.Substring(Thing.EquippedThing.CharSkip) </div>    
+        <div class="equipped"> @Thing.WieldingThing.DisplayIcon.Substring(Thing.WieldingThing.CharSkip) </div>
     }
 </root>
 

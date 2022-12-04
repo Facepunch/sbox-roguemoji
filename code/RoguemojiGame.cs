@@ -220,7 +220,8 @@ public partial class RoguemojiGame : Sandbox.Game
 		}
 		else
 		{
-			player.EquipThing(thing);
+            if(!thing.Flags.HasFlag(ThingFlags.Equipment))
+			    player.WieldThing(thing);
 		}
 	}
 
@@ -264,6 +265,9 @@ public partial class RoguemojiGame : Sandbox.Game
         gridManager.AddThing(thing);
 		thing.SetGridPos(gridPos);
 
+        if (player.WieldingThing == thing)
+            player.WieldThing(null);
+
         LogMessage(player.DisplayIcon + "(" + player.DisplayName + ") dropped " + thing.DisplayIcon, player.PlayerNum);
     }
 
@@ -282,7 +286,7 @@ public partial class RoguemojiGame : Sandbox.Game
         var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
         Thing thing = FindByIndex(networkIdent) as Thing;
 
-		if (thing.ContainingGridManager.GridType == GridType.Arena)
+		if (thing.ContainingGridManager.GridType != GridType.Arena)
 		{
 			Log.Info(thing.Name + " " + thing.NetworkIdent + "!!!!");
             return;
@@ -476,6 +480,11 @@ public partial class RoguemojiGame : Sandbox.Game
                 MoveThingToInventory(otherThing, originalGridPos, player);
             }
         }
+        else if(destinationPanelType == PanelType.Wielding)
+        {
+            if (!thing.Flags.HasFlag(ThingFlags.Equipment))
+                player.WieldThing(thing);
+        }
     }
 
     [ConCmd.Server]
@@ -488,8 +497,6 @@ public partial class RoguemojiGame : Sandbox.Game
 
     public void EquipmentThingDragged(Thing thing, PanelType destinationPanelType, IntVector targetGridPos, RoguemojiPlayer player)
     {
-		Log.Info("Game:EquipmentThingDragged - destinationPanelType: " + destinationPanelType);
-
         if (destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.Nearby || destinationPanelType == PanelType.None)
         {
             MoveThingToArena(thing, player.GridPos, player);
@@ -567,9 +574,46 @@ public partial class RoguemojiGame : Sandbox.Game
         {
             player.SelectThing(thing);
         }
+        else if (destinationPanelType == PanelType.Wielding)
+        {
+            if (thing.Flags.HasFlag(ThingFlags.Equipment))
+                return;
+
+            if (player.InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
+            {
+                MoveThingToInventory(thing, emptyGridPos, player);
+                player.WieldThing(thing);
+            }
+        }
     }
 
-	public RoguemojiPlayer GetClosestPlayer(IntVector gridPos)
+    [ConCmd.Server]
+    public static void WieldingClickedCmd(bool rightClick, bool shift)
+    {
+        var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
+        Instance.WieldingClicked(player, rightClick, shift);
+    }
+
+    public void WieldingClicked(RoguemojiPlayer player, bool rightClick, bool shift)
+    {
+        if(player.WieldingThing == null) 
+            return;
+
+        if(rightClick)
+        {
+            player.WieldThing(null);
+        }
+        else if(shift)
+        {
+            MoveThingToArena(player.WieldingThing, player.GridPos, player);
+        }
+        else
+        {
+            player.SelectThing(player.WieldingThing);
+        }
+    }
+
+    public RoguemojiPlayer GetClosestPlayer(IntVector gridPos)
 	{
 		int closestDistance = int.MaxValue;
 		RoguemojiPlayer closestPlayer = null;
