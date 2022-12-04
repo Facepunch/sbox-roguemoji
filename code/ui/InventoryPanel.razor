@@ -52,7 +52,7 @@
     {
         base.OnMouseDown(e);
 
-        Hud.Instance.GridCellClickedInventory(GetGridPos(MousePosition), rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run));
+        Hud.Instance.GridCellClicked(GetGridPos(MousePosition), rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), GridType.Inventory);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

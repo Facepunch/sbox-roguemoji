@@ -159,30 +159,23 @@
         bool shift = Input.Down(InputButton.Run);
         bool rightClick = e.Button == "mouseright";
 
-        if(Thing.ContainingGridManager.GridType == GridType.Inventory)
+        if(Thing.ContainingGridManager.GridType == GridType.Arena)
         {
-            var gridPanel = Hud.Instance.GetPanel(PanelType.InventoryGrid) as GridPanel;
-
+            Hud.Instance.GridCellClicked(Thing.GridPos, rightClick, shift, GridType.Arena);
+        }
+        else if(Thing.ContainingGridManager.GridType == GridType.Inventory)
+        {
             if(shift || rightClick)
-                Hud.Instance.GridCellClickedInventory(Thing.GridPos, rightClick, shift);
+                Hud.Instance.GridCellClicked(Thing.GridPos, rightClick, shift, GridType.Inventory);
             else
                 Hud.Instance.StartDragging(Thing, this, rightClick);
         }
         else if(Thing.ContainingGridManager.GridType == GridType.Equipment)
         {
-            var gridPanel = Hud.Instance.GetPanel(PanelType.EquipmentGrid) as GridPanel;
-
             if(shift || rightClick)
-                Hud.Instance.GridCellClickedEquipment(Thing.GridPos, rightClick, shift);
+                Hud.Instance.GridCellClicked(Thing.GridPos, rightClick, shift, GridType.Equipment);
             else
                 Hud.Instance.StartDragging(Thing, this, rightClick);
-        }
-        else
-        {
-            var gridPanel = Hud.Instance.GetPanel(PanelType.ArenaGrid) as GridPanel;
-            var player = RoguemojiGame.Instance.LocalPlayer;
-
-            Hud.Instance.GridCellClickedArena(Thing.GridPos, rightClick, shift);
         }
 
         e.StopPropagation();

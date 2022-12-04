@@ -42,26 +42,14 @@ public partial class Hud : RootPanel
 		if(IsDraggingThing && !_dragStartPlayerGridPos.Equals(RoguemojiGame.Instance.LocalPlayer.GridPos))
 		{
 			if(DraggedThing != null && DraggedThing.ContainingGridManager.GridType == GridType.Arena)
-			{
 				StopDragging();
-			}
 		}
     }
 
-    public void GridCellClickedArena(IntVector gridPos, bool rightClick, bool shift)
+    public void GridCellClicked(IntVector gridPos, bool rightClick, bool shift, GridType gridType)
 	{
-		RoguemojiGame.CellClickedArenaCmd(gridPos.x, gridPos.y, rightClick, shift);
+		RoguemojiGame.GridCellClickedCmd(gridPos.x, gridPos.y, rightClick, shift, gridType);
 	}
-
-	public void GridCellClickedInventory(IntVector gridPos, bool rightClick, bool shift)
-	{
-        RoguemojiGame.CellClickedInventoryCmd(gridPos.x, gridPos.y, rightClick, shift);
-	}
-
-    public void GridCellClickedEquipment(IntVector gridPos, bool rightClick, bool shift)
-    {
-        RoguemojiGame.CellClickedEquipmentCmd(gridPos.x, gridPos.y, rightClick, shift);
-    }
 
     public void WieldingClicked(bool rightClick, bool shift)
     {
@@ -84,17 +72,11 @@ public partial class Hud : RootPanel
 			}
 
 			if(DraggedThing.ContainingGridManager.GridType == GridType.Inventory)
-			{
 				RoguemojiGame.InventoryThingDraggedCmd(DraggedThing.NetworkIdent, destinationPanelType, targetGridPos.x, targetGridPos.y);
-            }
 			else if (DraggedThing.ContainingGridManager.GridType == GridType.Equipment)
-            {
                 RoguemojiGame.EquipmentThingDraggedCmd(DraggedThing.NetworkIdent, destinationPanelType, targetGridPos.x, targetGridPos.y);
-            }
             else
-			{
 				RoguemojiGame.NearbyThingDraggedCmd(DraggedThing.NetworkIdent, destinationPanelType, targetGridPos.x, targetGridPos.y);
-			}
 
             StopDragging();
 		}

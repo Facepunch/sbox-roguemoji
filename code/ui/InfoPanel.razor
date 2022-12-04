@@ -47,11 +47,11 @@
         color: #ffffff77;
     }
 
-    .tooltip_label
+    .equipment_label
     {
         //margin: 0 0 5px 0;
-        font-size: 18px;
-        color: #ffffff44;
+        font-size: 20px;
+        color: #44554477;
         font-style: italic;
     }
 
@@ -68,6 +68,8 @@
 
     @if(thing != null)
     {
+        <div class="name_label"> @thing.DisplayName </div>
+
         <div class="icon @GetPlayerClass()"> 
             @thing.DisplayIcon
 
@@ -76,14 +78,16 @@
                 <div class="equipped"> @thing.WieldingThing.DisplayIcon.Substring(thing.WieldingThing.CharSkip) </div>
             }
         </div>
-        <div class="name_label"> @thing.DisplayName </div>
 
         @if(thing.MaxHp > 0)
         {
             <div class="hp_label"> @($"{thing.Hp}/{thing.MaxHp}❤️") </div>
         }
 
-        <div class="tooltip_label"> @thing.Tooltip </div>
+        @if(thing.Flags.HasFlag(ThingFlags.Equipment))
+        {
+            <div class="equipment_label"> Equipment </div>
+        }
     }
 </root>
 
