@@ -96,7 +96,7 @@
         <div class="wielding @(player.WieldingThing != null ? "is_wielding_something" : "")" @ref=WieldingPanel @onmousedown=@((PanelEvent e) => OnMouseDownWieldable(e as MousePanelEvent) )> 
             @(player.WieldingThing?.DisplayIcon.Substring(player.WieldingThing.CharSkip) ?? "")
         </div>
-        <EquipmentPanel class="equipment" style="width: @(40 * RoguemojiGame.EquipmentWidth)px; height: @(40 * RoguemojiGame.EquipmentHeight)px;" @ref=EquipmentPanel></EquipmentPanel>
+        <EquipmentPanel class="equipment" style="width: @(40 * RoguemojiGame.EquipmentWidth + 4)px; height: @(40 * RoguemojiGame.EquipmentHeight + 4)px;" @ref=EquipmentPanel></EquipmentPanel>
      </div>
 </root>
 
@@ -124,7 +124,10 @@
         if (player == null || player.WieldingThing == null)
             return;
 
-        Hud.Instance.WieldingClicked(rightClick, shift);
+        if(shift || rightClick)
+            Hud.Instance.WieldingClicked(rightClick, shift);
+        else
+            Hud.Instance.StartDragging(player.WieldingThing, this, rightClick);
     }
 }
 
