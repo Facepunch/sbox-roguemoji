@@ -178,6 +178,8 @@ public partial class RoguemojiGame : Sandbox.Game
 
     public void GridCellClicked(IntVector gridPos, RoguemojiPlayer player, bool rightClick, bool shift, GridType gridType)
 	{
+        Log.Info("Game:GridCellClicked: " + gridPos + ", " + gridType + " rightClick: " + rightClick + " shift: " + shift);
+
         if(gridType == GridType.Arena)
         {
             var level = Levels[player.CurrentLevelId];
@@ -214,6 +216,9 @@ public partial class RoguemojiGame : Sandbox.Game
         {
             var thing = player.EquipmentGridManager.GetThingsAt(gridPos).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 
+            Log.Info("thing: " + thing + " #things: " + player.EquipmentGridManager.GetThingsAt(gridPos).Count());
+            player.EquipmentGridManager.PrintGridThings();
+
             if (!rightClick)
             {
                 if (thing != null && shift)
@@ -223,8 +228,11 @@ public partial class RoguemojiGame : Sandbox.Game
             }
             else
             {
-                if (player.InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
+                if (thing != null && player.InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
+                {
+                    Log.Info("emptyGridPos: " + emptyGridPos);
                     MoveThingToInventory(thing, emptyGridPos, player);
+                }
             }
         }
 	}
@@ -245,7 +253,7 @@ public partial class RoguemojiGame : Sandbox.Game
         gridManager.AddThing(thing);
 		thing.SetGridPos(gridPos);
 
-        if (player.WieldingThing == thing)
+        if (player.WieldedThing == thing)
             player.WieldThing(null);
 
         LogMessage(player.DisplayIcon + "(" + player.DisplayName + ") dropped " + thing.DisplayIcon, player.PlayerNum);
@@ -446,8 +454,22 @@ public partial class RoguemojiGame : Sandbox.Game
         }
         else if(destinationPanelType == PanelType.Wielding)
         {
-            if (!thing.Flags.HasFlag(ThingFlags.Equipment))
+            if (player.WieldedThing == thing)
+                player.SelectThing(thing);
+            else if (!thing.Flags.HasFlag(ThingFlags.Equipment))
                 player.WieldThing(thing);
+        }
+        else if (destinationPanelType == PanelType.PlayerIcon)
+        {
+            if (thing.Flags.HasFlag(ThingFlags.Equipment))
+            {
+                if (player.EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
+                    MoveThingToEquipment(thing, emptyGridPos, player);
+            }
+            else
+            {
+                player.WieldThing(thing);
+            }
         }
     }
 
@@ -549,6 +571,10 @@ public partial class RoguemojiGame : Sandbox.Game
                 player.WieldThing(thing);
             }
         }
+        else if (destinationPanelType == PanelType.PlayerIcon)
+        {
+            // todo
+        }
     }
 
     [ConCmd.Server]
@@ -560,15 +586,33 @@ public partial class RoguemojiGame : Sandbox.Game
 
     public void WieldingClicked(RoguemojiPlayer player, bool rightClick, bool shift)
     {
-        if(player.WieldingThing == null) 
+        if(player.WieldedThing == null) 
             return;
 
         if(rightClick)
             player.WieldThing(null);
         else if(shift)
-            MoveThingToArena(player.WieldingThing, player.GridPos, player);
+            MoveThingToArena(player.WieldedThing, player.GridPos, player);
         else
-            player.SelectThing(player.WieldingThing);
+            player.SelectThing(player.WieldedThing);
+    }
+
+    [ConCmd.Server]
+    public static void PlayerIconClickedCmd(bool rightClick, bool shift)
+    {
+        var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
+        Instance.PlayerIconClicked(player, rightClick, shift);
+    }
+
+    public void PlayerIconClicked(RoguemojiPlayer player, bool rightClick, bool shift)
+    {
+        player.SelectThing(player);
+    //if (rightClick)
+    //    player.WieldThing(null);
+    //else if (shift)
+    //    MoveThingToArena(player.WieldingThing, player.GridPos, player);
+    //else
+    //    player.SelectThing(player.WieldingThing);
     }
 
     public RoguemojiPlayer GetClosestPlayer(IntVector gridPos)

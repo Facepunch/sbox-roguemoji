@@ -51,7 +51,7 @@ public partial class Thing : Entity
     [Net] public int Hp { get; set; }
     [Net] public int MaxHp { get; set; }
 
-    [Net] public Thing WieldingThing { get; protected set; }
+    [Net] public Thing WieldedThing { get; protected set; }
 
     public Thing()
 	{
@@ -111,7 +111,7 @@ public partial class Thing : Entity
 
 	public virtual void FirstUpdate()
 	{
-		SetGridPos(GridPos, forceRefresh: true);
+		//SetGridPos(GridPos);
 		DoneFirstUpdate = true;
     }
 
@@ -172,10 +172,10 @@ public partial class Thing : Entity
 		Remove();
 	}
 
-	public virtual void SetGridPos( IntVector gridPos, bool forceRefresh = false )
+	public virtual void SetGridPos( IntVector gridPos )
 	{
-		if ( GridPos.Equals( gridPos ) && !forceRefresh )
-			return;
+		//if ( GridPos.Equals( gridPos ) && !forceRefresh )
+		//	return;
 
 		ContainingGridManager.SetGridPos( this, gridPos );
 		GridPos = gridPos;
@@ -368,13 +368,13 @@ public partial class Thing : Entity
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(DisplayIcon, WieldingThing?.DisplayIcon ?? "", PlayerNum + ThingId, RotationDegrees, IconScale, IconDepth, Flags);
+        return HashCode.Combine(DisplayIcon, WieldedThing?.DisplayIcon ?? "", PlayerNum + ThingId, RotationDegrees, IconScale, IconDepth, Flags);
         //return HashCode.Combine((DisplayIcon + ThingId.ToString()), PlayerNum, Offset, RotationDegrees, IconScale, IconDepth, Flags);
     }
 
 	public int GetInfoDisplayHash()
     {
-		return HashCode.Combine(NetworkIdent, DisplayIcon, WieldingThing?.DisplayIcon ?? "", Hp, MaxHp, Flags);
+		return HashCode.Combine(NetworkIdent, DisplayIcon, WieldedThing?.DisplayIcon ?? "", Hp, MaxHp, Flags);
     }
 
     public int GetNearbyCellHash()
@@ -389,6 +389,6 @@ public partial class Thing : Entity
 
 	public virtual void WieldThing(Thing thing)
 	{
-        WieldingThing = thing;
+        WieldedThing = thing;
 	}
 }

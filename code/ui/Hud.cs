@@ -4,7 +4,7 @@ using System.Diagnostics.SymbolStore;
 
 namespace Roguemoji;
 
-public enum PanelType { None, ArenaGrid, InventoryGrid, EquipmentGrid, Wielding, Log, Nearby, Info, Character, Stats };
+public enum PanelType { None, ArenaGrid, InventoryGrid, EquipmentGrid, Wielding, PlayerIcon, Log, Nearby, Info, Character, Stats };
 
 public partial class Hud : RootPanel
 {
@@ -54,6 +54,11 @@ public partial class Hud : RootPanel
     public void WieldingClicked(bool rightClick, bool shift)
     {
         RoguemojiGame.WieldingClickedCmd(rightClick, shift);
+    }
+
+    public void PlayerIconClicked(bool rightClick, bool shift)
+    {
+        RoguemojiGame.PlayerIconClickedCmd(rightClick, shift);
     }
 
     protected override void OnMouseUp(MousePanelEvent e)
@@ -138,6 +143,8 @@ public partial class Hud : RootPanel
             return PanelType.EquipmentGrid;
         else if (Contains(GetRect(PanelType.Wielding), pos))
             return PanelType.Wielding;
+        else if (Contains(GetRect(PanelType.PlayerIcon), pos))
+            return PanelType.PlayerIcon;
         else if (Contains(GetRect(PanelType.Character), pos))
             return PanelType.Character;
 
@@ -167,6 +174,8 @@ public partial class Hud : RootPanel
                 return MainPanel.CharacterPanel.EquipmentPanel;
             case PanelType.Wielding:
                 return MainPanel.CharacterPanel.WieldingPanel;
+            case PanelType.PlayerIcon:
+                return MainPanel.CharacterPanel.PlayerIcon;
         }
 
 		return null;

@@ -11,30 +11,23 @@ public enum GridType { None, Arena, Inventory, Equipment }
 
 public partial class GridManager : Entity
 {
-	[Net] public int LevelWidth { get; private set; }
-	[Net] public int LevelHeight { get; private set; }
+	[Net] public int GridWidth { get; private set; }
+	[Net] public int GridHeight { get; private set; }
 
     [Net] public IList<Thing> Things { get; private set; }
 	[Net] public GridType GridType { get; set; }
-    //[Net] public RoguemojiPlayer InventoryPlayer { get; private set; }
 
     public Dictionary<IntVector, List<Thing>> GridThings = new Dictionary<IntVector, List<Thing>>();
 
 	public void Init(int width, int height)
 	{
-		LevelWidth = width;
-		LevelHeight = height;
+		GridWidth = width;
+		GridHeight = height;
 
 		Transmit = TransmitType.Always;
 
 		Things = new List<Thing>();
 	}
-
-	//public void SetAsInventory(RoguemojiPlayer player)
-	//{
-	//	InventoryPlayer = player;
- //       GridType = GridType.Inventory;
- //   }
 
 	public void Update(float dt)
 	{
@@ -93,8 +86,8 @@ public partial class GridManager : Entity
 			thing.StackNum = stackNum++;
     }
 
-	public int GetIndex( IntVector gridPos ) { return gridPos.y * LevelWidth + gridPos.x; }
-	public IntVector GetGridPos( int index ) { return new IntVector( index % LevelWidth, ((float)index / (float)LevelWidth).FloorToInt() ); }
+	public int GetIndex( IntVector gridPos ) { return gridPos.y * GridWidth + gridPos.x; }
+	public IntVector GetGridPos( int index ) { return new IntVector( index % GridWidth, ((float)index / (float)GridWidth).FloorToInt() ); }
 	public Vector2 GetScreenPos(IntVector gridPos) { return new Vector2(gridPos.x, gridPos.y) * 40f; }
 
 	public static int GetIndex( int x, int y, int width) { return y * width + x; }
@@ -104,9 +97,9 @@ public partial class GridManager : Entity
 	{
 		return
 			gridPos.x >= 0 &&
-			gridPos.x < LevelWidth &&
+			gridPos.x < GridWidth &&
 			gridPos.y >= 0 &&
-			gridPos.y < LevelHeight;
+			gridPos.y < GridHeight;
 	}
 
     public void SetGridPos(Thing thing, IntVector gridPos)
@@ -227,10 +220,12 @@ public partial class GridManager : Entity
 
 	public bool GetFirstEmptyGridPos(out IntVector gridPos)
 	{
-		for(int index = 0; index < LevelWidth * LevelHeight; index++) 
+		for(int index = 0; index < GridWidth * GridHeight; index++) 
 		{
 			var currGridPos = GetGridPos(index);
             var things = GetThingsAt(currGridPos);
+
+			Log.Info("currGridPos: " + currGridPos + " things.Count(): " + things.Count());
             if (things.Count() == 0)
 			{
 				gridPos = currGridPos;
@@ -247,7 +242,7 @@ public partial class GridManager : Entity
 		int NUM_TRIES = 100;
 		for(int i = 0; i < NUM_TRIES; i++)
 		{
-			var currGridPos = new IntVector(Rand.Int(0, LevelWidth - 1), Rand.Int(0, LevelHeight - 1));
+			var currGridPos = new IntVector(Rand.Int(0, GridWidth - 1), Rand.Int(0, GridHeight - 1));
 			var things = GetThingsAt(currGridPos);
             if (things.Count() == 0)
             {
@@ -271,4 +266,16 @@ public partial class GridManager : Entity
 
 		GridThings.Clear();
     }
+
+	public void PrintGridThings()
+	{
+		Log.Info("----------- " + GridType);
+
+        //public Dictionary<IntVector, List<Thing>> GridThings = new Dictionary<IntVector, List<Thing>>();
+
+		foreach(var pair in GridThings)
+		{
+			Log.Info(pair.Key + ": " + (pair.Value?.Count ?? 0));
+		}
+	}
 }

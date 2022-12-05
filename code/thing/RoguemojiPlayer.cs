@@ -53,7 +53,7 @@ public partial class RoguemojiPlayer : Thing
         IsDead = false;
         DoneFirstUpdate = false;
         CurrentLevelId = LevelId.None;
-        WieldingThing = null;
+        WieldedThing = null;
 
         InventoryGridManager.Restart();
         EquipmentGridManager.Restart();
@@ -165,6 +165,13 @@ public partial class RoguemojiPlayer : Thing
             else if (Input.Pressed(InputButton.Slot8))  SelectHotbarSlot(7);
             else if (Input.Pressed(InputButton.Slot9))  SelectHotbarSlot(8);
             else if (Input.Pressed(InputButton.Slot0))  SelectHotbarSlot(9);
+
+            if(Input.Pressed(InputButton.Use))
+                PickUpTopItem();
+            else if(Input.Pressed(InputButton.Flashlight))
+                DropWieldedItem();
+            else if (Input.Pressed(InputButton.Drop))
+                DropWieldedItem();
         }
 	}
 
@@ -258,12 +265,9 @@ public partial class RoguemojiPlayer : Thing
         }
     }
 
-    public override void SetGridPos(IntVector gridPos, bool forceRefresh = false)
+    public override void SetGridPos(IntVector gridPos)
 	{
-		if (GridPos.Equals(gridPos) && !forceRefresh)
-			return;
-
-		base.SetGridPos(gridPos, forceRefresh);
+		base.SetGridPos(gridPos);
 
         RoguemojiGame.Instance.FlickerNearbyPanelCellsClient();
     }
@@ -285,8 +289,8 @@ public partial class RoguemojiPlayer : Thing
         var currOffset = CameraGridOffset;
 
         CameraGridOffset = new IntVector(
-            Math.Clamp(offset.x, 0, ContainingGridManager.LevelWidth - RoguemojiGame.ArenaWidth),
-            Math.Clamp(offset.y, 0, ContainingGridManager.LevelHeight - RoguemojiGame.ArenaHeight)
+            Math.Clamp(offset.x, 0, ContainingGridManager.GridWidth - RoguemojiGame.ArenaWidth),
+            Math.Clamp(offset.y, 0, ContainingGridManager.GridHeight - RoguemojiGame.ArenaHeight)
         );
 
         return !CameraGridOffset.Equals(currOffset);
@@ -386,5 +390,32 @@ public partial class RoguemojiPlayer : Thing
     public void Restart()
     {
         SetStartingValues();
+    }
+
+    public void PickUpTopItem()
+    {
+        var thing = ContainingGridManager.GetThingsAt(GridPos).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+
+        if (thing == null)
+            return;
+
+        if (InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
+        {
+            RoguemojiGame.Instance.MoveThingToInventory(thing, emptyGridPos, this);
+
+            if(WieldedThing == null)
+                WieldThing(thing);
+        }
+        else if(thing.Flags.HasFlag(ThingFlags.Equipment))
+        {
+            if(EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPosEquipment))
+                RoguemojiGame.Instance.MoveThingToEquipment(thing, emptyGridPosEquipment, this);
+        }
+    }
+
+    public void DropWieldedItem()
+    {
+        if(WieldedThing != null)
+            RoguemojiGame.Instance.MoveThingToArena(WieldedThing, GridPos, this);
     }
 }

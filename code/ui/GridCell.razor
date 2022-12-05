@@ -33,7 +33,7 @@
         //background-color: #0000ff88;
     }
 
-    .wielding_thing 
+    .wielded_thing 
     {
         width: 20px;
         height: 20px;
@@ -82,9 +82,9 @@
 <root class="icon @GetWieldedClass() @GetSelectedClass() @GetSolidClass()">
     <div class="image @GetPlayerClass() @GetDraggingClass()" @ref=IconPanel>@Thing.DisplayIcon.Substring(Thing.CharSkip) </div>
 
-    @if (Thing.WieldingThing != null)
+    @if (Thing.WieldedThing != null)
     {
-        <div class="wielding_thing"> @Thing.WieldingThing.DisplayIcon.Substring(Thing.WieldingThing.CharSkip) </div>
+        <div class="wielded_thing"> @Thing.WieldedThing.DisplayIcon.Substring(Thing.WieldedThing.CharSkip) </div>
     }
 </root>
 
@@ -100,7 +100,7 @@
     string GetSolidClass()      { return Thing.Flags.HasFlag(ThingFlags.Solid) ? "solid" : ""; }
     string GetDraggingClass()   { return Thing == Hud.Instance.DraggedThing ? "dragging" : ""; }
     string GetWieldedClass()    { return IsWielded() ? "wielded" : ""; }
-    bool IsWielded()            { return Thing == RoguemojiGame.Instance.LocalPlayer?.WieldingThing; }
+    bool IsWielded()            { return Thing == RoguemojiGame.Instance.LocalPlayer?.WieldedThing; }
     bool IsSelected()           { return Thing == RoguemojiGame.Instance.LocalPlayer?.SelectedThing; }
 
     protected override Panel CreateTooltipPanel()

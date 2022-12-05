@@ -59,6 +59,12 @@
     {
         border: 1px solid #bbbbff44;
     }
+
+    .debug
+    {
+        color: #44554499;
+        font-size: 12px;
+    }
 </style>
 
 <root class="info @GetSelectedClass()">
@@ -73,9 +79,9 @@
         <div class="icon @GetPlayerClass()"> 
             @thing.DisplayIcon
 
-            @if (thing.WieldingThing != null)
+            @if (thing.WieldedThing != null)
             {
-                <div class="equipped"> @thing.WieldingThing.DisplayIcon.Substring(thing.WieldingThing.CharSkip) </div>
+                <div class="equipped"> @thing.WieldedThing.DisplayIcon.Substring(thing.WieldedThing.CharSkip) </div>
             }
         </div>
 
@@ -88,6 +94,8 @@
         {
             <div class="equipment_label"> Equipment </div>
         }
+
+        <!-- <div class="debug"> @thing.GridPos TAGS: @thing.Flags GRID: @thing.ContainingGridManager.GridType @thing.ContainingGridManager.GetThingsAtClient(thing.GridPos).Count() </div> -->
     }
 </root>
 

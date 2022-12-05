@@ -23,7 +23,10 @@
     .char_icon
     {
         margin: 0 0 5px 0;
-        font-size: 45px;
+        font-size: 60px;
+        padding: 0 0 6px 0;
+        background-color: #111111;
+        border-radius:3px;
     }
 
     .name_label
@@ -86,15 +89,15 @@
     }
 
     <div class="column">
-        <div class="char_icon @GetPlayerClass()"> @player.DisplayIcon </div>
+        <div class="char_icon @GetPlayerClass()" @ref=PlayerIcon @onmousedown=@((PanelEvent e) => OnMouseDownPlayerIcon(e as MousePanelEvent) )> @player.DisplayIcon </div>
 
         <div class="name_label"> @player.DisplayName </div>
         <div class="hp_label"> @($"{player.Hp}/{player.MaxHp}❤️") </div>
         <div class="level_label"> @($"Level: {player.CurrentLevelId}") </div>
     </div>
      <div class="column">
-        <div class="wielding @(player.WieldingThing != null ? "is_wielding_something" : "")" @ref=WieldingPanel @onmousedown=@((PanelEvent e) => OnMouseDownWieldable(e as MousePanelEvent) )> 
-            @(player.WieldingThing?.DisplayIcon.Substring(player.WieldingThing.CharSkip) ?? "")
+        <div class="wielding @(player.WieldedThing != null ? "is_wielding_something" : "")" @ref=WieldingPanel @onmousedown=@((PanelEvent e) => OnMouseDownWieldable(e as MousePanelEvent) )> 
+            @(player.WieldedThing?.DisplayIcon.Substring(player.WieldedThing.CharSkip) ?? "")
         </div>
         <EquipmentPanel class="equipment" style="width: @(40 * RoguemojiGame.EquipmentWidth + 4)px; height: @(40 * RoguemojiGame.EquipmentHeight + 4)px;" @ref=EquipmentPanel></EquipmentPanel>
      </div>
@@ -104,6 +107,7 @@
 {
     public EquipmentPanel EquipmentPanel { get; set; }
     public Panel WieldingPanel { get; set; }
+    public Panel PlayerIcon { get; set; }
 
     string GetPlayerClass()
     {
@@ -121,13 +125,25 @@
         bool shift = Input.Down(InputButton.Run);
 
         var player = RoguemojiGame.Instance.LocalPlayer;
-        if (player == null || player.WieldingThing == null)
+        if (player == null || player.WieldedThing == null)
             return;
 
         if(shift || rightClick)
             Hud.Instance.WieldingClicked(rightClick, shift);
         else
-            Hud.Instance.StartDragging(player.WieldingThing, this, rightClick);
+            Hud.Instance.StartDragging(player.WieldedThing, this, rightClick);
+    }
+
+    public void OnMouseDownPlayerIcon(MousePanelEvent e)
+    {
+        bool rightClick = e.Button == "mouseright";
+        bool shift = Input.Down(InputButton.Run);
+
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        if (player == null)
+            return;
+
+        Hud.Instance.PlayerIconClicked(rightClick, shift);
     }
 }
 

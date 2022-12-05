@@ -22,7 +22,7 @@ public class VfxPlayerSlideCameraStatus : PlayerStatus
         base.Update(dt);
 
         var dir = GridManager.GetVectorForDirection(Direction);
-        Player.SetCameraPixelOffset(dir * Utils.Map(TimeSinceStart, 0f, Lifetime, Distance, 0f, EasingType.ExpoOut));
+        Player.SetCameraPixelOffset(dir * Utils.Map(TimeSinceStart, 0f, Lifetime, Distance, 0f, EasingType.QuadOut));
 
         if(TimeSinceStart > Lifetime)
             Remove();
