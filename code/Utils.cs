@@ -249,7 +249,7 @@ public static class Utils
             case EasingType.QuintInOut: opposite = EasingType.QuintInOut; break;
 
             case EasingType.ExpoIn: opposite = EasingType.ExpoOut; break;
-            case EasingType.ExpoOut: opposite = EasingType.ExpoIn; ; break;
+            case EasingType.ExpoOut: opposite = EasingType.ExpoIn; break;
             case EasingType.ExpoInOut: opposite = EasingType.ExpoInOut; break;
 
             case EasingType.ExtremeIn: opposite = EasingType.ExtremeOut; break;

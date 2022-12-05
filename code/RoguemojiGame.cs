@@ -192,15 +192,22 @@ public partial class RoguemojiGame : Sandbox.Game
 
             if (!rightClick)
             {
-                if (shift && thing != null)
+                if (thing != null && shift)
                     MoveThingToArena(thing, player.GridPos, player);
                 else
                     player.SelectThing(thing);
             }
             else
             {
-                if (!thing.Flags.HasFlag(ThingFlags.Equipment))
+                if (thing != null && thing.Flags.HasFlag(ThingFlags.Equipment))
+                {
+                    if (player.EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
+                        MoveThingToEquipment(thing, emptyGridPos, player);
+                }
+                else
+                {
                     player.WieldThing(thing);
+                }
             }
         }
         else if(gridType == GridType.Equipment)
@@ -209,7 +216,7 @@ public partial class RoguemojiGame : Sandbox.Game
 
             if (!rightClick)
             {
-                if (shift && thing != null)
+                if (thing != null && shift)
                     MoveThingToArena(thing, player.GridPos, player);
                 else
                     player.SelectThing(thing);

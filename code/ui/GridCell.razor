@@ -33,7 +33,7 @@
         //background-color: #0000ff88;
     }
 
-    .equipped 
+    .wielding_thing 
     {
         width: 20px;
         height: 20px;
@@ -71,14 +71,20 @@
         opacity: 0.2;
         transition: opacity 0.1s ease-in;
     }
+
+    .wielded
+    {
+        background-color: #5555ff22;
+        border-radius: 3px;
+    }
 </style>
 
-<root class="icon @GetSelectedClass() @GetSolidClass()">
+<root class="icon @GetWieldedClass() @GetSelectedClass() @GetSolidClass()">
     <div class="image @GetPlayerClass() @GetDraggingClass()" @ref=IconPanel>@Thing.DisplayIcon.Substring(Thing.CharSkip) </div>
 
     @if (Thing.WieldingThing != null)
     {
-        <div class="equipped"> @Thing.WieldingThing.DisplayIcon.Substring(Thing.WieldingThing.CharSkip) </div>
+        <div class="wielding_thing"> @Thing.WieldingThing.DisplayIcon.Substring(Thing.WieldingThing.CharSkip) </div>
     }
 </root>
 
@@ -89,30 +95,13 @@
     public Thing Thing { get; set; }
     public int GridIndex { get; set; }
 
-    string GetPlayerClass()
-    {
-        return Thing.PlayerNum > 0 ? $"icon-player-{Thing.PlayerNum}" : "";
-    }
-
-    string GetSelectedClass()
-    {
-        return IsSelected() ? "selected" : "";
-    }
-
-    string GetSolidClass()
-    {
-        return Thing.Flags.HasFlag(ThingFlags.Solid) ? "solid" : "";
-    }
-
-    string GetDraggingClass()
-    {
-        return Thing == Hud.Instance.DraggedThing ? "dragging" : "";
-    }
-
-    bool IsSelected()
-    {
-        return Thing == RoguemojiGame.Instance.LocalPlayer?.SelectedThing;
-    }
+    string GetPlayerClass()     { return Thing.PlayerNum > 0 ? $"icon-player-{Thing.PlayerNum}" : ""; }
+    string GetSelectedClass()   { return IsSelected() ? "selected" : ""; }
+    string GetSolidClass()      { return Thing.Flags.HasFlag(ThingFlags.Solid) ? "solid" : ""; }
+    string GetDraggingClass()   { return Thing == Hud.Instance.DraggedThing ? "dragging" : ""; }
+    string GetWieldedClass()    { return IsWielded() ? "wielded" : ""; }
+    bool IsWielded()            { return Thing == RoguemojiGame.Instance.LocalPlayer?.WieldingThing; }
+    bool IsSelected()           { return Thing == RoguemojiGame.Instance.LocalPlayer?.SelectedThing; }
 
     protected override Panel CreateTooltipPanel()
     {
@@ -128,7 +117,7 @@
         if (Thing == null || player == null)
             return base.BuildHash();
 
-        return HashCode.Combine( Thing.GetHashCode(), IsSelected(), Thing.NetworkIdent );
+        return HashCode.Combine( Thing.GetHashCode(), IsSelected(), IsWielded(), Thing.NetworkIdent );
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

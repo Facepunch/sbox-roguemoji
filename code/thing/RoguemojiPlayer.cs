@@ -1,6 +1,7 @@
 ﻿using Sandbox;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Roguemoji;
 public partial class RoguemojiPlayer : Thing
@@ -153,8 +154,45 @@ public partial class RoguemojiPlayer : Thing
             {
                 RoguemojiGame.Instance.Restart();
             }
+
+            if (Input.Pressed(InputButton.Slot1))       SelectHotbarSlot(0);
+            else if (Input.Pressed(InputButton.Slot2))  SelectHotbarSlot(1);
+            else if (Input.Pressed(InputButton.Slot3))  SelectHotbarSlot(2);
+            else if (Input.Pressed(InputButton.Slot4))  SelectHotbarSlot(3);
+            else if (Input.Pressed(InputButton.Slot5))  SelectHotbarSlot(4);
+            else if (Input.Pressed(InputButton.Slot6))  SelectHotbarSlot(5);
+            else if (Input.Pressed(InputButton.Slot7))  SelectHotbarSlot(6);
+            else if (Input.Pressed(InputButton.Slot8))  SelectHotbarSlot(7);
+            else if (Input.Pressed(InputButton.Slot9))  SelectHotbarSlot(8);
+            else if (Input.Pressed(InputButton.Slot0))  SelectHotbarSlot(9);
         }
 	}
+
+    void SelectHotbarSlot(int index)
+    {
+        var thing = InventoryGridManager.GetThingsAt(InventoryGridManager.GetGridPos(index)).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+
+        if (thing == null)
+            return;
+
+        if (Input.Down(InputButton.Run))
+        {
+            RoguemojiGame.Instance.MoveThingToArena(thing, GridPos, this);
+        }
+        else
+        {
+            if(thing.Flags.HasFlag(ThingFlags.Equipment))
+            {
+                if (EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
+                    RoguemojiGame.Instance.MoveThingToEquipment(thing, emptyGridPos, this);
+            }
+            else
+            {
+                WieldThing(thing);
+            }
+        }
+            
+    }
 
 	public override bool TryMove( Direction direction, bool shouldAnimate = true )
 	{

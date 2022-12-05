@@ -41,7 +41,7 @@
 
     .top_row_bg
     {
-        background-color: #22552216;
+        background-color: #22552210;
         pointer-events: none;
         height: 40px;
         border-radius: 3px;
@@ -58,21 +58,21 @@
 
     <div class="top_row_bg" style="width: @(40 * RoguemojiGame.InventoryWidth)px;"></div>
 
+    @{
+        var player = RoguemojiGame.Instance.LocalPlayer;
+    }
+
     @foreach(var thing in GetThings())
     {
         var index = GetIndex(thing.GridPos);
         <GridCell style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40);" Thing=@thing GridIndex=@index @onmouseover=@(() => HoveredCellIndex = index )) />
     }
 
-    @{
-        var player = RoguemojiGame.Instance.LocalPlayer;
-    }
-
     @for (int index = 0; index < RoguemojiGame.InventoryWidth; index++)
     {
         var gridPos = Hud.Instance.GetGridPanel(GridType.Inventory).GetGridPos(index);
         var things = player.InventoryGridManager.GetThingsAtClient(gridPos);
-        <div class="number_label @(things.Count() == 0 ? "dimmed" : "")" style="left: @(gridPos.x * 40); top: @(gridPos.y * 40); z-index:999;"> @(index + 1)</div>
+        <div class="number_label @(things.Count() == 0 ? "dimmed" : "")" style="left: @(gridPos.x * 40); top: @(gridPos.y * 40); z-index:999;"> @((index + 1 == 10) ? 0 : index + 1) </div>
     }
 </root>
 

@@ -68,6 +68,11 @@
         pointer-events: all;
         margin-bottom: 10px;
     }
+
+    .is_wielding_something
+    {
+        background-color: #5555ff11;
+    }
 </style>
 
 <root class="character">
@@ -88,7 +93,9 @@
         <div class="level_label"> @($"Level: {player.CurrentLevelId}") </div>
     </div>
      <div class="column">
-        <div class="wielding" @ref=WieldingPanel @onmousedown=@((PanelEvent e) => OnMouseDownWieldable(e as MousePanelEvent) )> @(player.WieldingThing?.DisplayIcon.Substring(player.WieldingThing.CharSkip) ?? "")</div>
+        <div class="wielding @(player.WieldingThing != null ? "is_wielding_something" : "")" @ref=WieldingPanel @onmousedown=@((PanelEvent e) => OnMouseDownWieldable(e as MousePanelEvent) )> 
+            @(player.WieldingThing?.DisplayIcon.Substring(player.WieldingThing.CharSkip) ?? "")
+        </div>
         <EquipmentPanel class="equipment" style="width: @(40 * RoguemojiGame.EquipmentWidth)px; height: @(40 * RoguemojiGame.EquipmentHeight)px;" @ref=EquipmentPanel></EquipmentPanel>
      </div>
 </root>
