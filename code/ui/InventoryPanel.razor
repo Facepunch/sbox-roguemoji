@@ -90,7 +90,7 @@
     {
         base.OnMouseDown(e);
 
-        Hud.Instance.GridCellClicked(GetGridPos(MousePosition), rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), GridType.Inventory);
+        Hud.Instance.GridCellClicked(GetGridPos(MousePosition), GridType.Inventory, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), doubleClick: false);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

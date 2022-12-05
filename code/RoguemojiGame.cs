@@ -170,17 +170,15 @@ public partial class RoguemojiGame : Sandbox.Game
 	}
 
 	[ConCmd.Server]
-	public static void GridCellClickedCmd(int x, int y, bool rightClick, bool shift, GridType gridType)
+	public static void GridCellClickedCmd(int x, int y, GridType gridType, bool rightClick, bool shift, bool doubleClick)
 	{
 		var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
-		Instance.GridCellClicked(new IntVector(x, y), player, rightClick, shift, gridType);
+		Instance.GridCellClicked(new IntVector(x, y), gridType, player, rightClick, shift, doubleClick);
 	}
 
-    public void GridCellClicked(IntVector gridPos, RoguemojiPlayer player, bool rightClick, bool shift, GridType gridType)
+    public void GridCellClicked(IntVector gridPos, GridType gridType, RoguemojiPlayer player, bool rightClick, bool shift, bool doubleClick)
 	{
-        Log.Info("Game:GridCellClicked: " + gridPos + ", " + gridType + " rightClick: " + rightClick + " shift: " + shift);
-
-        if(gridType == GridType.Arena)
+        if (gridType == GridType.Arena)
         {
             var level = Levels[player.CurrentLevelId];
             var thing = level.GridManager.GetThingsAt(gridPos).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
@@ -192,7 +190,11 @@ public partial class RoguemojiGame : Sandbox.Game
         {
             var thing = player.InventoryGridManager.GetThingsAt(gridPos).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 
-            if (!rightClick)
+            if (thing != null && doubleClick && !thing.Flags.HasFlag(ThingFlags.Equipment))
+            {
+                player.WieldThing(thing);
+            }
+            else if (!rightClick)
             {
                 if (thing != null && shift)
                     MoveThingToArena(thing, player.GridPos, player);
@@ -216,9 +218,6 @@ public partial class RoguemojiGame : Sandbox.Game
         {
             var thing = player.EquipmentGridManager.GetThingsAt(gridPos).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 
-            Log.Info("thing: " + thing + " #things: " + player.EquipmentGridManager.GetThingsAt(gridPos).Count());
-            player.EquipmentGridManager.PrintGridThings();
-
             if (!rightClick)
             {
                 if (thing != null && shift)
@@ -229,10 +228,7 @@ public partial class RoguemojiGame : Sandbox.Game
             else
             {
                 if (thing != null && player.InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
-                {
-                    Log.Info("emptyGridPos: " + emptyGridPos);
                     MoveThingToInventory(thing, emptyGridPos, player);
-                }
             }
         }
 	}

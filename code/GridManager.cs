@@ -225,7 +225,6 @@ public partial class GridManager : Entity
 			var currGridPos = GetGridPos(index);
             var things = GetThingsAt(currGridPos);
 
-			Log.Info("currGridPos: " + currGridPos + " things.Count(): " + things.Count());
             if (things.Count() == 0)
 			{
 				gridPos = currGridPos;

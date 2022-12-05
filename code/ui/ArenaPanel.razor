@@ -72,7 +72,7 @@
         base.OnMouseDown(e);
 
         var player = RoguemojiGame.Instance.LocalPlayer;
-        Hud.Instance.GridCellClicked(GetGridPos(MousePosition) + player.CameraGridOffset, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), GridType.Arena);
+        Hud.Instance.GridCellClicked(GetGridPos(MousePosition) + player.CameraGridOffset, GridType.Arena, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), doubleClick: false);
     }
 
     protected override int BuildHash()

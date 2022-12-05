@@ -79,7 +79,7 @@
     }
 </style>
 
-<root class="icon @GetWieldedClass() @GetSelectedClass() @GetSolidClass()">
+<root class="icon @GetWieldedClass() @GetSelectedClass() @GetSolidClass()" )>
     <div class="image @GetPlayerClass() @GetDraggingClass()" @ref=IconPanel>@Thing.DisplayIcon.Substring(Thing.CharSkip) </div>
 
     @if (Thing.WieldedThing != null)
@@ -150,21 +150,36 @@
 
         if(Thing.ContainingGridManager.GridType == GridType.Arena)
         {
-            Hud.Instance.GridCellClicked(Thing.GridPos, rightClick, shift, GridType.Arena);
+            Hud.Instance.GridCellClicked(Thing.GridPos, GridType.Arena, rightClick, shift, doubleClick: false);
         }
         else if(Thing.ContainingGridManager.GridType == GridType.Inventory)
         {
             if(shift || rightClick)
-                Hud.Instance.GridCellClicked(Thing.GridPos, rightClick, shift, GridType.Inventory);
+                Hud.Instance.GridCellClicked(Thing.GridPos, GridType.Inventory, rightClick, shift, doubleClick: false);
             else
                 Hud.Instance.StartDragging(Thing, this, rightClick);
         }
         else if(Thing.ContainingGridManager.GridType == GridType.Equipment)
         {
             if(shift || rightClick)
-                Hud.Instance.GridCellClicked(Thing.GridPos, rightClick, shift, GridType.Equipment);
+                Hud.Instance.GridCellClicked(Thing.GridPos, GridType.Equipment, rightClick, shift, doubleClick: false);
             else
                 Hud.Instance.StartDragging(Thing, this, rightClick);
+        }
+
+        e.StopPropagation();
+    }
+
+    protected override void OnDoubleClick(MousePanelEvent e)
+    {
+        base.OnDoubleClick(e);
+
+        bool shift = Input.Down(InputButton.Run);
+        bool rightClick = e.Button == "mouseright";
+
+        if (Thing.ContainingGridManager.GridType == GridType.Inventory)
+        {
+            Hud.Instance.GridCellClicked(Thing.GridPos, GridType.Inventory, rightClick, shift, doubleClick: true);
         }
 
         e.StopPropagation();

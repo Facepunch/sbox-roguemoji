@@ -46,9 +46,9 @@ public partial class Hud : RootPanel
 		}
     }
 
-    public void GridCellClicked(IntVector gridPos, bool rightClick, bool shift, GridType gridType)
+    public void GridCellClicked(IntVector gridPos, GridType gridType, bool rightClick, bool shift, bool doubleClick)
 	{
-		RoguemojiGame.GridCellClickedCmd(gridPos.x, gridPos.y, rightClick, shift, gridType);
+		RoguemojiGame.GridCellClickedCmd(gridPos.x, gridPos.y, gridType, rightClick, shift, doubleClick);
 	}
 
     public void WieldingClicked(bool rightClick, bool shift)

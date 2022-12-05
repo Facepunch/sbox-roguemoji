@@ -52,7 +52,7 @@
     {
         base.OnMouseDown(e);
 
-        Hud.Instance.GridCellClicked(GetGridPos(MousePosition), rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), GridType.Equipment);
+        Hud.Instance.GridCellClicked(GetGridPos(MousePosition), GridType.Equipment, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), doubleClick: false);
     }
 
     protected override int BuildHash()
