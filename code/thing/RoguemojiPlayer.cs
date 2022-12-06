@@ -159,20 +159,21 @@ public partial class RoguemojiPlayer : Thing
 				else if (Input.Down(InputButton.Right))         TryMove(Direction.Right);
 				else if (Input.Down(InputButton.Back))          TryMove(Direction.Down);
 				else if (Input.Down(InputButton.Forward))       TryMove(Direction.Up);
-                else if (Input.Pressed(InputButton.Slot1))      WieldHotbarSlot(0);
-                else if (Input.Pressed(InputButton.Slot2))      WieldHotbarSlot(1);
-                else if (Input.Pressed(InputButton.Slot3))      WieldHotbarSlot(2);
-                else if (Input.Pressed(InputButton.Slot4))      WieldHotbarSlot(3);
-                else if (Input.Pressed(InputButton.Slot5))      WieldHotbarSlot(4);
-                else if (Input.Pressed(InputButton.Slot6))      WieldHotbarSlot(5);
-                else if (Input.Pressed(InputButton.Slot7))      WieldHotbarSlot(6);
-                else if (Input.Pressed(InputButton.Slot8))      WieldHotbarSlot(7);
-                else if (Input.Pressed(InputButton.Slot9))      WieldHotbarSlot(8);
-                else if (Input.Pressed(InputButton.Slot0))      WieldHotbarSlot(9);
-                else if (Input.Pressed(InputButton.Use))        PickUpTopItem();
-                else if (Input.Pressed(InputButton.Flashlight)) DropWieldedItem();
-                else if (Input.Pressed(InputButton.Drop))       DropWieldedItem();
             }
+
+            if (Input.Pressed(InputButton.Slot1))           WieldHotbarSlot(0);
+            else if (Input.Pressed(InputButton.Slot2))      WieldHotbarSlot(1);
+            else if (Input.Pressed(InputButton.Slot3))      WieldHotbarSlot(2);
+            else if (Input.Pressed(InputButton.Slot4))      WieldHotbarSlot(3);
+            else if (Input.Pressed(InputButton.Slot5))      WieldHotbarSlot(4);
+            else if (Input.Pressed(InputButton.Slot6))      WieldHotbarSlot(5);
+            else if (Input.Pressed(InputButton.Slot7))      WieldHotbarSlot(6);
+            else if (Input.Pressed(InputButton.Slot8))      WieldHotbarSlot(7);
+            else if (Input.Pressed(InputButton.Slot9))      WieldHotbarSlot(8);
+            else if (Input.Pressed(InputButton.Slot0))      WieldHotbarSlot(9);
+            else if (Input.Pressed(InputButton.Use))        PickUpTopItem();
+            else if (Input.Pressed(InputButton.Flashlight)) DropWieldedItem();
+            else if (Input.Pressed(InputButton.Drop))       DropWieldedItem();
         }
 	}
     
@@ -185,7 +186,7 @@ public partial class RoguemojiPlayer : Thing
 
     void WieldHotbarSlot(int index)
     {
-        if (TimeSinceInput < MoveDelay)
+        if (TimeSinceInput < MoveDelay || IsDead)
             return;
 
         var thing = InventoryGridManager.GetThingsAt(InventoryGridManager.GetGridPos(index)).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
@@ -383,10 +384,11 @@ public partial class RoguemojiPlayer : Thing
 
     public override void WieldThing(Thing thing)
     {
-        if(IsDead)
+        if (TimeSinceInput < MoveDelay || IsDead)
             return;
 
         base.WieldThing(thing);
+        PerformedAction();
     }
 
     public override void Destroy()
@@ -405,6 +407,9 @@ public partial class RoguemojiPlayer : Thing
 
     public void PickUpTopItem()
     {
+        if (TimeSinceInput < MoveDelay || IsDead)
+            return;
+
         var thing = ContainingGridManager.GetThingsAt(GridPos).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 
         if (thing == null)
@@ -425,13 +430,16 @@ public partial class RoguemojiPlayer : Thing
 
     public void DropWieldedItem()
     {
-        if(WieldedThing != null)
+        if (TimeSinceInput < MoveDelay || IsDead)
+            return;
+
+        if (WieldedThing != null)
             MoveThingToArena(WieldedThing, GridPos);
     }
 
     public void MoveThingToArena(Thing thing, IntVector gridPos)
     {
-        if (IsDead)
+        if (TimeSinceInput < MoveDelay || IsDead)
             return;
 
         Assert.True(thing.ContainingGridManager != ContainingGridManager);
@@ -446,12 +454,13 @@ public partial class RoguemojiPlayer : Thing
         if (WieldedThing == thing)
             WieldThing(null);
 
+        PerformedAction();
         RoguemojiGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") dropped " + thing.DisplayIcon, PlayerNum);
     }
 
     public void MoveThingToInventory(Thing thing, IntVector gridPos)
     {
-        if (IsDead)
+        if (TimeSinceInput < MoveDelay || IsDead)
             return;
 
         Assert.True(thing.ContainingGridManager.GridType != GridType.Inventory);
@@ -469,12 +478,13 @@ public partial class RoguemojiPlayer : Thing
         InventoryGridManager.AddThing(thing);
         thing.SetGridPos(gridPos);
 
+        PerformedAction();
         RoguemojiGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") picked up " + thing.DisplayIcon, PlayerNum);
     }
 
     public void MoveThingToEquipment(Thing thing, IntVector gridPos)
     {
-        if (IsDead)
+        if (TimeSinceInput < MoveDelay || IsDead)
             return;
 
         if (thing.ContainingGridManager.GridType == GridType.Equipment)
@@ -496,6 +506,7 @@ public partial class RoguemojiPlayer : Thing
         EquipmentGridManager.AddThing(thing);
         thing.SetGridPos(gridPos);
 
+        PerformedAction();
         RoguemojiGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") equipped " + thing.DisplayIcon, PlayerNum);
     }
 
