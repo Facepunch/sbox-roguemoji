@@ -20,20 +20,28 @@
         padding: 10px;
     }
 
+    .row
+    {
+        flex-direction:row;       
+        align-items: center;
+    }
+
     .char_icon
     {
-        margin: 0 0 5px 0;
         font-size: 60px;
-        padding: 0 0 6px 0;
         background-color: #111111;
         border-radius:3px;
+        padding: 8px;
     }
 
     .name_label
     {
-        margin: 0 0 5px 0;
-        font-size: 22px;
+        margin: 0 0 2px 0;
+        font-size: 18px;
         color: #ffffff55;
+        max-width: 100px;
+        overflow:hidden;
+        white-space: nowrap;
     }
 
     .hp_label
@@ -77,10 +85,19 @@
         background-color: #5555ff11;
     }
 
+    .input_icon
+    {
+        width: 30px;
+        font-size: 25px;
+        margin-right: 4px;
+        text-align: right;
+    }
+
     .input_recharge_bar
     {
         width: 100%;
         height: 4px;
+        flex-shrink: 0;
         background-color: #333333;
     }
 
@@ -104,14 +121,21 @@
     }
 
     <div class="column">
-        <div class="char_icon @GetPlayerClass()" @ref=PlayerIcon @onmousedown=@((PanelEvent e) => OnMouseDownPlayerIcon(e as MousePanelEvent) )> @player.DisplayIcon </div>
-
         <div class="name_label"> @player.DisplayName </div>
+        <div class="char_icon @GetPlayerClass()" @ref=PlayerIcon @onmousedown=@((PanelEvent e) => OnMouseDownPlayerIcon(e as MousePanelEvent) )> @player.DisplayIcon </div>
+        <div class="input_recharge_bar">
+                <div class="input_recharge_bar_overlay" style="width: @Utils.Map(player.InputRechargePercent, 0f, 1f, 0f, 100f, EasingType.SineInOut)%; opacity: @Utils.Map(player.InputRechargePercent, 0f, 1f, 0.25f, 1f, EasingType.ExpoIn);"></div>
+            </div>
+
         <div class="hp_label"> @($"{player.Hp}/{player.MaxHp}❤️") </div>
         <!-- <div class="level_label"> @($"Level: {player.CurrentLevelId}") </div> -->
-        <div class="input_recharge_bar">
-            <div class="input_recharge_bar_overlay" style="width: @Utils.Map(player.InputRechargePercent, 0f, 1f, 0f, 100f, EasingType.SineInOut)%; opacity: @Utils.Map(player.InputRechargePercent, 0f, 1f, 0.25f, 1f, EasingType.ExpoIn);"></div>
-        </div>
+        <!-- <div class="row" style="width: 120px;"> -->
+
+            <!-- <div class="input_icon">@(player.IsInputReady ? "☑️" : "⏳️")</div> -->
+            
+        <!-- </div> -->
+
+        <div style="color: white;">Test</div>
     </div>
      <div class="column">
         <div class="wielding @(player.WieldedThing != null ? "is_wielding_something" : "")" @ref=WieldingPanel @onmousedown=@((PanelEvent e) => OnMouseDownWieldable(e as MousePanelEvent) )> 

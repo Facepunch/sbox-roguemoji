@@ -12,6 +12,8 @@ public enum ThingFlags
     Solid = 1,
     Selectable = 2,
 	Equipment = 4,
+	Food = 8,
+	Animal = 16,
 }
 public partial class Thing : Entity
 {

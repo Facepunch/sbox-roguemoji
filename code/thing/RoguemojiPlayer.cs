@@ -9,6 +9,7 @@ public partial class RoguemojiPlayer : Thing
 	public TimeSince TimeSinceInput { get; set; }
 	[Net] public float MoveDelay { get; set; }
     [Net] public float InputRechargePercent { get; set; }
+    [Net] public bool IsInputReady { get; set; }
 
     [Net] public IntVector CameraGridOffset { get; set; }
     public Vector2 CameraPixelOffset { get; set; } // Client-only
@@ -57,7 +58,8 @@ public partial class RoguemojiPlayer : Thing
         DoneFirstUpdate = false;
         CurrentLevelId = LevelId.None;
         WieldedThing = null;
-        MoveDelay = 0.5f;
+        MoveDelay = TimeSinceInput = 0.5f;
+        IsInputReady = true;
 
         InventoryGridManager.Restart();
         EquipmentGridManager.Restart();
@@ -132,7 +134,14 @@ public partial class RoguemojiPlayer : Thing
 	{
 		base.Update( dt );
 
-		InventoryGridManager.Update(dt);
+        bool wasInputReady = IsInputReady;
+        IsInputReady = TimeSinceInput >= MoveDelay;
+        InputRechargePercent = Math.Clamp(TimeSinceInput / MoveDelay, 0f, 1f);
+
+        if (IsInputReady && !wasInputReady)
+            MovementRecharged();
+
+        InventoryGridManager.Update(dt);
 
         foreach (KeyValuePair<TypeDescription, PlayerStatus> pair in PlayerStatuses)
         {
@@ -146,8 +155,6 @@ public partial class RoguemojiPlayer : Thing
 	{
 		if(Host.IsServer)
 		{
-            InputRechargePercent = Math.Clamp(TimeSinceInput / MoveDelay, 0f, 1f);
-
             if (Input.Pressed(InputButton.Reload))
             {
                 RoguemojiGame.Instance.Restart();
@@ -182,11 +189,17 @@ public partial class RoguemojiPlayer : Thing
         base.PerformedAction();
 
         TimeSinceInput = 0f;
+        IsInputReady = false;
+    }
+
+    public void MovementRecharged()
+    {
+
     }
 
     void WieldHotbarSlot(int index)
     {
-        if (TimeSinceInput < MoveDelay || IsDead)
+        if (!IsInputReady || IsDead)
             return;
 
         var thing = InventoryGridManager.GetThingsAt(InventoryGridManager.GetGridPos(index)).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
@@ -384,7 +397,7 @@ public partial class RoguemojiPlayer : Thing
 
     public override void WieldThing(Thing thing)
     {
-        if (TimeSinceInput < MoveDelay || IsDead)
+        if (!IsInputReady || IsDead)
             return;
 
         base.WieldThing(thing);
@@ -397,7 +410,7 @@ public partial class RoguemojiPlayer : Thing
             return;
 
         IsDead = true;
-        DisplayIcon = "😑";
+        SetIcon("😑");
     }
 
     public void Restart()
@@ -407,7 +420,7 @@ public partial class RoguemojiPlayer : Thing
 
     public void PickUpTopItem()
     {
-        if (TimeSinceInput < MoveDelay || IsDead)
+        if (!IsInputReady || IsDead)
             return;
 
         var thing = ContainingGridManager.GetThingsAt(GridPos).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
@@ -430,7 +443,7 @@ public partial class RoguemojiPlayer : Thing
 
     public void DropWieldedItem()
     {
-        if (TimeSinceInput < MoveDelay || IsDead)
+        if (!IsInputReady || IsDead)
             return;
 
         if (WieldedThing != null)
@@ -439,7 +452,7 @@ public partial class RoguemojiPlayer : Thing
 
     public void MoveThingToArena(Thing thing, IntVector gridPos)
     {
-        if (TimeSinceInput < MoveDelay || IsDead)
+        if (!IsInputReady || IsDead)
             return;
 
         Assert.True(thing.ContainingGridManager != ContainingGridManager);
@@ -460,7 +473,7 @@ public partial class RoguemojiPlayer : Thing
 
     public void MoveThingToInventory(Thing thing, IntVector gridPos)
     {
-        if (TimeSinceInput < MoveDelay || IsDead)
+        if (!IsInputReady || IsDead)
             return;
 
         Assert.True(thing.ContainingGridManager.GridType != GridType.Inventory);
@@ -484,7 +497,7 @@ public partial class RoguemojiPlayer : Thing
 
     public void MoveThingToEquipment(Thing thing, IntVector gridPos)
     {
-        if (TimeSinceInput < MoveDelay || IsDead)
+        if (!IsInputReady || IsDead)
             return;
 
         if (thing.ContainingGridManager.GridType == GridType.Equipment)
