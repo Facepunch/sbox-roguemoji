@@ -4,6 +4,22 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Roguemoji;
+
+public interface IQueuedAction
+{
+    public void Execute();
+}
+
+public class MoveThingAction : IQueuedAction
+{
+    public GridType TargetGridType;
+
+    public void Execute()
+    {
+
+    }
+}
+
 public partial class RoguemojiPlayer : Thing
 {
 	public TimeSince TimeSinceInput { get; set; }
@@ -134,13 +150,6 @@ public partial class RoguemojiPlayer : Thing
 	{
 		base.Update( dt );
 
-        bool wasInputReady = IsInputReady;
-        IsInputReady = TimeSinceInput >= MoveDelay;
-        InputRechargePercent = Math.Clamp(TimeSinceInput / MoveDelay, 0f, 1f);
-
-        if (IsInputReady && !wasInputReady)
-            MovementRecharged();
-
         InventoryGridManager.Update(dt);
 
         foreach (KeyValuePair<TypeDescription, PlayerStatus> pair in PlayerStatuses)
@@ -155,11 +164,13 @@ public partial class RoguemojiPlayer : Thing
 	{
 		if(Host.IsServer)
 		{
-            if (Input.Pressed(InputButton.Reload))
-            {
-                RoguemojiGame.Instance.Restart();
-            }
-            
+            bool wasInputReady = IsInputReady;
+            IsInputReady = TimeSinceInput >= MoveDelay;
+            InputRechargePercent = Math.Clamp(TimeSinceInput / MoveDelay, 0f, 1f);
+
+            if (IsInputReady && !wasInputReady)
+                MovementRecharged();
+
             if (TimeSinceInput > MoveDelay && !IsDead)
             {
 				if (Input.Down(InputButton.Left))               TryMove(Direction.Left);
@@ -181,6 +192,11 @@ public partial class RoguemojiPlayer : Thing
             else if (Input.Pressed(InputButton.Use))        PickUpTopItem();
             else if (Input.Pressed(InputButton.Flashlight)) DropWieldedItem();
             else if (Input.Pressed(InputButton.Drop))       DropWieldedItem();
+
+            if (Input.Pressed(InputButton.Reload))
+            {
+                RoguemojiGame.Instance.Restart();
+            }
         }
 	}
     
@@ -209,14 +225,14 @@ public partial class RoguemojiPlayer : Thing
 
         if (Input.Down(InputButton.Run))
         {
-            MoveThingToArena(thing, GridPos);
+            MoveThingTo(thing, GridType.Arena, GridPos);
         }
         else
         {
             if(thing.Flags.HasFlag(ThingFlags.Equipment))
             {
                 if (EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
-                    MoveThingToEquipment(thing, emptyGridPos);
+                    MoveThingTo(thing, GridType.Equipment, emptyGridPos);
             }
             else
             {
@@ -395,13 +411,15 @@ public partial class RoguemojiPlayer : Thing
         base.Damage(amount, source);
     }
 
-    public override void WieldThing(Thing thing)
+    public void WieldThing(Thing thing, bool dontRequireMove = false)
     {
-        if (!IsInputReady || IsDead)
+        if (IsDead || (WieldedThing == thing) || (!IsInputReady && !dontRequireMove))
             return;
 
         base.WieldThing(thing);
-        PerformedAction();
+
+        if(!dontRequireMove)
+            PerformedAction();
     }
 
     public override void Destroy()
@@ -429,16 +447,9 @@ public partial class RoguemojiPlayer : Thing
             return;
 
         if (InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
-        {
-            MoveThingToInventory(thing, emptyGridPos);
-
-            if(WieldedThing == null)
-                WieldThing(thing);
-        }
+            MoveThingTo(thing, GridType.Inventory, emptyGridPos, wieldIfPossible: true);
         else if(thing.Flags.HasFlag(ThingFlags.Equipment) && EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPosEquipment))
-        {
-            MoveThingToEquipment(thing, emptyGridPosEquipment);
-        }
+            MoveThingTo(thing, GridType.Equipment, emptyGridPosEquipment);
     }
 
     public void DropWieldedItem()
@@ -447,81 +458,157 @@ public partial class RoguemojiPlayer : Thing
             return;
 
         if (WieldedThing != null)
-            MoveThingToArena(WieldedThing, GridPos);
+            MoveThingTo(WieldedThing, GridType.Arena, GridPos);
     }
 
-    public void MoveThingToArena(Thing thing, IntVector gridPos)
+    public void MoveThingTo(Thing thing, GridType targetGridType, IntVector targetGridPos, bool dontRequireMove = false, bool wieldIfPossible = false)
     {
-        if (!IsInputReady || IsDead)
+        if (IsDead || (!IsInputReady && !dontRequireMove)) 
             return;
 
-        Assert.True(thing.ContainingGridManager != ContainingGridManager);
+        var sourceGridType = thing.ContainingGridManager.GridType;
+        Assert.True(sourceGridType != targetGridType);
 
-        thing.ContainingGridManager?.RemoveThing(thing);
-        RoguemojiGame.Instance.RefreshGridPanelClient(To.Single(this), gridType: GridType.Inventory);
-        RoguemojiGame.Instance.RefreshNearbyPanelClient(To.Single(this));
+        RoguemojiGame.Instance.RefreshGridPanelClient(To.Single(this), gridType: sourceGridType);
+        RoguemojiGame.Instance.RefreshGridPanelClient(To.Single(this), gridType: targetGridType);
 
-        ContainingGridManager.AddThing(thing);
-        thing.SetGridPos(gridPos);
-
-        if (WieldedThing == thing)
-            WieldThing(null);
-
-        PerformedAction();
-        RoguemojiGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") dropped " + thing.DisplayIcon, PlayerNum);
-    }
-
-    public void MoveThingToInventory(Thing thing, IntVector gridPos)
-    {
-        if (!IsInputReady || IsDead)
-            return;
-
-        Assert.True(thing.ContainingGridManager.GridType != GridType.Inventory);
-
-        bool fromNearby = thing.ContainingGridManager.GridType == GridType.Arena;
-
-        thing.ContainingGridManager?.RemoveThing(thing);
-
-        if (fromNearby)
+        if(targetGridType == GridType.Arena || sourceGridType == GridType.Arena)
         {
             RoguemojiGame.Instance.RefreshNearbyPanelClient(To.Single(this));
             RoguemojiGame.Instance.FlickerNearbyPanelCellsClient(To.Single(this));
         }
 
-        InventoryGridManager.AddThing(thing);
-        thing.SetGridPos(gridPos);
-
-        PerformedAction();
-        RoguemojiGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") picked up " + thing.DisplayIcon, PlayerNum);
-    }
-
-    public void MoveThingToEquipment(Thing thing, IntVector gridPos)
-    {
-        if (!IsInputReady || IsDead)
-            return;
-
-        if (thing.ContainingGridManager.GridType == GridType.Equipment)
-        {
-            Log.Error(thing.DisplayName + " at " + gridPos + " is already equipped by " + DisplayName + "!");
-            return;
-        }
-
-        bool fromNearby = thing.ContainingGridManager.GridType == GridType.Arena;
-
         thing.ContainingGridManager?.RemoveThing(thing);
+        var targetGridManager = GetGridManager(targetGridType);
 
-        if (fromNearby)
+        Thing targetThing = targetGridType != GridType.Arena ? targetGridManager.GetThingsAt(targetGridPos).OrderByDescending(x => x.GetZPos()).FirstOrDefault() : null;
+        IntVector sourceGridPos = thing.GridPos;
+
+        targetGridManager.AddThing(thing);
+        thing.SetGridPos(targetGridPos);
+
+        if (targetThing != null)
         {
-            RoguemojiGame.Instance.RefreshNearbyPanelClient(To.Single(this));
-            RoguemojiGame.Instance.FlickerNearbyPanelCellsClient(To.Single(this));
+            if(sourceGridType == GridType.Equipment && targetGridType == GridType.Inventory && !targetThing.Flags.HasFlag(ThingFlags.Equipment))
+            {
+                if (InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
+                    ChangeInventoryPos(targetThing, emptyGridPos);
+                else
+                    MoveThingTo(targetThing, GridType.Arena, GridPos, dontRequireMove: true);
+            }
+            else
+            {
+                MoveThingTo(targetThing, sourceGridType, sourceGridPos, dontRequireMove: true);
+            }
         }
 
-        EquipmentGridManager.AddThing(thing);
-        thing.SetGridPos(gridPos);
+        if (targetGridType == GridType.Arena && thing == WieldedThing)
+            WieldThing(null, dontRequireMove: true);
 
-        PerformedAction();
-        RoguemojiGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") equipped " + thing.DisplayIcon, PlayerNum);
+        if (targetGridType == GridType.Inventory && wieldIfPossible && WieldedThing == null && !thing.Flags.HasFlag(ThingFlags.Equipment))
+            WieldThing(thing, dontRequireMove: true);
+
+        if (!dontRequireMove)
+            PerformedAction();
     }
+
+    GridManager GetGridManager(GridType gridType)
+    {
+        switch(gridType)
+        {
+            case GridType.Arena:
+                return ContainingGridManager;
+            case GridType.Inventory:
+                return InventoryGridManager;
+            case GridType.Equipment:
+                return EquipmentGridManager;
+        }
+
+        return null;
+    }
+
+    //public void MoveThingToArena(Thing thing, IntVector gridPos, bool dontRequireMove = false)
+    //{
+    //    if (IsDead || (!IsInputReady && !dontRequireMove))
+    //        return;
+
+    //    Assert.True(thing.ContainingGridManager != ContainingGridManager);
+
+    //    thing.ContainingGridManager?.RemoveThing(thing);
+    //    RoguemojiGame.Instance.RefreshGridPanelClient(To.Single(this), gridType: GridType.Inventory);
+    //    RoguemojiGame.Instance.RefreshNearbyPanelClient(To.Single(this));
+
+    //    ContainingGridManager.AddThing(thing);
+    //    thing.SetGridPos(gridPos);
+
+    //    if (WieldedThing == thing)
+    //        WieldThing(null);
+
+    //    PerformedAction();
+    //    RoguemojiGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") dropped " + thing.DisplayIcon, PlayerNum);
+    //}
+
+    //public void MoveThingToInventory(Thing thing, IntVector gridPos, bool dontRequireMove = false, bool wieldIfPossible = false)
+    //{
+    //    if (IsDead || (!IsInputReady && !dontRequireMove))
+    //        return;
+
+    //    Assert.True(thing.ContainingGridManager.GridType != GridType.Inventory);
+
+    //    bool fromNearby = thing.ContainingGridManager.GridType == GridType.Arena;
+
+    //    thing.ContainingGridManager?.RemoveThing(thing);
+
+    //    if (fromNearby)
+    //    {
+    //        RoguemojiGame.Instance.RefreshNearbyPanelClient(To.Single(this));
+    //        RoguemojiGame.Instance.FlickerNearbyPanelCellsClient(To.Single(this));
+    //    }
+
+    //    InventoryGridManager.AddThing(thing);
+    //    thing.SetGridPos(gridPos);
+
+    //    PerformedAction();
+    //    RoguemojiGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") picked up " + thing.DisplayIcon, PlayerNum);
+
+    //    if (wieldIfPossible && WieldedThing == null)
+    //        WieldThing(thing, dontRequireMove: true);
+    //}
+
+    //public void MoveThingToEquipment(Thing thing, IntVector gridPos, bool dontRequireMove = false)
+    //{
+    //    if (IsDead || (!IsInputReady && !dontRequireMove))
+    //        return;
+
+    //    if (thing.ContainingGridManager.GridType == GridType.Equipment)
+    //    {
+    //        Log.Error(thing.DisplayName + " at " + gridPos + " is already equipped by " + DisplayName + "!");
+    //        return;
+    //    }
+
+    //    bool fromNearby = thing.ContainingGridManager.GridType == GridType.Arena;
+
+    //    thing.ContainingGridManager?.RemoveThing(thing);
+
+    //    if (fromNearby)
+    //    {
+    //        RoguemojiGame.Instance.RefreshNearbyPanelClient(To.Single(this));
+    //        RoguemojiGame.Instance.FlickerNearbyPanelCellsClient(To.Single(this));
+    //    }
+
+    //    Thing targetThing = EquipmentGridManager.GetThingsAt(gridPos).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+    //    IntVector originalGridPos = thing.GridPos;
+
+
+    //    EquipmentGridManager.AddThing(thing);
+    //    thing.SetGridPos(gridPos);
+
+    //    PerformedAction();
+    //    RoguemojiGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") equipped " + thing.DisplayIcon, PlayerNum);
+
+    //    if (targetThing != null)
+    //        MoveThingToInventory(targetThing, originalGridPos, dontRequireMove: true);
+    //}
 
     public void ChangeInventoryPos(Thing thing, IntVector targetGridPos)
     {
@@ -584,7 +671,7 @@ public partial class RoguemojiPlayer : Thing
             else if (!rightClick)
             {
                 if (thing != null && shift)
-                    MoveThingToArena(thing, GridPos);
+                    MoveThingTo(thing, GridType.Arena, GridPos);
                 else
                     SelectThing(thing);
             }
@@ -593,7 +680,7 @@ public partial class RoguemojiPlayer : Thing
                 if (thing != null && thing.Flags.HasFlag(ThingFlags.Equipment))
                 {
                     if (EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
-                        MoveThingToEquipment(thing, emptyGridPos);
+                        MoveThingTo(thing, GridType.Equipment, emptyGridPos);
                 }
                 else
                 {
@@ -608,14 +695,14 @@ public partial class RoguemojiPlayer : Thing
             if (!rightClick)
             {
                 if (thing != null && shift)
-                    MoveThingToArena(thing, GridPos);
+                    MoveThingTo(thing, GridType.Arena, GridPos);
                 else
                     SelectThing(thing);
             }
             else
             {
                 if (thing != null && InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
-                    MoveThingToInventory(thing, emptyGridPos);
+                    MoveThingTo(thing, GridType.Inventory, emptyGridPos);
             }
         }
     }
@@ -624,8 +711,8 @@ public partial class RoguemojiPlayer : Thing
     {
         if (shift || rightClick || doubleClick)
         {
-            if (InventoryGridManager.GetFirstEmptyGridPos(out var gridPos))
-                MoveThingToInventory(thing, gridPos);
+            if (InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
+                MoveThingTo(thing, GridType.Inventory, emptyGridPos, wieldIfPossible: true);
         }
         else
         {
@@ -637,7 +724,7 @@ public partial class RoguemojiPlayer : Thing
     {
         if (destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.Nearby || destinationPanelType == PanelType.None)
         {
-            MoveThingToArena(thing, GridPos);
+            MoveThingTo(thing, GridType.Arena, GridPos);
         }
         else if (destinationPanelType == PanelType.InventoryGrid)
         {
@@ -651,13 +738,7 @@ public partial class RoguemojiPlayer : Thing
             if (!thing.Flags.HasFlag(ThingFlags.Equipment))
                 return;
 
-            Thing otherThing = EquipmentGridManager.GetThingsAt(targetGridPos).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
-            IntVector originalGridPos = thing.GridPos;
-
-            MoveThingToEquipment(thing, targetGridPos);
-
-            if (otherThing != null)
-                MoveThingToInventory(otherThing, originalGridPos);
+            MoveThingTo(thing, GridType.Equipment, targetGridPos);
         }
         else if (destinationPanelType == PanelType.Wielding)
         {
@@ -671,7 +752,7 @@ public partial class RoguemojiPlayer : Thing
             if (thing.Flags.HasFlag(ThingFlags.Equipment))
             {
                 if (EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
-                    MoveThingToEquipment(thing, emptyGridPos);
+                    MoveThingTo(thing, GridType.Equipment, emptyGridPos);
             }
             else
             {
@@ -684,29 +765,11 @@ public partial class RoguemojiPlayer : Thing
     {
         if (destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.Nearby || destinationPanelType == PanelType.None)
         {
-            MoveThingToArena(thing, GridPos);
+            MoveThingTo(thing, GridType.Arena, GridPos);
         }
         else if (destinationPanelType == PanelType.InventoryGrid)
         {
-            Thing otherThing = InventoryGridManager.GetThingsAt(targetGridPos).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
-            IntVector originalGridPos = thing.GridPos;
-
-            MoveThingToInventory(thing, targetGridPos);
-
-            if (otherThing != null)
-            {
-                if (otherThing.Flags.HasFlag(ThingFlags.Equipment))
-                {
-                    MoveThingToEquipment(otherThing, originalGridPos);
-                }
-                else
-                {
-                    if (InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
-                        ChangeInventoryPos(otherThing, emptyGridPos);
-                    else
-                        MoveThingToArena(otherThing, GridPos);
-                }
-            }
+            MoveThingTo(thing, GridType.Inventory, targetGridPos);
         }
         else if (destinationPanelType == PanelType.EquipmentGrid)
         {
@@ -725,24 +788,14 @@ public partial class RoguemojiPlayer : Thing
 
         if (destinationPanelType == PanelType.InventoryGrid)
         {
-            Thing otherThing = InventoryGridManager.GetThingsAt(targetGridPos).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
-
-            if (otherThing != null)
-                MoveThingToArena(otherThing, GridPos);
-
-            MoveThingToInventory(thing, targetGridPos);
+            MoveThingTo(thing, GridType.Inventory, targetGridPos);
         }
         else if (destinationPanelType == PanelType.EquipmentGrid)
         {
             if (!thing.Flags.HasFlag(ThingFlags.Equipment))
                 return;
 
-            Thing otherThing = EquipmentGridManager.GetThingsAt(targetGridPos).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
-
-            if (otherThing != null)
-                MoveThingToArena(otherThing, GridPos);
-
-            MoveThingToEquipment(thing, targetGridPos);
+            MoveThingTo(thing, GridType.Equipment, targetGridPos);
         }
         else if (destinationPanelType == PanelType.Nearby)
         {
@@ -755,8 +808,7 @@ public partial class RoguemojiPlayer : Thing
 
             if (InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
             {
-                MoveThingToInventory(thing, emptyGridPos);
-                WieldThing(thing);
+                MoveThingTo(thing, GridType.Inventory, emptyGridPos, wieldIfPossible: true);
             }
         }
         else if (destinationPanelType == PanelType.PlayerIcon)
@@ -773,7 +825,7 @@ public partial class RoguemojiPlayer : Thing
         if (rightClick)
             WieldThing(null);
         else if (shift)
-            MoveThingToArena(WieldedThing, GridPos);
+            MoveThingTo(WieldedThing, GridType.Arena, GridPos);
         else
             SelectThing(WieldedThing);
     }
