@@ -19,6 +19,8 @@ public partial class GridManager : Entity
 
     public Dictionary<IntVector, List<Thing>> GridThings = new Dictionary<IntVector, List<Thing>>();
 
+	public RoguemojiPlayer OwningPlayer { get; set; }
+
 	public void Init(int width, int height)
 	{
 		GridWidth = width;

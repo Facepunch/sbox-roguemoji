@@ -76,6 +76,21 @@
     {
         background-color: #5555ff11;
     }
+
+    .input_recharge_bar
+    {
+        width: 100%;
+        height: 4px;
+        background-color: #333333;
+    }
+
+    .input_recharge_bar_overlay 
+    {
+        height: 100%;
+        transform-origin: left;
+        position: absolute;
+        background-color: #5555ff;
+    }
 </style>
 
 <root class="character">
@@ -93,7 +108,10 @@
 
         <div class="name_label"> @player.DisplayName </div>
         <div class="hp_label"> @($"{player.Hp}/{player.MaxHp}❤️") </div>
-        <div class="level_label"> @($"Level: {player.CurrentLevelId}") </div>
+        <!-- <div class="level_label"> @($"Level: {player.CurrentLevelId}") </div> -->
+        <div class="input_recharge_bar">
+            <div class="input_recharge_bar_overlay" style="width: @Utils.Map(player.InputRechargePercent, 0f, 1f, 0f, 100f, EasingType.SineInOut)%; opacity: @Utils.Map(player.InputRechargePercent, 0f, 1f, 0.25f, 1f, EasingType.ExpoIn);"></div>
+        </div>
     </div>
      <div class="column">
         <div class="wielding @(player.WieldedThing != null ? "is_wielding_something" : "")" @ref=WieldingPanel @onmousedown=@((PanelEvent e) => OnMouseDownWieldable(e as MousePanelEvent) )> 
@@ -111,12 +129,14 @@
 
     string GetPlayerClass()
     {
-        return (RoguemojiGame.Instance.LocalPlayer?.PlayerNum ?? 0) > 0 ? $"icon-player-{RoguemojiGame.Instance.LocalPlayer.PlayerNum}" : "";
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        return (player?.PlayerNum ?? 0) > 0 ? $"icon-player-{player.PlayerNum}" : "";
     }
 
     protected override int BuildHash()
     {
-        return HashCode.Combine(RoguemojiGame.Instance.LocalPlayer?.GetInfoDisplayHash() ?? 0);
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        return HashCode.Combine(player.GetInfoDisplayHash(), player.InputRechargePercent);
     }
 
     public void OnMouseDownWieldable(MousePanelEvent e)

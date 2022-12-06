@@ -39,8 +39,6 @@ public partial class Thing : Entity
 	public float IconScale { get; set; }
     public int CharSkip { get; set; } // Client-only
 
-    [Net] public RoguemojiPlayer InventoryPlayer { get; set; }
-
 	[Net] public string DebugText { get; set; }
 
     [Net] public int ThingId { get; private set; }
@@ -142,7 +140,12 @@ public partial class Thing : Entity
 		return true;
 	}
 
-	public virtual void Interact(Thing other, Direction direction)
+    public virtual void PerformedAction()
+    {
+        
+    }
+
+    public virtual void Interact(Thing other, Direction direction)
 	{
         VfxNudge(direction, 0.1f, 10f);
         other.VfxShake(0.2f, 4f);
@@ -181,7 +184,7 @@ public partial class Thing : Entity
 		GridPos = gridPos;
 
 		if(ContainingGridManager.GridType == GridType.Inventory || ContainingGridManager.GridType == GridType.Equipment)
-            RefreshGridPanelClient(To.Single(InventoryPlayer));
+            RefreshGridPanelClient(To.Single(ContainingGridManager.OwningPlayer));
 		else
 			RefreshGridPanelClient();
 

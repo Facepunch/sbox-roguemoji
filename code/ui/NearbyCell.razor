@@ -17,6 +17,7 @@
         width: 40px;
         height: 40px;
         padding-bottom: 4px;
+        flex-shrink: 0;
     }
 
     .nearby_selected 
@@ -95,10 +96,24 @@
         bool shift = Input.Down(InputButton.Run);
 
         if(shift || rightClick)
-            RoguemojiGame.NearbyThingClickedCmd(Thing.NetworkIdent, rightClick, shift);
+            RoguemojiGame.NearbyThingClickedCmd(Thing.NetworkIdent, rightClick, shift, doubleClick: false);
         else
             Hud.Instance.StartDragging(Thing, this, rightClick);
+
+        e.StopPropagation();
     }
+
+    //protected override void OnDoubleClick(MousePanelEvent e)
+    //{
+    //    base.OnDoubleClick(e);
+
+    //    bool rightClick = e.Button == "mouseright";
+    //    bool shift = Input.Down(InputButton.Run);
+
+    //    RoguemojiGame.NearbyThingClickedCmd(Thing.NetworkIdent, rightClick, shift, doubleClick: true);
+
+    //    e.StopPropagation();
+    //}
 
     void DrawDebugText(string text)
     {
