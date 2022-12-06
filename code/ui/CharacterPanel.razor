@@ -134,8 +134,7 @@
             <!-- <div class="input_icon">@(player.IsInputReady ? "☑️" : "⏳️")</div> -->
             
         <!-- </div> -->
-
-        <div style="color: white;">Test</div>
+        <!-- <div style="color: white; font-size:14px; max-width: 60px; overflow: visible; white-space: nowrap;"> @player.QueuedActionName </div> -->
     </div>
      <div class="column">
         <div class="wielding @(player.WieldedThing != null ? "is_wielding_something" : "")" @ref=WieldingPanel @onmousedown=@((PanelEvent e) => OnMouseDownWieldable(e as MousePanelEvent) )> 

@@ -5,21 +5,6 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public interface IQueuedAction
-{
-    public void Execute();
-}
-
-public class MoveThingAction : IQueuedAction
-{
-    public GridType TargetGridType;
-
-    public void Execute()
-    {
-
-    }
-}
-
 public partial class RoguemojiPlayer : Thing
 {
 	public TimeSince TimeSinceInput { get; set; }
@@ -38,6 +23,9 @@ public partial class RoguemojiPlayer : Thing
     [Net] public bool IsDead { get; set; }
 
     public Dictionary<TypeDescription, PlayerStatus> PlayerStatuses = new Dictionary<TypeDescription, PlayerStatus>();
+
+    public IQueuedAction QueuedAction { get; private set; }
+    [Net] public string QueuedActionName { get; private set; }
 
     [Net] public LevelId CurrentLevelId { get; set; }
 
@@ -76,6 +64,8 @@ public partial class RoguemojiPlayer : Thing
         WieldedThing = null;
         MoveDelay = TimeSinceInput = 0.5f;
         IsInputReady = true;
+        QueuedAction = null;
+        QueuedActionName = "";
 
         InventoryGridManager.Restart();
         EquipmentGridManager.Restart();
@@ -169,29 +159,32 @@ public partial class RoguemojiPlayer : Thing
             InputRechargePercent = Math.Clamp(TimeSinceInput / MoveDelay, 0f, 1f);
 
             if (IsInputReady && !wasInputReady)
-                MovementRecharged();
+                ActionRecharged();
 
-            if (TimeSinceInput > MoveDelay && !IsDead)
+            if (!IsDead)
             {
-				if (Input.Down(InputButton.Left))               TryMove(Direction.Left);
-				else if (Input.Down(InputButton.Right))         TryMove(Direction.Right);
-				else if (Input.Down(InputButton.Back))          TryMove(Direction.Down);
-				else if (Input.Down(InputButton.Forward))       TryMove(Direction.Up);
+                if (Input.Pressed(InputButton.Slot1))           WieldHotbarSlot(0);
+                else if (Input.Pressed(InputButton.Slot2))      WieldHotbarSlot(1);
+                else if (Input.Pressed(InputButton.Slot3))      WieldHotbarSlot(2);
+                else if (Input.Pressed(InputButton.Slot4))      WieldHotbarSlot(3);
+                else if (Input.Pressed(InputButton.Slot5))      WieldHotbarSlot(4);
+                else if (Input.Pressed(InputButton.Slot6))      WieldHotbarSlot(5);
+                else if (Input.Pressed(InputButton.Slot7))      WieldHotbarSlot(6);
+                else if (Input.Pressed(InputButton.Slot8))      WieldHotbarSlot(7);
+                else if (Input.Pressed(InputButton.Slot9))      WieldHotbarSlot(8);
+                else if (Input.Pressed(InputButton.Slot0))      WieldHotbarSlot(9);
+                else if (Input.Pressed(InputButton.Use))        PickUpTopItem();
+                else if (Input.Pressed(InputButton.Flashlight)) DropWieldedItem();
+                else if (Input.Pressed(InputButton.Drop))       DropWieldedItem();
+                else if (Input.Pressed(InputButton.Left))       TryMove(Direction.Left, shouldQueueAction: true);
+				else if (Input.Pressed(InputButton.Right))      TryMove(Direction.Right, shouldQueueAction: true);
+				else if (Input.Pressed(InputButton.Back))       TryMove(Direction.Down, shouldQueueAction: true);
+				else if (Input.Pressed(InputButton.Forward))    TryMove(Direction.Up, shouldQueueAction: true);
+                else if (Input.Down(InputButton.Left))          TryMove(Direction.Left);
+                else if (Input.Down(InputButton.Right))         TryMove(Direction.Right);
+                else if (Input.Down(InputButton.Back))          TryMove(Direction.Down);
+                else if (Input.Down(InputButton.Forward))       TryMove(Direction.Up);
             }
-
-            if (Input.Pressed(InputButton.Slot1))           WieldHotbarSlot(0);
-            else if (Input.Pressed(InputButton.Slot2))      WieldHotbarSlot(1);
-            else if (Input.Pressed(InputButton.Slot3))      WieldHotbarSlot(2);
-            else if (Input.Pressed(InputButton.Slot4))      WieldHotbarSlot(3);
-            else if (Input.Pressed(InputButton.Slot5))      WieldHotbarSlot(4);
-            else if (Input.Pressed(InputButton.Slot6))      WieldHotbarSlot(5);
-            else if (Input.Pressed(InputButton.Slot7))      WieldHotbarSlot(6);
-            else if (Input.Pressed(InputButton.Slot8))      WieldHotbarSlot(7);
-            else if (Input.Pressed(InputButton.Slot9))      WieldHotbarSlot(8);
-            else if (Input.Pressed(InputButton.Slot0))      WieldHotbarSlot(9);
-            else if (Input.Pressed(InputButton.Use))        PickUpTopItem();
-            else if (Input.Pressed(InputButton.Flashlight)) DropWieldedItem();
-            else if (Input.Pressed(InputButton.Drop))       DropWieldedItem();
 
             if (Input.Pressed(InputButton.Reload))
             {
@@ -208,16 +201,18 @@ public partial class RoguemojiPlayer : Thing
         IsInputReady = false;
     }
 
-    public void MovementRecharged()
+    public void ActionRecharged()
     {
-
+        if(QueuedAction != null)
+        {
+            QueuedAction.Execute(this);
+            QueuedAction = null;
+            QueuedActionName = "";
+        }
     }
 
     void WieldHotbarSlot(int index)
     {
-        if (!IsInputReady || IsDead)
-            return;
-
         var thing = InventoryGridManager.GetThingsAt(InventoryGridManager.GetGridPos(index)).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 
         if (thing == null)
@@ -239,12 +234,22 @@ public partial class RoguemojiPlayer : Thing
                 WieldThing(thing);
             }
         }
-            
     }
 
-	public override bool TryMove( Direction direction, bool shouldAnimate = true )
+	public new bool TryMove( Direction direction, bool shouldQueueAction = false )
 	{
-		var success = base.TryMove( direction, shouldAnimate: false );
+        if (!IsInputReady)
+        {
+            if(shouldQueueAction)
+            {
+                QueuedAction = new TryMoveAction(direction);
+                QueuedActionName = QueuedAction.ToString();
+            }
+            
+            return false;
+        }
+        
+        var success = base.TryMove( direction, shouldAnimate: false );
 		if (success)
 		{
 			SetIcon("😀");
@@ -411,17 +416,6 @@ public partial class RoguemojiPlayer : Thing
         base.Damage(amount, source);
     }
 
-    public void WieldThing(Thing thing, bool dontRequireMove = false)
-    {
-        if (IsDead || (WieldedThing == thing) || (!IsInputReady && !dontRequireMove))
-            return;
-
-        base.WieldThing(thing);
-
-        if(!dontRequireMove)
-            PerformedAction();
-    }
-
     public override void Destroy()
     {
         if (IsDead)
@@ -438,9 +432,6 @@ public partial class RoguemojiPlayer : Thing
 
     public void PickUpTopItem()
     {
-        if (!IsInputReady || IsDead)
-            return;
-
         var thing = ContainingGridManager.GetThingsAt(GridPos).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 
         if (thing == null)
@@ -454,17 +445,21 @@ public partial class RoguemojiPlayer : Thing
 
     public void DropWieldedItem()
     {
-        if (!IsInputReady || IsDead)
-            return;
-
         if (WieldedThing != null)
             MoveThingTo(WieldedThing, GridType.Arena, GridPos);
     }
 
-    public void MoveThingTo(Thing thing, GridType targetGridType, IntVector targetGridPos, bool dontRequireMove = false, bool wieldIfPossible = false)
+    public void MoveThingTo(Thing thing, GridType targetGridType, IntVector targetGridPos, bool dontRequireAction = false, bool wieldIfPossible = false)
     {
-        if (IsDead || (!IsInputReady && !dontRequireMove)) 
+        if (IsDead) 
             return;
+
+        if(!IsInputReady && !dontRequireAction)
+        {
+            QueuedAction = new MoveThingAction(thing, targetGridType, targetGridPos, wieldIfPossible);
+            QueuedActionName = QueuedAction.ToString();
+            return;
+        }
 
         var sourceGridType = thing.ContainingGridManager.GridType;
         Assert.True(sourceGridType != targetGridType);
@@ -494,37 +489,40 @@ public partial class RoguemojiPlayer : Thing
                 if (InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
                     SwapGridThingPos(targetThing, GridType.Inventory, emptyGridPos);
                 else
-                    MoveThingTo(targetThing, GridType.Arena, GridPos, dontRequireMove: true);
+                    MoveThingTo(targetThing, GridType.Arena, GridPos, dontRequireAction: true);
             }
             else
             {
-                MoveThingTo(targetThing, sourceGridType, sourceGridPos, dontRequireMove: true);
+                MoveThingTo(targetThing, sourceGridType, sourceGridPos, dontRequireAction: true);
             }
         }
 
         if (targetGridType == GridType.Arena && thing == WieldedThing)
-            WieldThing(null, dontRequireMove: true);
+            WieldThing(null, dontRequireAction: true);
 
         if (targetGridType == GridType.Inventory && wieldIfPossible && WieldedThing == null && !thing.Flags.HasFlag(ThingFlags.Equipment))
-            WieldThing(thing, dontRequireMove: true);
+            WieldThing(thing, dontRequireAction: true);
 
-        if (!dontRequireMove)
+        if (!dontRequireAction)
             PerformedAction();
     }
 
-    GridManager GetGridManager(GridType gridType)
+    public void WieldThing(Thing thing, bool dontRequireAction = false)
     {
-        switch(gridType)
+        if (IsDead || WieldedThing == thing)
+            return;
+
+        if (!IsInputReady && !dontRequireAction)
         {
-            case GridType.Arena:
-                return ContainingGridManager;
-            case GridType.Inventory:
-                return InventoryGridManager;
-            case GridType.Equipment:
-                return EquipmentGridManager;
+            QueuedAction = new WieldThingAction(thing);
+            QueuedActionName = QueuedAction.ToString();
+            return;
         }
 
-        return null;
+        base.WieldThing(thing);
+
+        if (!dontRequireAction)
+            PerformedAction();
     }
 
     public void SwapGridThingPos(Thing thing, GridType gridType, IntVector targetGridPos)
@@ -731,5 +729,91 @@ public partial class RoguemojiPlayer : Thing
     public void PlayerIconClicked(bool rightClick, bool shift)
     {
         SelectThing(this);
+    }
+
+    GridManager GetGridManager(GridType gridType)
+    {
+        switch (gridType)
+        {
+            case GridType.Arena:
+                return ContainingGridManager;
+            case GridType.Inventory:
+                return InventoryGridManager;
+            case GridType.Equipment:
+                return EquipmentGridManager;
+        }
+
+        return null;
+    }
+}
+
+public interface IQueuedAction
+{
+    public void Execute(RoguemojiPlayer player);
+}
+
+public class TryMoveAction : IQueuedAction
+{
+    public Direction Direction { get; set; }
+
+    public TryMoveAction(Direction direction)
+    {
+        Direction = direction;
+    }
+
+    public void Execute(RoguemojiPlayer player)
+    {
+        player.TryMove(Direction, shouldQueueAction: false);
+    }
+
+    public override string ToString()
+    {
+        return $"TryMove {Direction}";
+    }
+}
+
+public class MoveThingAction : IQueuedAction
+{
+    public Thing Thing { get; set; }
+    public GridType TargetGridType { get; set; }
+    public IntVector TargetGridPos { get; set; }
+    public bool WieldIfPossible { get; set; }
+
+    public MoveThingAction(Thing thing, GridType targetGridType, IntVector targetGridPos, bool wieldIfPossible = false)
+    {
+        Thing = thing;
+        TargetGridType = targetGridType;
+        TargetGridPos = targetGridPos;
+        WieldIfPossible = wieldIfPossible;
+    }
+
+    public void Execute(RoguemojiPlayer player)
+    {
+        player.MoveThingTo(Thing, TargetGridType, TargetGridPos, wieldIfPossible: WieldIfPossible);
+    }
+
+    public override string ToString()
+    {
+        return $"Move {Thing.DisplayName} -> {TargetGridType} in {TargetGridPos}";
+    }
+}
+
+public class WieldThingAction : IQueuedAction
+{
+    public Thing Thing { get; set; }
+
+    public WieldThingAction(Thing thing)
+    {
+        Thing = thing;
+    }
+
+    public void Execute(RoguemojiPlayer player)
+    {
+        player.WieldThing(Thing);
+    }
+
+    public override string ToString()
+    {
+        return $"Wield {Thing?.DisplayName ?? null}";
     }
 }
