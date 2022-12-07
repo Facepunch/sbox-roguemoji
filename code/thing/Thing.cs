@@ -20,7 +20,6 @@ public partial class Thing : Entity
 	[Net] public IntVector GridPos { get; protected set; }
 	[Net] public GridManager ContainingGridManager { get; set; }
 
-	//[Net] public string DisplayImagePath { get; protected set; }
     [Net] public string DisplayIcon { get; protected set; }
 	[Net] public string DisplayName { get; protected set; }
 	[Net] public string Tooltip { get; protected set; }
@@ -45,7 +44,7 @@ public partial class Thing : Entity
 
     [Net] public int ThingId { get; private set; }
 
-    public Dictionary<TypeDescription, ThingStatus> Statuses = new Dictionary<TypeDescription, ThingStatus>();
+    public Dictionary<TypeDescription, ThingComponent> ThingComponents = new Dictionary<TypeDescription, ThingComponent>();
 
 	[Net] public ThingFlags Flags { get; set; }
     [Net] public int Hp { get; set; }
@@ -63,7 +62,6 @@ public partial class Thing : Entity
 		ShouldLogBehaviour = false;
 		IconScale = 1f;
 		ThingId = RoguemojiGame.ThingId++;
-		//DisplayImagePath = "textures/emoji/hole.png";
     }
 
 	public override void Spawn()
@@ -78,11 +76,11 @@ public partial class Thing : Entity
     {
 		float dt = Time.Delta;
 
-		foreach (KeyValuePair<TypeDescription, ThingStatus> pair in Statuses)
+		foreach (KeyValuePair<TypeDescription, ThingComponent> pair in ThingComponents)
 		{
-			var status = pair.Value;
-			if (status.ShouldUpdate)
-				status.Update(dt);
+			var component = pair.Value;
+			if (component.ShouldUpdate)
+				component.Update(dt);
 		}
 
 		if(!string.IsNullOrEmpty(DebugText))
@@ -96,14 +94,14 @@ public partial class Thing : Entity
 
 	public virtual void Update(float dt)
 	{
-		//DebugText = "Server Statuses (" + Statuses.Count + "):\n";
-		foreach (KeyValuePair<TypeDescription, ThingStatus> pair in Statuses)
+        //DebugText = "Server Components (" + Components.Count + "):\n";
+        foreach (KeyValuePair<TypeDescription, ThingComponent> pair in ThingComponents)
         {
-			var status = pair.Value;
-			if (status.ShouldUpdate)
-				status.Update(dt);
+			var component = pair.Value;
+			if (component.ShouldUpdate)
+				component.Update(dt);
 
-			//DebugText += status.GetType().Name + "\n";
+			//DebugText += component.GetType().Name + "\n";
 		}
 
 		//DrawDebugText(Flags.ToString());
@@ -241,7 +239,7 @@ public partial class Thing : Entity
 		IconScale = scale;
 	}
 
-	public ThingStatus AddStatus(TypeDescription type)
+	public ThingComponent AddThingComponent(TypeDescription type)
 	{
 		if(type == null)
 		{
@@ -249,53 +247,53 @@ public partial class Thing : Entity
 			return null;
 		}
 
-		if(Statuses.ContainsKey(type))
+		if(ThingComponents.ContainsKey(type))
         {
-			var status = Statuses[type];
-			status.ReInitialize();
-			return status;
+			var component = ThingComponents[type];
+			component.ReInitialize();
+			return component;
         }
 		else
         {
-			var status = type.Create<ThingStatus>();
-			status.Init(this);
-			Statuses.Add(type, status);
-			return status;
+			var component = type.Create<ThingComponent>();
+			component.Init(this);
+			ThingComponents.Add(type, component);
+			return component;
 		}
 	}
 
-	public T AddStatus<T>() where T : ThingStatus
+	public T AddThingComponent<T>() where T : ThingComponent
 	{
-		return AddStatus(TypeLibrary.GetDescription(typeof(T))) as T;
+		return AddThingComponent(TypeLibrary.GetDescription(typeof(T))) as T;
 	}
 
-	public void RemoveStatus(TypeDescription type)
+	public void RemoveComponent(TypeDescription type)
     {
-		if(Statuses.ContainsKey(type))
+		if(ThingComponents.ContainsKey(type))
         {
-			var status = Statuses[type];
-			status.OnRemove();
-			Statuses.Remove(type);
+			var component = ThingComponents[type];
+			component.OnRemove();
+			ThingComponents.Remove(type);
         }
     }
 
-	public bool GetStatus(TypeDescription type, out ThingStatus status)
+	public bool GetComponent(TypeDescription type, out ThingComponent component)
 	{
-		if (Statuses.ContainsKey(type))
+		if (ThingComponents.ContainsKey(type))
 		{
-			status = Statuses[type];
+			component = ThingComponents[type];
 			return true;
 		}
 
-		status = null;
+		component = null;
 		return false;
 	}
 
-	public void ForEachStatus(Action<ThingStatus> action)
+	public void ForEachComponent(Action<ThingComponent> action)
 	{
-		foreach (var (_, status) in Statuses)
+		foreach (var (_, component) in ThingComponents)
 		{
-			action(status);
+			action(component);
 		}
 	}
 
@@ -330,7 +328,7 @@ public partial class Thing : Entity
 	[ClientRpc]
 	public void VfxNudge(Direction direction, float lifetime, float distance)
 	{
-		var nudge = AddStatus<VfxNudgeStatus>();
+		var nudge = AddThingComponent<VfxNudge>();
         nudge.Direction = direction;
         nudge.Lifetime = lifetime;
         nudge.Distance = distance;
@@ -339,7 +337,7 @@ public partial class Thing : Entity
 	[ClientRpc]
 	public void VfxSlide(Direction direction, float lifetime, float distance)
     {
-		var slide = AddStatus<VfxSlideStatus>();
+		var slide = AddThingComponent<VfxSlide>();
 		slide.Direction = direction;
 		slide.Lifetime = lifetime;
 		slide.Distance = distance;
@@ -348,7 +346,7 @@ public partial class Thing : Entity
 	[ClientRpc]
 	public void VfxShake(float lifetime, float distance)
 	{
-		var shake = AddStatus<VfxShakeStatus>();
+		var shake = AddThingComponent<VfxShake>();
 		shake.Lifetime = lifetime;
 		shake.Distance = distance;
 	}
@@ -356,7 +354,7 @@ public partial class Thing : Entity
 	[ClientRpc]
 	public void VfxScale(float lifetime, float startScale, float endScale)
 	{
-		var scale = AddStatus<VfxScaleStatus>();
+		var scale = AddThingComponent<VfxScale>();
 		scale.Lifetime = lifetime;
 		scale.StartScale = startScale;
 		scale.EndScale = endScale;
@@ -365,7 +363,7 @@ public partial class Thing : Entity
 	[ClientRpc]
 	public void VfxSpin(float lifetime, float startAngle, float endAngle)
 	{
-		var scale = AddStatus<VfxSpinStatus>();
+		var scale = AddThingComponent<VfxSpin>();
 		scale.Lifetime = lifetime;
 		scale.StartAngle = startAngle;
 		scale.EndAngle = endAngle;

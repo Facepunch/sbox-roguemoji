@@ -4,8 +4,8 @@ using System;
 namespace Roguemoji;
 public partial class Squirrel : Thing
 {
-    public TargetingStatus Targeting { get; private set; }
-    public PathfindingStatus Pathfinding { get; private set; }
+    public Targeting Targeting { get; private set; }
+    public Pathfinding Pathfinding { get; private set; }
 
     public TimeSince TimeSinceAction { get; private set; }
     public float ActionDelay { get; private set; }
@@ -27,8 +27,8 @@ public partial class Squirrel : Thing
     {
         base.Spawn();
 
-        Targeting = AddStatus<TargetingStatus>();
-        Pathfinding = AddStatus<PathfindingStatus>();
+        Targeting = AddThingComponent<Targeting>();
+        Pathfinding = AddThingComponent<Pathfinding>();
     }
 
     public override void Update(float dt)

@@ -22,7 +22,7 @@ public partial class RoguemojiPlayer : Thing
 
     [Net] public bool IsDead { get; set; }
 
-    public Dictionary<TypeDescription, PlayerStatus> PlayerStatuses = new Dictionary<TypeDescription, PlayerStatus>();
+    public Dictionary<TypeDescription, PlayerComponent> PlayerComponents = new Dictionary<TypeDescription, PlayerComponent>();
 
     public IQueuedAction QueuedAction { get; private set; }
     [Net] public string QueuedActionName { get; private set; }
@@ -124,11 +124,11 @@ public partial class RoguemojiPlayer : Thing
 		base.ClientTick();
 
         float dt = Time.Delta;
-        foreach (KeyValuePair<TypeDescription, PlayerStatus> pair in PlayerStatuses)
+        foreach (KeyValuePair<TypeDescription, PlayerComponent> pair in PlayerComponents)
         {
-            var status = pair.Value;
-            if (status.ShouldUpdate)
-                status.Update(dt);
+            var component = pair.Value;
+            if (component.ShouldUpdate)
+                component.Update(dt);
         }
 
         //DrawDebugText("" + CameraGridOffset + ", " + CameraPixelOffset);
@@ -142,11 +142,11 @@ public partial class RoguemojiPlayer : Thing
 
         InventoryGridManager.Update(dt);
 
-        foreach (KeyValuePair<TypeDescription, PlayerStatus> pair in PlayerStatuses)
+        foreach (KeyValuePair<TypeDescription, PlayerComponent> pair in PlayerComponents)
         {
-            var status = pair.Value;
-            if (status.ShouldUpdate)
-                status.Update(dt);
+            var component = pair.Value;
+            if (component.ShouldUpdate)
+                component.Update(dt);
         }
     }
 
@@ -356,45 +356,45 @@ public partial class RoguemojiPlayer : Thing
             (gridPos.y < CameraGridOffset.y + RoguemojiGame.ArenaHeight + 1);
     }
 
-    public PlayerStatus AddPlayerStatus(TypeDescription type)
+    public PlayerComponent AddPlayerComponent(TypeDescription type)
     {
-        if (PlayerStatuses.ContainsKey(type))
+        if (PlayerComponents.ContainsKey(type))
         {
-            var status = PlayerStatuses[type];
-            status.ReInitialize();
-            return status;
+            var component = PlayerComponents[type];
+            component.ReInitialize();
+            return component;
         }
         else
         {
-            var status = type.Create<PlayerStatus>();
-            status.Init(this);
-            PlayerStatuses.Add(type, status);
-            return status;
+            var component = type.Create<PlayerComponent>();
+            component.Init(this);
+            PlayerComponents.Add(type, component);
+            return component;
         }
     }
 
-    public void RemovePlayerStatus(TypeDescription type)
+    public void RemovePlayerComponent(TypeDescription type)
     {
-        if (PlayerStatuses.ContainsKey(type))
+        if (PlayerComponents.ContainsKey(type))
         {
-            var status = PlayerStatuses[type];
-            status.OnRemove();
-            PlayerStatuses.Remove(type);
+            var component = PlayerComponents[type];
+            component.OnRemove();
+            PlayerComponents.Remove(type);
         }
     }
 
-    public void ForEachPlayerStatus(Action<PlayerStatus> action)
+    public void ForEachPlayerComponent(Action<PlayerComponent> action)
     {
-        foreach (var (_, status) in PlayerStatuses)
+        foreach (var (_, component) in PlayerComponents)
         {
-            action(status);
+            action(component);
         }
     }
 
     [ClientRpc]
     public void VfxSlideCamera(Direction direction, float lifetime, float distance)
     {
-        var slide = AddPlayerStatus(TypeLibrary.GetDescription(typeof(VfxPlayerSlideCameraStatus))) as VfxPlayerSlideCameraStatus;
+        var slide = AddPlayerComponent(TypeLibrary.GetDescription(typeof(VfxPlayerSlideCamera))) as VfxPlayerSlideCamera;
         slide.Direction = direction;
         slide.Lifetime = lifetime;
         slide.Distance = distance;
@@ -403,7 +403,7 @@ public partial class RoguemojiPlayer : Thing
     [ClientRpc]
     public void VfxShakeCamera(float lifetime, float distance)
     {
-        var shake = AddPlayerStatus(TypeLibrary.GetDescription(typeof(VfxPlayerShakeCameraStatus))) as VfxPlayerShakeCameraStatus;
+        var shake = AddPlayerComponent(TypeLibrary.GetDescription(typeof(VfxPlayerShakeCamera))) as VfxPlayerShakeCamera;
         shake.Lifetime = lifetime;
         shake.Distance = distance;
     }

@@ -3,25 +3,26 @@ using System;
 
 namespace Roguemoji;
 
-public class VfxShakeStatus : ThingStatus
+public class VfxScale : ThingComponent
 {
     public float Lifetime { get; set; }
-    public float Distance { get; set; }
+    public float StartScale { get; set; }
+    public float EndScale { get; set; }
 
     public override void Init(Thing thing)
     {
         base.Init(thing);
 
         ShouldUpdate = true;
-        IsClientStatus = true;
+        IsClientComponent = true;
+        Thing.SetScale(StartScale);
     }
 
     public override void Update(float dt)
     {
         base.Update(dt);
 
-        var dir = Utils.DegreesToVector(Rand.Float(0f, 360f));
-        Thing.SetOffset(dir * Utils.Map(TimeSinceStart, 0f, Lifetime, Distance, 0f, EasingType.QuadOut));
+        Thing.SetScale(Utils.Map(TimeSinceStart, 0f, Lifetime, StartScale, EndScale, EasingType.Linear));
 
         if(TimeSinceStart > Lifetime)
             Remove();
@@ -29,6 +30,6 @@ public class VfxShakeStatus : ThingStatus
 
     public override void OnRemove()
     {
-        Thing.SetOffset(Vector2.Zero);
+        Thing.SetScale(EndScale);
     }
 }

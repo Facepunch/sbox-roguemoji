@@ -3,7 +3,7 @@ using System;
 
 namespace Roguemoji;
 
-public class VfxSpinStatus : ThingStatus
+public class VfxSpin : ThingComponent
 {
     public float Lifetime { get; set; }
     public float StartAngle { get; set; }
@@ -14,7 +14,7 @@ public class VfxSpinStatus : ThingStatus
         base.Init(thing);
 
         ShouldUpdate = true;
-        IsClientStatus = true;
+        IsClientComponent = true;
         Thing.SetRotation(StartAngle);
     }
 

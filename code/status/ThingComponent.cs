@@ -3,14 +3,14 @@ using System;
 
 namespace Roguemoji;
 
-public abstract class ThingStatus
+public abstract class ThingComponent
 {
     public Thing Thing { get; private set; }
 
     public bool ShouldUpdate { get; protected set; }
 
     public TimeSince TimeSinceStart { get; protected set; }
-    public bool IsClientStatus { get; protected set; }
+    public bool IsClientComponent { get; protected set; }
 
     public virtual void Init(Thing thing)
     {
@@ -21,13 +21,13 @@ public abstract class ThingStatus
 
     public virtual void Update(float dt)
     {
-        if(IsClientStatus == Host.IsServer)
+        if(IsClientComponent == Host.IsServer)
         {
-            Log.Error(GetType().Name + " IsClientStatus: " + IsClientStatus + " Host.IsServer: " + Host.IsServer + "!");
+            Log.Error(GetType().Name + " IsClientComponent: " + IsClientComponent + " Host.IsServer: " + Host.IsServer + "!");
         }
     }
 
-    // status was added when already existing
+    // component was added when already existing
     public virtual void ReInitialize()
     {
         TimeSinceStart = 0f;
@@ -35,7 +35,7 @@ public abstract class ThingStatus
 
     public void Remove()
     {
-        Thing.RemoveStatus(TypeLibrary.GetDescription(GetType()));
+        Thing.RemoveComponent(TypeLibrary.GetDescription(GetType()));
     }
 
     public virtual void OnRemove()

@@ -3,18 +3,18 @@ using System;
 
 namespace Roguemoji;
 
-public class VfxPlayerSlideCameraStatus : PlayerStatus
+public class VfxNudge : ThingComponent
 {
     public Direction Direction { get; set; }
     public float Lifetime { get; set; }
     public float Distance { get; set; }
 
-    public override void Init(RoguemojiPlayer player)
+    public override void Init(Thing thing)
     {
-        base.Init(player);
+        base.Init(thing);
 
         ShouldUpdate = true;
-        IsClientStatus = true;
+        IsClientComponent = true;
     }
 
     public override void Update(float dt)
@@ -22,14 +22,19 @@ public class VfxPlayerSlideCameraStatus : PlayerStatus
         base.Update(dt);
 
         var dir = GridManager.GetVectorForDirection(Direction);
-        Player.SetCameraPixelOffset(dir * Utils.Map(TimeSinceStart, 0f, Lifetime, Distance, 0f, EasingType.QuadOut));
+        Thing.SetOffset(dir * Utils.MapReturn(TimeSinceStart, 0f, Lifetime, 0f, Distance, EasingType.QuadOut));
 
         if(TimeSinceStart > Lifetime)
             Remove();
     }
 
+    public override void ReInitialize()
+    {
+
+    }
+
     public override void OnRemove()
     {
-        Player.SetCameraPixelOffset(Vector2.Zero);
+        Thing.SetOffset(Vector2.Zero);
     }
 }

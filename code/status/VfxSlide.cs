@@ -3,7 +3,7 @@ using System;
 
 namespace Roguemoji;
 
-public class VfxSlideStatus : ThingStatus
+public class VfxSlide : ThingComponent
 {
     public Direction Direction { get; set; }
     public float Lifetime { get; set; }
@@ -14,7 +14,7 @@ public class VfxSlideStatus : ThingStatus
         base.Init(thing);
 
         ShouldUpdate = true;
-        IsClientStatus = true;
+        IsClientComponent = true;
     }
 
     public override void Update(float dt)

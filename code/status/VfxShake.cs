@@ -3,9 +3,8 @@ using System;
 
 namespace Roguemoji;
 
-public class VfxNudgeStatus : ThingStatus
+public class VfxShake : ThingComponent
 {
-    public Direction Direction { get; set; }
     public float Lifetime { get; set; }
     public float Distance { get; set; }
 
@@ -14,23 +13,18 @@ public class VfxNudgeStatus : ThingStatus
         base.Init(thing);
 
         ShouldUpdate = true;
-        IsClientStatus = true;
+        IsClientComponent = true;
     }
 
     public override void Update(float dt)
     {
         base.Update(dt);
 
-        var dir = GridManager.GetVectorForDirection(Direction);
-        Thing.SetOffset(dir * Utils.MapReturn(TimeSinceStart, 0f, Lifetime, 0f, Distance, EasingType.QuadOut));
+        var dir = Utils.DegreesToVector(Rand.Float(0f, 360f));
+        Thing.SetOffset(dir * Utils.Map(TimeSinceStart, 0f, Lifetime, Distance, 0f, EasingType.QuadOut));
 
         if(TimeSinceStart > Lifetime)
             Remove();
-    }
-
-    public override void ReInitialize()
-    {
-
     }
 
     public override void OnRemove()

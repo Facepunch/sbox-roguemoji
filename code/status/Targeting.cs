@@ -3,7 +3,7 @@ using System;
 
 namespace Roguemoji;
 
-public class TargetingStatus : ThingStatus
+public class Targeting : ThingComponent
 {
     public Thing Target { get; set; }
 

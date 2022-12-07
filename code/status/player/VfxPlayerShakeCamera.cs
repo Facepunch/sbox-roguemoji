@@ -3,7 +3,7 @@ using System;
 
 namespace Roguemoji;
 
-public class VfxPlayerShakeCameraStatus : PlayerStatus
+public class VfxPlayerShakeCamera : PlayerComponent
 {
     public float Lifetime { get; set; }
     public float Distance { get; set; }
@@ -13,7 +13,7 @@ public class VfxPlayerShakeCameraStatus : PlayerStatus
         base.Init(player);
 
         ShouldUpdate = true;
-        IsClientStatus = true;
+        IsClientComponent = true;
     }
 
     public override void Update(float dt)

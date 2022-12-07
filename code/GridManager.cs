@@ -45,8 +45,8 @@ public partial class GridManager : Entity
 			if (!thing.DoneFirstUpdate)
 				thing.FirstUpdate();
 
-			// todo: only update if a status needs updating
-			if (thing.ShouldUpdate || thing.Statuses.Count > 0)
+			// todo: only update if a component needs updating
+			if (thing.ShouldUpdate || thing.ThingComponents.Count > 0)
 				thing.Update(dt);
 		}
 	}
