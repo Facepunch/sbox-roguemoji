@@ -65,6 +65,8 @@
         base.Tick();
 
         StateHasChanged();
+
+        Hud.Instance.MainPanel.DebugDrawing.GridLine(new IntVector(10, 10), new IntVector(15, 15), Color.Blue);
     }
 
     protected override void OnMouseDown(MousePanelEvent e)

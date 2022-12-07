@@ -114,6 +114,8 @@
         <InfoPanel class="info" @ref=InfoPanel></InfoPanel>
         <div class="stats"></div>
     </div>
+
+    <DebugDrawing style="z-index:9999;" @ref=DebugDrawing></DebugDrawing>
 </root>
 
 @code
@@ -125,6 +127,7 @@
     public NearbyPanel NearbyPanel { get; set; }
     public InventoryPanel InventoryPanel { get; set; }
     public InfoPanel InfoPanel { get; set; }
+    public DebugDrawing DebugDrawing { get; set; }
 
     public string GetHoveredCoords()
     {

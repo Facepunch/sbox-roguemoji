@@ -1,0 +1,47 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+
+@inherits Panel;
+@namespace Roguemoji
+
+<style>
+    .debug
+    {
+        width: 1px;
+        height: 1px;
+        overflow: visible;
+    }
+</style>
+
+<div class="debug"></div>
+
+@code
+{
+    public List<DebugLineData> DebugLines { get; private set; } = new List<DebugLineData>();
+
+    public override bool HasContent => true;
+
+    public override void DrawContent(ref RenderState state)
+    {
+        foreach (var line in DebugLines)
+        {
+            GraphicsX.Line(line.color, 2, line.a, line.b);
+        }
+
+        DebugLines.Clear();
+    }
+
+    public Vector2 GetScreenPosForArenaGridPos(IntVector gridPos)
+    {
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        var arenaPanel = Hud.Instance.GetGridPanel(GridType.Arena);
+        var rect = Hud.Instance.GetRect(PanelType.ArenaGrid);
+
+        return rect.TopLeft + arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset;
+    }
+
+    public void GridLine(IntVector a, IntVector b, Color color)
+    {
+        DebugLines.Add(new DebugLineData(GetScreenPosForArenaGridPos(a), GetScreenPosForArenaGridPos(b), color));
+    }
+}
