@@ -299,7 +299,7 @@ public partial class RoguemojiPlayer : Thing
     [ClientRpc]
     public void RefreshVisibility()
     {
-        ComputeVisibility(GridPos, rangeLimit: 10);
+        ComputeVisibility(GridPos, rangeLimit: 7);
     }
 
     public override void Interact(Thing other, Direction direction)
@@ -358,7 +358,7 @@ public partial class RoguemojiPlayer : Thing
         CameraPixelOffset = new Vector2(MathF.Round(offset.x), MathF.Round(offset.y));
     }
 
-    public bool IsGridPosVisible(IntVector gridPos)
+    public bool IsGridPosOnCamera(IntVector gridPos)
     {
         return
             (gridPos.x >= CameraGridOffset.x - 1) &&
@@ -557,12 +557,15 @@ public partial class RoguemojiPlayer : Thing
         RoguemojiGame.Instance.RefreshGridPanelClient(To.Single(this), gridType);
     }
 
-    public void GridCellClicked(IntVector gridPos, GridType gridType, bool rightClick, bool shift, bool doubleClick)
+    public void GridCellClicked(IntVector gridPos, GridType gridType, bool rightClick, bool shift, bool doubleClick, bool visible = true)
     {
         if (gridType == GridType.Arena)
         {
             var level = RoguemojiGame.Instance.Levels[CurrentLevelId];
             var thing = level.GridManager.GetThingsAt(gridPos).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+
+            if (!visible && thing != null)
+                return;
 
             if (!rightClick)
                 SelectThing(thing);

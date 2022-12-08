@@ -23,6 +23,14 @@
         width:100%;
         height:100%;
     }
+
+    .unseen
+    {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        background-color: #050505;
+    }
 </style>
 
 <root class="arena_panel">
@@ -39,11 +47,23 @@
 
     @foreach(Thing thing in GetThings())
     {
-        if(player.IsGridPosVisible(thing.GridPos))
+        if (player.IsGridPosOnCamera(thing.GridPos) && player.IsCellVisible(thing.GridPos))
         {
             var offsetGridPos = thing.GridPos - player.CameraGridOffset;
             var index = GetIndex(offsetGridPos);
             <GridCell style="left: @((offsetGridPos.x * 40) + player.CameraPixelOffset.x + thing.Offset.x * ScaleToScreen); top: @((offsetGridPos.y * 40) + player.CameraPixelOffset.y + thing.Offset.y * ScaleToScreen);" Thing=@thing GridIndex=@index @onmouseover=@(() => HoveredCellIndex = index )) />    
+        }
+    }
+
+    @for(int x = -1; x <= RoguemojiGame.ArenaWidth; x++)
+    {
+        for(int y = -1; y <= RoguemojiGame.ArenaHeight; y++)
+        {
+            var gridPos = new IntVector(x, y) + player.CameraGridOffset;
+            if(!player.IsCellVisible(gridPos))
+            {
+                <div class="unseen" style="left: @(x * 40 + player.CameraPixelOffset.x); top: @(y * 40 + player.CameraPixelOffset.y);"></div>
+            }
         }
     }
 </root>
@@ -67,12 +87,11 @@
 
         StateHasChanged();
 
-
-        var player = RoguemojiGame.Instance.LocalPlayer;
-        foreach(var gridPos in player.VisibleCells)
-        {
-            Hud.Instance.MainPanel.DebugDrawing.GridCell(gridPos, Color.Blue);
-        }
+        //var player = RoguemojiGame.Instance.LocalPlayer;
+        //foreach(var gridPos in player.VisibleCells)
+        //{
+        //    Hud.Instance.MainPanel.DebugDrawing.GridCell(gridPos, new Color(0f, 0f, 1f, 0.1f));
+        //}
         //Hud.Instance.MainPanel.DebugDrawing.Line(new Vector2(100f, 100f), new Vector2(200f, 85f), new Color(0f, 1f, 0f, 0.5f));
         //Hud.Instance.MainPanel.DebugDrawing.GridLine(new IntVector(10, 10), new IntVector(15, 15), Color.Blue);
         //Hud.Instance.MainPanel.DebugDrawing.GridCell(new IntVector(9, 10), Color.Red);
@@ -83,7 +102,9 @@
         base.OnMouseDown(e);
 
         var player = RoguemojiGame.Instance.LocalPlayer;
-        Hud.Instance.GridCellClicked(GetGridPos(MousePosition) + player.CameraGridOffset, GridType.Arena, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), doubleClick: false);
+        var gridPos = GetGridPos(MousePosition) + player.CameraGridOffset;
+        bool visible = player.IsCellVisible(gridPos);
+        Hud.Instance.GridCellClicked(gridPos, GridType.Arena, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), doubleClick: false, visible);
     }
 
     protected override int BuildHash()

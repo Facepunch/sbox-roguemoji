@@ -150,7 +150,9 @@
 
         if(Thing.ContainingGridManager.GridType == GridType.Arena)
         {
-            Hud.Instance.GridCellClicked(Thing.GridPos, GridType.Arena, rightClick, shift, doubleClick: false);
+            var player = RoguemojiGame.Instance.LocalPlayer;
+            bool visible = player.IsCellVisible(Thing.GridPos);
+            Hud.Instance.GridCellClicked(Thing.GridPos, GridType.Arena, rightClick, shift, doubleClick: false, visible);
         }
         else if(Thing.ContainingGridManager.GridType == GridType.Inventory)
         {

@@ -170,10 +170,10 @@ public partial class RoguemojiGame : GameManager
 	}
 
 	[ConCmd.Server]
-	public static void GridCellClickedCmd(int x, int y, GridType gridType, bool rightClick, bool shift, bool doubleClick)
+	public static void GridCellClickedCmd(int x, int y, GridType gridType, bool rightClick, bool shift, bool doubleClick, bool visible = true)
 	{
 		var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
-		player.GridCellClicked(new IntVector(x, y), gridType, rightClick, shift, doubleClick);
+		player.GridCellClicked(new IntVector(x, y), gridType, rightClick, shift, doubleClick, visible);
 	}
 
 	[ClientRpc]
