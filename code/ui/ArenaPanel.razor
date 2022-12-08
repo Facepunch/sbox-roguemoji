@@ -68,9 +68,14 @@
         StateHasChanged();
 
 
-        Hud.Instance.MainPanel.DebugDrawing.Line(new Vector2(100f, 100f), new Vector2(200f, 85f), new Color(0f, 1f, 0f, 0.5f));
-        Hud.Instance.MainPanel.DebugDrawing.GridLine(new IntVector(10, 10), new IntVector(15, 15), Color.Blue);
-        Hud.Instance.MainPanel.DebugDrawing.GridCell(new IntVector(9, 10), Color.Red);
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        foreach(var gridPos in player.VisibleCells)
+        {
+            Hud.Instance.MainPanel.DebugDrawing.GridCell(gridPos, Color.Blue);
+        }
+        //Hud.Instance.MainPanel.DebugDrawing.Line(new Vector2(100f, 100f), new Vector2(200f, 85f), new Color(0f, 1f, 0f, 0.5f));
+        //Hud.Instance.MainPanel.DebugDrawing.GridLine(new IntVector(10, 10), new IntVector(15, 15), Color.Blue);
+        //Hud.Instance.MainPanel.DebugDrawing.GridCell(new IntVector(9, 10), Color.Red);
     }
 
     protected override void OnMouseDown(MousePanelEvent e)
