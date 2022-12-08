@@ -24,7 +24,7 @@ public enum LevelId
 	Forest0, Forest1, Forest2, Forest3,
 }
 
-public partial class RoguemojiGame : Sandbox.Game
+public partial class RoguemojiGame : GameManager
 {
 	public static RoguemojiGame Instance { get; private set; }
 
