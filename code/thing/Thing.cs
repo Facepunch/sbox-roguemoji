@@ -52,6 +52,8 @@ public partial class Thing : Entity
 
     [Net] public Thing WieldedThing { get; protected set; }
 
+	[Net] public int SightBlockAmount { get; set; }
+
     public Thing()
 	{
         ShouldUpdate = true;

@@ -21,6 +21,9 @@ public partial class GridManager : Entity
 
 	public RoguemojiPlayer OwningPlayer { get; set; }
 
+	public HashSet<RoguemojiPlayer> ContainedPlayers = new HashSet<RoguemojiPlayer>();
+	public HashSet<RoguemojiPlayer> VisionChangedPlayers = new HashSet<RoguemojiPlayer>(); // players who need an update to their field of view
+
 	public void Init(int width, int height)
 	{
 		GridWidth = width;
@@ -34,6 +37,14 @@ public partial class GridManager : Entity
 	public void Update(float dt)
 	{
 		UpdateThings(Things, dt);
+
+		if(GridType == GridType.Arena)
+		{
+			foreach (var player in VisionChangedPlayers)
+				player.RefreshVisibility();
+
+			VisionChangedPlayers.Clear();
+		}
 	}
 
 	void UpdateThings(IList<Thing> things, float dt)
@@ -67,6 +78,10 @@ public partial class GridManager : Entity
 	{
 		Things.Add(thing);
 		thing.ContainingGridManager = this;
+
+		var player = thing as RoguemojiPlayer;
+		if (player != null)
+            AddPlayer(player);
     }
 
 	public void RemoveThing(Thing thing)
@@ -75,7 +90,11 @@ public partial class GridManager : Entity
 
 		Things.Remove(thing);
 		thing.ContainingGridManager = null;
-	}
+
+        var player = thing as RoguemojiPlayer;
+        if (player != null)
+            RemovePlayer(player);
+    }
 
 	void RefreshStackNums(IntVector gridPos)
 	{
@@ -122,6 +141,9 @@ public partial class GridManager : Entity
             GridThings[gridPos] = new List<Thing> { thing };
 
         RefreshStackNums(gridPos);
+
+		if (GridType == GridType.Arena && thing.SightBlockAmount > 0)
+			CheckVisionChange(thing);
     }
 
     public void DeregisterGridPos(Thing thing, IntVector gridPos)
@@ -130,7 +152,32 @@ public partial class GridManager : Entity
         {
             GridThings[gridPos].Remove(thing);
 			RefreshStackNums(gridPos);
+
+			if (GridType == GridType.Arena && thing.SightBlockAmount > 0)
+                CheckVisionChange(thing);
         }
+    }
+
+	void CheckVisionChange(Thing thing)
+	{
+		foreach(var player in ContainedPlayers)
+		{
+			if (VisionChangedPlayers.Contains(player) || thing == player || thing.SightBlockAmount < player.SightStrength)
+				continue;
+
+			var dist = GetDistance(player.GridPos, thing.GridPos);
+			if (dist > player.SightRange)
+				continue;
+
+			VisionChangedPlayers.Add(player);
+		}
+	}
+
+    int GetDistance(IntVector a, IntVector b)
+    {
+		var xDiff = MathF.Abs(b.x - a.x);
+        var yDiff = MathF.Abs(b.y - a.y);
+        return (int)Math.Round(Math.Sqrt(xDiff * xDiff + yDiff * yDiff));
     }
 
     public static IntVector GetIntVectorForDirection(Direction direction)
@@ -266,9 +313,86 @@ public partial class GridManager : Entity
 		Things.Clear();
 
 		GridThings.Clear();
+		ContainedPlayers.Clear();
+		VisionChangedPlayers.Clear();
     }
 
-	public void PrintGridThings()
+	public void AddPlayer(RoguemojiPlayer player)
+	{
+		ContainedPlayers.Add(player);
+	}
+
+	public void RemovePlayer(RoguemojiPlayer player)
+	{
+		ContainedPlayers.Remove(player);
+	}
+
+    // Function to check if there is a clear line of sight between
+    // the two given points on a 2D grid
+    public bool HasLineOfSight(int x1, int y1, int x2, int y2, float visionStrength, Func<IntVector, float, bool> isSightBlocked)
+    {
+        // Check if the two points have the same coordinates
+        if (x1 == x2 && y1 == y2)
+            return true;
+
+        // Calculate the difference between the x and y coordinates
+        int dx = Math.Abs(x2 - x1);
+        int dy = Math.Abs(y2 - y1);
+
+        // Calculate the direction of the line
+        int sx = (x1 < x2) ? 1 : -1;
+        int sy = (y1 < y2) ? 1 : -1;
+
+        // Check if the line is steep or not
+        bool isSteep = (dy > dx);
+        if (isSteep)
+        {
+            // Swap the x and y coordinates if the line is steep
+            int temp = x1;
+            x1 = y1;
+            y1 = temp;
+
+            temp = x2;
+            x2 = y2;
+            y2 = temp;
+
+            // Recalculate the difference between the x and y coordinates
+            dx = Math.Abs(x2 - x1);
+            dy = Math.Abs(y2 - y1);
+        }
+
+        // Calculate the error value
+        int error = dx / 2;
+
+        // Calculate the coordinates of the first point on the line
+        int x = x1;
+        int y = y1;
+
+        // Loop through the points on the line
+        for (int i = 0; i <= dx; i++)
+        {
+            // Check if there is an obstacle at the current point
+            if (isSightBlocked(new IntVector(x, y), visionStrength))
+                return false;
+
+            // Update the error value
+            error -= dy;
+            if (error < 0)
+            {
+                // Move to the next point on the line
+                y += sy;
+                error += dx;
+            }
+
+            // Move to the next point on the line
+            x += sx;
+        }
+
+        // There is a clear line of sight between the two given points
+        return true;
+    }
+
+    public void PrintGridThings()
 	{
 		Log.Info("----------- " + GridType);
 

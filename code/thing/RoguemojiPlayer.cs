@@ -29,7 +29,10 @@ public partial class RoguemojiPlayer : Thing
 
     [Net] public LevelId CurrentLevelId { get; set; }
 
-    public HashSet<IntVector> VisibleCells { get; set; } = new HashSet<IntVector>();
+    public HashSet<IntVector> VisibleCells { get; set; } // Client-only
+
+    [Net] public int SightRange { get; set; }
+    [Net] public int SightStrength { get; set; }
 
     public RoguemojiPlayer()
 	{
@@ -38,6 +41,7 @@ public partial class RoguemojiPlayer : Thing
 		DisplayName = "Player";
 		Tooltip = "";
         PathfindMovementCost = 10f;
+        SightStrength = 1;
 
         if (Host.IsServer)
         {
@@ -52,6 +56,10 @@ public partial class RoguemojiPlayer : Thing
             EquipmentGridManager.OwningPlayer = this;
 
             SetStartingValues();
+        }
+        else
+        {
+            VisibleCells = new HashSet<IntVector>();
         }
 	}
 
@@ -69,6 +77,8 @@ public partial class RoguemojiPlayer : Thing
         QueuedAction = null;
         QueuedActionName = "";
         RefreshVisibility();
+        SightBlockAmount = 5;
+        SightRange = 9;
 
         InventoryGridManager.Restart();
         EquipmentGridManager.Restart();
@@ -299,7 +309,7 @@ public partial class RoguemojiPlayer : Thing
     [ClientRpc]
     public void RefreshVisibility()
     {
-        ComputeVisibility(GridPos, rangeLimit: 7);
+        ComputeVisibility(GridPos, rangeLimit: SightRange);
     }
 
     public override void Interact(Thing other, Direction direction)
@@ -801,6 +811,7 @@ public partial class RoguemojiPlayer : Thing
         public readonly uint X, Y;
     }
 
+    // http://www.adammil.net/blog/v125_roguelike_vision_algorithms.html#mycode
     void Compute(uint octant, IntVector origin, int rangeLimit, uint x, Slope top, Slope bottom)
     {
         for (; x <= (uint)rangeLimit; x++)
@@ -949,12 +960,12 @@ public partial class RoguemojiPlayer : Thing
     {
         return (int)Math.Round(Math.Sqrt(x * x + y * y));
     }
-
+    
     bool BlocksLight(int x, int y)
     {
         Host.AssertClient();
 
-        return ContainingGridManager.GetThingsAtClient(new IntVector(x, y)).WithAll(ThingFlags.Solid).Count() > 0;
+        return ContainingGridManager.GetThingsAtClient(new IntVector(x, y)).WithAll(ThingFlags.Solid).Where(x => x.SightBlockAmount >= SightStrength).Count() > 0;
     }
 }
 

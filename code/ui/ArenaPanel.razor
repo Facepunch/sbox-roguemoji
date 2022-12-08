@@ -2,6 +2,7 @@
 @using Sandbox;
 @using Sandbox.UI;
 @using System.Collections.Generic;
+@attribute [StyleSheet("/ui/Hud.scss")]
 
 @inherits GridPanel;
 @namespace Roguemoji
@@ -107,11 +108,11 @@
         Hud.Instance.GridCellClicked(gridPos, GridType.Arena, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), doubleClick: false, visible);
     }
 
-    protected override int BuildHash()
-    {
-        var player = RoguemojiGame.Instance.LocalPlayer;
-        return HashCode.Combine(GetThings().Count, player.CameraGridOffset, player.CameraPixelOffset);
-    }
+    //protected override int BuildHash()
+    //{
+    //    var player = RoguemojiGame.Instance.LocalPlayer;
+    //    return HashCode.Combine(GetThings().Count, player.CameraGridOffset, player.CameraPixelOffset);
+    //}
 
     protected override void OnAfterTreeRender(bool firstTime)
     {
