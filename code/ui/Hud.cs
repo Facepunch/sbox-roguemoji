@@ -7,20 +7,6 @@ namespace Roguemoji;
 
 public enum PanelType { None, ArenaGrid, InventoryGrid, EquipmentGrid, Wielding, PlayerIcon, Log, Nearby, Info, Character, Stats };
 
-public class DebugLineData
-{
-	public Vector2 a { get; set; }
-	public Vector2 b { get; set; }
-	public Color color { get; set; }
-
-	public DebugLineData(Vector2 a, Vector2 b, Color color)
-    {
-        this.a = a;
-        this.b = b;
-        this.color = color;
-    }
-}
-
 public partial class Hud : RootPanel
 {
 	public static Hud Instance { get; private set; }
