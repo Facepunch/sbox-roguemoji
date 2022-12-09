@@ -45,25 +45,9 @@
         //background-color: #ff000088;
     }
 
-    .selected 
-    {
-        border: 1px solid #bbbbff44;
-        border-radius:3px;
-        //filter: brightness(2);
-        //filter: brightness(0.3);
-        //filter: contrast(3);
-        //text-shadow: 0px 0px 8px #000000;
-        //text-decoration: overline underline 4px black wavy;
-        //text-decoration-skip-ink: none;
-    }
-
     .solid
     {
         text-shadow: 0px 0px 8px #000000;
-        //background-color: #ffffff11;
-        //filter: blur(10px);
-        //box-shadow: 0 0 12px #ffffff11;
-        //border-radius:3px;
     }
     
     .dragging
@@ -79,7 +63,7 @@
     }
 </style>
 
-<root class="icon @GetWieldedClass() @GetSelectedClass() @GetSolidClass()" )>
+<root class="icon @GetWieldedClass() @GetSolidClass()" )>
     <div class="image @GetPlayerClass() @GetDraggingClass()" @ref=IconPanel> @Thing.DisplayIcon.Substring(Thing.CharSkip) </div>
 
     @if (Thing.WieldedThing != null)
@@ -96,12 +80,10 @@
     public int GridIndex { get; set; }
 
     string GetPlayerClass()     { return Thing.PlayerNum > 0 ? $"icon-player-{Thing.PlayerNum}" : ""; }
-    string GetSelectedClass()   { return IsSelected() ? "selected" : ""; }
     string GetSolidClass()      { return Thing.Flags.HasFlag(ThingFlags.Solid) ? "solid" : ""; }
     string GetDraggingClass()   { return Thing == Hud.Instance.DraggedThing ? "dragging" : ""; }
     string GetWieldedClass()    { return IsWielded() ? "wielded" : ""; }
     bool IsWielded()            { return Thing == RoguemojiGame.Instance.LocalPlayer?.WieldedThing; }
-    bool IsSelected()           { return Thing == RoguemojiGame.Instance.LocalPlayer?.SelectedThing; }
 
     protected override Panel CreateTooltipPanel()
     {
@@ -117,7 +99,7 @@
         if (Thing == null || player == null)
             return base.BuildHash();
 
-        return HashCode.Combine( Thing.GetHashCode(), IsSelected(), IsWielded(), Thing.NetworkIdent );
+        return HashCode.Combine( Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent );
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

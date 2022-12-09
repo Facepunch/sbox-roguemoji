@@ -27,7 +27,11 @@
 <root>
     <div class="equipment_bg" style="background-image: url( textures/bg_tile.png );"></div>
 
-    @if(RoguemojiGame.Instance.LocalPlayer?.EquipmentGridManager?.Things == null)
+    @{
+        var player = RoguemojiGame.Instance.LocalPlayer;
+    }
+
+    @if(player?.EquipmentGridManager?.Things == null)
     {
         return;
     }
@@ -36,6 +40,11 @@
     {
         var index = GetIndex(thing.GridPos);
         <GridCell style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40);" Thing=@thing GridIndex=@index @onmouseover=@(() => HoveredCellIndex = index )) />
+
+        if (thing == player.SelectedThing)
+        {
+            <div class="selected" style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40);"></div>
+        }
     }
 </root>
 

@@ -12,6 +12,16 @@
     .icon-player-7 { text-stroke-color: #8800bb; text-stroke-width: 4px; }
     .icon-player-8 { text-stroke-color: #ff8800; text-stroke-width: 4px; }
 
+    .selected 
+    {
+        border: 1px solid #bbbbff44;
+        border-radius:3px;
+        width: 40px;
+        height: 40px;
+        z-index: 10000;
+        position: absolute;
+        pointer-events: none;
+    }
     //.unseen {
     //    position: absolute;
     //    width: 40px;

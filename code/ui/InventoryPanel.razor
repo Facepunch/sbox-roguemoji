@@ -53,28 +53,33 @@
 <root>
     <div class="inventory_bg" style="background-image: url( textures/bg_tile.png );"></div>
 
-    @if(RoguemojiGame.Instance.LocalPlayer?.InventoryGridManager?.Things == null)
+    @{
+        var player = RoguemojiGame.Instance.LocalPlayer;
+    }
+
+    @if (player?.InventoryGridManager?.Things == null)
     {
         return;
     }
 
     <div class="top_row_bg" style="width: @(40 * RoguemojiGame.InventoryWidth)px;"></div>
 
-    @{
-        var player = RoguemojiGame.Instance.LocalPlayer;
-    }
-
     @foreach(var thing in GetThings())
     {
         var index = GetIndex(thing.GridPos);
         <GridCell style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40);" Thing=@thing GridIndex=@index @onmouseover=@(() => HoveredCellIndex = index )) />
+
+        if (thing == player.SelectedThing)
+        {
+            <div class="selected" style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40);"></div>
+        }
     }
 
     @for (int index = 0; index < RoguemojiGame.InventoryWidth; index++)
     {
         var gridPos = Hud.Instance.GetGridPanel(GridType.Inventory).GetGridPos(index);
         var things = player.InventoryGridManager.GetThingsAtClient(gridPos);
-        <div class="number_label @(things.Count() == 0 ? "dimmed" : "")" style="left: @(gridPos.x * 40); top: @(gridPos.y * 40); z-index:999;"> @((index + 1 == 10) ? 0 : index + 1) </div>
+        <div class="number_label @(things.Count() == 0 ? "dimmed" : "")" style="left: @(gridPos.x * 40); top: @(gridPos.y * 40); z-index:9999;"> @((index + 1 == 10) ? 0 : index + 1) </div>
     }
 </root>
 
