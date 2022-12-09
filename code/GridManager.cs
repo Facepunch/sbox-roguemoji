@@ -162,11 +162,12 @@ public partial class GridManager : Entity
 	{
 		foreach(var player in ContainedPlayers)
 		{
-			if (VisionChangedPlayers.Contains(player) || thing == player || thing.SightBlockAmount < player.SightStrength)
+			var sight = player.GetStat(ThingStat.Sight);
+            if (VisionChangedPlayers.Contains(player) || thing == player || thing.SightBlockAmount < sight)
 				continue;
 
 			var dist = GetDistance(player.GridPos, thing.GridPos);
-			if (dist > player.SightRange)
+			if (dist > sight)
 				continue;
 
 			VisionChangedPlayers.Add(player);

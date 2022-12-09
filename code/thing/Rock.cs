@@ -12,6 +12,6 @@ public partial class Rock : Thing
 		Tooltip = "A rock.";
 		Flags = ThingFlags.Solid | ThingFlags.Selectable;
         PathfindMovementCost = 15f;
-        SightBlockAmount = 8;
+        SightBlockAmount = 15;
     }
 }

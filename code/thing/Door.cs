@@ -12,6 +12,6 @@ public partial class Door : Thing
 		Tooltip = "A door.";
         Flags = ThingFlags.Solid | ThingFlags.Selectable;
         PathfindMovementCost = 15f;
-        SightBlockAmount = 10;
+        SightBlockAmount = 20;
     }
 }

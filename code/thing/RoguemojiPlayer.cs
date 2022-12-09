@@ -31,9 +31,6 @@ public partial class RoguemojiPlayer : Thing
 
     public HashSet<IntVector> VisibleCells { get; set; } // Client-only
 
-    [Net] public int SightRange { get; set; }
-    [Net] public int SightStrength { get; set; }
-
     public RoguemojiPlayer()
 	{
 		IconDepth = 5;
@@ -41,7 +38,6 @@ public partial class RoguemojiPlayer : Thing
 		DisplayName = "Player";
 		Tooltip = "";
         PathfindMovementCost = 10f;
-        SightStrength = 1;
 
         if (Host.IsServer)
         {
@@ -55,6 +51,7 @@ public partial class RoguemojiPlayer : Thing
             EquipmentGridManager.GridType = GridType.Equipment;
             EquipmentGridManager.OwningPlayer = this;
 
+            InitStats();
             SetStartingValues();
         }
         else
@@ -77,10 +74,16 @@ public partial class RoguemojiPlayer : Thing
         QueuedAction = null;
         QueuedActionName = "";
         RefreshVisibility();
-        SightBlockAmount = 5;
-        SightRange = 9;
+        SightBlockAmount = 10;
 
-        InventoryGridManager.Restart();
+        SetStat(ThingStat.Strength, 1);
+        SetStat(ThingStat.Speed, 1);
+        SetStat(ThingStat.Intelligence, 1);
+        SetStat(ThingStat.Vitality, 1);
+        SetStat(ThingStat.Charisma, 1);
+        SetStat(ThingStat.Sight, 9);
+        SetStat(ThingStat.Hearing, 1);
+         
         EquipmentGridManager.Restart();
 
         for (int x = 0; x < RoguemojiGame.InventoryWidth - 2; x++)
@@ -305,12 +308,6 @@ public partial class RoguemojiPlayer : Thing
 
 		return success;
 	}
-
-    [ClientRpc]
-    public void RefreshVisibility()
-    {
-        ComputeVisibility(GridPos, rangeLimit: SightRange);
-    }
 
     public override void Interact(Thing other, Direction direction)
     {
@@ -770,6 +767,20 @@ public partial class RoguemojiPlayer : Thing
         return null;
     }
 
+    public override void SetStat(ThingStat stat, int value)
+    {
+        base.SetStat(stat, value);
+
+        if (stat == ThingStat.Sight)
+            RefreshVisibility();
+    }
+
+    [ClientRpc]
+    public void RefreshVisibility()
+    {
+        ComputeVisibility(GridPos, rangeLimit: GetStat(ThingStat.Sight));
+    }
+
     public bool IsCellVisible(IntVector gridPos)
     {
         return VisibleCells.Contains(gridPos);
@@ -965,7 +976,7 @@ public partial class RoguemojiPlayer : Thing
     {
         Host.AssertClient();
 
-        return ContainingGridManager.GetThingsAtClient(new IntVector(x, y)).WithAll(ThingFlags.Solid).Where(x => x.SightBlockAmount >= SightStrength).Count() > 0;
+        return ContainingGridManager.GetThingsAtClient(new IntVector(x, y)).Where(x => x.SightBlockAmount >= GetStat(ThingStat.Sight)).Count() > 0;
     }
 }
 

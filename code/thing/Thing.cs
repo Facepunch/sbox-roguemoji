@@ -15,6 +15,9 @@ public enum ThingFlags
 	Food = 8,
 	Animal = 16,
 }
+
+public enum ThingStat { Strength, Speed, Vitality, Intelligence, Charisma, Sight, Smell, Hearing }
+
 public partial class Thing : Entity
 {
 	[Net] public IntVector GridPos { get; protected set; }
@@ -53,6 +56,9 @@ public partial class Thing : Entity
     [Net] public Thing WieldedThing { get; protected set; }
 
 	[Net] public int SightBlockAmount { get; set; }
+
+	[Net] public bool HasStats { get; private set; }
+	[Net] public IDictionary<ThingStat, int> Stats { get; private set; }
 
     public Thing()
 	{
@@ -395,5 +401,32 @@ public partial class Thing : Entity
 	public virtual void WieldThing(Thing thing)
 	{
         WieldedThing = thing;
+	}
+	
+	public void InitStats()
+	{
+		Stats = new Dictionary<ThingStat, int>();
+		HasStats = true;
+	}
+
+	public virtual void SetStat(ThingStat stat, int value)
+	{
+        Stats[stat] = value;
+    }
+
+	public void AdjustStat(ThingStat stat, int amount)
+	{
+		if (!Stats.ContainsKey(stat))
+			SetStat(stat, amount);
+		else
+            SetStat(stat, Stats[stat] + amount);
+    }
+
+	public int GetStat(ThingStat stat)
+	{
+		if (HasStats && Stats.ContainsKey(stat))
+			return Stats[stat];
+		else
+			return 0;
 	}
 }
