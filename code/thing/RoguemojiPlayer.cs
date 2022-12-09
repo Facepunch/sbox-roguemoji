@@ -83,7 +83,8 @@ public partial class RoguemojiPlayer : Thing
         SetStat(ThingStat.Charisma, 1);
         SetStat(ThingStat.Sight, 9);
         SetStat(ThingStat.Hearing, 1);
-         
+
+        InventoryGridManager.Restart();
         EquipmentGridManager.Restart();
 
         for (int x = 0; x < RoguemojiGame.InventoryWidth - 2; x++)
@@ -101,7 +102,7 @@ public partial class RoguemojiPlayer : Thing
 
     void SpawnRandomInventoryThing(IntVector gridPos)
     {
-        int rand = Rand.Int(0, 8);
+        int rand = Rand.Int(0, 11);
         switch (rand)
         {
             case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -113,6 +114,9 @@ public partial class RoguemojiPlayer : Thing
             case 6: InventoryGridManager.SpawnThing<Cheese>(gridPos); break;
             case 7: InventoryGridManager.SpawnThing<Coat>(gridPos); break;
             case 8: InventoryGridManager.SpawnThing<SafetyVest>(gridPos); break;
+            case 9: InventoryGridManager.SpawnThing<Sunglasses>(gridPos); break;
+            case 10: InventoryGridManager.SpawnThing<Telescope>(gridPos); break;
+            case 11: InventoryGridManager.SpawnThing<WhiteCane>(gridPos); break;
         }
     }
 
@@ -268,7 +272,10 @@ public partial class RoguemojiPlayer : Thing
         var success = base.TryMove( direction, shouldAnimate: false );
 		if (success)
 		{
-			SetIcon("😀");
+            if(HasEquipmentType(TypeLibrary.GetDescription(typeof(Sunglasses))))
+                SetIcon("😎");
+            else
+                SetIcon("😀");
 
 			var middleCell = new IntVector(MathX.FloorToInt((float)RoguemojiGame.ArenaWidth / 2f), MathX.FloorToInt((float)RoguemojiGame.ArenaHeight / 2f));
             var offsetGridPos = GridPos - CameraGridOffset;
@@ -443,8 +450,10 @@ public partial class RoguemojiPlayer : Thing
         SetIcon("😑");
     }
 
-    public void Restart()
+    public override void Restart()
     {
+        base.Restart();
+
         SetStartingValues();
     }
 
@@ -481,6 +490,9 @@ public partial class RoguemojiPlayer : Thing
 
         var sourceGridType = thing.ContainingGridManager.GridType;
         Assert.True(sourceGridType != targetGridType);
+
+        if(sourceGridType == GridType.Equipment)
+            thing.ContainingGridManager.OwningPlayer.UnequipThing(thing);
 
         RoguemojiGame.Instance.RefreshGridPanelClient(To.Single(this), gridType: sourceGridType);
         RoguemojiGame.Instance.RefreshGridPanelClient(To.Single(this), gridType: targetGridType);
@@ -520,6 +532,9 @@ public partial class RoguemojiPlayer : Thing
 
         if (targetGridType == GridType.Inventory && wieldIfPossible && WieldedThing == null && !thing.Flags.HasFlag(ThingFlags.Equipment))
             WieldThing(thing, dontRequireAction: true);
+
+        if (targetGridType == GridType.Equipment)
+            targetGridManager.OwningPlayer.EquipThing(thing);
 
         if (!dontRequireAction)
             PerformedAction();
@@ -778,7 +793,7 @@ public partial class RoguemojiPlayer : Thing
     [ClientRpc]
     public void RefreshVisibility()
     {
-        ComputeVisibility(GridPos, rangeLimit: GetStat(ThingStat.Sight));
+        ComputeVisibility(GridPos, rangeLimit: Math.Max(GetStat(ThingStat.Sight), 0));
     }
 
     public bool IsCellVisible(IntVector gridPos)

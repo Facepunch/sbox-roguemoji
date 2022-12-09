@@ -60,6 +60,8 @@ public partial class Thing : Entity
 	[Net] public bool HasStats { get; private set; }
 	[Net] public IDictionary<ThingStat, int> Stats { get; private set; }
 
+	[Net] public IList<Thing> EquippedThings { get; private set; }
+
     public Thing()
 	{
         ShouldUpdate = true;
@@ -400,8 +402,42 @@ public partial class Thing : Entity
 
 	public virtual void WieldThing(Thing thing)
 	{
+		if (thing == WieldedThing)
+			return;
+
+		if(WieldedThing != null)
+		{
+			OnNoLongerWieldingThing(thing);
+			WieldedThing.OnNoLongerWieldedBy(this);
+		}
+
         WieldedThing = thing;
+
+		if(WieldedThing != null)
+		{
+            OnWieldThing(thing);
+            thing.OnWieldedBy(this);
+        }
 	}
+
+	public void EquipThing(Thing thing)
+	{
+		if(EquippedThings == null)
+            EquippedThings = new List<Thing>();
+
+		EquippedThings.Add(thing);
+
+        OnEquipThing(thing);
+		thing.OnEquippedTo(this);
+	}
+
+	public void UnequipThing(Thing thing)
+	{
+        EquippedThings.Remove(thing);
+
+        OnUnequipThing(thing);
+		thing.OnUnequippedFrom(this);
+    }
 	
 	public void InitStats()
 	{
@@ -429,4 +465,32 @@ public partial class Thing : Entity
 		else
 			return 0;
 	}
+
+    public bool HasEquipmentType(TypeDescription type)
+    {
+		if (EquippedThings == null)
+			return false;
+
+		foreach(var thing in EquippedThings)
+		{
+			if (type == TypeLibrary.GetDescription(thing.GetType()))
+				return true;
+		}
+
+        return false;
+    }
+
+    public virtual void Restart()
+    {
+        EquippedThings.Clear();
+    }
+
+    public virtual void OnWieldThing(Thing thing) { }
+    public virtual void OnNoLongerWieldingThing(Thing thing) { }
+    public virtual void OnWieldedBy(Thing thing) { }
+    public virtual void OnNoLongerWieldedBy(Thing thing) { }
+    public virtual void OnEquipThing(Thing thing) {}
+    public virtual void OnUnequipThing(Thing thing) {}
+    public virtual void OnEquippedTo(Thing thing) {}
+    public virtual void OnUnequippedFrom(Thing thing) {}
 }
