@@ -28,10 +28,13 @@
 
     .char_icon
     {
-        font-size: 60px;
+        width:100%;
+        font-size: 72px;
         background-color: #111111;
         border-radius:3px;
-        padding: 2px 4px 8px 4px;
+        text-align: center;
+        justify-content: center;
+        padding-bottom:4px;
     }
 
     .name_label
@@ -134,12 +137,12 @@
         <div class="name_label"> @player.DisplayName </div>
         <div class="char_icon @GetPlayerClass()" @ref=PlayerIcon @onmousedown=@((PanelEvent e) => OnMouseDownPlayerIcon(e as MousePanelEvent) )> @player.DisplayIcon </div>
         <div class="input_recharge_bar">
-                <div class="input_recharge_bar_overlay" style="width: @Utils.Map(player.InputRechargePercent, 0f, 1f, 0f, 100f, EasingType.SineInOut)%; opacity: @Utils.Map(player.InputRechargePercent, 0f, 1f, 0.25f, 1f, EasingType.ExpoIn);"></div>
-            </div>
+            <div class="input_recharge_bar_overlay" style="width: @Utils.Map(player.InputRechargePercent, 0f, 1f, 0f, 100f, EasingType.SineInOut)%; opacity: @Utils.Map(player.InputRechargePercent, 0f, 1f, 0.25f, 1f, EasingType.ExpoIn);"></div>
+        </div>
 
         <div class="hp_display">
             <span class="hp_icon">@($"{player.GetStatIcon(StatType.Health)}") </span>
-            <span class="hp_label">@($"{player.GetStat(StatType.Health)}/{player.GetStatMax(StatType.Health)}") </span>
+            <span class="hp_label">@($"{player.GetStat(StatType.Health)}") </span>
         </div>
 
         <!-- <div class="level_label"> @($"Level: {player.CurrentLevelId}") </div> -->

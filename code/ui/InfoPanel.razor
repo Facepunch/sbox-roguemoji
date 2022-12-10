@@ -103,7 +103,10 @@
             }
         </div>
 
-        <StatsDisplay Thing=@thing></StatsDisplay>
+        @if(thing.HasStats)
+        {
+            <StatsDisplay Thing=@thing></StatsDisplay>    
+        }
 
         <!-- <div class="debug"> @thing.GridPos TAGS: @thing.Flags GRID: @thing.ContainingGridManager.GridType @thing.ContainingGridManager.GetThingsAtClient(thing.GridPos).Count() </div> -->
     }
