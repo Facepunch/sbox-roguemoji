@@ -51,7 +51,6 @@ public partial class RoguemojiPlayer : Thing
             EquipmentGridManager.GridType = GridType.Equipment;
             EquipmentGridManager.OwningPlayer = this;
 
-            InitStats();
             SetStartingValues();
         }
         else
@@ -76,13 +75,13 @@ public partial class RoguemojiPlayer : Thing
         RefreshVisibility();
         SightBlockAmount = 10;
 
-        SetStat(ThingStat.Strength, 1);
-        SetStat(ThingStat.Speed, 1);
-        SetStat(ThingStat.Intelligence, 1);
-        SetStat(ThingStat.Vitality, 1);
-        SetStat(ThingStat.Charisma, 1);
-        SetStat(ThingStat.Sight, 9);
-        SetStat(ThingStat.Hearing, 1);
+        InitStat(StatType.Strength, 1, 0, 99);
+        InitStat(StatType.Speed, 1, 0, 99);
+        InitStat(StatType.Intelligence, 1, 0, 99);
+        InitStat(StatType.Vitality, 1, 0, 99);
+        InitStat(StatType.Charisma, 1, 0, 99);
+        InitStat(StatType.Sight, 9, 0, 99);
+        InitStat(StatType.Hearing, 1, 0, 99);
 
         InventoryGridManager.Restart();
         EquipmentGridManager.Restart();
@@ -153,7 +152,7 @@ public partial class RoguemojiPlayer : Thing
 
         //DrawDebugText("" + CameraGridOffset + ", " + CameraPixelOffset);
         //DrawDebugText("# Things: " + InventoryGridManager.Things.Count);
-        //Log.Info("Player:ClientTick - InventoryGridManager: " + InventoryGridManager);
+        //Log.Info("Player:Client - Sight: " + GetStat(StatType.Sight));
     }
 
     public override void Update( float dt )
@@ -272,7 +271,7 @@ public partial class RoguemojiPlayer : Thing
         var success = base.TryMove( direction, shouldAnimate: false );
 		if (success)
 		{
-            if(HasEquipmentType(TypeLibrary.GetDescription(typeof(Sunglasses))))
+            if(HasEquipmentType(TypeLibrary.GetType(typeof(Sunglasses))))
                 SetIcon("😎");
             else
                 SetIcon("😀");
@@ -419,7 +418,7 @@ public partial class RoguemojiPlayer : Thing
     [ClientRpc]
     public void VfxSlideCamera(Direction direction, float lifetime, float distance)
     {
-        var slide = AddPlayerComponent(TypeLibrary.GetDescription(typeof(VfxPlayerSlideCamera))) as VfxPlayerSlideCamera;
+        var slide = AddPlayerComponent(TypeLibrary.GetType(typeof(VfxPlayerSlideCamera))) as VfxPlayerSlideCamera;
         slide.Direction = direction;
         slide.Lifetime = lifetime;
         slide.Distance = distance;
@@ -428,7 +427,7 @@ public partial class RoguemojiPlayer : Thing
     [ClientRpc]
     public void VfxShakeCamera(float lifetime, float distance)
     {
-        var shake = AddPlayerComponent(TypeLibrary.GetDescription(typeof(VfxPlayerShakeCamera))) as VfxPlayerShakeCamera;
+        var shake = AddPlayerComponent(TypeLibrary.GetType(typeof(VfxPlayerShakeCamera))) as VfxPlayerShakeCamera;
         shake.Lifetime = lifetime;
         shake.Distance = distance;
     }
@@ -782,18 +781,16 @@ public partial class RoguemojiPlayer : Thing
         return null;
     }
 
-    public override void SetStat(ThingStat stat, int value)
+    public override void ChangedStat(StatType statType)
     {
-        base.SetStat(stat, value);
-
-        if (stat == ThingStat.Sight)
+        if (statType == StatType.Sight)
             RefreshVisibility();
     }
 
     [ClientRpc]
     public void RefreshVisibility()
     {
-        ComputeVisibility(GridPos, rangeLimit: Math.Max(GetStat(ThingStat.Sight), 0));
+        ComputeVisibility(GridPos, rangeLimit: Math.Max(GetStat(StatType.Sight), 0));
     }
 
     public bool IsCellVisible(IntVector gridPos)
@@ -991,7 +988,7 @@ public partial class RoguemojiPlayer : Thing
     {
         Host.AssertClient();
 
-        return ContainingGridManager.GetThingsAtClient(new IntVector(x, y)).Where(x => x.SightBlockAmount >= GetStat(ThingStat.Sight)).Count() > 0;
+        return ContainingGridManager.GetThingsAtClient(new IntVector(x, y)).Where(x => x.SightBlockAmount >= GetStat(StatType.Sight)).Count() > 0;
     }
 }
 

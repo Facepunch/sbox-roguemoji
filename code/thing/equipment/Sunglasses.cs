@@ -15,15 +15,15 @@ public partial class Sunglasses : Thing
 
     public override void OnEquippedTo(Thing thing)
     {
-        thing.AdjustStat(ThingStat.Sight, -3);
+        thing.AdjustStat(StatType.Sight, -3);
         thing.SetIcon("😎");
     }
 
     public override void OnUnequippedFrom(Thing thing)
     {
-        thing.AdjustStat(ThingStat.Sight, 3);
+        thing.AdjustStat(StatType.Sight, 3);
 
-        if (!HasEquipmentType(TypeLibrary.GetDescription(typeof(Sunglasses))))
+        if (!thing.HasEquipmentType(TypeLibrary.GetType(typeof(Sunglasses))))
             thing.SetIcon("😀");
     }
 }

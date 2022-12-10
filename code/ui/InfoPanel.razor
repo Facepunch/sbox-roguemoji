@@ -37,9 +37,9 @@
         width: 40px;
         height: 40px;
         position: absolute;
-        left: 35px;
-        top: 35px;
-        font-size: 24px;
+        left: 25px;
+        top: 25px;
+        font-size: 32px;
         pointer-events: none;
         text-stroke-color: #00000000;
         text-stroke-width: 0px;
@@ -111,7 +111,7 @@
 
             @if(thing.HasStats)
             {
-                <div class="stat_label"> 👁️@thing.GetStat(ThingStat.Sight) </div>
+                <div class="stat_label"> @($"👁️{thing.GetStat(StatType.Sight)}")</div>
             }
         </div>
 

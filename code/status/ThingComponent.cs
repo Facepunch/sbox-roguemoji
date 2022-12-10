@@ -35,7 +35,7 @@ public abstract class ThingComponent
 
     public void Remove()
     {
-        Thing.RemoveComponent(TypeLibrary.GetDescription(GetType()));
+        Thing.RemoveComponent(TypeLibrary.GetType(GetType()));
     }
 
     public virtual void OnRemove()

@@ -22,9 +22,9 @@ public partial class Squirrel : Thing
         ActionDelay = Rand.Float(1f, 3f);
         Hp = MaxHp = 3;
         SightBlockAmount = 8;
-        InitStats();
-        SetStat(ThingStat.Strength, 1);
-        SetStat(ThingStat.Sight, 7);
+
+        InitStat(StatType.Strength, 1, 0, 10);
+        InitStat(StatType.Sight, 7, 0, 10);
     }
 
     public override void Spawn()

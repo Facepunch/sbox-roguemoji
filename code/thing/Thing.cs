@@ -16,7 +16,14 @@ public enum ThingFlags
 	Animal = 16,
 }
 
-public enum ThingStat { Strength, Speed, Vitality, Intelligence, Charisma, Sight, Smell, Hearing }
+public enum StatType { Strength, Speed, Vitality, Intelligence, Charisma, Sight, Smell, Hearing }
+
+public partial class Stat : BaseNetworkable
+{
+	[Net] public int CurrentValue { get; set; }
+    [Net] public int MinValue { get; set; }
+    [Net] public int MaxValue { get; set; }
+}
 
 public partial class Thing : Entity
 {
@@ -58,7 +65,7 @@ public partial class Thing : Entity
 	[Net] public int SightBlockAmount { get; set; }
 
 	[Net] public bool HasStats { get; private set; }
-	[Net] public IDictionary<ThingStat, int> Stats { get; private set; }
+	[Net] public IDictionary<StatType, Stat> Stats { get; private set; }
 
 	[Net] public IList<Thing> EquippedThings { get; private set; }
 
@@ -274,7 +281,7 @@ public partial class Thing : Entity
 
 	public T AddThingComponent<T>() where T : ThingComponent
 	{
-		return AddThingComponent(TypeLibrary.GetDescription(typeof(T))) as T;
+		return AddThingComponent(TypeLibrary.GetType(typeof(T))) as T;
 	}
 
 	public void RemoveComponent(TypeDescription type)
@@ -435,35 +442,66 @@ public partial class Thing : Entity
 	{
         EquippedThings.Remove(thing);
 
+		Log.Info("UnequipThing: " + EquippedThings.Count());
+
         OnUnequipThing(thing);
 		thing.OnUnequippedFrom(this);
     }
 	
-	public void InitStats()
+	public virtual void InitStat(StatType statType, int current, int min, int max)
 	{
-		Stats = new Dictionary<ThingStat, int>();
-		HasStats = true;
-	}
+		if (!HasStats)
+		{
+			Stats = new Dictionary<StatType, Stat>();
+			HasStats = true;
+		}
 
-	public virtual void SetStat(ThingStat stat, int value)
-	{
-        Stats[stat] = value;
+        Stats[statType] = new Stat()
+		{
+			CurrentValue = current,
+			MinValue = min,
+			MaxValue = max
+		};
     }
 
-	public void AdjustStat(ThingStat stat, int amount)
+    public void AdjustStat(StatType statType, int amount)
 	{
-		if (!Stats.ContainsKey(stat))
-			SetStat(stat, amount);
-		else
-            SetStat(stat, Stats[stat] + amount);
+		if (HasStats && Stats.ContainsKey(statType))
+		{
+            Stats[statType].CurrentValue += amount;
+            ChangedStat(statType);
+        }
     }
 
-	public int GetStat(ThingStat stat)
+    public void AdjustStatMin(StatType statType, int amount)
+    {
+        if (HasStats && Stats.ContainsKey(statType))
+		{
+            Stats[statType].MinValue += amount;
+            ChangedStat(statType);
+        }
+    }
+
+    public void AdjustStatMax(StatType statType, int amount)
+    {
+        if (HasStats && Stats.ContainsKey(statType))
+		{
+            Stats[statType].MaxValue += amount;
+			ChangedStat(statType);
+        }
+    }
+
+	public virtual void ChangedStat(StatType statType) { }
+
+    public int GetStat(StatType statType)
 	{
-		if (HasStats && Stats.ContainsKey(stat))
-			return Stats[stat];
-		else
-			return 0;
+		if (HasStats && Stats.ContainsKey(statType))
+		{
+			var stat = Stats[statType];
+			return Math.Clamp(stat.CurrentValue, stat.MinValue, stat.MaxValue);
+        }
+
+		return 0;
 	}
 
     public bool HasEquipmentType(TypeDescription type)
@@ -471,9 +509,9 @@ public partial class Thing : Entity
 		if (EquippedThings == null)
 			return false;
 
-		foreach(var thing in EquippedThings)
+        foreach (var thing in EquippedThings)
 		{
-			if (type == TypeLibrary.GetDescription(thing.GetType()))
+			if (type == TypeLibrary.GetType(thing.GetType()))
 				return true;
 		}
 

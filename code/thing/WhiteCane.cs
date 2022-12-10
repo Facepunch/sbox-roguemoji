@@ -15,11 +15,11 @@ public partial class WhiteCane : Thing
 
     public override void OnWieldedBy(Thing thing)
     {
-        thing.AdjustStat(ThingStat.Sight, 3);
+        thing.AdjustStatMin(StatType.Sight, 3);
     }
 
     public override void OnNoLongerWieldedBy(Thing thing)
     {
-        thing.AdjustStat(ThingStat.Sight, -3);
+        thing.AdjustStatMin(StatType.Sight, -3);
     }
 }

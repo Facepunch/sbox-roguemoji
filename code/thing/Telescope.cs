@@ -15,11 +15,11 @@ public partial class Telescope : Thing
 
     public override void OnWieldedBy(Thing thing)
     {
-        thing.AdjustStat(ThingStat.Sight, 6);
+        thing.AdjustStat(StatType.Sight, 6);
     }
 
     public override void OnNoLongerWieldedBy(Thing thing)
     {
-        thing.AdjustStat(ThingStat.Sight, -6);
+        thing.AdjustStat(StatType.Sight, -6);
     }
 }

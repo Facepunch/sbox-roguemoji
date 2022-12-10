@@ -66,7 +66,7 @@ public partial class GridManager : Entity
     {
         Host.AssertServer();
 
-        var thing = TypeLibrary.GetDescription(typeof(T)).Create<T>();
+        var thing = TypeLibrary.GetType(typeof(T)).Create<T>();
         AddThing(thing);
 
         thing.SetGridPos(gridPos);
@@ -162,7 +162,7 @@ public partial class GridManager : Entity
 	{
 		foreach(var player in ContainedPlayers)
 		{
-			var sight = player.GetStat(ThingStat.Sight);
+			var sight = player.GetStat(StatType.Sight);
             if (VisionChangedPlayers.Contains(player) || thing == player || thing.SightBlockAmount < sight)
 				continue;
 

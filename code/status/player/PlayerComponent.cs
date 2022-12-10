@@ -35,7 +35,7 @@ public abstract class PlayerComponent
 
     public void Remove()
     {
-        Player.RemovePlayerComponent(TypeLibrary.GetDescription(GetType()));
+        Player.RemovePlayerComponent(TypeLibrary.GetType(GetType()));
     }
 
     public virtual void OnRemove()
