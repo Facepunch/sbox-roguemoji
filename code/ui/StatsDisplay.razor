@@ -9,62 +9,36 @@
     .stats
     {
         flex-direction:column;
-        align-items:center;
-        justify-content:center;
-        border: 1px solid #ffffff05;
-        background-color: #ff000099;
+        border-radius: 3px;
+        background-color: #101010;
+        flex-wrap: wrap;
+        //height: 80%;
+        justify-content: center;
+        margin: 20px 20px 20px 0;
+        padding: 4px;
     }
 
-    .icon
+    .stat_display
     {
-        margin: 0 0 5px 0;
-        font-size: 45px;
+        border: 1px solid #151515;
+        border-radius: 3px;
+        margin: 2px;
+        background-color: #050505;
+        padding: 2px;
     }
 
-    .equipped 
+    .stat_icon
     {
-        width: 40px;
-        height: 40px;
-        position: absolute;
-        left: 35px;
-        top: 35px;
-        font-size: 24px;
-        pointer-events: none;
-        text-stroke-color: #00000000; 
-        text-stroke-width: 0px;
+        font-size: 18px;
+        color: white;
+        text-align: center;
     }
 
-    .name_label
+    .stat_label
     {
-        margin: 0 0 5px 0;
         font-size: 22px;
-        color: #ffffff77;
-    }
-
-    .hp_label
-    {
-        margin: 0 0 5px 0;
-        font-size: 22px;
-        color: #ffffff77;
-    }
-
-    .equipment_label
-    {
-        //margin: 0 0 5px 0;
-        font-size: 20px;
-        color: #44554477;
-        font-style: italic;
-    }
-
-    .thing_selected
-    {
-        border: 1px solid #bbbbff44;
-    }
-
-    .debug
-    {
-        color: #44554499;
-        font-size: 12px;
+        color: #ffffff88;
+        text-align: center;
     }
 </style>
 
@@ -74,7 +48,13 @@
         return;
     }
 
-    <!-- <div class="debug"> @thing.GridPos TAGS: @thing.Flags GRID: @thing.ContainingGridManager.GridType @thing.ContainingGridManager.GetThingsAtClient(thing.GridPos).Count() </div> -->
+    @foreach(var pair in Thing.Stats)
+    {
+        <div class="stat_display">
+            <span class="stat_icon"> @($"{pair.Value.Icon}") </span>
+            <span class="stat_label"> @($"{pair.Value.CurrentValue}") </span>
+        </div>
+    }
 </root>
 
 @code

@@ -63,7 +63,6 @@ public partial class RoguemojiPlayer : Thing
     {
         DisplayIcon = "🙂";
         Flags = ThingFlags.Solid | ThingFlags.Selectable;
-        Hp = MaxHp = 10;
         IsDead = false;
         DoneFirstUpdate = false;
         CurrentLevelId = LevelId.None;
@@ -75,13 +74,15 @@ public partial class RoguemojiPlayer : Thing
         RefreshVisibility();
         SightBlockAmount = 10;
 
-        InitStat(StatType.Strength, 1, 0, 99);
-        InitStat(StatType.Speed, 1, 0, 99);
-        InitStat(StatType.Intelligence, 1, 0, 99);
-        InitStat(StatType.Vitality, 1, 0, 99);
-        InitStat(StatType.Charisma, 1, 0, 99);
-        InitStat(StatType.Sight, 9, 0, 99);
-        InitStat(StatType.Hearing, 1, 0, 99);
+        ClearStats();
+        InitStat(StatType.Health, 10, 0, 10, "❤️");
+        InitStat(StatType.Strength, 1, 0, 99, "💪");
+        InitStat(StatType.Speed, 1, 0, 99, "🦶");
+        InitStat(StatType.Intelligence, 1, 0, 99, "🧠");
+        InitStat(StatType.Charisma, 1, 0, 99, "👄");
+        InitStat(StatType.Sight, 9, 0, 99, "👁️");
+        InitStat(StatType.Hearing, 1, 0, 99, "👂️");
+        InitStat(StatType.Smell, 1, 0, 99, "👃");
 
         InventoryGridManager.Restart();
         EquipmentGridManager.Restart();
@@ -781,7 +782,7 @@ public partial class RoguemojiPlayer : Thing
         return null;
     }
 
-    public override void ChangedStat(StatType statType)
+    public override void OnChangedStat(StatType statType)
     {
         if (statType == StatType.Sight)
             RefreshVisibility();

@@ -80,19 +80,8 @@
 
     .info
     {
-        width: 400px;
         border-radius: 3px;
         margin-right: 20px;
-    }
-
-    .stats
-    {
-        //background-color: #663300;
-        width: 100px;
-        flex-grow: 1;
-        //margin-left: 20px;
-        border-radius: 3px;
-        border: 1px solid #ffffff05;
     }
 </style>
 
@@ -112,7 +101,6 @@
         <InventoryPanel class="inventory" style="width: @(40 * RoguemojiGame.InventoryWidth + 4)px; height: @(40 * RoguemojiGame.InventoryHeight + 3)px;" @ref=InventoryPanel></InventoryPanel>
         <NearbyPanel class="nearby" @ref=NearbyPanel></NearbyPanel>
         <InfoPanel class="info" @ref=InfoPanel></InfoPanel>
-        <div class="stats"></div>
     </div>
 
     <!-- <DebugDrawing style="z-index:99999;" @ref=DebugDrawing></DebugDrawing> -->

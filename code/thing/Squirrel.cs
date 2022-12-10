@@ -20,11 +20,13 @@ public partial class Squirrel : Thing
         PathfindMovementCost = 5f;
         TimeSinceAction = 0f;
         ActionDelay = Rand.Float(1f, 3f);
-        Hp = MaxHp = 3;
         SightBlockAmount = 8;
 
-        InitStat(StatType.Strength, 1, 0, 10);
-        InitStat(StatType.Sight, 7, 0, 10);
+        InitStat(StatType.Health, 3, 0, 3, "❤️");
+        InitStat(StatType.Strength, 1, 0, 10, "💪");
+        InitStat(StatType.Sight, 7, 0, 10, "👁️");
+        InitStat(StatType.Hearing, 7, 0, 10, "👂️");
+        InitStat(StatType.Smell, 7, 0, 10, "👃");
     }
 
     public override void Spawn()
@@ -65,7 +67,6 @@ public partial class Squirrel : Thing
     public override void Damage(int amount, Thing source)
     {
         base.Damage(amount, source);
-        //Tooltip = $"A squirrel.\n{Hp}/{MaxHp}❤️";
     }
 
     public override void Destroy()

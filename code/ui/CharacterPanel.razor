@@ -44,11 +44,21 @@
         white-space: nowrap;
     }
 
-    .hp_label
+    .hp_display
     {
         margin: 0 0 5px 0;
+    }
+
+    .hp_icon {
+        font-size: 18px;
+        color: white;
+        text-align: center;
+    }
+
+    .hp_label {
         font-size: 22px;
-        color: #ffffff77;
+        color: #ffffff55;
+        text-align: center;
     }
 
     .level_label
@@ -127,7 +137,11 @@
                 <div class="input_recharge_bar_overlay" style="width: @Utils.Map(player.InputRechargePercent, 0f, 1f, 0f, 100f, EasingType.SineInOut)%; opacity: @Utils.Map(player.InputRechargePercent, 0f, 1f, 0.25f, 1f, EasingType.ExpoIn);"></div>
             </div>
 
-        <div class="hp_label"> @($"{player.Hp}/{player.MaxHp}❤️") </div>
+        <div class="hp_display">
+            <span class="hp_icon">@($"{player.GetStatIcon(StatType.Health)}") </span>
+            <span class="hp_label">@($"{player.GetStat(StatType.Health)}/{player.GetStatMax(StatType.Health)}") </span>
+        </div>
+
         <!-- <div class="level_label"> @($"Level: {player.CurrentLevelId}") </div> -->
         <!-- <div class="row" style="width: 120px;"> -->
 

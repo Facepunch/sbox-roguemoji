@@ -10,15 +10,25 @@
     {
         flex-direction: row;
         align-items:center;
-        justify-content:center;
+        justify-content:flex-start;
         border: 1px solid #ffffff05;
+        flex-basis: content;
+        //flex-grow: 1;
+        //flex-shrink: 1;
     }
 
     .column
     {
         flex-direction:column;       
         align-items: center;
+    }
+
+    .selected_info {
+        flex-shrink: 0;
         padding: 10px;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 20px 0 20px;
     }
 
     .row
@@ -51,23 +61,11 @@
         color: #ffffff77;
     }
 
-    .hp_label {
-        margin: 0 0 5px 0;
-        font-size: 22px;
-        color: #ffffff77;
-    }
-
     .equipment_label {
         //margin: 0 0 5px 0;
         font-size: 20px;
         color: #44554477;
         font-style: italic;
-    }
-
-    .stat_label {
-        font-size: 20px;
-        color: #ffffffaa;
-        text-align: center;
     }
 
     .thing_selected {
@@ -87,7 +85,7 @@
 
     @if(thing != null)
     {
-        <div class="column">
+        <div class="selected_info">
             <div class="name_label"> @thing.DisplayName </div>
 
             <div class="icon @GetPlayerClass()">
@@ -99,28 +97,13 @@
                 }
             </div>
 
-            @if (thing.MaxHp > 0)
-            {
-                <div class="hp_label"> @($"{thing.Hp}/{thing.MaxHp}❤️") </div>
-            }
-
             @if (thing.Flags.HasFlag(ThingFlags.Equipment))
             {
                 <div class="equipment_label"> Equipment </div>
             }
-
-            @if(thing.HasStats)
-            {
-                <div class="stat_label"> @($"👁️{thing.GetStat(StatType.Sight)}")</div>
-            }
         </div>
 
-        <!--
-        <div class="column">
-            <StatsDisplay Thing=@thing></StatsDisplay>
-        </div>
-        -->
-
+        <StatsDisplay Thing=@thing></StatsDisplay>
 
         <!-- <div class="debug"> @thing.GridPos TAGS: @thing.Flags GRID: @thing.ContainingGridManager.GridType @thing.ContainingGridManager.GetThingsAtClient(thing.GridPos).Count() </div> -->
     }

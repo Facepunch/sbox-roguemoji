@@ -16,15 +16,6 @@ public enum ThingFlags
 	Animal = 16,
 }
 
-public enum StatType { Strength, Speed, Vitality, Intelligence, Charisma, Sight, Smell, Hearing }
-
-public partial class Stat : BaseNetworkable
-{
-	[Net] public int CurrentValue { get; set; }
-    [Net] public int MinValue { get; set; }
-    [Net] public int MaxValue { get; set; }
-}
-
 public partial class Thing : Entity
 {
 	[Net] public IntVector GridPos { get; protected set; }
@@ -57,15 +48,10 @@ public partial class Thing : Entity
     public Dictionary<TypeDescription, ThingComponent> ThingComponents = new Dictionary<TypeDescription, ThingComponent>();
 
 	[Net] public ThingFlags Flags { get; set; }
-    [Net] public int Hp { get; set; }
-    [Net] public int MaxHp { get; set; }
 
     [Net] public Thing WieldedThing { get; protected set; }
 
 	[Net] public int SightBlockAmount { get; set; }
-
-	[Net] public bool HasStats { get; private set; }
-	[Net] public IDictionary<StatType, Stat> Stats { get; private set; }
 
 	[Net] public IList<Thing> EquippedThings { get; private set; }
 
@@ -171,7 +157,7 @@ public partial class Thing : Entity
         explosion.VfxShake(0.15f, 6f);
         explosion.VfxScale(0.15f, 0.5f, 1f);
 
-		if (other.MaxHp > 0)
+		if (other.HasStat(StatType.Health))
 		{
 			other.Damage(1, this);
 		}
@@ -179,12 +165,13 @@ public partial class Thing : Entity
 
 	public virtual void Damage(int amount, Thing source)
 	{
-		Hp = Math.Clamp(Hp - amount, 0, MaxHp);
+		if (!HasStat(StatType.Health))
+			return;
 
-		if(Hp <= 0)
-		{
+		AdjustStat(StatType.Health, -amount);
+
+		if(GetStat(StatType.Health) <= 0)
 			Destroy();
-		}
 	}
 
 	public virtual void Destroy()
@@ -394,7 +381,7 @@ public partial class Thing : Entity
 
 	public int GetInfoDisplayHash()
     {
-		return HashCode.Combine(NetworkIdent, DisplayIcon, WieldedThing?.DisplayIcon ?? "", Hp, MaxHp, Flags);
+		return HashCode.Combine(NetworkIdent, DisplayIcon, WieldedThing?.DisplayIcon ?? "", GetStat(StatType.Health), GetStatMax(StatType.Health), Flags);
     }
 
     public int GetNearbyCellHash()
@@ -448,62 +435,6 @@ public partial class Thing : Entity
 		thing.OnUnequippedFrom(this);
     }
 	
-	public virtual void InitStat(StatType statType, int current, int min, int max)
-	{
-		if (!HasStats)
-		{
-			Stats = new Dictionary<StatType, Stat>();
-			HasStats = true;
-		}
-
-        Stats[statType] = new Stat()
-		{
-			CurrentValue = current,
-			MinValue = min,
-			MaxValue = max
-		};
-    }
-
-    public void AdjustStat(StatType statType, int amount)
-	{
-		if (HasStats && Stats.ContainsKey(statType))
-		{
-            Stats[statType].CurrentValue += amount;
-            ChangedStat(statType);
-        }
-    }
-
-    public void AdjustStatMin(StatType statType, int amount)
-    {
-        if (HasStats && Stats.ContainsKey(statType))
-		{
-            Stats[statType].MinValue += amount;
-            ChangedStat(statType);
-        }
-    }
-
-    public void AdjustStatMax(StatType statType, int amount)
-    {
-        if (HasStats && Stats.ContainsKey(statType))
-		{
-            Stats[statType].MaxValue += amount;
-			ChangedStat(statType);
-        }
-    }
-
-	public virtual void ChangedStat(StatType statType) { }
-
-    public int GetStat(StatType statType)
-	{
-		if (HasStats && Stats.ContainsKey(statType))
-		{
-			var stat = Stats[statType];
-			return Math.Clamp(stat.CurrentValue, stat.MinValue, stat.MaxValue);
-        }
-
-		return 0;
-	}
-
     public bool HasEquipmentType(TypeDescription type)
     {
 		if (EquippedThings == null)
