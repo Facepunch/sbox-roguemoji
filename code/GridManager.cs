@@ -64,7 +64,7 @@ public partial class GridManager : Entity
 
     public T SpawnThing<T>(IntVector gridPos) where T : Thing
     {
-        Host.AssertServer();
+        Game.AssertServer();
 
         var thing = TypeLibrary.GetType(typeof(T)).Create<T>();
         AddThing(thing);
@@ -246,13 +246,13 @@ public partial class GridManager : Entity
 
     public IEnumerable<Thing> GetThingsAt(IntVector gridPos)
     {
-        Host.AssertServer();
+        Game.AssertServer();
         return GridThings.TryGetValue(gridPos, out var list) ? list : Enumerable.Empty<Thing>();
     }
 
     public IEnumerable<Thing> GetThingsAtClient(IntVector gridPos)
     {
-        Host.AssertClient();
+        Game.AssertClient();
 		return Things.Where(x => x.GridPos.Equals(gridPos));
     }
 
@@ -291,7 +291,7 @@ public partial class GridManager : Entity
 		int NUM_TRIES = 100;
 		for(int i = 0; i < NUM_TRIES; i++)
 		{
-			var currGridPos = new IntVector(Rand.Int(0, GridWidth - 1), Rand.Int(0, GridHeight - 1));
+			var currGridPos = new IntVector(Game.Random.Int(0, GridWidth - 1), Game.Random.Int(0, GridHeight - 1));
 			var things = GetThingsAt(currGridPos);
             if (things.Count() == 0)
             {

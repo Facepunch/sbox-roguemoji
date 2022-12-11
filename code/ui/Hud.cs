@@ -186,7 +186,7 @@ public partial class Hud : RootPanel
 
     public GridPanel GetGridPanel(GridType gridType)
     {
-        Host.AssertClient();
+        Game.AssertClient();
 
         switch (gridType)
         {

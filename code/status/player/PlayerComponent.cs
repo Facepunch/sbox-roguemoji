@@ -21,9 +21,9 @@ public abstract class PlayerComponent
 
     public virtual void Update(float dt)
     {
-        if(IsClientComponent == Host.IsServer)
+        if(IsClientComponent == Game.IsServer)
         {
-            Log.Error(GetType().Name + " IsClientComponent: " + IsClientComponent + " Host.IsServer: " + Host.IsServer + "!");
+            Log.Error(GetType().Name + " IsClientComponent: " + IsClientComponent + " IsServer: " + Game.IsServer + "!");
         }
     }
 

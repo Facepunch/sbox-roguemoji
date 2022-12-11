@@ -118,7 +118,7 @@ public partial class Thing : Entity
 
 	public virtual bool TryMove(Direction direction, bool shouldAnimate = true)
 	{
-		Assert.True(direction != Direction.None);
+		Sandbox.Diagnostics.Assert.True(direction != Direction.None);
 
 		IntVector vec = GridManager.GetIntVectorForDirection(direction);
 		IntVector newGridPos = GridPos + vec;
@@ -303,7 +303,7 @@ public partial class Thing : Entity
 
 	public void DrawDebugText(string text, Color color, int line = 0, float time = 0f)
     {
-		if (Host.IsServer)
+		if (Game.IsServer)
         {
 			DebugOverlay.ScreenText(text, new Vector2(20f, 20f), 0, color, time);
 		}

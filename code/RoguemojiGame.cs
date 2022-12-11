@@ -48,7 +48,7 @@ public partial class RoguemojiGame : GameManager
 
 	public List<RoguemojiPlayer> Players = new List<RoguemojiPlayer>();
 
-	public RoguemojiPlayer LocalPlayer => Local.Client.Pawn as RoguemojiPlayer; // Client-only
+	public RoguemojiPlayer LocalPlayer => Game.LocalPawn as RoguemojiPlayer; // Client-only
 
 	public List<PanelFlickerData> _panelsToFlicker;
 
@@ -58,14 +58,14 @@ public partial class RoguemojiGame : GameManager
 	{
 		Instance = this;
 
-		if (Host.IsServer)
+		if (Game.IsServer)
 		{
             Levels = new Dictionary<LevelId, Level>();
 
 			CreateLevel(LevelId.Forest0);
 		}
 
-		if (Host.IsClient)
+		if (Game.IsClient)
 		{
 			Hud = new Hud();
 			_panelsToFlicker = new List<PanelFlickerData>();
@@ -119,7 +119,7 @@ public partial class RoguemojiGame : GameManager
         }
     }
 
-	public override void ClientJoined(Client client) // Server-only
+	public override void ClientJoined(IClient client) // Server-only
 	{
 		base.ClientJoined(client);
 
@@ -138,7 +138,7 @@ public partial class RoguemojiGame : GameManager
 		Players.Add(player);
     }
 
-	public override void ClientDisconnect(Client client, NetworkDisconnectionReason reason)
+	public override void ClientDisconnect(IClient client, NetworkDisconnectionReason reason)
 	{
 		var player = client.Pawn as RoguemojiPlayer;
 
@@ -218,7 +218,7 @@ public partial class RoguemojiGame : GameManager
 
     public void FlickerPanel(Panel panel)
 	{
-		Host.AssertClient();
+		Game.AssertClient();
 
 		if (panel == null)
 			return;

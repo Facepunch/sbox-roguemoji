@@ -13,7 +13,7 @@ public partial class Hole : Thing
         Flags = ThingFlags.Solid | ThingFlags.Selectable;
         PathfindMovementCost = 15f;
 
-        if (Host.IsClient)
+        if (Game.IsClient)
         {
             CharSkip = 1;
         }

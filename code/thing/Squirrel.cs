@@ -19,7 +19,7 @@ public partial class Squirrel : Thing
 		Flags = ThingFlags.Solid | ThingFlags.Selectable;
         PathfindMovementCost = 5f;
         TimeSinceAction = 0f;
-        ActionDelay = Rand.Float(1f, 3f);
+        ActionDelay = Game.Random.Float(1f, 3f);
         SightBlockAmount = 8;
 
         InitStat(StatType.Health, 3, 0, 3, "❤️");

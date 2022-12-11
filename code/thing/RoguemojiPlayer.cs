@@ -39,7 +39,7 @@ public partial class RoguemojiPlayer : Thing
 		Tooltip = "";
         PathfindMovementCost = 10f;
 
-        if (Host.IsServer)
+        if (Game.IsServer)
         {
 			InventoryGridManager = new();
 			InventoryGridManager.Init(RoguemojiGame.InventoryWidth, RoguemojiGame.InventoryHeight);
@@ -102,7 +102,7 @@ public partial class RoguemojiPlayer : Thing
 
     void SpawnRandomInventoryThing(IntVector gridPos)
     {
-        int rand = Rand.Int(0, 11);
+        int rand = Game.Random.Int(0, 11);
         switch (rand)
         {
             case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -122,7 +122,7 @@ public partial class RoguemojiPlayer : Thing
 
     void SpawnRandomEquipmentThing(IntVector gridPos)
     {
-        int rand = Rand.Int(0, 1);
+        int rand = Game.Random.Int(0, 1);
         switch (rand)
         {
             case 0: EquipmentGridManager.SpawnThing<Coat>(gridPos); break;
@@ -130,7 +130,7 @@ public partial class RoguemojiPlayer : Thing
         }
     }
 
-    public override void OnClientActive(Client client)
+    public override void OnClientActive(IClient client)
     {
         base.OnClientActive(client);
 
@@ -170,9 +170,9 @@ public partial class RoguemojiPlayer : Thing
         }
     }
 
-	public override void Simulate( Client cl )
+	public override void Simulate(IClient cl )
 	{
-		if(Host.IsServer)
+		if(Game.IsServer)
 		{
             bool wasInputReady = IsInputReady;
             IsInputReady = TimeSinceInput >= MoveDelay;
@@ -489,7 +489,7 @@ public partial class RoguemojiPlayer : Thing
         }
 
         var sourceGridType = thing.ContainingGridManager.GridType;
-        Assert.True(sourceGridType != targetGridType);
+        Sandbox.Diagnostics.Assert.True(sourceGridType != targetGridType);
 
         if(sourceGridType == GridType.Equipment)
             thing.ContainingGridManager.OwningPlayer.UnequipThing(thing);
@@ -987,7 +987,7 @@ public partial class RoguemojiPlayer : Thing
     
     bool BlocksLight(int x, int y)
     {
-        Host.AssertClient();
+        Game.AssertClient();
 
         return ContainingGridManager.GetThingsAtClient(new IntVector(x, y)).Where(x => x.SightBlockAmount >= GetStat(StatType.Sight)).Count() > 0;
     }

@@ -20,7 +20,7 @@ public class VfxShake : ThingComponent
     {
         base.Update(dt);
 
-        var dir = Utils.DegreesToVector(Rand.Float(0f, 360f));
+        var dir = Utils.DegreesToVector(Game.Random.Float(0f, 360f));
         Thing.SetOffset(dir * Utils.Map(TimeSinceStart, 0f, Lifetime, Distance, 0f, EasingType.QuadOut));
 
         if(TimeSinceStart > Lifetime)
