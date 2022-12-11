@@ -7,7 +7,7 @@ public partial class TreeEvergreen : Thing
 	public TreeEvergreen()
 	{
 		DisplayIcon = "🌲";
-		DisplayName = "Evergreen Tree";
+		DisplayName = "Evergreen\nTree";
         IconDepth = 1;
         ShouldLogBehaviour = true;
 		Tooltip = "An evergreen tree.";

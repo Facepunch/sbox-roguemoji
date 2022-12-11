@@ -39,7 +39,7 @@
     @foreach(var thing in GetThings())
     {
         var index = GetIndex(thing.GridPos);
-        <GridCell style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40);" Thing=@thing GridIndex=@index @onmouseover=@(() => HoveredCellIndex = index )) />
+        <GridCell style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40);" Thing=@thing GridIndex=@index />
 
         if (thing == player.SelectedThing)
         {

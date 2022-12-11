@@ -10,9 +10,6 @@ public abstract class GridPanel : Panel
     public virtual int GridWidth => 0;
     public virtual int GridHeight => 0;
 
-    public int HoveredCellIndex { get; set; }
-    public int ClickedCellIndex { get; set; }
-
     public string GetSelectedIndexString()
     {
         if (Hud.Instance.SelectedCell != null)

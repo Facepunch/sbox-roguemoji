@@ -98,6 +98,12 @@
         background-color: #5555ff11;
     }
 
+    .not_wielding_anything
+    {
+        color: transparent;
+        text-shadow: 0 0 0.01px #00000099;
+    }
+
     .input_icon
     {
         width: 30px;
@@ -154,8 +160,8 @@
         <!-- <div style="color: white; font-size:14px; max-width: 60px; overflow: visible; white-space: nowrap;"> @player.QueuedActionName </div> -->
     </div>
      <div class="column">
-        <div class="wielding @(player.WieldedThing != null ? "is_wielding_something" : "")" @ref=WieldingPanel @onmousedown=@((PanelEvent e) => OnMouseDownWieldable(e as MousePanelEvent) )> 
-            @(player.WieldedThing?.DisplayIcon.Substring(player.WieldedThing.CharSkip) ?? "")
+        <div class="wielding @(player.WieldedThing != null ? "is_wielding_something" : "not_wielding_anything")" @ref=WieldingPanel @onmousedown=@((PanelEvent e) => OnMouseDownWieldable(e as MousePanelEvent) )> 
+            @(player.WieldedThing?.DisplayIcon.Substring(player.WieldedThing.CharSkip) ?? "🖐️")
         </div>
         <EquipmentPanel class="equipment" style="width: @(40 * RoguemojiGame.EquipmentWidth + 4)px; height: @(40 * RoguemojiGame.EquipmentHeight + 4)px;" @ref=EquipmentPanel></EquipmentPanel>
      </div>
