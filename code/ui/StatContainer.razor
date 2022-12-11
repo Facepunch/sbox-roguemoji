@@ -1,0 +1,73 @@
+﻿@using System;
+@using Sandbox;
+@using Sandbox.UI;
+
+@inherits Panel;
+@namespace Roguemoji
+
+<style>
+    .stat_container
+    {
+        border: 1px solid #151515;
+        border-radius: 3px;
+        margin: 2px;
+        background-color: #050505;
+        padding: 2px;
+        justify-content: space-around;
+    }
+
+    .stat_icon
+    {
+        font-size: 18px;
+        color: white;
+        text-align: center;
+        padding: 0px;
+    }
+
+    .stat_label
+    {
+        font-size: 22px;
+        color: #ffffff88;
+        text-align: center;
+        padding: 0px;
+    }
+</style>
+
+<root class="stat_container">
+    @if(Stat == null)
+    {
+        return;
+    }
+
+    <span class="stat_icon"> @($"{Thing.GetStatIcon(Stat.StatType)}") </span>
+    <span class="stat_label"> @($"{Stat.CurrentValue}") </span>
+</root>
+
+@code
+{
+    public Stat Stat { get; set; }
+
+    protected override int BuildHash()
+    {
+        // todo
+        return HashCode.Combine( Stat?.CurrentValue ?? 0 );
+    }
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        base.OnAfterTreeRender(firstTime);
+
+        if (Stat == null)
+            return;
+
+        Tooltip = $"{Thing.GetStatName(Stat.StatType)}\n{Stat.CurrentValue}/{Stat.MaxValue}";
+    }
+
+    //protected override Panel CreateTooltipPanel()
+    //{
+    //    var panel = Hud.Instance.AddChild<CellTooltip>();
+    //    panel.Text = Tooltip;
+    //    panel.AddClass($"player-{Thing.PlayerNum}");
+    //    return panel;
+    //}
+}

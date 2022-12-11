@@ -22,11 +22,11 @@ public partial class Squirrel : Thing
         ActionDelay = Game.Random.Float(1f, 3f);
         SightBlockAmount = 8;
 
-        InitStat(StatType.Health, 3, 0, 3, "❤️");
-        InitStat(StatType.Strength, 1, 0, 10, "💪");
-        InitStat(StatType.Sight, 7, 0, 10, "👁️");
-        InitStat(StatType.Hearing, 7, 0, 10, "👂️");
-        InitStat(StatType.Smell, 7, 0, 10, "👃");
+        InitStat(StatType.Health, 3, 0, 3);
+        InitStat(StatType.Attack, 1, 0, 10);
+        InitStat(StatType.Sight, 7, 0, 10);
+        InitStat(StatType.Hearing, 7, 0, 10);
+        InitStat(StatType.Smell, 7, 0, 10);
     }
 
     public override void Spawn()

@@ -17,32 +17,6 @@
         margin: 20px 20px 20px 0;
         padding: 4px;
     }
-
-    .stat_display
-    {
-        border: 1px solid #151515;
-        border-radius: 3px;
-        margin: 2px;
-        background-color: #050505;
-        padding: 2px;
-        justify-content: space-around;
-    }
-
-    .stat_icon
-    {
-        font-size: 18px;
-        color: white;
-        text-align: center;
-        padding: 0px;
-    }
-
-    .stat_label
-    {
-        font-size: 22px;
-        color: #ffffff88;
-        text-align: center;
-        padding: 0px;
-    }
 </style>
 
 <root class="stats">
@@ -53,10 +27,7 @@
 
     @foreach(var pair in Thing.Stats)
     {
-        <div class="stat_display">
-            <span class="stat_icon"> @($"{pair.Value.Icon}") </span>
-            <span class="stat_label"> @($"{pair.Value.CurrentValue}") </span>
-        </div>
+        <StatContainer Stat=@pair.Value></StatContainer>
     }
 </root>
 
@@ -64,18 +35,9 @@
 {
     public Thing Thing { get; set; }
 
-    string GetSelectedClass()
-    {
-        return RoguemojiGame.Instance.LocalPlayer?.SelectedThing != null ? "thing_selected" : "";
-    }
-
-    string GetPlayerClass()
-    {
-        return (RoguemojiGame.Instance.LocalPlayer?.SelectedThing?.PlayerNum ?? 0) > 0 ? $"icon-player-{RoguemojiGame.Instance.LocalPlayer.SelectedThing.PlayerNum}" : "";
-    }
-
     protected override int BuildHash()
     {
-        return HashCode.Combine( RoguemojiGame.Instance.LocalPlayer?.SelectedThing?.GetInfoDisplayHash() ?? 0 );
+        // todo
+        return HashCode.Combine( Thing?.GetInfoDisplayHash() ?? 0 );
     }
 }

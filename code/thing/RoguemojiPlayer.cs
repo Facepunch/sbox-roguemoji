@@ -75,14 +75,14 @@ public partial class RoguemojiPlayer : Thing
         SightBlockAmount = 10;
 
         ClearStats();
-        InitStat(StatType.Health, 10, 0, 10, "❤️");
-        InitStat(StatType.Strength, 1, 0, 99, "💪");
-        InitStat(StatType.Speed, 1, 0, 99, "🦶");
-        InitStat(StatType.Intelligence, 1, 0, 99, "🧠");
-        InitStat(StatType.Charisma, 1, 0, 99, "👄");
-        InitStat(StatType.Sight, 9, 0, 99, "👁️");
-        InitStat(StatType.Hearing, 1, 0, 99, "👂️");
-        InitStat(StatType.Smell, 1, 0, 99, "👃");
+        InitStat(StatType.Health, 10, 0, 10);
+        InitStat(StatType.Attack, 1, 0, 99);
+        InitStat(StatType.Speed, 1, 0, 99);
+        InitStat(StatType.Intelligence, 1, 0, 99);
+        InitStat(StatType.Charisma, 1, 0, 99);
+        InitStat(StatType.Sight, 9, 0, 99);
+        InitStat(StatType.Hearing, 1, 0, 99);
+        InitStat(StatType.Smell, 1, 0, 99);
 
         InventoryGridManager.Restart();
         EquipmentGridManager.Restart();
@@ -196,6 +196,7 @@ public partial class RoguemojiPlayer : Thing
                 else if (Input.Pressed(InputButton.Use))        PickUpTopItem();
                 else if (Input.Pressed(InputButton.Flashlight)) DropWieldedItem();
                 else if (Input.Pressed(InputButton.Drop))       DropWieldedItem();
+                else if (Input.Pressed(InputButton.View))       CharacterHotkeyPressed();
                 else if (Input.Pressed(InputButton.Left))       TryMove(Direction.Left, shouldQueueAction: true);
 				else if (Input.Pressed(InputButton.Right))      TryMove(Direction.Right, shouldQueueAction: true);
 				else if (Input.Pressed(InputButton.Back))       TryMove(Direction.Down, shouldQueueAction: true);
@@ -763,6 +764,11 @@ public partial class RoguemojiPlayer : Thing
     }
 
     public void PlayerIconClicked(bool rightClick, bool shift)
+    {
+        SelectThing(this);
+    }
+
+    public void CharacterHotkeyPressed()
     {
         SelectThing(this);
     }
