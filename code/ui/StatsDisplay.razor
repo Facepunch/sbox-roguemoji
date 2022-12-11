@@ -27,7 +27,8 @@
 
     @foreach(var pair in Thing.Stats)
     {
-        <StatContainer Stat=@pair.Value></StatContainer>
+        <!-- if(pair.Value.CurrentValue != 0) -->
+            <StatContainer Stat=@pair.Value></StatContainer>    
     }
 </root>
 

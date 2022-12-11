@@ -54,6 +54,40 @@ public partial class Thing : Entity
         return "???";
     }
 
+    public static string GetStatDescription(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.Health: return "Amount of life remaining.";
+            case StatType.Attack: return "Amount of physical damage dealt.";
+            case StatType.Speed: return "How quickly actions are performed.";
+            case StatType.Intelligence: return "Skill with magic and technology.";
+            case StatType.Charisma: return "Likeability and attractiveness.";
+            case StatType.Sight: return "The ability to see farther and see past objects.";
+            case StatType.Hearing: return "The ability to notice sounds from a distance.";
+            case StatType.Smell: return "The ability to detect odors left by things.";
+        }
+
+        return "???";
+    }
+
+    public static string GetStatColor(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.Health: return "#ff1111";
+            case StatType.Attack: return "#444444";
+            case StatType.Speed: return "#5555ff";
+            case StatType.Intelligence: return "#9922ff";
+            case StatType.Charisma: return "#ffff55";
+            case StatType.Sight: return "#448844";
+            case StatType.Hearing: return "#aa5500";
+            case StatType.Smell: return "#5b3e31";
+        }
+
+        return "#ffffff";
+    }
+
     public virtual void InitStat(StatType statType, int current, int min, int max)
 	{
 		if (!HasStats)

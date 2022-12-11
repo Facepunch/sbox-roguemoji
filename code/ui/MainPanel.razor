@@ -100,7 +100,15 @@
         <CharacterPanel class="character" @ref=CharacterPanel></CharacterPanel>
         <InventoryPanel class="inventory" style="width: @(40 * RoguemojiGame.InventoryWidth + 4)px; height: @(40 * RoguemojiGame.InventoryHeight + 3)px;" @ref=InventoryPanel></InventoryPanel>
         <NearbyPanel class="nearby" @ref=NearbyPanel></NearbyPanel>
-        <InfoPanel class="info" @ref=InfoPanel></InfoPanel>
+
+        @{
+            var selected_thing = RoguemojiGame.Instance.LocalPlayer?.SelectedThing;
+        }
+
+        @if (selected_thing != null)
+        {
+            <InfoPanel class="info" @ref=InfoPanel SelectedThing=@selected_thing></InfoPanel>    
+        }
     </div>
 
     <!-- <DebugDrawing style="z-index:99999;" @ref=DebugDrawing></DebugDrawing> -->

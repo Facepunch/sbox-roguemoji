@@ -40,7 +40,7 @@
     .icon
     {
         margin: 0 0 5px 0;
-        font-size: 45px;
+        font-size: 55px;
     }
 
     .equipped {
@@ -79,53 +79,53 @@
 </style>
 
 <root class="info @GetSelectedClass()">
-    @{
-        var thing = RoguemojiGame.Instance.LocalPlayer?.SelectedThing;
+    @if(SelectedThing == null)
+    {
+        return;
     }
 
-    @if(thing != null)
-    {
-        <div class="selected_info">
-            <div class="name_label"> @thing.DisplayName </div>
+     <div class="selected_info">
+        <div class="name_label"> @SelectedThing.DisplayName </div>
 
-            <div class="icon @GetPlayerClass()">
-                @thing.DisplayIcon
+        <div class="icon @GetPlayerClass()">
+            @SelectedThing.DisplayIcon
 
-                @if (thing.WieldedThing != null)
-                {
-                    <div class="equipped"> @thing.WieldedThing.DisplayIcon.Substring(thing.WieldedThing.CharSkip) </div>
-                }
-            </div>
-
-            @if (thing.Flags.HasFlag(ThingFlags.Equipment))
+            @if (SelectedThing.WieldedThing != null)
             {
-                <div class="equipment_label"> Equipment </div>
+                <div class="equipped"> @SelectedThing.WieldedThing.DisplayIcon.Substring(SelectedThing.WieldedThing.CharSkip) </div>
             }
         </div>
 
-        @if(thing.HasStats)
+        @if (SelectedThing.Flags.HasFlag(ThingFlags.Equipment))
         {
-            <StatsDisplay Thing=@thing></StatsDisplay>    
+            <div class="equipment_label"> Equipment </div>
         }
+    </div>
+
+    @if (SelectedThing.HasStats)
+    {
+        <StatsDisplay Thing=@SelectedThing></StatsDisplay>    
+    }
 
         <!-- <div class="debug"> @thing.GridPos TAGS: @thing.Flags GRID: @thing.ContainingGridManager.GridType @thing.ContainingGridManager.GetThingsAtClient(thing.GridPos).Count() </div> -->
-    }
 </root>
 
 @code
 {
+    public Thing SelectedThing { get; set; }
+
     string GetSelectedClass()
     {
-        return RoguemojiGame.Instance.LocalPlayer?.SelectedThing != null ? "thing_selected" : "";
+        return SelectedThing != null ? "thing_selected" : "";
     }
 
     string GetPlayerClass()
     {
-        return (RoguemojiGame.Instance.LocalPlayer?.SelectedThing?.PlayerNum ?? 0) > 0 ? $"icon-player-{RoguemojiGame.Instance.LocalPlayer.SelectedThing.PlayerNum}" : "";
+        return SelectedThing.PlayerNum > 0 ? $"icon-player-{SelectedThing.PlayerNum}" : "";
     }
 
     protected override int BuildHash()
     {
-        return HashCode.Combine( RoguemojiGame.Instance.LocalPlayer?.SelectedThing?.GetInfoDisplayHash() ?? 0 );
+        return HashCode.Combine(SelectedThing?.GetInfoDisplayHash() ?? 0);
     }
 }

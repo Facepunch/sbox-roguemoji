@@ -60,14 +60,14 @@
         if (Stat == null)
             return;
 
-        Tooltip = $"{Thing.GetStatName(Stat.StatType)}\n{Stat.CurrentValue}/{Stat.MaxValue}";
+        Tooltip = $"{Thing.GetStatName(Stat.StatType)}";
     }
 
-    //protected override Panel CreateTooltipPanel()
-    //{
-    //    var panel = Hud.Instance.AddChild<CellTooltip>();
-    //    panel.Text = Tooltip;
-    //    panel.AddClass($"player-{Thing.PlayerNum}");
-    //    return panel;
-    //}
+    protected override Panel CreateTooltipPanel()
+    {
+        var panel = Hud.Instance.AddChild<StatTooltip>();
+        panel.StatName = Tooltip;
+        panel.StatType = Stat.StatType;
+        return panel;
+    }
 }
