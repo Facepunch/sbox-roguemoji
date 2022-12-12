@@ -111,7 +111,9 @@
         var player = RoguemojiGame.Instance.LocalPlayer;
         var gridPos = GetGridPos(MousePosition) + player.CameraGridOffset;
         bool visible = player.IsCellVisible(gridPos);
-        Hud.Instance.GridCellClicked(gridPos, GridType.Arena, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), doubleClick: false, visible);
+
+        if (player.ContainingGridManager.IsGridPosInBounds(gridPos))
+            Hud.Instance.GridCellClicked(gridPos, GridType.Arena, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), doubleClick: false, visible);
     }
 
     //protected override int BuildHash()

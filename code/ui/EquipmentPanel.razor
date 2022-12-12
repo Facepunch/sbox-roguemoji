@@ -62,7 +62,11 @@
     {
         base.OnMouseDown(e);
 
-        Hud.Instance.GridCellClicked(GetGridPos(MousePosition), GridType.Equipment, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), doubleClick: false);
+        var gridPos = GetGridPos(MousePosition);
+        var player = RoguemojiGame.Instance.LocalPlayer;
+
+        if (player.EquipmentGridManager.IsGridPosInBounds(gridPos))
+            Hud.Instance.GridCellClicked(gridPos, GridType.Equipment, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), doubleClick: false);
     }
 
     protected override int BuildHash()

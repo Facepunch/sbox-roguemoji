@@ -782,7 +782,7 @@ public partial class RoguemojiPlayer : Thing
         SelectThing(this);
     }
 
-    GridManager GetGridManager(GridType gridType)
+    public GridManager GetGridManager(GridType gridType)
     {
         switch (gridType)
         {

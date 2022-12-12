@@ -73,10 +73,19 @@ public partial class Hud : RootPanel
 			PanelType destinationPanelType = GetContainingPanelType(MousePosition);
 
 			IntVector targetGridPos = IntVector.Zero;
-			if(destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.InventoryGrid || destinationPanelType == PanelType.EquipmentGrid)
+			var gridType = GetGridType(destinationPanelType);
+            if (gridType != GridType.None)
 			{
-				GridPanel gridPanel = GetPanel(destinationPanelType) as GridPanel;
+				GridPanel gridPanel = GetGridPanel(gridType);
 				targetGridPos = gridPanel.GetGridPos(gridPanel.MousePosition);
+
+                var player = RoguemojiGame.Instance.LocalPlayer;
+				var gridManager = player.GetGridManager(gridType);
+				if (!gridManager.IsGridPosInBounds(targetGridPos)) 
+				{
+                    StopDragging();
+					return;
+                }
 			}
 
 			if(DraggedThing.ContainingGridManager.GridType == GridType.Inventory)
@@ -199,6 +208,21 @@ public partial class Hud : RootPanel
         }
 
 		return null;
+    }
+
+	public GridType GetGridType(PanelType panelType)
+    {
+		switch(panelType)
+		{
+            case PanelType.ArenaGrid:
+                return GridType.Arena;
+            case PanelType.InventoryGrid:
+				return GridType.Inventory; ;
+            case PanelType.EquipmentGrid:
+                return GridType.Equipment;
+        }
+
+		return GridType.None;
     }
 
     bool Contains(Rect rect, Vector2 point)

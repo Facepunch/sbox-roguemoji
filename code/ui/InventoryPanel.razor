@@ -31,7 +31,7 @@
         font-size: 12;
         font-weight: bold;
         pointer-events: none;
-        padding: 1px;
+        padding: 0 0 0 2px;
         text-shadow: 0px 2px #000000;
 
         &.dimmed
@@ -97,7 +97,11 @@
     {
         base.OnMouseDown(e);
 
-        Hud.Instance.GridCellClicked(GetGridPos(MousePosition), GridType.Inventory, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), doubleClick: false);
+        var gridPos = GetGridPos(MousePosition);
+        var player = RoguemojiGame.Instance.LocalPlayer;
+
+        if(player.InventoryGridManager.IsGridPosInBounds(gridPos))
+            Hud.Instance.GridCellClicked(gridPos, GridType.Inventory, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), doubleClick: false);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)
