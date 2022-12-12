@@ -7,6 +7,7 @@ public partial class Hole : Thing
 	public Hole()
 	{
         DisplayIcon = "️🕳";
+        DisplayName = "Hole";
         IconDepth = 1;
         ShouldLogBehaviour = true;
 		Tooltip = "A hole.";

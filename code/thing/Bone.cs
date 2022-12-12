@@ -7,6 +7,7 @@ public partial class Bone : Thing
 	public Bone()
 	{
 		DisplayIcon = "🦴";
+		DisplayName = "Bone";
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Tooltip = "A bone.";

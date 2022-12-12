@@ -7,6 +7,7 @@ public partial class Potato : Thing
 	public Potato()
 	{
 		DisplayIcon = "🥔";
+        DisplayName = "Potato";
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Tooltip = "A potato.";

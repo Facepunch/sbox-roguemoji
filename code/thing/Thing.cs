@@ -23,7 +23,8 @@ public partial class Thing : Entity
 
     [Net] public string DisplayIcon { get; protected set; }
 	[Net] public string DisplayName { get; protected set; }
-	[Net] public string Tooltip { get; protected set; }
+    [Net] public string Description { get; protected set; }
+    [Net] public string Tooltip { get; protected set; }
 
 	public bool ShouldUpdate { get; set; }
 	public bool DoneFirstUpdate { get; protected set; }
@@ -428,8 +429,6 @@ public partial class Thing : Entity
 	public void UnequipThing(Thing thing)
 	{
         EquippedThings.Remove(thing);
-
-		Log.Info("UnequipThing: " + EquippedThings.Count());
 
         OnUnequipThing(thing);
 		thing.OnUnequippedFrom(this);

@@ -13,6 +13,8 @@ public partial class Squirrel : Thing
     public Squirrel()
 	{
 		DisplayIcon = "🐿";
+        DisplayName = "Squirrel";
+        Description = "A bushy-tailed rodent.";
         IconDepth = 1;
         ShouldLogBehaviour = true;
 		Tooltip = "A squirrel.";
@@ -23,10 +25,10 @@ public partial class Squirrel : Thing
         SightBlockAmount = 8;
 
         InitStat(StatType.Health, 3, 0, 3);
-        InitStat(StatType.Attack, 1, 0, 10);
-        InitStat(StatType.Sight, 7, 0, 10);
-        InitStat(StatType.Hearing, 7, 0, 10);
-        InitStat(StatType.Smell, 7, 0, 10);
+        InitStat(StatType.Attack, 1);
+        InitStat(StatType.Sight, 7);
+        InitStat(StatType.Hearing, 3);
+        //InitStat(StatType.Smell, 3);
     }
 
     public override void Spawn()

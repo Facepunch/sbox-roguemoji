@@ -7,6 +7,7 @@ public partial class Mushroom : Thing
 	public Mushroom()
 	{
 		DisplayIcon = "🍄";
+        DisplayName = "Mushroom";
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Tooltip = "A mushroom.";

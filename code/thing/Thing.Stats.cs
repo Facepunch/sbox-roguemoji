@@ -88,7 +88,7 @@ public partial class Thing : Entity
         return "#ffffff";
     }
 
-    public virtual void InitStat(StatType statType, int current, int min, int max)
+    public virtual void InitStat(StatType statType, int current, int min = 0, int max = int.MaxValue)
 	{
 		if (!HasStats)
 		{

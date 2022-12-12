@@ -7,6 +7,7 @@ public partial class SafetyVest : Thing
 	public SafetyVest()
 	{
 		DisplayIcon = "🦺";
+        DisplayName = "Safety Vest";
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Tooltip = "A very noticeable safety vest.";

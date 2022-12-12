@@ -25,10 +25,9 @@
         return;
     }
 
-    @foreach(var pair in Thing.Stats)
+    @foreach(var trait in Thing.Traits)
     {
-        <!-- if(pair.Value.CurrentValue != 0) -->
-            <StatContainer Stat=@pair.Value></StatContainer>    
+        <TraitContainer Trait=@trait></TraitContainer>    
     }
 </root>
 

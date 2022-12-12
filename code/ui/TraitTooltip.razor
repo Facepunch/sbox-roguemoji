@@ -1,0 +1,35 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+
+@inherits Panel;
+@namespace Roguemoji
+
+<style>
+    .trait_tooltip {
+        position: absolute;
+        border-radius: 2px;
+        border: 1px solid #ffffff33;
+        box-shadow: 2px 2px 12px black;
+        flex-direction:column;
+        padding: 4px;
+    }
+
+    .trait_tooltip_name {
+        font-size: 18px;
+    }
+
+    .trait_tooltip_desc {
+        font-size: 16px;
+        color: white;
+    }
+</style>
+
+<root class="trait_tooltip">
+    <div class="trait_tooltip_name" >@Trait.Name </div>
+    <div class="trait_tooltip_desc"> @Trait.Description </div>
+</root>
+
+@code
+{
+    public Trait Trait { get; set; }
+}

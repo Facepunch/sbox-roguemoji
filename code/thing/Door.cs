@@ -7,6 +7,7 @@ public partial class Door : Thing
 	public Door()
 	{
 		DisplayIcon = "️🚪";
+        DisplayName = "Door";
         IconDepth = 1;
         ShouldLogBehaviour = true;
 		Tooltip = "A door.";

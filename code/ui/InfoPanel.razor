@@ -39,7 +39,7 @@
 
     .icon
     {
-        margin: 0 0 5px 0;
+        margin: 0 0 10px 0;
         font-size: 55px;
     }
 
@@ -47,8 +47,8 @@
         width: 40px;
         height: 40px;
         position: absolute;
-        left: 25px;
-        top: 25px;
+        left: 35px;
+        top: 35px;
         font-size: 32px;
         pointer-events: none;
         text-stroke-color: #00000000;
@@ -56,17 +56,26 @@
     }
 
     .name_label {
-        margin: 0 0 5px 0;
+        margin: 0 0 1px 0;
         font-size: 20px;
         color: #ffffff77;
         text-align: center;
     }
 
     .equipment_label {
-        //margin: 0 0 5px 0;
-        font-size: 20px;
-        color: #44554477;
+        font-size: 18px;
+        color: #44554433;
+    }
+
+    .info_description_label {
+        font-size: 16px;
+        color: #ffffff55;
         font-style: italic;
+        flex-wrap: wrap;
+        text-align: left;
+        max-width: 160px;
+        max-height: 80px;
+        overflow: hidden;
     }
 
     .thing_selected {
@@ -88,24 +97,25 @@
      <div class="selected_info">
         <div class="name_label"> @SelectedThing.DisplayName </div>
 
+        @if (SelectedThing.Flags.HasFlag(ThingFlags.Equipment)) { <div class="equipment_label"> Equipment </div> }
+
         <div class="icon @GetPlayerClass()">
             @SelectedThing.DisplayIcon
 
-            @if (SelectedThing.WieldedThing != null)
-            {
-                <div class="equipped"> @SelectedThing.WieldedThing.DisplayIcon.Substring(SelectedThing.WieldedThing.CharSkip) </div>
-            }
+            @if (SelectedThing.WieldedThing != null) { <div class="equipped"> @SelectedThing.WieldedThing.DisplayIcon.Substring(SelectedThing.WieldedThing.CharSkip) </div> }
         </div>
 
-        @if (SelectedThing.Flags.HasFlag(ThingFlags.Equipment))
-        {
-            <div class="equipment_label"> Equipment </div>
-        }
+        @if (!string.IsNullOrEmpty(SelectedThing.Description)) { <div class="info_description_label"> @SelectedThing.Description </div> }
     </div>
 
     @if (SelectedThing.HasStats)
     {
         <StatsDisplay Thing=@SelectedThing></StatsDisplay>    
+    }
+
+    @if (SelectedThing.Traits != null && SelectedThing.Traits.Count > 0)
+    {
+        <TraitsDisplay Thing=@SelectedThing></TraitsDisplay>    
     }
 
         <!-- <div class="debug"> @thing.GridPos TAGS: @thing.Flags GRID: @thing.ContainingGridManager.GridType @thing.ContainingGridManager.GetThingsAtClient(thing.GridPos).Count() </div> -->

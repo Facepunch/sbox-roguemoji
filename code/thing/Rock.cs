@@ -7,6 +7,7 @@ public partial class Rock : Thing
 	public Rock()
 	{
 		DisplayIcon = "🗿";
+        DisplayName = "Rock";
         IconDepth = 1;
         ShouldLogBehaviour = true;
 		Tooltip = "A rock.";

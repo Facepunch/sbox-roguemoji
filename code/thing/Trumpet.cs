@@ -7,6 +7,7 @@ public partial class Trumpet : Thing
 	public Trumpet()
 	{
 		DisplayIcon = "🎺";
+        DisplayName = "Trumpet";
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Tooltip = "A trumpet.";

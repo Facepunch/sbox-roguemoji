@@ -7,6 +7,7 @@ public partial class Nut : Thing
 	public Nut()
 	{
 		DisplayIcon = "🌰";
+        DisplayName = "Nut";
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Tooltip = "A nut.";

@@ -7,9 +7,11 @@ public partial class Telescope : Thing
 	public Telescope()
 	{
 		DisplayIcon = "🔭";
+        DisplayName = "Telescope";
+        Description = "See farther but move slower.";
+        Tooltip = "A telescope.";
         IconDepth = 0;
         ShouldLogBehaviour = true;
-		Tooltip = "A telescope.";
 		Flags = ThingFlags.Selectable;
     }
 

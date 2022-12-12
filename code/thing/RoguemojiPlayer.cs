@@ -76,13 +76,21 @@ public partial class RoguemojiPlayer : Thing
 
         ClearStats();
         InitStat(StatType.Health, 10, 0, 10);
-        InitStat(StatType.Attack, 1, 0, 99);
-        InitStat(StatType.Speed, 1, 0, 99);
-        InitStat(StatType.Intelligence, 1, 0, 99);
-        InitStat(StatType.Charisma, 1, 0, 99);
-        InitStat(StatType.Sight, 9, 0, 99);
-        InitStat(StatType.Hearing, 1, 0, 99);
-        InitStat(StatType.Smell, 1, 0, 99);
+        InitStat(StatType.Attack, 1);
+        InitStat(StatType.Speed, 1);
+        InitStat(StatType.Intelligence, 1);
+        InitStat(StatType.Charisma, 1);
+        InitStat(StatType.Sight, 9);
+        InitStat(StatType.Hearing, 3);
+        //InitStat(StatType.Smell, 1);
+
+        ClearTraits();
+        AddTrait("Trait", "🌟", "Trait description.");
+        AddTrait("Trait", "🕹️", "Trait description.");
+        AddTrait("Trait", "📮", "Trait description.");
+        AddTrait("Trait", "🌟", "Trait description.");
+        AddTrait("Trait", "🕹️", "Trait description.");
+        AddTrait("Trait", "📮", "Trait description.");
 
         InventoryGridManager.Restart();
         EquipmentGridManager.Restart();
@@ -296,6 +304,7 @@ public partial class RoguemojiPlayer : Thing
 
             if(movedCamera)
             {
+                // todo: make an option to turn this off
                 VfxSlideCamera(direction, 0.25f, 40f);
                 VfxSlide(direction, 0.1f, 40f);
             }

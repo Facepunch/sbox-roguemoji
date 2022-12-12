@@ -7,6 +7,7 @@ public partial class Coat : Thing
 	public Coat()
 	{
 		DisplayIcon = "🧥";
+        DisplayName = "Coat";
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Tooltip = "A thick coat.";
