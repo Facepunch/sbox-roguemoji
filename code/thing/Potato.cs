@@ -12,6 +12,14 @@ public partial class Potato : Thing
         Tooltip = "A potato.";
         IconDepth = 0;
         ShouldLogBehaviour = true;
-		Flags = ThingFlags.Selectable;
+		Flags = ThingFlags.Selectable | ThingFlags.Useable;
+    }
+
+    public override void Use(Thing target)
+    {
+        base.Use(target);
+
+        target.AdjustStat(StatType.Health, 2);
+        Destroy();
     }
 }

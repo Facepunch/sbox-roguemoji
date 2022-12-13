@@ -11,6 +11,6 @@ public partial class Nut : Thing
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Tooltip = "A nut.";
-		Flags = ThingFlags.Selectable;
+		Flags = ThingFlags.Selectable | ThingFlags.Useable;
     }
 }

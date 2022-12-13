@@ -66,7 +66,6 @@ public partial class RoguemojiPlayer : Thing
         IsDead = false;
         DoneFirstUpdate = false;
         CurrentLevelId = LevelId.None;
-        WieldedThing = null;
         MoveDelay = TimeSinceInput = 0.5f;
         IsInputReady = true;
         QueuedAction = null;
@@ -204,6 +203,7 @@ public partial class RoguemojiPlayer : Thing
                 else if (Input.Pressed(InputButton.Use))        PickUpTopItem();
                 else if (Input.Pressed(InputButton.Flashlight)) DropWieldedItem();
                 else if (Input.Pressed(InputButton.Drop))       DropWieldedItem();
+                else if (Input.Pressed(InputButton.Jump))       UseWieldedThing();
                 else if (Input.Pressed(InputButton.View))       CharacterHotkeyPressed();
                 else if (Input.Pressed(InputButton.Left))       TryMove(Direction.Left, shouldQueueAction: true);
 				else if (Input.Pressed(InputButton.Right))      TryMove(Direction.Right, shouldQueueAction: true);
@@ -323,9 +323,9 @@ public partial class RoguemojiPlayer : Thing
 		return success;
 	}
 
-    public override void Interact(Thing other, Direction direction)
+    public override void BumpInto(Thing other, Direction direction)
     {
-        base.Interact(other, direction);
+        base.BumpInto(other, direction);
 
         if(other is Hole)
         {
@@ -440,12 +440,12 @@ public partial class RoguemojiPlayer : Thing
         shake.Distance = distance;
     }
 
-    public override void Damage(int amount, Thing source)
+    public override void TakeDamage(Thing source)
     {
         if (IsDead)
             return;
 
-        base.Damage(amount, source);
+        base.TakeDamage(source);
     }
 
     public override void Destroy()
@@ -803,7 +803,7 @@ public partial class RoguemojiPlayer : Thing
     [ClientRpc]
     public void RefreshVisibility()
     {
-        ComputeVisibility(GridPos, rangeLimit: GetStat(StatType.Sight).ClampedValue);
+        ComputeVisibility(GridPos, rangeLimit: GetStatClamped(StatType.Sight));
     }
 
     public bool IsCellVisible(IntVector gridPos)

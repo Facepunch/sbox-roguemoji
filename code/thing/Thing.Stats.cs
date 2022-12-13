@@ -28,7 +28,7 @@ public partial class Thing : Entity
         {
             case StatType.Health: return "❤️";
             case StatType.Attack: return "⚔️";
-            case StatType.Speed: return "⏳";
+            case StatType.Speed: return "🏃";
             case StatType.Intelligence: return "🧠";
             case StatType.Charisma: return "💋";
             case StatType.Sight: return "👁";
@@ -62,7 +62,7 @@ public partial class Thing : Entity
         {
             case StatType.Health: return "Amount of life remaining.";
             case StatType.Attack: return "Amount of physical damage dealt.";
-            case StatType.Speed: return "How quickly actions are performed.";
+            case StatType.Speed: return "Decreases the delay between actions.";
             case StatType.Intelligence: return "Skill with magic and technology.";
             case StatType.Charisma: return "Likeability and attractiveness.";
             case StatType.Sight: return "The ability to see farther and see past objects.";
@@ -109,12 +109,21 @@ public partial class Thing : Entity
 		};
     }
 
+
     public void AdjustStat(StatType statType, int amount)
 	{
 		if (HasStats && Stats.ContainsKey(statType))
 		{
-            Stats[statType].CurrentValue += amount;
-            OnChangedStat(statType);
+            var stat = Stats[statType];
+            var oldValue = stat.CurrentValue;
+
+            stat.CurrentValue += amount;
+
+            if (ShouldClampCurrentStat(statType))
+                stat.CurrentValue = stat.ClampedValue;
+
+            if(stat.CurrentValue != oldValue)
+                OnChangedStat(statType);
         }
     }
 
@@ -159,7 +168,7 @@ public partial class Thing : Entity
 		if (HasStats && Stats.ContainsKey(statType))
 		{
 			var stat = Stats[statType];
-			return Math.Clamp(stat.CurrentValue, stat.MinValue, stat.MaxValue);
+			return stat.ClampedValue;
         }
 
 		return 0;
@@ -185,5 +194,14 @@ public partial class Thing : Entity
     {
         Stats.Clear();
         HasStats = false;
+    }
+
+    /// <summary> Clamp non-permanent stats like Health, don't clamp stats like Sight. </summary>
+    public bool ShouldClampCurrentStat(StatType statType)
+    {
+        if (statType == StatType.Health)
+            return true;
+
+        return false;
     }
 }

@@ -12,8 +12,9 @@ public enum ThingFlags
     Solid = 1,
     Selectable = 2,
 	Equipment = 4,
-	Food = 8,
-	Animal = 16,
+	Useable = 8,
+	Food = 16,
+	Animal = 32,
 }
 
 public partial class Thing : Entity
@@ -51,8 +52,9 @@ public partial class Thing : Entity
 	[Net] public ThingFlags Flags { get; set; }
 
     [Net] public Thing WieldedThing { get; protected set; }
+    [Net] public Thing ThingWieldingThis { get; protected set; }
 
-	[Net] public int SightBlockAmount { get; set; }
+    [Net] public int SightBlockAmount { get; set; }
 
 	[Net] public IList<Thing> EquippedThings { get; private set; }
 
@@ -130,8 +132,8 @@ public partial class Thing : Entity
 		Thing other = ContainingGridManager.GetThingsAt(newGridPos).WithAll(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
         if (other != null)
 		{
-            Interact(other, direction);
-            RoguemojiGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") bumped into " + other.DisplayIcon + "(" + other.DisplayName + ")", PlayerNum);
+            BumpInto(other, direction);
+            //RoguemojiGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") bumped into " + other.DisplayIcon + "(" + other.DisplayName + ")", PlayerNum);
 
 			return false;
 		}
@@ -149,30 +151,63 @@ public partial class Thing : Entity
         
     }
 
-    public virtual void Interact(Thing other, Direction direction)
+    public virtual void BumpInto(Thing target, Direction direction)
 	{
         VfxNudge(direction, 0.1f, 10f);
-        other.VfxShake(0.2f, 4f);
 
-        var explosion = ContainingGridManager.SpawnThing<Explosion>(other.GridPos);
-        explosion.VfxShake(0.15f, 6f);
-        explosion.VfxScale(0.15f, 0.5f, 1f);
-
-		if (other.HasStat(StatType.Health))
-		{
-			other.Damage(1, this);
-		}
+		var hittingThing = WieldedThing != null ? WieldedThing : this;
+        hittingThing.HitOther(target, direction);
     }
 
-	public virtual void Damage(int amount, Thing source)
+	public virtual void HitOther(Thing target, Direction direction)
+	{
+		if (Flags.HasFlag(ThingFlags.Useable))
+			Use(target);
+		else
+			DamageOther(target, direction);
+    }
+
+	public virtual void DamageOther(Thing target, Direction direction)
+	{
+        target.VfxShake(0.2f, 4f);
+
+        if (target.HasStat(StatType.Health))
+        {
+            var explosion = target.ContainingGridManager.SpawnThing<Explosion>(target.GridPos);
+            explosion.VfxShake(0.15f, 6f);
+            explosion.VfxScale(0.15f, 0.5f, 1f);
+
+            var damagingThing = ThingWieldingThis != null ? ThingWieldingThis : this;
+            target.TakeDamage(damagingThing);
+
+            int amount = damagingThing.GetStatClamped(StatType.Attack);
+            RoguemojiGame.Instance.LogMessage($"{damagingThing.DisplayIcon}{damagingThing.DisplayName} attacked {target.DisplayIcon}{target.DisplayName} for {amount}⚔️!", damagingThing.PlayerNum);
+        }
+    }
+
+	public virtual void TakeDamage(Thing source)
 	{
 		if (!HasStat(StatType.Health))
 			return;
 
+		int amount = source.GetStatClamped(StatType.Attack);
 		AdjustStat(StatType.Health, -amount);
 
 		if(GetStatClamped(StatType.Health) <= 0)
 			Destroy();
+	}
+
+	public virtual void UseWieldedThing()
+	{
+		if (WieldedThing == null)
+			return;
+
+		WieldedThing.Use(this);
+	}
+
+	public virtual void Use(Thing target)
+	{
+
 	}
 
 	public virtual void Destroy()
@@ -451,12 +486,24 @@ public partial class Thing : Entity
     public virtual void Restart()
     {
         EquippedThings.Clear();
+        WieldedThing = null;
+		ThingWieldingThis = null;
     }
 
     public virtual void OnWieldThing(Thing thing) { }
     public virtual void OnNoLongerWieldingThing(Thing thing) { }
-    public virtual void OnWieldedBy(Thing thing) { }
-    public virtual void OnNoLongerWieldedBy(Thing thing) { }
+
+    public virtual void OnWieldedBy(Thing thing) 
+	{
+		ThingWieldingThis = thing;
+	}
+
+    public virtual void OnNoLongerWieldedBy(Thing thing) 
+	{
+		if(thing == ThingWieldingThis)
+            ThingWieldingThis = null;
+    }
+
     public virtual void OnEquipThing(Thing thing) {}
     public virtual void OnUnequipThing(Thing thing) {}
     public virtual void OnEquippedTo(Thing thing) {}

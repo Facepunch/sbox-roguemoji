@@ -12,6 +12,6 @@ public partial class Cheese : Thing
         Description = "Brightly colored and highly noticeable.";
         IconDepth = 0;
         ShouldLogBehaviour = true;
-		Flags = ThingFlags.Selectable;
+		Flags = ThingFlags.Selectable | ThingFlags.Useable;
     }
 }

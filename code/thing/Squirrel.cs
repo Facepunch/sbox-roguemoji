@@ -66,9 +66,9 @@ public partial class Squirrel : Thing
         }
     }
 
-    public override void Damage(int amount, Thing source)
+    public override void TakeDamage(Thing source)
     {
-        base.Damage(amount, source);
+        base.TakeDamage(source);
     }
 
     public override void Destroy()
