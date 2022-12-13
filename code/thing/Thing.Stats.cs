@@ -28,7 +28,7 @@ public partial class Thing : Entity
         {
             case StatType.Health: return "❤️";
             case StatType.Attack: return "⚔️";
-            case StatType.Speed: return "🏃";
+            case StatType.Speed: return "⏳";
             case StatType.Intelligence: return "🧠";
             case StatType.Charisma: return "💋";
             case StatType.Sight: return "👁";
@@ -62,7 +62,7 @@ public partial class Thing : Entity
         {
             case StatType.Health: return "Amount of life remaining.";
             case StatType.Attack: return "Amount of physical damage dealt.";
-            case StatType.Speed: return "Decreases the delay between actions.";
+            case StatType.Speed: return "Reduces the delay between actions.";
             case StatType.Intelligence: return "Skill with magic and technology.";
             case StatType.Charisma: return "Likeability and attractiveness.";
             case StatType.Sight: return "The ability to see farther and see past objects.";
@@ -108,7 +108,6 @@ public partial class Thing : Entity
 			MaxValue = max,
 		};
     }
-
 
     public void AdjustStat(StatType statType, int amount)
 	{

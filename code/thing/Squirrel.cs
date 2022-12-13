@@ -6,9 +6,7 @@ public partial class Squirrel : Thing
 {
     public Targeting Targeting { get; private set; }
     public Pathfinding Pathfinding { get; private set; }
-
-    public TimeSince TimeSinceAction { get; private set; }
-    public float ActionDelay { get; private set; }
+    public Acting Acting { get; private set; }
 
     public Squirrel()
 	{
@@ -20,12 +18,11 @@ public partial class Squirrel : Thing
 		Tooltip = "A squirrel.";
 		Flags = ThingFlags.Solid | ThingFlags.Selectable;
         PathfindMovementCost = 5f;
-        TimeSinceAction = 0f;
-        ActionDelay = Game.Random.Float(1f, 3f);
         SightBlockAmount = 8;
 
         InitStat(StatType.Health, 3, 0, 3);
         InitStat(StatType.Attack, 1);
+        InitStat(StatType.Speed, 2);
         InitStat(StatType.Sight, 7);
         InitStat(StatType.Hearing, 3);
         //InitStat(StatType.Smell, 3);
@@ -37,6 +34,9 @@ public partial class Squirrel : Thing
 
         Targeting = AddThingComponent<Targeting>();
         Pathfinding = AddThingComponent<Pathfinding>();
+        Acting = AddThingComponent<Acting>();
+        Acting.ActionDelay = 2f;
+        Acting.TimeSinceAction = Game.Random.Float(0f, 2f);
     }
 
     public override void Update(float dt)
@@ -52,7 +52,7 @@ public partial class Squirrel : Thing
         }
         else
         {
-            if (TimeSinceAction > ActionDelay)
+            if (Acting.IsActionReady)
             {
                 var path = Pathfinding.GetPathTo(GridPos, Targeting.Target.GridPos);
                 if (path != null && path.Count > 0 && !path[0].Equals(GridPos))
@@ -61,7 +61,7 @@ public partial class Squirrel : Thing
                     TryMove(dir);
                 }
 
-                TimeSinceAction = 0f;
+                Acting.PerformedAction();
             }
         }
     }

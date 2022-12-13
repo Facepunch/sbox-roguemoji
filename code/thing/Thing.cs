@@ -58,6 +58,8 @@ public partial class Thing : Entity
 
 	[Net] public IList<Thing> EquippedThings { get; private set; }
 
+	[Net] public float ActionRechargePercent { get; set; }
+
     public Thing()
 	{
         ShouldUpdate = true;
@@ -70,6 +72,7 @@ public partial class Thing : Entity
 		ThingId = RoguemojiGame.ThingId++;
     }
 
+	// Server only
 	public override void Spawn()
 	{
 		base.Spawn();
@@ -145,11 +148,6 @@ public partial class Thing : Entity
 
 		return true;
 	}
-
-    public virtual void PerformedAction()
-    {
-        
-    }
 
     public virtual void BumpInto(Thing target, Direction direction)
 	{
@@ -508,4 +506,5 @@ public partial class Thing : Entity
     public virtual void OnUnequipThing(Thing thing) {}
     public virtual void OnEquippedTo(Thing thing) {}
     public virtual void OnUnequippedFrom(Thing thing) {}
+    public virtual void OnActionRecharged() {}
 }

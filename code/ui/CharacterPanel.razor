@@ -144,7 +144,7 @@
         <div class="name_label"> @player.DisplayName </div>
         <div class="char_icon @GetPlayerClass()" @ref=PlayerIcon @onmousedown=@((PanelEvent e) => OnMouseDownPlayerIcon(e as MousePanelEvent) )> @player.DisplayIcon </div>
         <div class="input_recharge_bar">
-            <div class="input_recharge_bar_overlay" style="width: @Utils.Map(player.InputRechargePercent, 0f, 1f, 0f, 100f, EasingType.SineInOut)%; opacity: @Utils.Map(player.InputRechargePercent, 0f, 1f, 0.25f, 1f, EasingType.ExpoIn);"></div>
+            <div class="input_recharge_bar_overlay" style="width: @Utils.Map(player.ActionRechargePercent, 0f, 1f, 0f, 100f, EasingType.SineInOut)%; opacity: @Utils.Map(player.ActionRechargePercent, 0f, 1f, 0.25f, 1f, EasingType.ExpoIn);"></div>
         </div>
 
         <div class="hp_display">
@@ -183,7 +183,7 @@
     protected override int BuildHash()
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
-        return HashCode.Combine(player.GetInfoDisplayHash(), player.InputRechargePercent);
+        return HashCode.Combine(player.GetInfoDisplayHash(), player.ActionRechargePercent);
     }
 
     public void OnMouseDownWieldable(MousePanelEvent e)

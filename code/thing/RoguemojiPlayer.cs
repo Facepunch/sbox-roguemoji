@@ -7,10 +7,13 @@ namespace Roguemoji;
 
 public partial class RoguemojiPlayer : Thing
 {
-	public TimeSince TimeSinceInput { get; set; }
-	[Net] public float MoveDelay { get; set; }
-    [Net] public float InputRechargePercent { get; set; }
-    [Net] public bool IsInputReady { get; set; }
+	//public TimeSince TimeSinceAction { get; set; }
+	//[Net] public float ActionDelay { get; set; }
+ //   [Net] public float ActionRechargePercent { get; set; }
+ //   [Net] public bool IsActionReady { get; set; }
+
+    public Acting Acting { get; private set; }
+    private float _startingActionDelay = 0.5f;
 
     [Net] public IntVector CameraGridOffset { get; set; }
     public Vector2 CameraPixelOffset { get; set; } // Client-only
@@ -59,6 +62,14 @@ public partial class RoguemojiPlayer : Thing
         }
 	}
 
+    public override void Spawn()
+    {
+        base.Spawn();
+
+        Acting = AddThingComponent<Acting>();
+        Acting.ActionDelay = _startingActionDelay;
+    }
+
     void SetStartingValues()
     {
         DisplayIcon = "🙂";
@@ -66,8 +77,8 @@ public partial class RoguemojiPlayer : Thing
         IsDead = false;
         DoneFirstUpdate = false;
         CurrentLevelId = LevelId.None;
-        MoveDelay = TimeSinceInput = 0.5f;
-        IsInputReady = true;
+        //ActionDelay = TimeSinceAction = 0.5f;
+        //IsActionReady = true;
         QueuedAction = null;
         QueuedActionName = "";
         RefreshVisibility();
@@ -105,6 +116,15 @@ public partial class RoguemojiPlayer : Thing
         RoguemojiGame.Instance.RefreshGridPanelClient(GridType.Inventory);
         RoguemojiGame.Instance.RefreshGridPanelClient(GridType.Equipment);
         RoguemojiGame.Instance.RefreshNearbyPanelClient();
+    }
+
+    public override void Restart()
+    {
+        base.Restart();
+
+        SetStartingValues();
+        Acting.ActionDelay = _startingActionDelay;
+        Acting.IsActionReady = false;
     }
 
     void SpawnRandomInventoryThing(IntVector gridPos)
@@ -181,12 +201,12 @@ public partial class RoguemojiPlayer : Thing
 	{
 		if(Game.IsServer)
 		{
-            bool wasInputReady = IsInputReady;
-            IsInputReady = TimeSinceInput >= MoveDelay;
-            InputRechargePercent = Math.Clamp(TimeSinceInput / MoveDelay, 0f, 1f);
+            //bool wasInputReady = IsActionReady;
+            //IsActionReady = TimeSinceAction >= ActionDelay;
+            //ActionRechargePercent = Math.Clamp(TimeSinceAction / ActionDelay, 0f, 1f);
 
-            if (IsInputReady && !wasInputReady)
-                ActionRecharged();
+            //if (IsActionReady && !wasInputReady)
+            //    ActionRecharged();
 
             if (!IsDead)
             {
@@ -222,15 +242,15 @@ public partial class RoguemojiPlayer : Thing
         }
 	}
     
-    public override void PerformedAction()
-    {
-        base.PerformedAction();
+    //public override void PerformedAction()
+    //{
+    //    base.PerformedAction();
 
-        TimeSinceInput = 0f;
-        IsInputReady = false;
-    }
+    //    TimeSinceAction = 0f;
+    //    IsActionReady = false;
+    //}
 
-    public void ActionRecharged()
+    public override void OnActionRecharged()
     {
         if(QueuedAction != null)
         {
@@ -264,7 +284,7 @@ public partial class RoguemojiPlayer : Thing
 
 	public new bool TryMove( Direction direction, bool shouldQueueAction = false )
 	{
-        if (!IsInputReady)
+        if (!Acting.IsActionReady)
         {
             if(shouldQueueAction)
             {
@@ -316,10 +336,8 @@ public partial class RoguemojiPlayer : Thing
 			SetIcon("🤨");
         }
 
-        PerformedAction();
-
+        Acting.PerformedAction();
         RefreshVisibility();
-
 		return success;
 	}
 
@@ -457,13 +475,6 @@ public partial class RoguemojiPlayer : Thing
         SetIcon("😑");
     }
 
-    public override void Restart()
-    {
-        base.Restart();
-
-        SetStartingValues();
-    }
-
     public void PickUpTopItem()
     {
         var thing = ContainingGridManager.GetThingsAt(GridPos).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
@@ -488,7 +499,7 @@ public partial class RoguemojiPlayer : Thing
         if (IsDead) 
             return;
 
-        if(!IsInputReady && !dontRequireAction)
+        if(!Acting.IsActionReady && !dontRequireAction)
         {
             QueuedAction = new MoveThingAction(thing, targetGridType, targetGridPos, wieldIfPossible);
             QueuedActionName = QueuedAction.ToString();
@@ -544,7 +555,7 @@ public partial class RoguemojiPlayer : Thing
             targetGridManager.OwningPlayer.EquipThing(thing);
 
         if (!dontRequireAction)
-            PerformedAction();
+            Acting.PerformedAction();
     }
 
     public void WieldThing(Thing thing, bool dontRequireAction = false)
@@ -552,7 +563,7 @@ public partial class RoguemojiPlayer : Thing
         if (IsDead || WieldedThing == thing)
             return;
 
-        if (!IsInputReady && !dontRequireAction)
+        if (!Acting.IsActionReady && !dontRequireAction)
         {
             QueuedAction = new WieldThingAction(thing);
             QueuedActionName = QueuedAction.ToString();
@@ -562,7 +573,7 @@ public partial class RoguemojiPlayer : Thing
         base.WieldThing(thing);
 
         if (!dontRequireAction)
-            PerformedAction();
+            Acting.PerformedAction();
     }
 
     public void SwapGridThingPos(Thing thing, GridType gridType, IntVector targetGridPos)
