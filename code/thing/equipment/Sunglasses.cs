@@ -8,7 +8,7 @@ public partial class Sunglasses : Thing
 	{
 		DisplayIcon = "🕶️";
         DisplayName = "Sunglasses";
-        Description = "Looks cool but obscures your vision.";
+        Description = "Obscures your vision but looks cool.";
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Tooltip = "Dark sunglasses.";

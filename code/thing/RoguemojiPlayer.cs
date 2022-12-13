@@ -85,12 +85,12 @@ public partial class RoguemojiPlayer : Thing
         //InitStat(StatType.Smell, 1);
 
         ClearTraits();
-        AddTrait("Trait", "🌟", "Trait description.");
-        AddTrait("Trait", "🕹️", "Trait description.");
-        AddTrait("Trait", "📮", "Trait description.");
-        AddTrait("Trait", "🌟", "Trait description.");
-        AddTrait("Trait", "🕹️", "Trait description.");
-        AddTrait("Trait", "📮", "Trait description.");
+        //AddTrait("Trait", "🌟", "Trait description.", DisplayName);
+        //AddTrait("Trait", "🕹️", "Trait description.");
+        //AddTrait("Trait", "📮", "Trait description.");
+        //AddTrait("Trait", "🌟", "Trait description.");
+        //AddTrait("Trait", "🕹️", "Trait description.");
+        //AddTrait("Trait", "📮", "Trait description.");
 
         InventoryGridManager.Restart();
         EquipmentGridManager.Restart();
@@ -244,16 +244,13 @@ public partial class RoguemojiPlayer : Thing
     {
         var thing = InventoryGridManager.GetThingsAt(InventoryGridManager.GetGridPos(index)).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 
-        if (thing == null)
-            return;
-
-        if (Input.Down(InputButton.Run))
+        if (thing != null && Input.Down(InputButton.Run))
         {
             MoveThingTo(thing, GridType.Arena, GridPos);
         }
         else
         {
-            if(thing.Flags.HasFlag(ThingFlags.Equipment))
+            if(thing != null && thing.Flags.HasFlag(ThingFlags.Equipment))
             {
                 if (EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
                     MoveThingTo(thing, GridType.Equipment, emptyGridPos);
@@ -806,7 +803,7 @@ public partial class RoguemojiPlayer : Thing
     [ClientRpc]
     public void RefreshVisibility()
     {
-        ComputeVisibility(GridPos, rangeLimit: Math.Max(GetStat(StatType.Sight), 0));
+        ComputeVisibility(GridPos, rangeLimit: GetStat(StatType.Sight).ClampedValue);
     }
 
     public bool IsCellVisible(IntVector gridPos)
@@ -1004,7 +1001,7 @@ public partial class RoguemojiPlayer : Thing
     {
         Game.AssertClient();
 
-        return ContainingGridManager.GetThingsAtClient(new IntVector(x, y)).Where(x => x.SightBlockAmount >= GetStat(StatType.Sight)).Count() > 0;
+        return ContainingGridManager.GetThingsAtClient(new IntVector(x, y)).Where(x => x.SightBlockAmount >= GetStatClamped(StatType.Sight)).Count() > 0;
     }
 }
 

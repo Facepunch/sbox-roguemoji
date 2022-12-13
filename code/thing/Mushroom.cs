@@ -8,9 +8,15 @@ public partial class Mushroom : Thing
 	{
 		DisplayIcon = "🍄";
         DisplayName = "Mushroom";
+        Description = "There's a good chance it's poisonous.";
+        Tooltip = "A mushroom.";
         IconDepth = 0;
         ShouldLogBehaviour = true;
-		Tooltip = "A mushroom.";
 		Flags = ThingFlags.Selectable;
+
+        if (Game.IsServer)
+        {
+            AddTrait("", "🍽️", "When eaten, equal chance to poison or temporarily increase sight.");
+        }
     }
 }

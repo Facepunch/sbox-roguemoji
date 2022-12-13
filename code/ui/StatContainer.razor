@@ -8,6 +8,7 @@
 <style>
     .stat_container
     {
+        height: 32px;
         border: 1px solid #151515;
         border-radius: 3px;
         margin: 2px;
@@ -40,7 +41,7 @@
     }
 
     <span class="stat_icon"> @($"{Thing.GetStatIcon(Stat.StatType)}") </span>
-    <span class="stat_label"> @($"{Stat.CurrentValue}") </span>
+    <span class="stat_label"> @($"{Stat.ClampedValue}") </span>
 </root>
 
 @code
@@ -50,7 +51,7 @@
     protected override int BuildHash()
     {
         // todo
-        return HashCode.Combine( Stat?.CurrentValue ?? 0 );
+        return HashCode.Combine(Stat?.ClampedValue ?? 0);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

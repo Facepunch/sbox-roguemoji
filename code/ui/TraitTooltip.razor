@@ -11,22 +11,34 @@
         border: 1px solid #ffffff33;
         box-shadow: 2px 2px 12px black;
         flex-direction:column;
-        padding: 4px;
+        padding: 5px;
+        font-family: RobotoMono;
+        flex-wrap: wrap;
     }
 
     .trait_tooltip_name {
         font-size: 18px;
+        color: white;
     }
 
     .trait_tooltip_desc {
         font-size: 16px;
-        color: white;
+        color: #ffffff77;
+    }
+
+    .trait_tooltip_source {
+        font-size: 14px;
+        color: #ffffff44;
+        padding: 4px 0 0 0;
     }
 </style>
 
 <root class="trait_tooltip">
-    <div class="trait_tooltip_name" >@Trait.Name </div>
+    @if (!string.IsNullOrEmpty(Trait.Name)) { <div class="trait_tooltip_name">@Trait.Name </div> }
+    
     <div class="trait_tooltip_desc"> @Trait.Description </div>
+
+    @if (!string.IsNullOrEmpty(Trait.Source)) { <span class="trait_tooltip_source"> Source: <span style="font-weight: bold;">@Trait.Source </span></span> }
 </root>
 
 @code

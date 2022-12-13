@@ -17,24 +17,12 @@
         //flex-shrink: 1;
     }
 
-    .column
-    {
-        flex-direction:column;       
-        align-items: center;
-    }
-
     .selected_info {
         flex-shrink: 0;
         padding: 10px;
         flex-direction: column;
         align-items: center;
         margin: 0 20px 0 20px;
-    }
-
-    .row
-    {
-        flex-direction:row;       
-        align-items: center;
     }
 
     .icon
@@ -73,9 +61,12 @@
         font-style: italic;
         flex-wrap: wrap;
         text-align: left;
-        max-width: 160px;
+        max-width: 180px;
         max-height: 80px;
         overflow: hidden;
+        background-color: #030303;
+        border-radius: 3px;
+        padding: 8px;
     }
 
     .thing_selected {
@@ -108,17 +99,8 @@
         @if (!string.IsNullOrEmpty(SelectedThing.Description)) { <div class="info_description_label"> @SelectedThing.Description </div> }
     </div>
 
-    @if (SelectedThing.HasStats)
-    {
-        <StatsDisplay Thing=@SelectedThing></StatsDisplay>    
-    }
-
-    @if (SelectedThing.Traits != null && SelectedThing.Traits.Count > 0)
-    {
-        <TraitsDisplay Thing=@SelectedThing></TraitsDisplay>    
-    }
-
-        <!-- <div class="debug"> @thing.GridPos TAGS: @thing.Flags GRID: @thing.ContainingGridManager.GridType @thing.ContainingGridManager.GetThingsAtClient(thing.GridPos).Count() </div> -->
+    @if (SelectedThing.HasStats) { <StatsDisplay Thing=@SelectedThing></StatsDisplay>     }
+    @if (SelectedThing.Traits != null && SelectedThing.Traits.Count > 0) { <TraitsDisplay Thing=@SelectedThing></TraitsDisplay>     }
 </root>
 
 @code

@@ -149,7 +149,7 @@
 
         <div class="hp_display">
             <span class="hp_icon">@($"{Thing.GetStatIcon(StatType.Health)}") </span>
-            <span class="hp_label">@($"{player.GetStat(StatType.Health)}") </span>
+            <span class="hp_label">@($"{player.GetStatClamped(StatType.Health)}") </span>
         </div>
 
         <!-- <div class="level_label"> @($"Level: {player.CurrentLevelId}") </div> -->

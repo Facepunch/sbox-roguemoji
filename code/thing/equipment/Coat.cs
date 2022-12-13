@@ -8,9 +8,10 @@ public partial class Coat : Thing
 	{
 		DisplayIcon = "🧥";
         DisplayName = "Coat";
+        Description = "Brightly colored and highly noticeable.";
+        Tooltip = "A thick coat.";
         IconDepth = 0;
         ShouldLogBehaviour = true;
-		Tooltip = "A thick coat.";
 		Flags = ThingFlags.Selectable | ThingFlags.Equipment;
     }
 }

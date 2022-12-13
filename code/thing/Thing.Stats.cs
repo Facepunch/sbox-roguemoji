@@ -13,6 +13,8 @@ public partial class Stat : BaseNetworkable
     [Net] public int CurrentValue { get; set; }
     [Net] public int MinValue { get; set; }
     [Net] public int MaxValue { get; set; }
+
+    public int ClampedValue => Math.Clamp(CurrentValue, MinValue, MaxValue);
 }
 
 public partial class Thing : Entity
@@ -144,7 +146,15 @@ public partial class Thing : Entity
         return HasStats && Stats.ContainsKey(statType);
     }
 
-    public int GetStat(StatType statType)
+    public Stat GetStat(StatType statType)
+    {
+        if (HasStats && Stats.ContainsKey(statType))
+            return Stats[statType];
+
+        return null;
+    }
+
+    public int GetStatClamped(StatType statType)
 	{
 		if (HasStats && Stats.ContainsKey(statType))
 		{

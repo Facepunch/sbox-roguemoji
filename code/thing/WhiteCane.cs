@@ -4,32 +4,36 @@ using System;
 namespace Roguemoji;
 public partial class WhiteCane : Thing
 {
+    public Trait Trait { get; private set; }
+
 	public WhiteCane()
 	{
 		DisplayIcon = "🦯";
         DisplayName = "White Cane";
-        Description = "Prevents your sight from reaching zero.";
+        Description = "Useful when you can't see anything.";
+        Tooltip = "A white cane for the vision impaired.";
         IconDepth = 0;
         ShouldLogBehaviour = true;
-		Tooltip = "A white cane for the vision impaired.";
 		Flags = ThingFlags.Selectable;
 
         if (Game.IsServer)
         {
             InitStat(StatType.Attack, 1);
-            //AddTrait("", "👁️", "Prevents your 👁️ from reaching zero.");
+            AddTrait("", "👁️", "Prevents your sight from reaching zero.");
         }
     }
 
     public override void OnWieldedBy(Thing thing)
     {
         thing.AdjustStatMin(StatType.Sight, 3);
-        thing.AdjustStat(StatType.Attack, GetStat(StatType.Attack));
+        thing.AdjustStat(StatType.Attack, GetStatClamped(StatType.Attack));
+        Trait = thing.AddTrait("", "👁️", "Your sight can't go down to zero.", DisplayName);
     }
 
     public override void OnNoLongerWieldedBy(Thing thing)
     {
         thing.AdjustStatMin(StatType.Sight, -3);
-        thing.AdjustStat(StatType.Attack, -GetStat(StatType.Attack));
+        thing.AdjustStat(StatType.Attack, -GetStatClamped(StatType.Attack));
+        thing.RemoveTrait(Trait);
     }
 }

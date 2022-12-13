@@ -12,19 +12,21 @@ public partial class Trait : BaseNetworkable
     [Net] public string Description { get; set; }
     [Net] public Color BackgroundColor { get; set; }
     [Net] public float Progress { get; set; }
+    [Net] public string Source { get; set; }
 }
 
 public partial class Thing : Entity
 {
     [Net] public IList<Trait> Traits { get; private set; }
 
-    public Trait AddTrait(string name, string icon, string description)
+    public Trait AddTrait(string name, string icon, string description, string source = "")
     {
         var trait = new Trait()
         {
             Name = name,
             Icon = icon,
             Description = description,
+            Source = source,
         };
 
         if (Traits == null)

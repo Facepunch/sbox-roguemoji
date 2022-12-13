@@ -8,9 +8,10 @@ public partial class Potato : Thing
 	{
 		DisplayIcon = "🥔";
         DisplayName = "Potato";
+        Description = "Uncooked and as hard as a rock.";
+        Tooltip = "A potato.";
         IconDepth = 0;
         ShouldLogBehaviour = true;
-		Tooltip = "A potato.";
 		Flags = ThingFlags.Selectable;
     }
 }

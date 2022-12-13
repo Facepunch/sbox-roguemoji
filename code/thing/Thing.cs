@@ -171,7 +171,7 @@ public partial class Thing : Entity
 
 		AdjustStat(StatType.Health, -amount);
 
-		if(GetStat(StatType.Health) <= 0)
+		if(GetStatClamped(StatType.Health) <= 0)
 			Destroy();
 	}
 
@@ -382,7 +382,7 @@ public partial class Thing : Entity
 
 	public int GetInfoDisplayHash()
     {
-		return HashCode.Combine(NetworkIdent, DisplayIcon, WieldedThing?.DisplayIcon ?? "", GetStat(StatType.Health), GetStatMax(StatType.Health), Flags);
+		return HashCode.Combine(NetworkIdent, DisplayIcon, WieldedThing?.DisplayIcon ?? "", GetStatClamped(StatType.Health), GetStatMax(StatType.Health), Flags);
     }
 
     public int GetNearbyCellHash()

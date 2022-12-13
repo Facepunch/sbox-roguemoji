@@ -162,7 +162,7 @@ public partial class GridManager : Entity
 	{
 		foreach(var player in ContainedPlayers)
 		{
-			var sight = player.GetStat(StatType.Sight);
+			var sight = player.GetStatClamped(StatType.Sight);
             if (VisionChangedPlayers.Contains(player) || thing == player || thing.SightBlockAmount < sight)
 				continue;
 
