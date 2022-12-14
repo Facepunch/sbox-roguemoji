@@ -111,8 +111,6 @@
             <InfoPanel class="info" @ref=InfoPanel SelectedThing=@selected_thing></InfoPanel>    
         }
     </div>
-
-    <!-- <DebugDrawing style="z-index:99999;" @ref=DebugDrawing></DebugDrawing> -->
 </root>
 
 @code
@@ -124,7 +122,6 @@
     public NearbyPanel NearbyPanel { get; set; }
     public InventoryPanel InventoryPanel { get; set; }
     public InfoPanel InfoPanel { get; set; }
-    public DebugDrawing DebugDrawing { get; set; }
 
     protected override int BuildHash()
     {

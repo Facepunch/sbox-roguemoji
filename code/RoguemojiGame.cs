@@ -297,7 +297,15 @@ public partial class RoguemojiGame : GameManager
 
 			SpawnPlayerOnLevel(player, LevelId.Forest0);
 		}
+
+        ResetHudClient();
     }
+
+	[ClientRpc]
+	public void ResetHudClient()
+	{
+		Hud.Restart();
+	}
 
 	public void SetPlayerLevel(RoguemojiPlayer player, LevelId levelId)
 	{
@@ -310,6 +318,8 @@ public partial class RoguemojiGame : GameManager
         }
 
 		SpawnPlayerOnLevel(player, levelId);
+
+        ResetHudClient();
     }
 
 	void SpawnPlayerOnLevel(RoguemojiPlayer player, LevelId levelId)

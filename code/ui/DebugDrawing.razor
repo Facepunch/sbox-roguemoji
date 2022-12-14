@@ -52,42 +52,27 @@
     public override void DrawContent(ref RenderState state)
     {
         foreach (var line in DebugLines)
+        {
+            //Log.Info($"{ line.b}");
             GraphicsX.Line(line.color, 2f, line.a, 1f, line.b);
+        }
 
         foreach (var cell in DebugGridCells)
-            GraphicsX.Circle(GetScreenPosForArenaGridPos(cell.gridPos), 18f / ScaleFromScreen, 15f / ScaleFromScreen, cell.color);
+            GraphicsX.Circle(Hud.Instance.GetScreenPosForArenaGridPos(cell.gridPos), 18f / ScaleFromScreen, 15f / ScaleFromScreen, cell.color);
 
         DebugLines.Clear();
         DebugGridCells.Clear();
     }
 
-    public Vector2 GetScreenPosForArenaGridPos(IntVector gridPos)
-    {
-        var player = RoguemojiGame.Instance.LocalPlayer;
-        var arenaPanel = Hud.Instance.GetGridPanel(GridType.Arena);
-        var rect = Hud.Instance.GetRect(PanelType.ArenaGrid);
-
-        return rect.TopLeft + arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset;
-    }
-
-    public Vector2 GetScreenPosForPos(Vector2 pos)
-    {
-        var player = RoguemojiGame.Instance.LocalPlayer;
-        var arenaPanel = Hud.Instance.GetGridPanel(GridType.Arena);
-        var rect = Hud.Instance.GetRect(PanelType.ArenaGrid);
-
-        return rect.TopLeft + pos - player.CameraGridOffset * 40f + player.CameraPixelOffset;
-    }
-
     public void GridLine(IntVector a, IntVector b, Color color)
     {
-        DebugLines.Add(new DebugLineData(GetScreenPosForArenaGridPos(a), GetScreenPosForArenaGridPos(b), color));
+        DebugLines.Add(new DebugLineData(Hud.Instance.GetScreenPosForArenaGridPos(a), Hud.Instance.GetScreenPosForArenaGridPos(b), color));
     }
 
-    public void Line(Vector2 a, Vector2 b, Color color)
-    {
-        DebugLines.Add(new DebugLineData(GetScreenPosForPos(a), GetScreenPosForPos(b), color));
-    }
+    //public void Line(Vector2 a, Vector2 b, Color color)
+    //{
+    //    DebugLines.Add(new DebugLineData(Hud.Instance.GetScreenPosForPos(a), Hud.Instance.GetScreenPosForPos(b), color));
+    //}
 
     public void GridCell(IntVector gridPos, Color color)
     {
