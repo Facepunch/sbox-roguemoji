@@ -9,29 +9,31 @@ namespace Roguemoji;
 
 public enum PanelType { None, ArenaGrid, InventoryGrid, EquipmentGrid, Wielding, PlayerIcon, Log, Nearby, Info, Character, Stats };
 
-public class FloaterData
+public struct FloaterData
 {
-    public string icon { get; set; }
-    public IntVector gridPos { get; set; }
-    public float time { get; set; }
-    public float elapsedTime { get; set; }
-    public string text { get; set; }
-    public bool requireSight { get; set; }
-    public float yOffsetStart { get; set; }
-    public float yOffsetEnd { get; set; }
-    public EasingType offsetEasingType { get; set; }
+    public string icon;
+    public IntVector gridPos;
+    public float time;
+    public TimeSince timeSinceStart;
+    public string text;
+    public bool requireSight;
+    public float yOffsetStart;
+    public float yOffsetEnd;
+    public EasingType offsetEasingType;
+    public float fadeInTime;
 
-    public FloaterData(string icon, IntVector gridPos, float time, string text, bool requireSight, float yOffsetStart, float yOffsetEnd, EasingType offsetEasingType)
+    public FloaterData(string icon, IntVector gridPos, float time, string text, bool requireSight, float yOffsetStart, float yOffsetEnd, EasingType offsetEasingType, float fadeInTime)
     {
         this.icon = icon;
         this.gridPos = gridPos;
         this.time = time;
-        this.elapsedTime = 0f;
+        this.timeSinceStart = 0f;
         this.text = text;
         this.requireSight = requireSight;
         this.yOffsetStart = yOffsetStart;
         this.yOffsetEnd = yOffsetEnd;
         this.offsetEasingType = offsetEasingType;
+        this.fadeInTime = fadeInTime;
     }
 }
 
@@ -97,17 +99,16 @@ public partial class Hud : RootPanel
 
             //DebugDrawing.GridLine(IntVector.Zero, floater.gridPos, new Color(0f, 1f, 0f, 0.5f));
 
-            floater.elapsedTime += dt;
-            if(floater.elapsedTime > floater.time)
+            if(floater.timeSinceStart > floater.time)
                 Floaters.RemoveAt(i);
         }
 	}
 
     public void GridCellClicked(IntVector gridPos, GridType gridType, bool rightClick, bool shift, bool doubleClick, bool visible = true)
 	{
-        AddFloater("💔", gridPos, 0.75f, "-4", requireSight: true, 1f, -6f, EasingType.SineIn);
+        //AddFloater("💔", gridPos, 1f, "-37", requireSight: true, 1f, -6f, EasingType.SineOut, 0.25f);
 
-		RoguemojiGame.GridCellClickedCmd(gridPos.x, gridPos.y, gridType, rightClick, shift, doubleClick, visible);
+        RoguemojiGame.GridCellClickedCmd(gridPos.x, gridPos.y, gridType, rightClick, shift, doubleClick, visible);
 	}
 
     public void WieldingClicked(bool rightClick, bool shift)
@@ -308,9 +309,9 @@ public partial class Hud : RootPanel
     //    return rect.TopLeft + pos - player.CameraGridOffset * (40f / ScaleFromScreen) + player.CameraPixelOffset;
     //}
 
-    public void AddFloater(string icon, IntVector gridPos, float time, string text = "", bool requireSight = true, float yOffsetStart = 0f, float yOffsetEnd = 0f, EasingType offsetEasingType = EasingType.Linear)
+    public void AddFloater(string icon, IntVector gridPos, float time, string text = "", bool requireSight = true, float yOffsetStart = 0f, float yOffsetEnd = 0f, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f)
     {
-        Floaters.Add(new FloaterData(icon, gridPos, time, text, requireSight, yOffsetStart, yOffsetEnd, offsetEasingType));
+        Floaters.Add(new FloaterData(icon, gridPos, time, text, requireSight, yOffsetStart, yOffsetEnd, offsetEasingType, fadeInTime));
     }
 
     public void Restart()

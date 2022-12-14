@@ -191,11 +191,29 @@ public partial class Thing : Entity
 		int amount = source.GetStatClamped(StatType.Attack);
 		AdjustStat(StatType.Health, -amount);
 
+		TakeDamageClient(amount, source.NetworkIdent);
+
 		if(GetStatClamped(StatType.Health) <= 0)
-			Destroy();
+		{
+			TakeDamageLethalClient(amount, source.NetworkIdent);
+            Destroy();
+        }
+			
 	}
 
-	public virtual void UseWieldedThing()
+	[ClientRpc]
+	public virtual void TakeDamageClient(int amount, int sourceNetworkIdent)
+	{
+        Hud.Instance.AddFloater("💔", GridPos, 1f, $"-{amount}", requireSight: true, 1f, -6f, EasingType.SineOut, 0.25f);
+    }
+
+    [ClientRpc]
+    public virtual void TakeDamageLethalClient(int amount, int sourceNetworkIdent)
+    {
+        Hud.Instance.AddFloater("☠️", GridPos, 2f, "", requireSight: true, 4f, -6f, EasingType.SineOut, 0.75f);
+    }
+
+    public virtual void UseWieldedThing()
 	{
 		if (WieldedThing == null)
 			return;

@@ -31,7 +31,7 @@
 
     .floater_text
     {
-        font-size: 22px;
+        font-size: 20px;
         overflow:visible;
         text-align: center;
         position: absolute;
@@ -52,14 +52,15 @@
         {
             var left = (Hud.Instance.GetScreenPosForArenaGridPos(floater.gridPos).x / ScaleToScreen) - 20f;
             var top = (Hud.Instance.GetScreenPosForArenaGridPos(floater.gridPos).y / ScaleToScreen) - 20f;
-            var offset = Utils.Map(floater.elapsedTime, 0f, floater.time, floater.yOffsetStart, floater.yOffsetEnd, floater.offsetEasingType);
+            var offset = Utils.Map(floater.timeSinceStart, 0f, floater.time, floater.yOffsetStart, floater.yOffsetEnd, floater.offsetEasingType);
+            var opacity = floater.timeSinceStart < floater.fadeInTime ? Utils.Map(floater.timeSinceStart, 0f, floater.fadeInTime, 0f, 1f, EasingType.SineIn) : Utils.Map(floater.timeSinceStart, floater.fadeInTime, floater.time, 1f, 0f, floater.offsetEasingType);
 
-            <div class="floater_draw" style="left: @(left); top: @(top + offset); opacity: @(Utils.Map(floater.elapsedTime, 0f, floater.time, 1f, 0f, floater.offsetEasingType));"> 
+            <div class="floater_draw" style="left: @(left); top: @(top + offset); opacity: @(opacity);"> 
                 @floater.icon 
 
                 @if(!string.IsNullOrEmpty(floater.text))
                 {
-                    <div class="floater_text" style="top: @(10f + offset * 0.9f);"> @(floater.text) </div>
+                    <div class="floater_text" style="top: @(13f + offset * 1.25f);"> @(floater.text) </div>
                 }
             </div>
         }
