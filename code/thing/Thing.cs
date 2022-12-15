@@ -60,6 +60,8 @@ public partial class Thing : Entity
 
 	[Net] public float ActionRechargePercent { get; set; }
 
+    [Net] public LevelId CurrentLevelId { get; set; }
+
     public Thing()
 	{
         ShouldUpdate = true;
@@ -191,27 +193,15 @@ public partial class Thing : Entity
 		int amount = source.GetStatClamped(StatType.Attack);
 		AdjustStat(StatType.Health, -amount);
 
-		TakeDamageClient(amount, source.NetworkIdent);
+        RoguemojiGame.Instance.AddFloater("💔", GridPos, 1.2f, CurrentLevelId, $"-{amount}", requireSight: true, 1f, -6f, EasingType.SineOut, 0.25f, parent: this);
 
-		if(GetStatClamped(StatType.Health) <= 0)
+        if (GetStatClamped(StatType.Health) <= 0)
 		{
-			TakeDamageLethalClient(amount, source.NetworkIdent);
+            RoguemojiGame.Instance.AddFloater("☠️", GridPos, 1.5f, CurrentLevelId, "", requireSight: true, 4f, -7f, EasingType.SineOut, 1f, parent: this);
             Destroy();
         }
 			
 	}
-
-	[ClientRpc]
-	public virtual void TakeDamageClient(int amount, int sourceNetworkIdent)
-	{
-        RoguemojiGame.Instance.AddFloater("💔", GridPos, 1.2f, $"-{amount}", requireSight: true, 1f, -6f, EasingType.SineOut, 0.25f, parent: this);
-    }
-
-    [ClientRpc]
-    public virtual void TakeDamageLethalClient(int amount, int sourceNetworkIdent)
-    {
-        RoguemojiGame.Instance.AddFloater("☠️", GridPos, 1.5f, "", requireSight: true, 4f, -7f, EasingType.SineOut, 1f, parent: this);
-    }
 
     public virtual void UseWieldedThing()
 	{
@@ -471,7 +461,7 @@ public partial class Thing : Entity
 		if(EquippedThings == null)
             EquippedThings = new List<Thing>();
 
-        RoguemojiGame.Instance.AddFloater(thing.DisplayIcon, GridPos, 0.6f, "", requireSight: true, 0f, -7f, EasingType.SineOut, 0.05f, parent: this);
+        RoguemojiGame.Instance.AddFloater(thing.DisplayIcon, GridPos, 0.6f, CurrentLevelId, "", requireSight: true, 0f, -7f, EasingType.SineOut, 0.05f, parent: this);
 
         EquippedThings.Add(thing);
 
@@ -481,7 +471,7 @@ public partial class Thing : Entity
 
 	public void UnequipThing(Thing thing)
 	{
-        RoguemojiGame.Instance.AddFloater(thing.DisplayIcon, GridPos, 0.6f, "", requireSight: true, -8f, 0f, EasingType.SineOut, 0.05f, parent: this);
+        RoguemojiGame.Instance.AddFloater(thing.DisplayIcon, GridPos, 0.6f, CurrentLevelId, "", requireSight: true, -8f, 0f, EasingType.SineOut, 0.05f, parent: this);
 
         EquippedThings.Remove(thing);
 

@@ -24,6 +24,8 @@ public partial class GridManager : Entity
 	public HashSet<RoguemojiPlayer> ContainedPlayers = new HashSet<RoguemojiPlayer>();
 	public HashSet<RoguemojiPlayer> VisionChangedPlayers = new HashSet<RoguemojiPlayer>(); // players who need an update to their field of view
 
+	[Net] public LevelId LevelId { get; set; }
+
 	public void Init(int width, int height)
 	{
 		GridWidth = width;
@@ -70,6 +72,7 @@ public partial class GridManager : Entity
         AddThing(thing);
 
         thing.SetGridPos(gridPos);
+		thing.CurrentLevelId = LevelId;
 
         return thing;
     }

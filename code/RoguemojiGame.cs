@@ -342,9 +342,13 @@ public partial class RoguemojiGame : GameManager
 		return level;
     }
 
-    public void AddFloater(string icon, IntVector gridPos, float time, string text = "", bool requireSight = true, float yOffsetStart = 0f, float yOffsetEnd = 0f, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, Thing parent = null)
+    public void AddFloater(string icon, IntVector gridPos, float time, LevelId levelId, string text = "", bool requireSight = true, float yOffsetStart = 0f, float yOffsetEnd = 0f, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, Thing parent = null)
     {
-        AddFloaterClient(icon, gridPos.x, gridPos.y, time, text, requireSight, yOffsetStart, yOffsetEnd, offsetEasingType, fadeInTime, parent.NetworkIdent);
+		foreach(var player in Players)
+		{
+			if (player.CurrentLevelId == levelId)
+                AddFloaterClient(To.Single(player), icon, gridPos.x, gridPos.y, time, text, requireSight, yOffsetStart, yOffsetEnd, offsetEasingType, fadeInTime, parent.NetworkIdent);
+		}
     }
 
     [ClientRpc]

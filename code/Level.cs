@@ -21,6 +21,7 @@ public partial class Level : Entity
         GridManager = new();
         GridManager.Init(width, height);
         GridManager.GridType = GridType.Arena;
+        GridManager.LevelId = LevelId;
 
         Transmit = TransmitType.Always;
 

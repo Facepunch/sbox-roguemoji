@@ -30,8 +30,6 @@ public partial class RoguemojiPlayer : Thing
     public IQueuedAction QueuedAction { get; private set; }
     [Net] public string QueuedActionName { get; private set; }
 
-    [Net] public LevelId CurrentLevelId { get; set; }
-
     public HashSet<IntVector> VisibleCells { get; set; } // Client-only
 
     public RoguemojiPlayer()
