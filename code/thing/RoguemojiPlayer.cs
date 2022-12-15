@@ -599,6 +599,8 @@ public partial class RoguemojiPlayer : Thing
     {
         if (gridType == GridType.Arena)
         {
+            //RoguemojiGame.Instance.AddFloater("💢", gridPos, 1.5f, CurrentLevelId, new Vector2(15f, -8f), new Vector2(15, -10f), "", requireSight: true, EasingType.ExpoIn, 0.1f, 0.75f, parent: this);
+
             var level = RoguemojiGame.Instance.Levels[CurrentLevelId];
             var thing = level.GridManager.GetThingsAt(gridPos).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 

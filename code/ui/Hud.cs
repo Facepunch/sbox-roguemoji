@@ -21,9 +21,10 @@ public struct FloaterData
     public Vector2 offsetEnd;
     public EasingType offsetEasingType;
     public float fadeInTime;
+    public float scale;
     public Thing parent;
 
-    public FloaterData(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, string text, bool requireSight, EasingType offsetEasingType, float fadeInTime, Thing parent)
+    public FloaterData(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, string text, bool requireSight, EasingType offsetEasingType, float fadeInTime, float scale, Thing parent)
     {
         this.icon = icon;
         this.gridPos = gridPos;
@@ -35,6 +36,7 @@ public struct FloaterData
         this.requireSight = requireSight;
         this.offsetEasingType = offsetEasingType;
         this.fadeInTime = fadeInTime;
+        this.scale = scale;
         this.parent = parent;
     }
 }
@@ -108,8 +110,6 @@ public partial class Hud : RootPanel
 
     public void GridCellClicked(IntVector gridPos, GridType gridType, bool rightClick, bool shift, bool doubleClick, bool visible = true)
 	{
-        //AddFloater("💔", gridPos, 1f, "-37", requireSight: true, 1f, -6f, EasingType.SineOut, 0.25f);
-
         RoguemojiGame.GridCellClickedCmd(gridPos.x, gridPos.y, gridType, rightClick, shift, doubleClick, visible);
 	}
 
@@ -311,9 +311,9 @@ public partial class Hud : RootPanel
     //    return rect.TopLeft + pos - player.CameraGridOffset * (40f / ScaleFromScreen) + player.CameraPixelOffset;
     //}
 
-    public void AddFloater(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, string text = "", bool requireSight = true, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, Thing parent = null)
+    public void AddFloater(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, string text = "", bool requireSight = true, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, Thing parent = null)
     {
-        Floaters.Add(new FloaterData(icon, gridPos, time, offsetStart, offsetEnd, text, requireSight, offsetEasingType, fadeInTime, parent));
+        Floaters.Add(new FloaterData(icon, gridPos, time, offsetStart, offsetEnd, text, requireSight, offsetEasingType, fadeInTime, scale, parent));
     }
 
     public void Restart()
