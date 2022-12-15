@@ -132,7 +132,7 @@ public partial class Thing : Entity
 		if ( !ContainingGridManager.IsGridPosInBounds( newGridPos ) )
 			return false;
 
-		Thing other = ContainingGridManager.GetThingsAt(newGridPos).WithAll(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+        Thing other = ContainingGridManager.GetThingsAt(newGridPos).WithAll(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
         if (other != null)
 		{
             BumpInto(other, direction);
@@ -204,13 +204,13 @@ public partial class Thing : Entity
 	[ClientRpc]
 	public virtual void TakeDamageClient(int amount, int sourceNetworkIdent)
 	{
-        Hud.Instance.AddFloater("💔", GridPos, 1f, $"-{amount}", requireSight: true, 1f, -6f, EasingType.SineOut, 0.25f);
+        Hud.Instance.AddFloater("💔", GridPos, 1.2f, $"-{amount}", requireSight: true, 1f, -6f, EasingType.SineOut, 0.25f, parent: this);
     }
 
     [ClientRpc]
     public virtual void TakeDamageLethalClient(int amount, int sourceNetworkIdent)
     {
-        Hud.Instance.AddFloater("☠️", GridPos, 2f, "", requireSight: true, 4f, -6f, EasingType.SineOut, 0.75f);
+        Hud.Instance.AddFloater("☠️", GridPos, 1.5f, "", requireSight: true, 4f, -7f, EasingType.SineOut, 1f, parent: this);
     }
 
     public virtual void UseWieldedThing()

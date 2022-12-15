@@ -50,17 +50,22 @@
     {
         @if (!floater.requireSight || player.IsCellVisible(floater.gridPos))
         {
-            var left = (Hud.Instance.GetScreenPosForArenaGridPos(floater.gridPos).x / ScaleToScreen) - 20f;
-            var top = (Hud.Instance.GetScreenPosForArenaGridPos(floater.gridPos).y / ScaleToScreen) - 20f;
-            var offset = Utils.Map(floater.timeSinceStart, 0f, floater.time, floater.yOffsetStart, floater.yOffsetEnd, floater.offsetEasingType);
+            Vector2 pos = (floater.parent != null)
+                ? ((Hud.Instance.GetScreenPosForArenaGridPos(floater.parent.GridPos) + floater.parent.Offset) / ScaleToScreen) + new Vector2(-20f, -20f)
+                : (Hud.Instance.GetScreenPosForArenaGridPos(floater.gridPos) / ScaleToScreen) + new Vector2(-20f, -20f);
+
+            //var left = (Hud.Instance.GetScreenPosForArenaGridPos(floater.gridPos).x / ScaleToScreen) - 20f;
+            //var top = (Hud.Instance.GetScreenPosForArenaGridPos(floater.gridPos).y / ScaleToScreen) - 20f;
+
+            var yOffset = Utils.Map(floater.timeSinceStart, 0f, floater.time, floater.yOffsetStart, floater.yOffsetEnd, floater.offsetEasingType);
             var opacity = floater.timeSinceStart < floater.fadeInTime ? Utils.Map(floater.timeSinceStart, 0f, floater.fadeInTime, 0f, 1f, EasingType.SineIn) : Utils.Map(floater.timeSinceStart, floater.fadeInTime, floater.time, 1f, 0f, floater.offsetEasingType);
 
-            <div class="floater_draw" style="left: @(left); top: @(top + offset); opacity: @(opacity);"> 
+            <div class="floater_draw" style="left: @(pos.x); top: @(pos.y + yOffset); opacity: @(opacity);"> 
                 @floater.icon 
 
                 @if(!string.IsNullOrEmpty(floater.text))
                 {
-                    <div class="floater_text" style="top: @(13f + offset * 1.25f);"> @(floater.text) </div>
+                    <div class="floater_text" style="top: @(13f + yOffset * 1.25f);"> @(floater.text) </div>
                 }
             </div>
         }
