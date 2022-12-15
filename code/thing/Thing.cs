@@ -204,13 +204,13 @@ public partial class Thing : Entity
 	[ClientRpc]
 	public virtual void TakeDamageClient(int amount, int sourceNetworkIdent)
 	{
-        Hud.Instance.AddFloater("💔", GridPos, 1.2f, $"-{amount}", requireSight: true, 1f, -6f, EasingType.SineOut, 0.25f, parent: this);
+        RoguemojiGame.Instance.AddFloater("💔", GridPos, 1.2f, $"-{amount}", requireSight: true, 1f, -6f, EasingType.SineOut, 0.25f, parent: this);
     }
 
     [ClientRpc]
     public virtual void TakeDamageLethalClient(int amount, int sourceNetworkIdent)
     {
-        Hud.Instance.AddFloater("☠️", GridPos, 1.5f, "", requireSight: true, 4f, -7f, EasingType.SineOut, 1f, parent: this);
+        RoguemojiGame.Instance.AddFloater("☠️", GridPos, 1.5f, "", requireSight: true, 4f, -7f, EasingType.SineOut, 1f, parent: this);
     }
 
     public virtual void UseWieldedThing()
@@ -471,7 +471,9 @@ public partial class Thing : Entity
 		if(EquippedThings == null)
             EquippedThings = new List<Thing>();
 
-		EquippedThings.Add(thing);
+        RoguemojiGame.Instance.AddFloater(thing.DisplayIcon, GridPos, 0.6f, "", requireSight: true, 0f, -7f, EasingType.SineOut, 0.05f, parent: this);
+
+        EquippedThings.Add(thing);
 
         OnEquipThing(thing);
 		thing.OnEquippedTo(this);
@@ -479,6 +481,8 @@ public partial class Thing : Entity
 
 	public void UnequipThing(Thing thing)
 	{
+        RoguemojiGame.Instance.AddFloater(thing.DisplayIcon, GridPos, 0.6f, "", requireSight: true, -8f, 0f, EasingType.SineOut, 0.05f, parent: this);
+
         EquippedThings.Remove(thing);
 
         OnUnequipThing(thing);
