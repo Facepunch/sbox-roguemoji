@@ -342,19 +342,19 @@ public partial class RoguemojiGame : GameManager
 		return level;
     }
 
-    public void AddFloater(string icon, IntVector gridPos, float time, LevelId levelId, string text = "", bool requireSight = true, float yOffsetStart = 0f, float yOffsetEnd = 0f, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, Thing parent = null)
+    public void AddFloater(string icon, IntVector gridPos, float time, LevelId levelId, Vector2 offsetStart, Vector2 offsetEnd, string text = "", bool requireSight = true, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, Thing parent = null)
     {
 		foreach(var player in Players)
 		{
 			if (player.CurrentLevelId == levelId)
-                AddFloaterClient(To.Single(player), icon, gridPos.x, gridPos.y, time, text, requireSight, yOffsetStart, yOffsetEnd, offsetEasingType, fadeInTime, parent.NetworkIdent);
+                AddFloaterClient(To.Single(player), icon, gridPos.x, gridPos.y, time, offsetStart, offsetEnd, text, requireSight, offsetEasingType, fadeInTime, parent.NetworkIdent);
 		}
     }
 
     [ClientRpc]
-    public void AddFloaterClient(string icon, int x, int y, float time, string text = "", bool requireSight = true, float yOffsetStart = 0f, float yOffsetEnd = 0f, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, int parentIdent = -1)
+    public void AddFloaterClient(string icon, int x, int y, float time, Vector2 offsetStart, Vector2 offsetEnd, string text = "", bool requireSight = true, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, int parentIdent = -1)
     {
         Thing parent = parentIdent == -1 ? null : Entity.FindByIndex(parentIdent) as Thing;
-        Hud.Instance.AddFloater(icon, new IntVector(x, y), time, text, requireSight, yOffsetStart, yOffsetEnd, offsetEasingType, fadeInTime, parent);
+        Hud.Instance.AddFloater(icon, new IntVector(x, y), time, offsetStart, offsetEnd, text, requireSight, offsetEasingType, fadeInTime, parent);
     }
 }
