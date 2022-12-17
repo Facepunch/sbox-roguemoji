@@ -28,7 +28,6 @@
     .stat_label
     {
         font-size: 18px;
-        color: #ffffff88;
         justify-content: flex-end;
         padding: 0 2px 0 0;
         min-width: 22px;
@@ -42,7 +41,7 @@
     }
 
     <span class="stat_icon"> @($"{Thing.GetStatIcon(Stat.StatType)}") </span>
-    <span class="stat_label"> @($"{Stat.ClampedValue}") </span>
+    <span class="stat_label" style="color: @(Stat.ClampedValue < 0 ? "#ff000055" : "#ffffff88");"> @($"{Stat.ClampedValue}") </span>
 </root>
 
 @code

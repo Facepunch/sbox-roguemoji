@@ -228,11 +228,11 @@ public partial class RoguemojiGame : GameManager
 	}
 
     [ConCmd.Server]
-    public static void InventoryThingDraggedCmd(int networkIdent, PanelType destinationPanelType, int x, int y)
+    public static void InventoryThingDraggedCmd(int networkIdent, PanelType destinationPanelType, int x, int y, bool wieldedThingDragged)
 	{
         var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
         Thing thing = FindByIndex(networkIdent) as Thing;
-		player.InventoryThingDragged(thing, destinationPanelType, new IntVector(x, y));
+		player.InventoryThingDragged(thing, destinationPanelType, new IntVector(x, y), wieldedThingDragged);
     }
 
     [ConCmd.Server]

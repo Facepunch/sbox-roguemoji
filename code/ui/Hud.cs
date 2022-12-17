@@ -57,6 +57,7 @@ public partial class Hud : RootPanel
     public bool IsDraggingRightClick { get; set; }
     public Thing DraggedThing { get; set; }
     public Panel DraggedPanel { get; set; }
+    public PanelType DraggedPanelType { get; set; }
     public DragIcon DragIcon { get; private set; }
 	private IntVector _dragStartPlayerGridPos;
 
@@ -147,8 +148,8 @@ public partial class Hud : RootPanel
                 }
 			}
 
-			if(DraggedThing.ContainingGridManager.GridType == GridType.Inventory)
-				RoguemojiGame.InventoryThingDraggedCmd(DraggedThing.NetworkIdent, destinationPanelType, targetGridPos.x, targetGridPos.y);
+            if (DraggedThing.ContainingGridManager.GridType == GridType.Inventory)
+				RoguemojiGame.InventoryThingDraggedCmd(DraggedThing.NetworkIdent, destinationPanelType, targetGridPos.x, targetGridPos.y, wieldedThingDragged: DraggedPanelType == PanelType.Wielding);
 			else if (DraggedThing.ContainingGridManager.GridType == GridType.Equipment)
                 RoguemojiGame.EquipmentThingDraggedCmd(DraggedThing.NetworkIdent, destinationPanelType, targetGridPos.x, targetGridPos.y);
             else
@@ -158,12 +159,13 @@ public partial class Hud : RootPanel
 		}
     }
 
-	public void StartDragging(Thing thing, Panel panel, bool rightClick)
+	public void StartDragging(Thing thing, Panel panel, bool rightClick, PanelType draggedPanelType)
 	{
 		IsDraggingThing = true;
 		IsDraggingRightClick = rightClick;
 		DraggedThing = thing;
 		DraggedPanel = panel;
+        DraggedPanelType = draggedPanelType;
 		_dragStartPlayerGridPos = RoguemojiGame.Instance.LocalPlayer.GridPos;
 
         CreateDragIcon(thing);
@@ -319,5 +321,6 @@ public partial class Hud : RootPanel
     public void Restart()
     {
         Floaters.Clear();
+        StopDragging();
     }
 }

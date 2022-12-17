@@ -198,7 +198,7 @@
         if(shift || rightClick)
             Hud.Instance.WieldingClicked(rightClick, shift);
         else
-            Hud.Instance.StartDragging(player.WieldedThing, this, rightClick);
+            Hud.Instance.StartDragging(player.WieldedThing, this, rightClick, PanelType.Wielding);
     }
 
     public void OnMouseDownPlayerIcon(MousePanelEvent e)

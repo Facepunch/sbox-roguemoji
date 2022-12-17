@@ -98,7 +98,7 @@
         if(shift || rightClick)
             RoguemojiGame.NearbyThingClickedCmd(Thing.NetworkIdent, rightClick, shift, doubleClick: false);
         else
-            Hud.Instance.StartDragging(Thing, this, rightClick);
+            Hud.Instance.StartDragging(Thing, this, rightClick, PanelType.Nearby);
 
         e.StopPropagation();
     }

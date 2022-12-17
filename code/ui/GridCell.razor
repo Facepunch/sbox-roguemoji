@@ -142,14 +142,14 @@
             if(shift || rightClick)
                 Hud.Instance.GridCellClicked(Thing.GridPos, GridType.Inventory, rightClick, shift, doubleClick: false);
             else
-                Hud.Instance.StartDragging(Thing, this, rightClick);
+                Hud.Instance.StartDragging(Thing, this, rightClick, PanelType.InventoryGrid);
         }
         else if(Thing.ContainingGridManager.GridType == GridType.Equipment)
         {
             if(shift || rightClick)
                 Hud.Instance.GridCellClicked(Thing.GridPos, GridType.Equipment, rightClick, shift, doubleClick: false);
             else
-                Hud.Instance.StartDragging(Thing, this, rightClick);
+                Hud.Instance.StartDragging(Thing, this, rightClick, PanelType.EquipmentGrid);
         }
 
         e.StopPropagation();
