@@ -147,7 +147,12 @@
         bool visible = player.IsCellVisible(gridPos);
 
         if (player.ContainingGridManager.IsGridPosInBounds(gridPos))
-            Hud.Instance.GridCellClicked(gridPos, GridType.Arena, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), doubleClick: false, visible);
+        {
+            if(player.IsAiming && player.AimingCells.Contains(gridPos))
+                RoguemojiGame.ConfirmAimingCmd(gridPos.x, gridPos.y);
+            else 
+                Hud.Instance.GridCellClicked(gridPos, GridType.Arena, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), doubleClick: false, visible);
+        }
     }
 
     //protected override int BuildHash()

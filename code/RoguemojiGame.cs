@@ -176,7 +176,14 @@ public partial class RoguemojiGame : GameManager
 		player.GridCellClicked(new IntVector(x, y), gridType, rightClick, shift, doubleClick, visible);
 	}
 
-	[ClientRpc]
+    [ConCmd.Server]
+    public static void ConfirmAimingCmd(int x, int y)
+    {
+        var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
+        player.ConfirmAiming(new IntVector(x, y));
+    }
+
+    [ClientRpc]
 	public void RefreshGridPanelClient(GridType gridType)
 	{
 		GridPanel panel = Hud.Instance.GetGridPanel(gridType);

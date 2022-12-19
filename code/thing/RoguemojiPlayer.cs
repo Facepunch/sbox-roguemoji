@@ -512,7 +512,7 @@ public partial class RoguemojiPlayer : Thing
 
     public void ThrowWieldedItem(Direction direction)
     {
-        if (WieldedThing == null)
+        if (WieldedThing == null || direction == Direction.None)
             return;
 
         var projectile = WieldedThing.AddThingComponent<Projectile>();
@@ -903,6 +903,12 @@ public partial class RoguemojiPlayer : Thing
     {
         ThrowWieldedItem(direction);
         StopAiming();
+    }
+
+    public void ConfirmAiming(IntVector gridPos)
+    {
+        var direction = GridManager.GetDirectionForIntVector(gridPos - GridPos);
+        ConfirmAiming(direction);
     }
 
     public void StopAiming()
