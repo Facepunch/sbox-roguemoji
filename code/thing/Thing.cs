@@ -11,91 +11,90 @@ public enum ThingFlags
     None = 0,
     Solid = 1,
     Selectable = 2,
-	Equipment = 4,
-	Useable = 8,
-	Food = 16,
-	Animal = 32,
+    Equipment = 4,
+    Useable = 8,
+    CanUseThings = 16,
 }
 
 public partial class Thing : Entity
 {
-	[Net] public IntVector GridPos { get; protected set; }
-	[Net] public GridManager ContainingGridManager { get; set; }
+    [Net] public IntVector GridPos { get; protected set; }
+    [Net] public GridManager ContainingGridManager { get; set; }
 
     [Net] public string DisplayIcon { get; protected set; }
-	[Net] public string DisplayName { get; protected set; }
+    [Net] public string DisplayName { get; protected set; }
     [Net] public string Description { get; protected set; }
     [Net] public string Tooltip { get; protected set; }
 
-	public bool ShouldUpdate { get; set; }
-	public bool DoneFirstUpdate { get; protected set; }
+    public bool ShouldUpdate { get; set; }
+    public bool DoneFirstUpdate { get; protected set; }
 
-	[Net] public int PlayerNum { get; set; }
+    [Net] public int PlayerNum { get; set; }
 
-	[Net] public int IconDepth { get; set; }
+    [Net] public int IconDepth { get; set; }
     public bool ShouldLogBehaviour { get; set; }
-	[Net] public int StackNum { get; set; }
+    [Net] public int StackNum { get; set; }
     [Net] public float PathfindMovementCost { get; set; }
 
     public Vector2 Offset { get; set; }
     public Vector2 TargetOffset { get; set; }
     public float RotationDegrees { get; set; }
-	public float IconScale { get; set; }
+    public float IconScale { get; set; }
     public int CharSkip { get; set; } // Client-only
 
-	[Net] public string DebugText { get; set; }
+    [Net] public string DebugText { get; set; }
 
     [Net] public int ThingId { get; private set; }
 
     public Dictionary<TypeDescription, ThingComponent> ThingComponents = new Dictionary<TypeDescription, ThingComponent>();
 
-	[Net] public ThingFlags Flags { get; set; }
+    [Net] public ThingFlags Flags { get; set; }
 
     [Net] public Thing WieldedThing { get; protected set; }
     [Net] public Thing ThingWieldingThis { get; protected set; }
 
     [Net] public int SightBlockAmount { get; set; }
 
-	[Net] public IList<Thing> EquippedThings { get; private set; }
+    [Net] public IList<Thing> EquippedThings { get; private set; }
 
-	[Net] public float ActionRechargePercent { get; set; }
+    [Net] public float ActionRechargePercent { get; set; }
 
     [Net] public LevelId CurrentLevelId { get; set; }
 
     public Thing()
-	{
+    {
         ShouldUpdate = true;
-		DisplayIcon = ".";
-		DisplayName = Name;
-		Tooltip = "";
-		IconDepth = 0;
-		ShouldLogBehaviour = false;
-		IconScale = 1f;
-		ThingId = RoguemojiGame.ThingId++;
+        DisplayIcon = ".";
+        DisplayName = Name;
+        Tooltip = "";
+        IconDepth = 0;
+        ShouldLogBehaviour = false;
+        IconScale = 1f;
+        ThingId = RoguemojiGame.ThingId++;
     }
 
-	// Server only
-	public override void Spawn()
-	{
-		base.Spawn();
-
-		Transmit = TransmitType.Always;
-	}
-
-	[Event.Tick.Client]
-	public virtual void ClientTick()
+    // Server only
+    public override void Spawn()
     {
-		float dt = Time.Delta;
+        base.Spawn();
 
-		foreach (KeyValuePair<TypeDescription, ThingComponent> pair in ThingComponents)
-		{
-			var component = pair.Value;
-			if (component.ShouldUpdate)
-				component.Update(dt);
-		}
+        Transmit = TransmitType.Always;
+    }
 
-		if(!string.IsNullOrEmpty(DebugText))
-			DrawDebugText(DebugText);
+    [Event.Tick.Client]
+    public virtual void ClientTick()
+    {
+        float dt = Time.Delta;
+
+        foreach (KeyValuePair<TypeDescription, ThingComponent> pair in ThingComponents)
+        {
+            var component = pair.Value;
+            if (component.ShouldUpdate)
+                component.Update(dt);
+        }
+
+        if (!string.IsNullOrEmpty(DebugText))
+            DrawDebugText(DebugText);
 
         Offset = Utils.DynamicEaseTo(Offset, TargetOffset, 0.6f, dt);
 
@@ -103,72 +102,75 @@ public partial class Thing : Entity
         //DrawDebugText(Flags.ToString());
     }
 
-	public virtual void Update(float dt)
-	{
+    public virtual void Update(float dt)
+    {
         //DebugText = "Server Components (" + Components.Count + "):\n";
         foreach (KeyValuePair<TypeDescription, ThingComponent> pair in ThingComponents)
         {
-			var component = pair.Value;
-			if (component.ShouldUpdate)
-				component.Update(dt);
+            var component = pair.Value;
+            if (component.ShouldUpdate)
+                component.Update(dt);
 
-			//DebugText += component.GetType().Name + "\n";
-		}
+            //DebugText += component.GetType().Name + "\n";
+        }
 
-		//DrawDebugText(Flags.ToString());
-	}
-
-	public virtual void FirstUpdate()
-	{
-		//SetGridPos(GridPos);
-		DoneFirstUpdate = true;
+        //DrawDebugText(Flags.ToString());
     }
 
-	public virtual bool TryMove(Direction direction, bool shouldAnimate = true)
-	{
-		Sandbox.Diagnostics.Assert.True(direction != Direction.None);
+    public virtual void FirstUpdate()
+    {
+        //SetGridPos(GridPos);
+        DoneFirstUpdate = true;
+    }
 
-		IntVector vec = GridManager.GetIntVectorForDirection(direction);
-		IntVector newGridPos = GridPos + vec;
+    public virtual bool TryMove(Direction direction, bool shouldAnimate = true)
+    {
+        Sandbox.Diagnostics.Assert.True(direction != Direction.None);
 
-		if ( !ContainingGridManager.IsGridPosInBounds( newGridPos ) )
-			return false;
+        IntVector vec = GridManager.GetIntVectorForDirection(direction);
+        IntVector newGridPos = GridPos + vec;
+
+        if (!ContainingGridManager.IsGridPosInBounds(newGridPos))
+            return false;
 
         Thing other = ContainingGridManager.GetThingsAt(newGridPos).WithAll(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
         if (other != null)
-		{
+        {
             BumpInto(other, direction);
             //RoguemojiGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") bumped into " + other.DisplayIcon + "(" + other.DisplayName + ")", PlayerNum);
 
-			return false;
-		}
+            return false;
+        }
 
-		SetGridPos(newGridPos);
+        SetGridPos(newGridPos);
 
-		if(shouldAnimate)
-			VfxSlide(direction, 0.2f, 40f);
+        if (shouldAnimate)
+            VfxSlide(direction, 0.2f, 40f);
 
-		return true;
-	}
+        return true;
+    }
 
     public virtual void BumpInto(Thing target, Direction direction)
-	{
+    {
         VfxNudge(direction, 0.1f, 10f);
 
-		var hittingThing = WieldedThing != null ? WieldedThing : this;
-        hittingThing.HitOther(target, direction);
+        OnBumpedIntoThing(target);
+        target.OnBumpedIntoBy(this);
+
+        var hittingThing = WieldedThing != null ? WieldedThing : this;
+        hittingThing.HitOther(target, direction, shouldUse: WieldedThing != null);
     }
 
-	public virtual void HitOther(Thing target, Direction direction)
-	{
-		if (Flags.HasFlag(ThingFlags.Useable))
-			Use(target);
-		else
-			DamageOther(target, direction);
+    public virtual void HitOther(Thing target, Direction direction, bool shouldUse)
+    {
+        if (shouldUse && Flags.HasFlag(ThingFlags.Useable) && target.CanUseThing(this))
+            Use(target);
+        else
+            DamageOther(target, direction);
     }
 
-	public virtual void DamageOther(Thing target, Direction direction)
-	{
+    public virtual void DamageOther(Thing target, Direction direction)
+    {
         target.VfxShake(0.2f, 4f);
 
         if (target.HasStat(StatType.Health))
@@ -185,235 +187,235 @@ public partial class Thing : Entity
         }
     }
 
-	public virtual void TakeDamage(Thing source)
-	{
-		if (!HasStat(StatType.Health))
-			return;
+    public virtual void TakeDamage(Thing source)
+    {
+        if (!HasStat(StatType.Health))
+            return;
 
-		int amount = source.GetStatClamped(StatType.Attack);
-		AdjustStat(StatType.Health, -amount);
+        int amount = source.GetStatClamped(StatType.Attack);
+        AdjustStat(StatType.Health, -amount);
 
         RoguemojiGame.Instance.AddFloater("💔", GridPos, 1.2f, CurrentLevelId, new Vector2(0f, 1f), new Vector2(0f, -6f), $"-{amount}", requireSight: true, EasingType.SineOut, 0.25f, parent: this);
 
         if (GetStatClamped(StatType.Health) <= 0)
-		{
+        {
             RoguemojiGame.Instance.AddFloater("☠️", GridPos, 1.5f, CurrentLevelId, new Vector2(0f, 4f), new Vector2(0f, -7f), "", requireSight: true, EasingType.SineOut, 1f, parent: this);
             Destroy();
         }
-			
-	}
+
+    }
 
     public virtual void UseWieldedThing()
-	{
-		if (WieldedThing == null)
-			return;
+    {
+        if (WieldedThing == null)
+            return;
 
-		WieldedThing.Use(this);
-	}
+        WieldedThing.Use(this);
+    }
 
-	public virtual void Use(Thing target)
-	{
+    public virtual void Use(Thing target)
+    {
 
-	}
+    }
 
-	public virtual void Destroy()
-	{
-		Remove();
-	}
+    public virtual void Destroy()
+    {
+        Remove();
+    }
 
-	public virtual void SetGridPos( IntVector gridPos )
-	{
-		//if ( GridPos.Equals( gridPos ) && !forceRefresh )
-		//	return;
+    public virtual void SetGridPos(IntVector gridPos)
+    {
+        //if ( GridPos.Equals( gridPos ) && !forceRefresh )
+        //	return;
 
-		ContainingGridManager.SetGridPos( this, gridPos );
-		GridPos = gridPos;
+        ContainingGridManager.SetGridPos(this, gridPos);
+        GridPos = gridPos;
 
-		if(ContainingGridManager.GridType == GridType.Inventory || ContainingGridManager.GridType == GridType.Equipment)
+        if (ContainingGridManager.GridType == GridType.Inventory || ContainingGridManager.GridType == GridType.Equipment)
             RefreshGridPanelClient(To.Single(ContainingGridManager.OwningPlayer));
-		else
-			RefreshGridPanelClient();
+        else
+            RefreshGridPanelClient();
 
-		//if (ShouldLogBehaviour)
-  //      {
-		//	if(Flags.HasFlag(ThingFlags.InInventory))
-		//		RoguemojiGame.Instance.LogMessage(DisplayIcon + DisplayName + " moved to (" + gridPos.x + ", " + gridPos.y + ") in " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
-		//	else
-		//		RoguemojiGame.Instance.LogMessage(DisplayIcon + DisplayName + " moved to (" + gridPos.x + ", " + gridPos.y + ").", PlayerNum);
-		//}
-	}
+        //if (ShouldLogBehaviour)
+        //      {
+        //	if(Flags.HasFlag(ThingFlags.InInventory))
+        //		RoguemojiGame.Instance.LogMessage(DisplayIcon + DisplayName + " moved to (" + gridPos.x + ", " + gridPos.y + ") in " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
+        //	else
+        //		RoguemojiGame.Instance.LogMessage(DisplayIcon + DisplayName + " moved to (" + gridPos.x + ", " + gridPos.y + ").", PlayerNum);
+        //}
+    }
 
-	public void Remove()
-	{
-		//if ( ShouldLogBehaviour )
-  //      {
-		//	if (Flags.HasFlag(ThingFlags.InInventory))
-		//		RoguemojiGame.Instance.LogMessage(DisplayIcon + DisplayName + " removed from " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
-		//	else
-		//		RoguemojiGame.Instance.LogMessage(DisplayIcon + DisplayName + " removed.", PlayerNum);
-		//}
-			
-		ContainingGridManager.RemoveThing( this );
-		Delete();
-	}
+    public void Remove()
+    {
+        //if ( ShouldLogBehaviour )
+        //      {
+        //	if (Flags.HasFlag(ThingFlags.InInventory))
+        //		RoguemojiGame.Instance.LogMessage(DisplayIcon + DisplayName + " removed from " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
+        //	else
+        //		RoguemojiGame.Instance.LogMessage(DisplayIcon + DisplayName + " removed.", PlayerNum);
+        //}
 
-	[ClientRpc]
+        ContainingGridManager.RemoveThing(this);
+        Delete();
+    }
+
+    [ClientRpc]
     public void RefreshGridPanelClient()
     {
         if (Hud.Instance == null)
             return;
 
-		GridPanel panel = Hud.Instance.GetGridPanel(ContainingGridManager.GridType);
+        GridPanel panel = Hud.Instance.GetGridPanel(ContainingGridManager.GridType);
         if (panel == null)
             return;
 
-		panel.StateHasChanged();
+        panel.StateHasChanged();
     }
 
     public void SetOffset(Vector2 offset)
     {
-		TargetOffset = offset;
+        TargetOffset = offset;
     }
 
-	public void SetRotation(float rotationDegrees)
-	{
-		RotationDegrees = rotationDegrees;
-	}
-
-	public void SetScale(float scale)
-	{
-		IconScale = scale;
-	}
-
-	public ThingComponent AddThingComponent(TypeDescription type)
-	{
-		if(type == null)
-		{
-			Log.Info("type is null!");
-			return null;
-		}
-
-		if(ThingComponents.ContainsKey(type))
-        {
-			var component = ThingComponents[type];
-			component.ReInitialize();
-			return component;
-        }
-		else
-        {
-			var component = type.Create<ThingComponent>();
-			component.Init(this);
-			ThingComponents.Add(type, component);
-			return component;
-		}
-	}
-
-	public T AddThingComponent<T>() where T : ThingComponent
-	{
-		return AddThingComponent(TypeLibrary.GetType(typeof(T))) as T;
-	}
-
-	public void RemoveComponent(TypeDescription type)
+    public void SetRotation(float rotationDegrees)
     {
-		if(ThingComponents.ContainsKey(type))
+        RotationDegrees = rotationDegrees;
+    }
+
+    public void SetScale(float scale)
+    {
+        IconScale = scale;
+    }
+
+    public ThingComponent AddThingComponent(TypeDescription type)
+    {
+        if (type == null)
         {
-			var component = ThingComponents[type];
-			component.OnRemove();
-			ThingComponents.Remove(type);
+            Log.Info("type is null!");
+            return null;
+        }
+
+        if (ThingComponents.ContainsKey(type))
+        {
+            var component = ThingComponents[type];
+            component.ReInitialize();
+            return component;
+        }
+        else
+        {
+            var component = type.Create<ThingComponent>();
+            component.Init(this);
+            ThingComponents.Add(type, component);
+            return component;
         }
     }
 
-	public bool GetComponent(TypeDescription type, out ThingComponent component)
-	{
-		if (ThingComponents.ContainsKey(type))
-		{
-			component = ThingComponents[type];
-			return true;
-		}
-
-		component = null;
-		return false;
-	}
-
-	public void ForEachComponent(Action<ThingComponent> action)
-	{
-		foreach (var (_, component) in ThingComponents)
-		{
-			action(component);
-		}
-	}
-
-	public void DrawDebugText(string text, Color color, int line = 0, float time = 0f)
+    public T AddThingComponent<T>() where T : ThingComponent
     {
-		if (Game.IsServer)
+        return AddThingComponent(TypeLibrary.GetType(typeof(T))) as T;
+    }
+
+    public void RemoveComponent(TypeDescription type)
+    {
+        if (ThingComponents.ContainsKey(type))
         {
-			DebugOverlay.ScreenText(text, new Vector2(20f, 20f), 0, color, time);
-		}
-		else
+            var component = ThingComponents[type];
+            component.OnRemove();
+            ThingComponents.Remove(type);
+        }
+    }
+
+    public bool GetComponent(TypeDescription type, out ThingComponent component)
+    {
+        if (ThingComponents.ContainsKey(type))
+        {
+            component = ThingComponents[type];
+            return true;
+        }
+
+        component = null;
+        return false;
+    }
+
+    public void ForEachComponent(Action<ThingComponent> action)
+    {
+        foreach (var (_, component) in ThingComponents)
+        {
+            action(component);
+        }
+    }
+
+    public void DrawDebugText(string text, Color color, int line = 0, float time = 0f)
+    {
+        if (Game.IsServer)
+        {
+            DebugOverlay.ScreenText(text, new Vector2(20f, 20f), 0, color, time);
+        }
+        else
         {
             var player = RoguemojiGame.Instance.LocalPlayer;
             var offsetGridPos = GridPos - player.CameraGridOffset;
-            
-			var panel = Hud.Instance.GetGridPanel(ContainingGridManager.GridType);
+
+            var panel = Hud.Instance.GetGridPanel(ContainingGridManager.GridType);
             if (panel != null)
-				DebugOverlay.ScreenText(text, panel.GetCellPos(offsetGridPos), line, color, time);
-		}
-	}
+                DebugOverlay.ScreenText(text, panel.GetCellPos(offsetGridPos), line, color, time);
+        }
+    }
 
-	public void DrawDebugText(string text)
-	{
-		DrawDebugText(text, new Color(1f, 1f, 1f, 0.5f));
-	}
+    public void DrawDebugText(string text)
+    {
+        DrawDebugText(text, new Color(1f, 1f, 1f, 0.5f));
+    }
 
-	public void SetIcon(string icon)
-	{
-		DisplayIcon = icon;
-		//GridManager.RefreshGridPos(GridPos);
-	}
+    public void SetIcon(string icon)
+    {
+        DisplayIcon = icon;
+        //GridManager.RefreshGridPos(GridPos);
+    }
 
-	[ClientRpc]
-	public void VfxNudge(Direction direction, float lifetime, float distance)
-	{
-		var nudge = AddThingComponent<VfxNudge>();
+    [ClientRpc]
+    public void VfxNudge(Direction direction, float lifetime, float distance)
+    {
+        var nudge = AddThingComponent<VfxNudge>();
         nudge.Direction = direction;
         nudge.Lifetime = lifetime;
         nudge.Distance = distance;
     }
 
-	[ClientRpc]
-	public void VfxSlide(Direction direction, float lifetime, float distance)
+    [ClientRpc]
+    public void VfxSlide(Direction direction, float lifetime, float distance)
     {
-		var slide = AddThingComponent<VfxSlide>();
-		slide.Direction = direction;
-		slide.Lifetime = lifetime;
-		slide.Distance = distance;
-	}
+        var slide = AddThingComponent<VfxSlide>();
+        slide.Direction = direction;
+        slide.Lifetime = lifetime;
+        slide.Distance = distance;
+    }
 
-	[ClientRpc]
-	public void VfxShake(float lifetime, float distance)
-	{
-		var shake = AddThingComponent<VfxShake>();
-		shake.Lifetime = lifetime;
-		shake.Distance = distance;
-	}
+    [ClientRpc]
+    public void VfxShake(float lifetime, float distance)
+    {
+        var shake = AddThingComponent<VfxShake>();
+        shake.Lifetime = lifetime;
+        shake.Distance = distance;
+    }
 
-	[ClientRpc]
-	public void VfxScale(float lifetime, float startScale, float endScale)
-	{
-		var scale = AddThingComponent<VfxScale>();
-		scale.Lifetime = lifetime;
-		scale.StartScale = startScale;
-		scale.EndScale = endScale;
-	}
+    [ClientRpc]
+    public void VfxScale(float lifetime, float startScale, float endScale)
+    {
+        var scale = AddThingComponent<VfxScale>();
+        scale.Lifetime = lifetime;
+        scale.StartScale = startScale;
+        scale.EndScale = endScale;
+    }
 
-	[ClientRpc]
-	public void VfxSpin(float lifetime, float startAngle, float endAngle)
-	{
-		var scale = AddThingComponent<VfxSpin>();
-		scale.Lifetime = lifetime;
-		scale.StartAngle = startAngle;
-		scale.EndAngle = endAngle;
-	}
+    [ClientRpc]
+    public void VfxSpin(float lifetime, float startAngle, float endAngle)
+    {
+        var scale = AddThingComponent<VfxSpin>();
+        scale.Lifetime = lifetime;
+        scale.StartAngle = startAngle;
+        scale.EndAngle = endAngle;
+    }
 
     public override int GetHashCode()
     {
@@ -421,9 +423,9 @@ public partial class Thing : Entity
         //return HashCode.Combine((DisplayIcon + ThingId.ToString()), PlayerNum, Offset, RotationDegrees, IconScale, IconDepth, Flags);
     }
 
-	public int GetInfoDisplayHash()
+    public int GetInfoDisplayHash()
     {
-		return HashCode.Combine(NetworkIdent, DisplayIcon, WieldedThing?.DisplayIcon ?? "", GetStatClamped(StatType.Health), GetStatMax(StatType.Health), Flags);
+        return HashCode.Combine(NetworkIdent, DisplayIcon, WieldedThing?.DisplayIcon ?? "", GetStatClamped(StatType.Health), GetStatMax(StatType.Health), Flags);
     }
 
     public int GetNearbyCellHash()
@@ -431,34 +433,34 @@ public partial class Thing : Entity
         return HashCode.Combine(DisplayIcon, PlayerNum, IconDepth, Flags, NetworkIdent, ThingId);
     }
 
-	public int GetZPos()
-	{
-		return (IconDepth * 100) + StackNum;
+    public int GetZPos()
+    {
+        return (IconDepth * 100) + StackNum;
     }
 
-	public virtual void WieldThing(Thing thing)
-	{
-		if (thing == WieldedThing)
-			return;
+    public virtual void WieldThing(Thing thing)
+    {
+        if (thing == WieldedThing)
+            return;
 
-		if(WieldedThing != null)
-		{
-			OnNoLongerWieldingThing(thing);
-			WieldedThing.OnNoLongerWieldedBy(this);
-		}
+        if (WieldedThing != null)
+        {
+            OnNoLongerWieldingThing(thing);
+            WieldedThing.OnNoLongerWieldedBy(this);
+        }
 
         WieldedThing = thing;
 
-		if(WieldedThing != null)
-		{
+        if (WieldedThing != null)
+        {
             OnWieldThing(thing);
             thing.OnWieldedBy(this);
         }
-	}
+    }
 
-	public void EquipThing(Thing thing)
-	{
-		if(EquippedThings == null)
+    public void EquipThing(Thing thing)
+    {
+        if (EquippedThings == null)
             EquippedThings = new List<Thing>();
 
         RoguemojiGame.Instance.AddFloater(thing.DisplayIcon, GridPos, 0.6f, CurrentLevelId, new Vector2(0f, 0f), new Vector2(0f, -7f), "", requireSight: true, EasingType.SineOut, 0.05f, parent: this);
@@ -466,29 +468,29 @@ public partial class Thing : Entity
         EquippedThings.Add(thing);
 
         OnEquipThing(thing);
-		thing.OnEquippedTo(this);
-	}
+        thing.OnEquippedTo(this);
+    }
 
-	public void UnequipThing(Thing thing)
-	{
+    public void UnequipThing(Thing thing)
+    {
         RoguemojiGame.Instance.AddFloater(thing.DisplayIcon, GridPos, 0.6f, CurrentLevelId, new Vector2(0f, -8f), new Vector2(0f, 0f), "", requireSight: true, EasingType.SineOut, 0.05f, parent: this);
 
         EquippedThings.Remove(thing);
 
         OnUnequipThing(thing);
-		thing.OnUnequippedFrom(this);
+        thing.OnUnequippedFrom(this);
     }
-	
+
     public bool HasEquipmentType(TypeDescription type)
     {
-		if (EquippedThings == null)
-			return false;
+        if (EquippedThings == null)
+            return false;
 
         foreach (var thing in EquippedThings)
-		{
-			if (type == TypeLibrary.GetType(thing.GetType()))
-				return true;
-		}
+        {
+            if (type == TypeLibrary.GetType(thing.GetType()))
+                return true;
+        }
 
         return false;
     }
@@ -497,26 +499,39 @@ public partial class Thing : Entity
     {
         EquippedThings.Clear();
         WieldedThing = null;
-		ThingWieldingThis = null;
+        ThingWieldingThis = null;
     }
 
-    public virtual void OnWieldThing(Thing thing) { }
-    public virtual void OnNoLongerWieldingThing(Thing thing) { }
+    public bool CanUseThing(Thing thing)
+    {
+        if (!Flags.HasFlag(ThingFlags.CanUseThings) || !thing.Flags.HasFlag(ThingFlags.Useable))
+            return false;
 
-    public virtual void OnWieldedBy(Thing thing) 
-	{
-		ThingWieldingThis = thing;
-	}
+        return true;
+    }
 
-    public virtual void OnNoLongerWieldedBy(Thing thing) 
-	{
-		if(thing == ThingWieldingThis)
+    public virtual void OnWieldThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnWieldThing(thing); } }
+    public virtual void OnNoLongerWieldingThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnNoLongerWieldingThing(thing); } }
+
+    public virtual void OnWieldedBy(Thing thing)
+    {
+        ThingWieldingThis = thing;
+        foreach (var component in ThingComponents) { component.Value.OnWieldedBy(thing); }
+    }
+
+    public virtual void OnNoLongerWieldedBy(Thing thing)
+    {
+        if (thing == ThingWieldingThis)
             ThingWieldingThis = null;
+
+        foreach (var component in ThingComponents) { component.Value.OnNoLongerWieldedBy(thing); }
     }
 
-    public virtual void OnEquipThing(Thing thing) {}
-    public virtual void OnUnequipThing(Thing thing) {}
-    public virtual void OnEquippedTo(Thing thing) {}
-    public virtual void OnUnequippedFrom(Thing thing) {}
-    public virtual void OnActionRecharged() {}
+    public virtual void OnEquipThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnEquipThing(thing); } }
+    public virtual void OnUnequipThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnUnequipThing(thing); } }
+    public virtual void OnEquippedTo(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnEquippedTo(thing); } }
+    public virtual void OnUnequippedFrom(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnUnequippedFrom(thing); } }
+    public virtual void OnActionRecharged() { foreach (var component in ThingComponents) { component.Value.OnActionRecharged(); } }
+    public virtual void OnBumpedIntoThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoThing(thing); } }
+    public virtual void OnBumpedIntoBy(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoBy(thing); } }
 }

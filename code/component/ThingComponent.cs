@@ -38,8 +38,16 @@ public abstract class ThingComponent
         Thing.RemoveComponent(TypeLibrary.GetType(GetType()));
     }
 
-    public virtual void OnRemove()
-    {
-
-    }
+    public virtual void OnWieldThing(Thing thing) { }
+    public virtual void OnNoLongerWieldingThing(Thing thing) { }
+    public virtual void OnWieldedBy(Thing thing) { }
+    public virtual void OnNoLongerWieldedBy(Thing thing) { }
+    public virtual void OnEquipThing(Thing thing) { }
+    public virtual void OnUnequipThing(Thing thing) { }
+    public virtual void OnEquippedTo(Thing thing) { }
+    public virtual void OnUnequippedFrom(Thing thing) { }
+    public virtual void OnActionRecharged() { }
+    public virtual void OnBumpedIntoThing(Thing thing) { }
+    public virtual void OnBumpedIntoBy(Thing thing) { }
+    public virtual void OnRemove() {}
 }
