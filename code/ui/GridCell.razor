@@ -134,8 +134,13 @@
         if(Thing.ContainingGridManager.GridType == GridType.Arena)
         {
             var player = RoguemojiGame.Instance.LocalPlayer;
-            bool visible = player.IsCellVisible(Thing.GridPos);
-            Hud.Instance.GridCellClicked(Thing.GridPos, GridType.Arena, rightClick, shift, doubleClick: false, visible);
+            var gridPos = Thing.GridPos;
+            bool visible = player.IsCellVisible(gridPos);
+
+            if(player.IsAiming && player.AimingCells.Contains(gridPos))
+                RoguemojiGame.ConfirmAimingCmd(gridPos.x, gridPos.y);
+            else 
+                Hud.Instance.GridCellClicked(Thing.GridPos, GridType.Arena, rightClick, shift, doubleClick: false, visible);
         }
         else if(Thing.ContainingGridManager.GridType == GridType.Inventory)
         {

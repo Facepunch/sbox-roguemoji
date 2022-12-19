@@ -90,7 +90,7 @@
             else if(player.IsAiming && player.AimingCells.Contains(gridPos))
             {
                 var aimOpacity = 0.5f + MathF.Sin(Time.Now * 16f) * 0.25f;
-                <div class="aiming" style="left: @(x * 40 + player.CameraPixelOffset.x); top: @(y * 40 + player.CameraPixelOffset.y); opacity: @(aimOpacity);">@GetArrowIcon(GridManager.GetDirectionForIntVector(gridPos - player.GridPos))</div>
+                <div class="aiming" style="left: @(x * 40 + player.CameraPixelOffset.x + 1); top: @(y * 40 + player.CameraPixelOffset.y + 1); opacity: @(aimOpacity);">@GetArrowIcon(GridManager.GetDirectionForIntVector(gridPos - player.GridPos))</div>
             }
         }
     }
