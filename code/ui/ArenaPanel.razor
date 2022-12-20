@@ -39,15 +39,15 @@
         position: absolute;
         width: 38px;
         height: 38px;
-        //background-color: #ffff5522;
         z-index: 9998;
         pointer-events: none;
         border: 1px solid #ffff3311;
         border-radius:3px;
         color: #ffffff;
-        align-items: center;
         justify-content: center;
-        font-size: 20;
+        align-items: center;
+        text-align: center;
+        font-size: 25px;
     }
 </style>
 
@@ -90,7 +90,8 @@
             else if(player.IsAiming && player.AimingCells.Contains(gridPos))
             {
                 var aimOpacity = 0.5f + MathF.Sin(Time.Now * 16f) * 0.25f;
-                <div class="aiming" style="left: @(x * 40 + player.CameraPixelOffset.x + 1); top: @(y * 40 + player.CameraPixelOffset.y + 1); opacity: @(aimOpacity);">@GetArrowIcon(GridManager.GetDirectionForIntVector(gridPos - player.GridPos))</div>
+                var dir = GridManager.GetDirectionForIntVector(gridPos - player.GridPos);
+                <div class="aiming" style="left: @(x * 40 + player.CameraPixelOffset.x + 1); top: @(y * 40 + player.CameraPixelOffset.y + 1); opacity: @(aimOpacity); padding-bottom: @(GetAimingPadding(dir));">@GetArrowIcon(dir)</div>
             }
         }
     }
@@ -114,6 +115,19 @@
         }
 
         return "";
+    }
+
+    int GetAimingPadding(Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.Left: return 9;
+            case Direction.Right: return 9;
+            case Direction.Down: return 2;
+            case Direction.Up: return 2;
+        }
+
+        return 0;
     }
 
     protected override IList<Thing> GetThings()

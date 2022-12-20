@@ -201,9 +201,9 @@ public partial class RoguemojiPlayer : Thing
                 component.Update(dt);
         }
 
-        DebugText = "";
-        if (QueuedAction != null)
-            DebugText = QueuedActionName;
+        //DebugText = "";
+        //if (QueuedAction != null)
+        //    DebugText = QueuedActionName;
 
         //DebugText = $"IsAiming: {IsAiming}";
     }
