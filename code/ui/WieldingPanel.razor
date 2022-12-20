@@ -1,0 +1,82 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@using System;
+
+@inherits Panel;
+@namespace Roguemoji
+
+<style>
+    .wielding
+    {
+        width: 70px;
+        height: 70px;
+        font-size: 48px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #ffffff05;
+        border-radius: 3px;
+        padding-bottom: 4px;
+        pointer-events: all;
+        margin-bottom: 10px;
+    }
+
+    .is_wielding_something
+    {
+        background-color: #5555ff11;
+    }
+
+    .not_wielding_anything
+    {
+        color: transparent;
+        text-shadow: 0 0 0.01px #00000099;
+    }
+</style>
+
+@{
+    var player = RoguemojiGame.Instance.LocalPlayer;
+}
+
+<root class="wielding @(player.WieldedThing != null ? "is_wielding_something" : "not_wielding_anything")"> 
+    @(player.WieldedThing?.DisplayIcon.Substring(player.WieldedThing.CharSkip) ?? "🖐️")
+</root>
+
+@code
+{
+    protected override Panel CreateTooltipPanel()
+    {
+        var panel = Hud.Instance.AddChild<CellTooltip>();
+        panel.Text = Tooltip;
+        return panel;
+    }
+
+    protected override int BuildHash()
+    {
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        return HashCode.Combine(player.WieldedThing?.NetworkIdent ?? 0);
+    }
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        base.OnAfterTreeRender(firstTime);
+
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        Tooltip = player.WieldedThing?.Tooltip ?? "";
+    }
+
+    protected override void OnMouseDown(MousePanelEvent e)
+    {
+        base.OnMouseDown(e);
+
+        bool rightClick = e.Button == "mouseright";
+        bool shift = Input.Down(InputButton.Run);
+
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        if (player == null || player.WieldedThing == null)
+            return;
+
+        if(shift || rightClick)
+            Hud.Instance.WieldingClicked(rightClick, shift);
+        else
+            Hud.Instance.StartDragging(player.WieldedThing, this, rightClick, PanelType.Wielding);
+    }
+}
