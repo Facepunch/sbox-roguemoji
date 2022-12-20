@@ -1,0 +1,58 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@using System.Collections.Generic;
+@using System;
+
+@inherits Panel;
+@namespace Roguemoji
+
+<style>
+    .cursor_display
+    {
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: visible;
+        position: absolute;
+        z-index: 0;
+    }
+
+    .cursor_draw
+    {
+        width: 40px;
+        height: 40px;
+        position: absolute;
+        font-size: 29px;
+        color: white;
+        z-index: 0;
+        justify-content: center;
+        align-items: center;
+        //background-color: #ff000033;
+    }
+</style>
+
+<root class="cursor_display">
+    @{
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        var pos = MousePosition / ScaleToScreen;
+    }
+
+    <div class="cursor_draw" style="left: @(pos.x - 14); top: @(pos.y - 6);">
+        👆️
+    </div>
+</root>
+
+@code
+{
+    public override void Tick()
+    {
+        base.Tick();
+
+        StateHasChanged();
+    }
+
+    protected override int BuildHash()
+    {
+        return HashCode.Combine(Game.Random.Int(0, 999));
+    }
+}

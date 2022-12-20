@@ -52,6 +52,7 @@ public partial class Hud : RootPanel
 	public MainPanel MainPanel { get; private set; }
     public DebugDrawing DebugDrawing { get; set; }
     public FloaterDisplay FloaterDisplay { get; set; }
+    public CursorDisplay CursorDisplay { get; set; }
 
     public bool IsDraggingThing { get; set; }
     public bool IsDraggingRightClick { get; set; }
@@ -74,6 +75,7 @@ public partial class Hud : RootPanel
 		MainPanel = AddChild<MainPanel>();
         DebugDrawing = AddChild<DebugDrawing>();
         FloaterDisplay = AddChild<FloaterDisplay>();
+        CursorDisplay = AddChild<CursorDisplay>();
     }
 
     public override void Tick()
