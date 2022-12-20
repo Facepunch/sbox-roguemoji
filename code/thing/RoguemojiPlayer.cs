@@ -201,9 +201,9 @@ public partial class RoguemojiPlayer : Thing
                 component.Update(dt);
         }
 
-        //DebugText = "";
-        //if (QueuedAction != null)
-        //    DebugText = QueuedActionName;
+        DebugText = "";
+        if (QueuedAction != null)
+            DebugText = QueuedActionName;
 
         //DebugText = $"IsAiming: {IsAiming}";
     }
@@ -510,8 +510,15 @@ public partial class RoguemojiPlayer : Thing
             MoveThingTo(thing, GridType.Equipment, emptyGridPosEquipment);
     }
 
-    public void ThrowWieldedItem(Direction direction)
+    public void ThrowWieldedThing(Direction direction)
     {
+        if (!Acting.IsActionReady)
+        {
+            QueuedAction = new ThrowThingAction(WieldedThing, direction);
+            QueuedActionName = QueuedAction.ToString();
+            return;
+        }
+
         if (WieldedThing == null || direction == Direction.None)
             return;
 
@@ -901,7 +908,7 @@ public partial class RoguemojiPlayer : Thing
 
     public void ConfirmAiming(Direction direction)
     {
-        ThrowWieldedItem(direction);
+        ThrowWieldedThing(direction);
         StopAiming();
     }
 
@@ -1206,22 +1213,24 @@ public class WieldThingAction : IQueuedAction
 public class ThrowThingAction : IQueuedAction
 {
     public Thing Thing { get; set; }
+    public Direction Direction { get; set; }
 
-    public ThrowThingAction(Thing thing)
+    public ThrowThingAction(Thing thing, Direction direction)
     {
         Thing = thing;
+        Direction = direction;
     }
 
     public void Execute(RoguemojiPlayer player)
     {
-        //if (Thing != null && Thing.ContainingGridManager.OwningPlayer != player)
-        //    return;
+        if (Thing == null || Thing != player.WieldedThing)
+            return;
 
-        //player.WieldThing(Thing);
+        player.ThrowWieldedThing(Direction);
     }
 
     public override string ToString()
     {
-        return $"Throw {Thing?.DisplayName ?? null}";
+        return $"Throw {Thing?.DisplayName ?? null} {Direction}";
     }
 }
