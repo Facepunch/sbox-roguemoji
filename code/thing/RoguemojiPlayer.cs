@@ -541,6 +541,9 @@ public partial class RoguemojiPlayer : Thing
         if (IsDead) 
             return;
 
+        if (IsAiming)
+            StopAiming();
+
         if(!Acting.IsActionReady && !dontRequireAction)
         {
             QueuedAction = new MoveThingAction(thing, targetGridType, targetGridPos, thing.ContainingGridManager.GridType, thing.GridPos, wieldIfPossible);
@@ -604,6 +607,9 @@ public partial class RoguemojiPlayer : Thing
     {
         if (IsDead || WieldedThing == thing)
             return;
+
+        if (IsAiming)
+            StopAiming();
 
         if (!Acting.IsActionReady && !dontRequireAction)
         {
@@ -920,8 +926,8 @@ public partial class RoguemojiPlayer : Thing
 
     public void ConfirmAiming(Direction direction)
     {
-        ThrowWieldedThing(direction);
         StopAiming();
+        ThrowWieldedThing(direction);
     }
 
     public void ConfirmAiming(IntVector gridPos)
