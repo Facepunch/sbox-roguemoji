@@ -59,9 +59,29 @@
             else if (draggingEquipment && targetPanelType == PanelType.Wielding || !draggingEquipment && targetPanelType == PanelType.EquipmentGrid)
                 return CursorMode.Invalid;
             else if (targetPanelType == PanelType.ArenaGrid || targetPanelType == PanelType.Nearby)
-                return CursorMode.Drop;
+                return CursorMode.PointDown;
             else if (Hud.Instance.TimeSinceStartDragging > 0.15f || (MousePosition - Hud.Instance.DragStartPosition).Length > 4)
                 return CursorMode.Pinch;
+        }
+
+        if(targetPanelType == PanelType.ArenaGrid)
+        {
+            var player = RoguemojiGame.Instance.LocalPlayer;
+            var arenaPanel = Hud.Instance.GetGridPanel(GridType.Arena);
+            var gridPos = arenaPanel.GetGridPos(arenaPanel.MousePosition) + player.CameraGridOffset;
+
+            if (player.IsAiming && player.AimingCells.Contains(gridPos))
+            {
+                var direction = GridManager.GetDirectionForIntVector(gridPos - player.GridPos);
+                switch(direction)
+                {
+                    case Direction.Left: return CursorMode.PointLeft;
+                    case Direction.Right: return CursorMode.PointRight;
+                    case Direction.Down: return CursorMode.PointDown;
+                    case Direction.Up: return CursorMode.Point2;
+                }
+            }
+            
         }
 
         return CursorMode.Point;
@@ -75,7 +95,15 @@
             case CursorMode.Pinch: return "🤏";
             case CursorMode.Invalid: return "❌";
             case CursorMode.Write: return "✍️";
-            case CursorMode.Drop: return "👇️";
+            case CursorMode.PointDown: return "👇️";
+            case CursorMode.ThumbsUp: return "👍️";
+            case CursorMode.Ok: return "👌";
+            case CursorMode.Check: return "✔️";
+            case CursorMode.Pin: return "📍";
+            case CursorMode.MiddleFinger: return "🖕";
+            case CursorMode.Point2: return "☝️";
+            case CursorMode.PointLeft: return "👈️";
+            case CursorMode.PointRight: return "👉️";
         }
     }
 
@@ -87,7 +115,15 @@
             case CursorMode.Pinch: return new IntVector(-6, -14);
             case CursorMode.Invalid: return new IntVector(-14, -6);
             case CursorMode.Write: return new IntVector(-6, -30);
-            case CursorMode.Drop: return new IntVector(-24, -32);
+            case CursorMode.PointDown: return new IntVector(-24, -32);
+            case CursorMode.ThumbsUp: return new IntVector(-20, -10);
+            case CursorMode.Ok: return new IntVector(-12, -19);
+            case CursorMode.Check: return new IntVector(-8, -16);
+            case CursorMode.Pin: return new IntVector(-18, -32);
+            case CursorMode.MiddleFinger: return new IntVector(-18, -5);
+            case CursorMode.Point2: return new IntVector(-25, -5);
+            case CursorMode.PointLeft: return new IntVector(-5, -20);
+            case CursorMode.PointRight: return new IntVector(-31, -18);
         }
     }
 
@@ -96,8 +132,6 @@
         base.Tick();
 
         StateHasChanged();
-
-        Log.Info($"{Hud.Instance.GetContainingPanelType(MousePosition)}");
     }
 
     protected override int BuildHash()
