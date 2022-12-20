@@ -7,7 +7,8 @@ using static Roguemoji.DebugDrawing;
 
 namespace Roguemoji;
 
-public enum PanelType { None, ArenaGrid, InventoryGrid, EquipmentGrid, Wielding, PlayerIcon, Log, Nearby, Info, Character, Stats };
+public enum PanelType { None, ArenaGrid, InventoryGrid, EquipmentGrid, Wielding, PlayerIcon, Log, Nearby, Info, Character, Stats, Chatbox };
+public enum CursorMode { Point, Pinch, Invalid, Write, Drop }
 
 public struct FloaterData
 {
@@ -60,7 +61,9 @@ public partial class Hud : RootPanel
     public Panel DraggedPanel { get; set; }
     public PanelType DraggedPanelType { get; set; }
     public DragIcon DragIcon { get; private set; }
-	private IntVector _dragStartPlayerGridPos;
+    public TimeSince TimeSinceStartDragging { get; private set; }
+    public Vector2 DragStartPosition { get; private set; }
+    private IntVector _dragStartPlayerGridPos;
 
 	public Vector2 GetMousePos() { return MousePosition / ScaleToScreen; }
 
@@ -150,6 +153,13 @@ public partial class Hud : RootPanel
                 }
 			}
 
+            if(destinationPanelType == PanelType.Chatbox || destinationPanelType == PanelType.Log)
+            {
+                MainPanel.Chatbox.AddIcon(DraggedThing.DisplayIcon);
+                StopDragging();
+                return;
+            }
+
             if (DraggedThing.ContainingGridManager.GridType == GridType.Inventory)
 				RoguemojiGame.InventoryThingDraggedCmd(DraggedThing.NetworkIdent, destinationPanelType, targetGridPos.x, targetGridPos.y, wieldedThingDragged: DraggedPanelType == PanelType.Wielding);
 			else if (DraggedThing.ContainingGridManager.GridType == GridType.Equipment)
@@ -169,6 +179,8 @@ public partial class Hud : RootPanel
 		DraggedPanel = panel;
         DraggedPanelType = draggedPanelType;
 		_dragStartPlayerGridPos = RoguemojiGame.Instance.LocalPlayer.GridPos;
+        TimeSinceStartDragging = 0f;
+        DragStartPosition = MousePosition;
 
         CreateDragIcon(thing);
 	}
@@ -222,6 +234,10 @@ public partial class Hud : RootPanel
             return PanelType.PlayerIcon;
         else if (Contains(GetRect(PanelType.Character), pos))
             return PanelType.Character;
+        else if (Contains(GetRect(PanelType.Info), pos))
+            return PanelType.Info;
+        else if (Contains(GetRect(PanelType.Chatbox), pos))
+            return PanelType.Chatbox;
 
         return PanelType.None;
 	}
@@ -251,6 +267,10 @@ public partial class Hud : RootPanel
                 return MainPanel.CharacterPanel.WieldingPanel;
             case PanelType.PlayerIcon:
                 return MainPanel.CharacterPanel.PlayerIcon;
+            case PanelType.Info:
+                return MainPanel.InfoPanel;
+            case PanelType.Chatbox:
+                return MainPanel.Chatbox;
         }
 
 		return null;

@@ -103,4 +103,11 @@
     {
         Open();
     }
+
+    public void AddIcon(string icon)
+    {
+        Open();
+        Input.Text += icon;
+        Input.CaretPosition = Input.TextLength;
+    }
 }

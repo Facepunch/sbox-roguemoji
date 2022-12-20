@@ -14,7 +14,7 @@
         pointer-events: none;
         overflow: visible;
         position: absolute;
-        z-index: 0;
+        z-index: 10002;
     }
 
     .cursor_draw
@@ -24,10 +24,10 @@
         position: absolute;
         font-size: 29px;
         color: white;
-        z-index: 0;
+        z-index: 110;
         justify-content: center;
         align-items: center;
-        //background-color: #ff000033;
+        //text-shadow: 0px 2px 1px #000000;
     }
 </style>
 
@@ -35,20 +35,69 @@
     @{
         var player = RoguemojiGame.Instance.LocalPlayer;
         var pos = MousePosition / ScaleToScreen;
+        var cursorMode = GetCursorMode();
+        var offset = GetCursorOffset(cursorMode);
     }
 
-    <div class="cursor_draw" style="left: @(pos.x - 14); top: @(pos.y - 6);">
-        👆️
+    <div class="cursor_draw" style="left: @(pos.x + offset.x); top: @(pos.y + offset.y);">
+        @(GetCursorIcon(cursorMode))
     </div>
 </root>
 
 @code
 {
+    CursorMode GetCursorMode()
+    {
+        var targetPanelType = Hud.Instance.GetContainingPanelType(MousePosition);
+
+        if (Hud.Instance.IsDraggingThing)
+        {
+            var draggingEquipment = Hud.Instance.DraggedThing.Flags.HasFlag(ThingFlags.Equipment);
+
+            if (targetPanelType == PanelType.Chatbox || targetPanelType == PanelType.Log)
+                return CursorMode.Write;
+            else if (draggingEquipment && targetPanelType == PanelType.Wielding || !draggingEquipment && targetPanelType == PanelType.EquipmentGrid)
+                return CursorMode.Invalid;
+            else if (targetPanelType == PanelType.ArenaGrid || targetPanelType == PanelType.Nearby)
+                return CursorMode.Drop;
+            else if (Hud.Instance.TimeSinceStartDragging > 0.15f || (MousePosition - Hud.Instance.DragStartPosition).Length > 4)
+                return CursorMode.Pinch;
+        }
+
+        return CursorMode.Point;
+    }
+
+    string GetCursorIcon(CursorMode cursorMode)
+    {
+        switch(cursorMode)
+        {
+            case CursorMode.Point: default: return "👆️";
+            case CursorMode.Pinch: return "🤏";
+            case CursorMode.Invalid: return "❌";
+            case CursorMode.Write: return "✍️";
+            case CursorMode.Drop: return "👇️";
+        }
+    }
+
+    IntVector GetCursorOffset(CursorMode cursorMode)
+    {
+        switch (cursorMode)
+        {
+            case CursorMode.Point: default: return new IntVector(-14, -6);
+            case CursorMode.Pinch: return new IntVector(-6, -14);
+            case CursorMode.Invalid: return new IntVector(-14, -6);
+            case CursorMode.Write: return new IntVector(-6, -30);
+            case CursorMode.Drop: return new IntVector(-24, -32);
+        }
+    }
+
     public override void Tick()
     {
         base.Tick();
 
         StateHasChanged();
+
+        Log.Info($"{Hud.Instance.GetContainingPanelType(MousePosition)}");
     }
 
     protected override int BuildHash()

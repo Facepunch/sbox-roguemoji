@@ -771,6 +771,10 @@ public partial class RoguemojiPlayer : Thing
                 WieldThing(thing);
             }
         }
+        else if (destinationPanelType == PanelType.Info)
+        {
+            SelectThing(thing);
+        }
     }
 
     public void EquipmentThingDragged(Thing thing, PanelType destinationPanelType, IntVector targetGridPos)
@@ -789,6 +793,10 @@ public partial class RoguemojiPlayer : Thing
                 SwapGridThingPos(thing, GridType.Equipment, targetGridPos);
             else
                 SelectThing(thing);
+        }
+        else if (destinationPanelType == PanelType.Info)
+        {
+            SelectThing(thing);
         }
     }
 
@@ -827,6 +835,10 @@ public partial class RoguemojiPlayer : Thing
         else if (destinationPanelType == PanelType.PlayerIcon)
         {
             // todo
+        }
+        else if (destinationPanelType == PanelType.Info)
+        {
+            SelectThing(thing);
         }
     }
 
