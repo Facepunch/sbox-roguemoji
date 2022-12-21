@@ -48,6 +48,7 @@
         align-items: center;
         text-align: center;
         font-size: 25px;
+        padding-bottom: 2px;
     }
 </style>
 
@@ -89,9 +90,9 @@
             }
             else if(player.IsAiming && player.AimingCells.Contains(gridPos))
             {
-                var aimOpacity = 0.5f + MathF.Sin(Time.Now * 16f) * 0.25f;
+                var aimOpacity = 0.4f + MathF.Sin(Time.Now * 16f) * 0.3f;
                 var dir = GridManager.GetDirectionForIntVector(gridPos - player.GridPos);
-                <div class="aiming" style="left: @(x * 40 + player.CameraPixelOffset.x + 1); top: @(y * 40 + player.CameraPixelOffset.y + 1); opacity: @(aimOpacity); padding-bottom: @(GetAimingPadding(dir));">@GetArrowIcon(dir)</div>
+                <div class="aiming" style="left: @(x * 40 + player.CameraPixelOffset.x + 1); top: @(y * 40 + player.CameraPixelOffset.y + 1); opacity: @(aimOpacity); transform: rotate(@(GetAimingAngle(dir)));">@(GetArrowIcon(dir))</div>
             }
         }
     }
@@ -103,28 +104,22 @@
 
     public override int GridWidth => RoguemojiGame.ArenaWidth;
     public override int GridHeight => RoguemojiGame.ArenaHeight;
-
     string GetArrowIcon(Direction direction)
     {
-        //switch (direction)
-        //{
-        //    case Direction.Left: return "👈️";
-        //    case Direction.Right: return "👉️";
-        //    case Direction.Down: return "👇️";
-        //    case Direction.Up: return "👆️";
-        //}
-
-        return "";
+        if (direction != Direction.None)
+            return "🔼";
+        else
+            return "";
     }
 
-    int GetAimingPadding(Direction direction)
+    int GetAimingAngle(Direction direction)
     {
         switch (direction)
         {
-            case Direction.Left: return 9;
-            case Direction.Right: return 9;
-            case Direction.Down: return 2;
-            case Direction.Up: return 2;
+            case Direction.Left: return -90;
+            case Direction.Right: return 90;
+            case Direction.Down: return 180;
+            case Direction.Up: return 0;
         }
 
         return 0;
