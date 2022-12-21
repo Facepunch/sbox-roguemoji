@@ -44,8 +44,9 @@
 {
     protected override Panel CreateTooltipPanel()
     {
-        var panel = Hud.Instance.AddChild<CellTooltip>();
-        panel.Text = Tooltip;
+        var panel = Hud.Instance.AddChild<WieldingTooltip>();
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        panel.Thing = player.WieldedThing;
         return panel;
     }
 
@@ -60,7 +61,8 @@
         base.OnAfterTreeRender(firstTime);
 
         var player = RoguemojiGame.Instance.LocalPlayer;
-        Tooltip = player.WieldedThing?.Tooltip ?? "";
+        var wieldedThing = player.WieldedThing;
+        Tooltip = (wieldedThing != null) ? "x" : "";
     }
 
     protected override void OnMouseDown(MousePanelEvent e)

@@ -1,0 +1,76 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+
+@inherits Panel;
+@namespace Roguemoji
+
+<style>
+    .wielding_tooltip 
+    {
+        color: white;
+        font-size: 16px;
+        position: absolute;
+        padding: 2px 4px 2px 4px;
+        border-radius: 2px;
+        border: 1px solid #ffffff33;
+        box-shadow: 2px 2px 12px black;
+        font-family: RobotoMono;
+        flex-direction: column;
+    }
+
+    .wielding_title
+    {
+        padding-bottom: 2px;
+    }
+
+    .wielding_line
+    {
+        flex-direction: row;
+    }
+
+    .wielding_action
+    {
+        color: #444444;
+        padding-right: 6px;
+    }
+
+    .wielding_bind
+    {
+        color: #888888;
+        //align-items: flex-end;
+        //background-color: blue;
+        //flex-grow: 1;
+    }
+</style>
+
+@if(Thing == null)
+{
+    return;
+}
+
+<root class="wielding_tooltip">
+    <!-- <div class="wielding_title">@Thing.Tooltip</div> -->
+
+    @if(Thing.Flags.HasFlag(ThingFlags.Useable))
+    {
+        <div class="wielding_line">
+            <span class="wielding_action">Use</span>
+            <span class="wielding_bind">[Space]</span>
+        </div>
+    }
+
+    <div class="wielding_line">
+        <span class="wielding_action">Throw</span>
+        <span class="wielding_bind">[F]</span>
+    </div>
+
+    <div class="wielding_line">
+        <span class="wielding_action">Drop</span>
+        <span class="wielding_bind">[G]</span>
+    </div>
+</root>
+
+@code
+{
+    public Thing Thing { get; set; }
+}

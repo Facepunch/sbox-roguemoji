@@ -620,6 +620,8 @@ public partial class RoguemojiPlayer : Thing
 
         base.WieldThing(thing);
 
+        RoguemojiGame.Instance.FlickerWieldingPanel();
+
         if (!dontRequireAction)
             Acting.PerformedAction();
     }

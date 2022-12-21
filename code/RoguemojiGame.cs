@@ -223,6 +223,13 @@ public partial class RoguemojiGame : GameManager
         nearbyPanel.FlickerCells();
     }
 
+    [ClientRpc]
+	public void FlickerWieldingPanel()
+	{
+		var wieldingPanel = Hud.Instance.MainPanel.CharacterPanel.WieldingPanel;
+		FlickerPanel(wieldingPanel);
+    }
+
     public void FlickerPanel(Panel panel)
 	{
 		Game.AssertClient();
