@@ -20,11 +20,11 @@ public partial class Potato : Thing
         }
     }
 
-    public override void Use(Thing target)
+    public override void Use(Thing user)
     {
-        base.Use(target);
+        base.Use(user);
 
-        target.AdjustStat(StatType.Health, 2);
+        user.AdjustStat(StatType.Health, 2);
         Destroy();
     }
 

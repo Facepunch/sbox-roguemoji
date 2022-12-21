@@ -14,7 +14,8 @@ public enum ThingFlags
     Equipment = 4,
     Useable = 8,
     UseRequiresAiming = 16,
-    CanUseThings = 32,
+    AimTypeTargetCell = 32,
+    CanUseThings = 64,
 }
 
 public partial class Thing : Entity
@@ -214,13 +215,29 @@ public partial class Thing : Entity
         if (WieldedThing == null)
             return;
 
+        // todo: AI needs to choose direction/target cell for aimed useables
         WieldedThing.Use(this);
     }
 
-    public virtual void Use(Thing target)
+    public virtual void UseWieldedThing(Direction direction)
     {
+        if (WieldedThing == null)
+            return;
 
+        WieldedThing.Use(this, direction);
     }
+
+    public virtual void UseWieldedThing(IntVector targetGridPos)
+    {
+        if (WieldedThing == null)
+            return;
+
+        WieldedThing.Use(this, targetGridPos);
+    }
+
+    public virtual void Use(Thing user) { }
+    public virtual void Use(Thing user, Direction direction) { }
+    public virtual void Use(Thing user, IntVector targetGridPos) { }
 
     public virtual void Destroy()
     {
@@ -513,6 +530,8 @@ public partial class Thing : Entity
 
         return true;
     }
+
+    public virtual HashSet<IntVector> GetAimingTargetCellsClient() { return null; }
 
     public virtual void OnWieldThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnWieldThing(thing); } }
     public virtual void OnNoLongerWieldingThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnNoLongerWieldingThing(thing); } }

@@ -72,13 +72,20 @@
 
             if (player.IsAiming && player.AimingCells.Contains(gridPos))
             {
-                var direction = GridManager.GetDirectionForIntVector(gridPos - player.GridPos);
-                switch(direction)
+                if(player.AimingType == AimingType.Direction)
                 {
-                    case Direction.Left: return CursorMode.PointLeft;
-                    case Direction.Right: return CursorMode.PointRight;
-                    case Direction.Down: return CursorMode.PointDown;
-                    case Direction.Up: return CursorMode.Point2;
+                    var direction = GridManager.GetDirectionForIntVector(gridPos - player.GridPos);
+                    switch (direction)
+                    {
+                        case Direction.Left: return CursorMode.PointLeft;
+                        case Direction.Right: return CursorMode.PointRight;
+                        case Direction.Down: return CursorMode.PointDown;
+                        case Direction.Up: return CursorMode.Point2;
+                    }
+                }
+                else if(player.AimingType == AimingType.TargetCell)
+                {
+                    
                 }
             }
         }

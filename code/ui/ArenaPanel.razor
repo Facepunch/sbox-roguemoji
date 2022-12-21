@@ -92,7 +92,10 @@
             {
                 var aimOpacity = 0.4f + MathF.Sin(Time.Now * 16f) * 0.3f;
                 var dir = GridManager.GetDirectionForIntVector(gridPos - player.GridPos);
-                <div class="aiming" style="left: @(x * 40 + player.CameraPixelOffset.x + 1); top: @(y * 40 + player.CameraPixelOffset.y + 1); opacity: @(aimOpacity); transform: rotate(@(GetAimingAngle(dir)));">@(GetArrowIcon(dir))</div>
+                <div class="aiming" style="left: @(x * 40 + player.CameraPixelOffset.x + 1); top: @(y * 40 + player.CameraPixelOffset.y + 1); opacity: @(aimOpacity); transform: rotate(@(GetAimingAngle(dir)));">
+                    @if(player.AimingType == AimingType.Direction)
+                        @(GetArrowIcon(dir))
+                </div>
             }
         }
     }
@@ -157,7 +160,7 @@
 
         if (player.ContainingGridManager.IsGridPosInBounds(gridPos))
         {
-            if(player.IsAiming && player.AimingCells.Contains(gridPos))
+            if(player.IsAiming && player.AimingCells.Contains(gridPos) && visible)
                 RoguemojiGame.ConfirmAimingCmd(gridPos.x, gridPos.y);
             else 
                 Hud.Instance.GridCellClicked(gridPos, GridType.Arena, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), doubleClick: false, visible);
