@@ -1,6 +1,7 @@
 ﻿@using Sandbox;
 @using Sandbox.UI;
 @using System;
+@using System.Linq;
 
 @inherits Panel;
 @namespace Roguemoji
@@ -66,6 +67,12 @@
     {
         var panel = Hud.Instance.AddChild<CellTooltip>();
         panel.Text = Tooltip;
+        panel.Thing = Thing;
+
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        var topItem = player.ContainingGridManager.GetThingsAtClient(player.GridPos).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+        panel.ShowPickUpKey = (Thing == topItem);
+
         panel.AddClass($"player-{Thing.PlayerNum}");
         return panel;
     }

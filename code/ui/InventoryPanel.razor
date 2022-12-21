@@ -117,6 +117,7 @@
     {
         var panel = Hud.Instance.AddChild<CellTooltip>();
         panel.Text = Tooltip;
+        panel.Thing = null;
         panel.Style.Opacity = 0.5f;
         return panel;
     }

@@ -13,7 +13,8 @@ public enum ThingFlags
     Selectable = 2,
     Equipment = 4,
     Useable = 8,
-    CanUseThings = 16,
+    UseRequiresAiming = 16,
+    CanUseThings = 32,
 }
 
 public partial class Thing : Entity
@@ -163,10 +164,11 @@ public partial class Thing : Entity
 
     public virtual void HitOther(Thing target, Direction direction, bool shouldUse)
     {
-        if (shouldUse && Flags.HasFlag(ThingFlags.Useable) && target.CanUseThing(this))
-            Use(target);
-        else
-            DamageOther(target, direction);
+        // todo: a way to force-feed food to other units
+        //if (shouldUse && Flags.HasFlag(ThingFlags.Useable) && target.CanUseThing(this))
+        //    Use(target);
+        
+        DamageOther(target, direction);
     }
 
     public virtual void DamageOther(Thing target, Direction direction)
@@ -193,16 +195,18 @@ public partial class Thing : Entity
             return;
 
         int amount = source.GetStatClamped(StatType.Attack);
-        AdjustStat(StatType.Health, -amount);
-
-        RoguemojiGame.Instance.AddFloater("💔", GridPos, 1.2f, CurrentLevelId, new Vector2(0f, 1f), new Vector2(0f, -6f), $"-{amount}", requireSight: true, EasingType.SineOut, 0.25f, parent: this);
-
-        if (GetStatClamped(StatType.Health) <= 0)
+        if(amount > 0)
         {
-            RoguemojiGame.Instance.AddFloater("☠️", GridPos, 1.5f, CurrentLevelId, new Vector2(0f, 4f), new Vector2(0f, -7f), "", requireSight: true, EasingType.SineOut, 1f, parent: this);
-            Destroy();
-        }
+            AdjustStat(StatType.Health, -amount);
 
+            RoguemojiGame.Instance.AddFloater("💔", GridPos, 1.2f, CurrentLevelId, new Vector2(0f, 1f), new Vector2(0f, -6f), $"-{amount}", requireSight: true, EasingType.SineOut, 0.25f, parent: this);
+
+            if (GetStatClamped(StatType.Health) <= 0)
+            {
+                RoguemojiGame.Instance.AddFloater("☠️", GridPos, 1.5f, CurrentLevelId, new Vector2(0f, 4f), new Vector2(0f, -7f), "", requireSight: true, EasingType.SineOut, 1f, parent: this);
+                Destroy();
+            }
+        }
     }
 
     public virtual void UseWieldedThing()

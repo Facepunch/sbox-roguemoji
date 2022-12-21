@@ -15,6 +15,7 @@
         border: 1px solid #ffffff33;
         box-shadow: 2px 2px 12px black;
         font-family: RobotoMono;
+        flex-direction: column;
     }
 
     .player-0 { background-color: #000000aa; }
@@ -26,11 +27,40 @@
     .player-6 { background-color: #2299ffaa; }
     .player-7 { background-color: #8800bbaa; }
     .player-8 { background-color: #ff8800aa; }
+
+    .cell_tooltip_line 
+    {
+        flex-direction: row;
+    }
+
+    .cell_tooltip_action 
+    {
+        color: #444444;
+        padding-right: 6px;
+    }
+
+    .cell_tooltip_bind 
+    {
+        color: #888888;
+    }
 </style>
 
-<root class="cell_tooltip">@Text</root>
+<root class="cell_tooltip">
+    @Text
+
+    @if (Thing != null && ShowPickUpKey)
+    {
+        <div class="cell_tooltip_line">
+            <span class="cell_tooltip_action">Pick Up</span>
+            <span class="cell_tooltip_bind">[E]</span>
+        </div>
+    }
+
+</root>
 
 @code
 {
     public string Text { get; set; }
+    public Thing Thing { get; set; }
+    public bool ShowPickUpKey { get; set; }
 }

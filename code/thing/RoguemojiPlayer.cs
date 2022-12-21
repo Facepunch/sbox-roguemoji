@@ -5,7 +5,8 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public enum AimingType { WASD, Mouse }
+public enum AimingSource { Throwing, UsingWieldedItem }
+public enum AimingType { Direction, TargetCell }
 
 public partial class RoguemojiPlayer : Thing
 {
@@ -35,6 +36,8 @@ public partial class RoguemojiPlayer : Thing
     public HashSet<IntVector> VisibleCells { get; set; } // Client-only
 
     [Net] public bool IsAiming { get; set; }
+    [Net] public AimingSource AimingSource { get; set; }
+    [Net] public AimingType AimingType { get; set; }
     public HashSet<IntVector> AimingCells { get; set; } // Client-only
 
     public RoguemojiPlayer()
@@ -134,7 +137,7 @@ public partial class RoguemojiPlayer : Thing
 
     void SpawnRandomInventoryThing(IntVector gridPos)
     {
-        int rand = Game.Random.Int(0, 11);
+        int rand = Game.Random.Int(0, 12);
         switch (rand)
         {
             case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -149,6 +152,7 @@ public partial class RoguemojiPlayer : Thing
             case 9: InventoryGridManager.SpawnThing<Sunglasses>(gridPos); break;
             case 10: InventoryGridManager.SpawnThing<Telescope>(gridPos); break;
             case 11: InventoryGridManager.SpawnThing<WhiteCane>(gridPos); break;
+            case 12: InventoryGridManager.SpawnThing<Scroll>(gridPos); break;
         }
     }
 
@@ -899,13 +903,14 @@ public partial class RoguemojiPlayer : Thing
         if (WieldedThing == null)
             return;
 
-        StartAiming(range);
+        StartAiming(AimingSource.Throwing, range);
         //RoguemojiGame.Instance.LogMessageClient(To.Single(this), "Press WASD to throw or F to cancel.", playerNum: 0);
     }
 
-    public void StartAiming(int range)
+    public void StartAiming(AimingSource aimingSource, int range)
     {
         IsAiming = true;
+        AimingSource = aimingSource;
         StartAimingClient(To.Single(this), range);
     }
 
@@ -928,8 +933,13 @@ public partial class RoguemojiPlayer : Thing
 
     public void ConfirmAiming(Direction direction)
     {
+        if (!IsAiming || AimingType != AimingType.Direction)
+            return;
+
         StopAiming();
-        ThrowWieldedThing(direction);
+
+        if(AimingSource == AimingSource.Throwing)
+            ThrowWieldedThing(direction);
     }
 
     public void ConfirmAiming(IntVector gridPos)

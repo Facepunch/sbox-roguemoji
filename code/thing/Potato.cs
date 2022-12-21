@@ -13,6 +13,11 @@ public partial class Potato : Thing
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Flags = ThingFlags.Selectable | ThingFlags.Useable;
+
+        if (Game.IsServer)
+        {
+            InitStat(StatType.Attack, 1);
+        }
     }
 
     public override void Use(Thing target)
@@ -21,5 +26,17 @@ public partial class Potato : Thing
 
         target.AdjustStat(StatType.Health, 2);
         Destroy();
+    }
+
+    public override void OnWieldedBy(Thing thing)
+    {
+        base.OnWieldedBy(thing);
+        thing.AdjustStat(StatType.Attack, GetStatClamped(StatType.Attack));
+    }
+
+    public override void OnNoLongerWieldedBy(Thing thing)
+    {
+        base.OnNoLongerWieldingThing(thing);
+        thing.AdjustStat(StatType.Attack, -GetStatClamped(StatType.Attack));
     }
 }
