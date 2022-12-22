@@ -930,19 +930,19 @@ public partial class RoguemojiPlayer : Thing
 
         if(aimingType == AimingType.Direction)
         {
-            StartAimingDirectionClient(To.Single(this));
+            AimDirectionClient(To.Single(this));
         }
         else if(aimingSource == AimingSource.UsingWieldedItem && aimingType == AimingType.TargetCell)
         {
             if(WieldedThing != null)
-                StartAimingTargetCellsClient(To.Single(this), WieldedThing.NetworkIdent);
+                AimTargetCellsClient(To.Single(this), WieldedThing.NetworkIdent);
             else
                 StopAiming();
         }
     }
 
     [ClientRpc]
-    public void StartAimingDirectionClient()
+    public void AimDirectionClient()
     {
         AimingCells.Clear();
 
@@ -953,8 +953,16 @@ public partial class RoguemojiPlayer : Thing
         }
     }
 
+    public void RefreshWieldedThingTargetAiming()
+    {
+        if (WieldedThing == null || !IsAiming || AimingSource != AimingSource.UsingWieldedItem || AimingType != AimingType.TargetCell)
+            return;
+
+        AimTargetCellsClient(To.Single(this), WieldedThing.NetworkIdent);
+    }
+
     [ClientRpc]
-    public void StartAimingTargetCellsClient(int networkIdent)
+    public void AimTargetCellsClient(int networkIdent)
     {
         AimingCells.Clear();
 

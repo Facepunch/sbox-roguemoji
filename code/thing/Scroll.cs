@@ -49,4 +49,22 @@ public partial class Scroll : Thing
 
         return aimingCells;
     }
+
+    public override bool IsPotentialAimingTargetCell(IntVector gridPos)
+    {
+        if (ThingWieldingThis == null)
+            return false;
+
+        for (int x = -3; x <= 3; x++)
+        {
+            for (int y = -3; y <= 3; y++)
+            {
+                var currGridPos = ThingWieldingThis.GridPos + new IntVector(x, y);
+                if (gridPos.Equals(currGridPos))
+                    return true;
+            }
+        }
+
+        return false;
+    }
 }

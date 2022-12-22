@@ -145,8 +145,13 @@ public partial class GridManager : Entity
 
         RefreshStackNums(gridPos);
 
-		if (GridType == GridType.Arena && thing.SightBlockAmount > 0)
-			CheckVisionChange(thing);
+		if (GridType == GridType.Arena)
+		{
+			if (thing.SightBlockAmount > 0)
+				CheckVisionChange(thing);
+
+			CheckAimingChange(gridPos);
+        }
     }
 
     public void DeregisterGridPos(Thing thing, IntVector gridPos)
@@ -156,8 +161,13 @@ public partial class GridManager : Entity
             GridThings[gridPos].Remove(thing);
 			RefreshStackNums(gridPos);
 
-			if (GridType == GridType.Arena && thing.SightBlockAmount > 0)
-                CheckVisionChange(thing);
+			if (GridType == GridType.Arena)
+			{
+				if (thing.SightBlockAmount > 0)
+					CheckVisionChange(thing);
+
+				CheckAimingChange(gridPos);
+			}
         }
     }
 
@@ -174,6 +184,18 @@ public partial class GridManager : Entity
 				continue;
 
 			VisionChangedPlayers.Add(player);
+		}
+	}
+
+	void CheckAimingChange(IntVector gridPos)
+	{
+		foreach(var player in ContainedPlayers)
+		{
+			if(player.IsAiming && player.AimingSource == AimingSource.UsingWieldedItem && player.AimingType == AimingType.TargetCell && player.WieldedThing != null)
+			{
+				if (player.WieldedThing.IsPotentialAimingTargetCell(gridPos))
+					player.RefreshWieldedThingTargetAiming();
+			}
 		}
 	}
 

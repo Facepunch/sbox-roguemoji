@@ -532,6 +532,7 @@ public partial class Thing : Entity
     }
 
     public virtual HashSet<IntVector> GetAimingTargetCellsClient() { return null; }
+    public virtual bool IsPotentialAimingTargetCell(IntVector gridPos) { return false; }
 
     public virtual void OnWieldThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnWieldThing(thing); } }
     public virtual void OnNoLongerWieldingThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnNoLongerWieldingThing(thing); } }
