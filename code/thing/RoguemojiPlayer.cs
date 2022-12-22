@@ -86,7 +86,7 @@ public partial class RoguemojiPlayer : Thing
         //IsActionReady = true;
         QueuedAction = null;
         QueuedActionName = "";
-        RefreshVisibility(To.Single(this));
+        RefreshVisibility();
         SightBlockAmount = 10;
         IsAiming = false;
 
