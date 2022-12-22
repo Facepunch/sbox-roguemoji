@@ -225,37 +225,38 @@ public partial class RoguemojiPlayer : Thing
             {
                 if (!IsAiming)
                 {
-                    if (Input.Pressed(InputButton.Slot1))           WieldHotbarSlot(0);
-                    else if (Input.Pressed(InputButton.Slot2))      WieldHotbarSlot(1);
-                    else if (Input.Pressed(InputButton.Slot3))      WieldHotbarSlot(2);
-                    else if (Input.Pressed(InputButton.Slot4))      WieldHotbarSlot(3);
-                    else if (Input.Pressed(InputButton.Slot5))      WieldHotbarSlot(4);
-                    else if (Input.Pressed(InputButton.Slot6))      WieldHotbarSlot(5);
-                    else if (Input.Pressed(InputButton.Slot7))      WieldHotbarSlot(6);
-                    else if (Input.Pressed(InputButton.Slot8))      WieldHotbarSlot(7);
-                    else if (Input.Pressed(InputButton.Slot9))      WieldHotbarSlot(8);
-                    else if (Input.Pressed(InputButton.Slot0))      WieldHotbarSlot(9);
-                    else if (Input.Pressed(InputButton.Use))        PickUpTopItem();
-                    else if (Input.Pressed(InputButton.Drop))       DropWieldedItem();
-                    else if (Input.Pressed(InputButton.Jump))       UseWieldedThing();
-                    else if (Input.Pressed(InputButton.View))       CharacterHotkeyPressed();
-                    else if (Input.Pressed(InputButton.Left))       TryMove(Direction.Left, shouldQueueAction: true);
-                    else if (Input.Pressed(InputButton.Right))      TryMove(Direction.Right, shouldQueueAction: true);
-                    else if (Input.Pressed(InputButton.Back))       TryMove(Direction.Down, shouldQueueAction: true);
-                    else if (Input.Pressed(InputButton.Forward))    TryMove(Direction.Up, shouldQueueAction: true);
-                    else if (Input.Pressed(InputButton.Flashlight)) StartAimingThrow();
-                    else if (Input.Down(InputButton.Left))          TryMove(Direction.Left);
-                    else if (Input.Down(InputButton.Right))         TryMove(Direction.Right);
-                    else if (Input.Down(InputButton.Back))          TryMove(Direction.Down);
-                    else if (Input.Down(InputButton.Forward))       TryMove(Direction.Up);
+                    if (Input.Pressed(InputButton.Slot1))                                                       WieldHotbarSlot(0);
+                    else if (Input.Pressed(InputButton.Slot2))                                                  WieldHotbarSlot(1);
+                    else if (Input.Pressed(InputButton.Slot3))                                                  WieldHotbarSlot(2);
+                    else if (Input.Pressed(InputButton.Slot4))                                                  WieldHotbarSlot(3);
+                    else if (Input.Pressed(InputButton.Slot5))                                                  WieldHotbarSlot(4);
+                    else if (Input.Pressed(InputButton.Slot6))                                                  WieldHotbarSlot(5);
+                    else if (Input.Pressed(InputButton.Slot7))                                                  WieldHotbarSlot(6);
+                    else if (Input.Pressed(InputButton.Slot8))                                                  WieldHotbarSlot(7);
+                    else if (Input.Pressed(InputButton.Slot9))                                                  WieldHotbarSlot(8);
+                    else if (Input.Pressed(InputButton.Slot0))                                                  WieldHotbarSlot(9);
+                    else if (Input.Pressed(InputButton.Use))                                                    PickUpTopItem();
+                    else if (Input.Pressed(InputButton.Drop))                                                   DropWieldedItem();
+                    else if (Input.Pressed(InputButton.Jump))                                                   UseWieldedThing();
+                    else if (Input.Pressed(InputButton.View))                                                   CharacterHotkeyPressed();
+                    else if (Input.Pressed(InputButton.Left))                                                   TryMove(Direction.Left, shouldQueueAction: true);
+                    else if (Input.Pressed(InputButton.Right))                                                  TryMove(Direction.Right, shouldQueueAction: true);
+                    else if (Input.Pressed(InputButton.Back))                                                   TryMove(Direction.Down, shouldQueueAction: true);
+                    else if (Input.Pressed(InputButton.Forward))                                                TryMove(Direction.Up, shouldQueueAction: true);
+                    else if (Input.Pressed(InputButton.Flashlight))                                             StartAimingThrow();
+                    else if (Input.Down(InputButton.Left))                                                      TryMove(Direction.Left);
+                    else if (Input.Down(InputButton.Right))                                                     TryMove(Direction.Right);
+                    else if (Input.Down(InputButton.Back))                                                      TryMove(Direction.Down);
+                    else if (Input.Down(InputButton.Forward))                                                   TryMove(Direction.Up);
                 }
                 else
                 {
-                    if (Input.Pressed(InputButton.Left))            ConfirmAiming(Direction.Left);
-                    else if (Input.Pressed(InputButton.Right))      ConfirmAiming(Direction.Right);
-                    else if (Input.Pressed(InputButton.Back))       ConfirmAiming(Direction.Down);
-                    else if (Input.Pressed(InputButton.Forward))    ConfirmAiming(Direction.Up);
-                    else if (Input.Pressed(InputButton.Flashlight)) StopAiming();
+                    if (Input.Pressed(InputButton.Left))                                                        ConfirmAiming(Direction.Left);
+                    else if (Input.Pressed(InputButton.Right))                                                  ConfirmAiming(Direction.Right);
+                    else if (Input.Pressed(InputButton.Back))                                                   ConfirmAiming(Direction.Down);
+                    else if (Input.Pressed(InputButton.Forward))                                                ConfirmAiming(Direction.Up);
+                    else if (Input.Pressed(InputButton.Jump) && AimingSource == AimingSource.UsingWieldedItem)  StopAiming();
+                    else if (Input.Pressed(InputButton.Flashlight) && AimingSource == AimingSource.Throwing)    StopAiming();
                 }
             }
 

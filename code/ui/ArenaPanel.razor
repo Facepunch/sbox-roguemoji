@@ -50,6 +50,13 @@
         font-size: 25px;
         padding-bottom: 2px;
     }
+
+    .aiming_pin
+    {
+        color: white;
+        font-size: 29px;
+        z-index: 10001;
+    }
 </style>
 
 <root class="arena_panel">
@@ -96,6 +103,19 @@
                     @if(player.AimingType == AimingType.Direction)
                         @(GetArrowIcon(dir))
                 </div>
+
+                @if(player.AimingType == AimingType.TargetCell)
+                {
+                    var arenaPanel = Hud.Instance.GetGridPanel(GridType.Arena);
+                    var mouseGridPos = arenaPanel.GetGridPos(arenaPanel.MousePosition) + player.CameraGridOffset;
+
+                    if(gridPos.Equals(mouseGridPos))
+                    {
+                        <div class="aiming_pin" style="left: @(x * 40 + player.CameraPixelOffset.x + 8); top: @(y * 40 + player.CameraPixelOffset.y - 14);">
+                            📍
+                        </div>
+                    }
+                }
             }
         }
     }
