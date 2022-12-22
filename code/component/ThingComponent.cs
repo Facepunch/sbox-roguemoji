@@ -49,5 +49,6 @@ public abstract class ThingComponent
     public virtual void OnActionRecharged() { }
     public virtual void OnBumpedIntoThing(Thing thing) { }
     public virtual void OnBumpedIntoBy(Thing thing) { }
-    public virtual void OnRemove() {}
+    public virtual void OnChangedGridPos() { }
+    public virtual void OnRemove() { }
 }

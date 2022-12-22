@@ -21,9 +21,12 @@ public partial class Scroll : Thing
     {
         base.Use(user, targetGridPos);
 
-        var explosion = user.ContainingGridManager.SpawnThing<Explosion>(targetGridPos);
-        explosion.VfxShake(0.15f, 6f);
-        explosion.VfxScale(0.15f, 0.5f, 1f);
+        var things = ContainingGridManager.GetThingsAt(targetGridPos).WithAll(ThingFlags.Solid).ToList();
+        if (things.Count > 0)
+            return;
+
+        user.SetGridPos(targetGridPos);
+        Destroy();
     }
 
     public override HashSet<IntVector> GetAimingTargetCellsClient() 

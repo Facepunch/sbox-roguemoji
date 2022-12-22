@@ -235,9 +235,22 @@ public partial class Thing : Entity
         WieldedThing.Use(this, targetGridPos);
     }
 
-    public virtual void Use(Thing user) { }
-    public virtual void Use(Thing user, Direction direction) { }
-    public virtual void Use(Thing user, IntVector targetGridPos) { }
+    public virtual void Use(Thing user) 
+    {
+        if(user.GetComponent(TypeLibrary.GetType(typeof(Acting)), out var acting))
+            ((Acting)acting).PerformedAction();
+    }
+    public virtual void Use(Thing user, Direction direction) 
+    {
+        if (user.GetComponent(TypeLibrary.GetType(typeof(Acting)), out var acting))
+            ((Acting)acting).PerformedAction();
+    }
+
+    public virtual void Use(Thing user, IntVector targetGridPos) 
+    {
+        if (user.GetComponent(TypeLibrary.GetType(typeof(Acting)), out var acting))
+            ((Acting)acting).PerformedAction();
+    }
 
     public virtual void Destroy()
     {
@@ -256,6 +269,8 @@ public partial class Thing : Entity
             RefreshGridPanelClient(To.Single(ContainingGridManager.OwningPlayer));
         else
             RefreshGridPanelClient();
+
+        OnChangedGridPos();
 
         //if (ShouldLogBehaviour)
         //      {
@@ -558,4 +573,6 @@ public partial class Thing : Entity
     public virtual void OnActionRecharged() { foreach (var component in ThingComponents) { component.Value.OnActionRecharged(); } }
     public virtual void OnBumpedIntoThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoThing(thing); } }
     public virtual void OnBumpedIntoBy(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoBy(thing); } }
+
+    public virtual void OnChangedGridPos() { foreach (var component in ThingComponents) { component.Value.OnChangedGridPos(); } }
 }

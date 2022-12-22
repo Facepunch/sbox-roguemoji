@@ -86,7 +86,7 @@ public partial class RoguemojiPlayer : Thing
         //IsActionReady = true;
         QueuedAction = null;
         QueuedActionName = "";
-        RefreshVisibility();
+        RefreshVisibility(To.Single(this));
         SightBlockAmount = 10;
         IsAiming = false;
 
@@ -362,7 +362,6 @@ public partial class RoguemojiPlayer : Thing
         }
 
         Acting.PerformedAction();
-        RefreshVisibility();
 		return success;
 	}
 
@@ -910,7 +909,7 @@ public partial class RoguemojiPlayer : Thing
     public override void OnChangedStat(StatType statType)
     {
         if (statType == StatType.Sight)
-            RefreshVisibility();
+            RefreshVisibility(To.Single(this));
     }
 
     public void StartAimingThrow()
@@ -1007,6 +1006,13 @@ public partial class RoguemojiPlayer : Thing
     {
         IsAiming = false;
     }
+
+    public override void OnChangedGridPos()
+    {
+        base.OnChangedGridPos();
+
+        RefreshVisibility(To.Single(this));
+    }
 }
 
 public interface IQueuedAction
@@ -1090,7 +1096,6 @@ public class WieldThingAction : IQueuedAction
     }
 }
 
-// todo
 public class ThrowThingAction : IQueuedAction
 {
     public Thing Thing { get; set; }
@@ -1113,5 +1118,14 @@ public class ThrowThingAction : IQueuedAction
     public override string ToString()
     {
         return $"Throw {Thing?.DisplayName ?? null} {Direction}";
+    }
+}
+
+// todo
+public class UseWieldedThingAction : IQueuedAction
+{
+    public void Execute(RoguemojiPlayer player)
+    {
+
     }
 }
