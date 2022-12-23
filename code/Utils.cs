@@ -93,6 +93,11 @@ public static class Utils
         return new Vector2(MathF.Cos(rads), MathF.Sin(rads));
     }
 
+    public static int GetDistance(int x, int y)
+    {
+        return (int)Math.Round(Math.Sqrt(x * x + y * y));
+    }
+
     public static float FastSin(float input)
     {
         // wrap input angle to -PI..PI

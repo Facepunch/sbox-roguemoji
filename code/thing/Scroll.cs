@@ -6,6 +6,8 @@ using System.Linq;
 namespace Roguemoji;
 public partial class Scroll : Thing
 {
+    [Net] public int Radius { get; set; }
+
 	public Scroll()
 	{
 		DisplayIcon = "📜";
@@ -15,6 +17,7 @@ public partial class Scroll : Thing
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Flags = ThingFlags.Selectable | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
+        //Radius = 6;
 
         SetTattoo("✨", 0.5f, new Vector2(0, -1));
     }
@@ -35,6 +38,13 @@ public partial class Scroll : Thing
         Destroy();
     }
 
+    public override void OnWieldedBy(Thing thing)
+    {
+        base.OnWieldedBy(thing);
+
+        Radius = thing.GetStatClamped(StatType.Intelligence);
+    }
+
     public override HashSet<IntVector> GetAimingTargetCellsClient() 
     {
         Game.AssertClient();
@@ -44,10 +54,14 @@ public partial class Scroll : Thing
 
         HashSet<IntVector> aimingCells = new HashSet<IntVector>();
 
-        for(int x = -3; x <= 3; x++)
+        for(int x = -Radius; x <= Radius; x++)
         {
-            for(int y = -3; y <= 3; y++)
+            for(int y = -Radius; y <= Radius; y++)
             {
+                int distance = Utils.GetDistance(x, y);
+                if (distance > Radius)
+                    continue;
+
                 var gridPos = ThingWieldingThis.GridPos + new IntVector(x, y);
                 if (ThingWieldingThis.ContainingGridManager.GetThingsAtClient(gridPos).WithAll(ThingFlags.Solid).ToList().Count > 0)
                     continue;
@@ -64,10 +78,14 @@ public partial class Scroll : Thing
         if (ThingWieldingThis == null)
             return false;
 
-        for (int x = -3; x <= 3; x++)
+        for (int x = -Radius; x <= Radius; x++)
         {
-            for (int y = -3; y <= 3; y++)
+            for (int y = -Radius; y <= Radius; y++)
             {
+                int distance = Utils.GetDistance(x, y);
+                if (distance > Radius)
+                    continue;
+
                 var currGridPos = ThingWieldingThis.GridPos + new IntVector(x, y);
                 if (gridPos.Equals(currGridPos))
                     return true;

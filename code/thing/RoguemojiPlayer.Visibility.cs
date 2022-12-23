@@ -100,7 +100,7 @@ public partial class RoguemojiPlayer : Thing
             int wasOpaque = -1; // 0:false, 1:true, -1:not applicable
             for (uint y = topY; (int)y >= (int)bottomY; y--)
             {
-                if (rangeLimit < 0 || GetDistance((int)x, (int)y) <= rangeLimit) // skip the tile if it's out of visual range
+                if (rangeLimit < 0 || Utils.GetDistance((int)x, (int)y) <= rangeLimit) // skip the tile if it's out of visual range
                 {
                     bool isOpaque = BlocksLight(x, y, octant, origin);
 
@@ -201,11 +201,6 @@ public partial class RoguemojiPlayer : Thing
         SetCellVisible((int)nx, (int)ny);
     }
 
-    int GetDistance(int x, int y)
-    {
-        return (int)Math.Round(Math.Sqrt(x * x + y * y));
-    }
-    
     bool BlocksLight(int x, int y)
     {
         Game.AssertClient();
