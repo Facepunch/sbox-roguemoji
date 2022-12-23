@@ -32,9 +32,9 @@ public partial class Squirrel : Thing
     {
         base.Spawn();
 
-        Targeting = AddThingComponent<Targeting>();
-        Pathfinding = AddThingComponent<Pathfinding>();
-        Acting = AddThingComponent<Acting>();
+        Targeting = AddComponent<Targeting>();
+        Pathfinding = AddComponent<Pathfinding>();
+        Acting = AddComponent<Acting>();
         Acting.ActionDelay = 2f;
         Acting.TimeSinceAction = Game.Random.Float(0f, 2f);
     }

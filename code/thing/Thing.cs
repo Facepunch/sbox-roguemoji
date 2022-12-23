@@ -68,6 +68,8 @@ public partial class Thing : Entity
     [Net] public float TattooScale { get; set; }
     [Net] public Vector2 TattooOffset { get; set; }
 
+    [Net] public bool IsRemoved { get; set; }
+
     public Thing()
     {
         ShouldUpdate = true;
@@ -78,6 +80,7 @@ public partial class Thing : Entity
         ShouldLogBehaviour = false;
         IconScale = 1f;
         ThingId = RoguemojiGame.ThingId++;
+        IsRemoved = false;
     }
 
     // Server only
@@ -288,6 +291,10 @@ public partial class Thing : Entity
 
     public void Remove()
     {
+        if (IsRemoved)
+            return;
+
+        IsRemoved = true;
         //if ( ShouldLogBehaviour )
         //      {
         //	if (Flags.HasFlag(ThingFlags.InInventory))
@@ -336,7 +343,7 @@ public partial class Thing : Entity
         IconScale = scale;
     }
 
-    public ThingComponent AddThingComponent(TypeDescription type)
+    public ThingComponent AddComponent(TypeDescription type)
     {
         if (type == null)
         {
@@ -357,11 +364,13 @@ public partial class Thing : Entity
             ThingComponents.Add(type, component);
             return component;
         }
+
+        OnAddComponent(type);
     }
 
-    public T AddThingComponent<T>() where T : ThingComponent
+    public T AddComponent<T>() where T : ThingComponent
     {
-        return AddThingComponent(TypeLibrary.GetType(typeof(T))) as T;
+        return AddComponent(TypeLibrary.GetType(typeof(T))) as T;
     }
 
     public void RemoveComponent(TypeDescription type)
@@ -371,6 +380,7 @@ public partial class Thing : Entity
             var component = ThingComponents[type];
             component.OnRemove();
             ThingComponents.Remove(type);
+            OnRemoveComponent(type);
         }
     }
 
@@ -425,7 +435,7 @@ public partial class Thing : Entity
     [ClientRpc]
     public void VfxNudge(Direction direction, float lifetime, float distance)
     {
-        var nudge = AddThingComponent<VfxNudge>();
+        var nudge = AddComponent<VfxNudge>();
         nudge.Direction = direction;
         nudge.Lifetime = lifetime;
         nudge.Distance = distance;
@@ -434,7 +444,7 @@ public partial class Thing : Entity
     [ClientRpc]
     public void VfxSlide(Direction direction, float lifetime, float distance)
     {
-        var slide = AddThingComponent<VfxSlide>();
+        var slide = AddComponent<VfxSlide>();
         slide.Direction = direction;
         slide.Lifetime = lifetime;
         slide.Distance = distance;
@@ -443,7 +453,7 @@ public partial class Thing : Entity
     [ClientRpc]
     public void VfxShake(float lifetime, float distance)
     {
-        var shake = AddThingComponent<VfxShake>();
+        var shake = AddComponent<VfxShake>();
         shake.Lifetime = lifetime;
         shake.Distance = distance;
     }
@@ -451,7 +461,7 @@ public partial class Thing : Entity
     [ClientRpc]
     public void VfxScale(float lifetime, float startScale, float endScale)
     {
-        var scale = AddThingComponent<VfxScale>();
+        var scale = AddComponent<VfxScale>();
         scale.Lifetime = lifetime;
         scale.StartScale = startScale;
         scale.EndScale = endScale;
@@ -460,7 +470,7 @@ public partial class Thing : Entity
     [ClientRpc]
     public void VfxSpin(float lifetime, float startAngle, float endAngle)
     {
-        var scale = AddThingComponent<VfxSpin>();
+        var scale = AddComponent<VfxSpin>();
         scale.Lifetime = lifetime;
         scale.StartAngle = startAngle;
         scale.EndAngle = endAngle;
@@ -601,4 +611,6 @@ public partial class Thing : Entity
     public virtual void OnBumpedIntoBy(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoBy(thing); } }
 
     public virtual void OnChangedGridPos() { foreach (var component in ThingComponents) { component.Value.OnChangedGridPos(); } }
+    public virtual void OnAddComponent(TypeDescription type) { foreach (var component in ThingComponents) { component.Value.OnAddComponent(type); } }
+    public virtual void OnRemoveComponent(TypeDescription type) { foreach (var component in ThingComponents) { component.Value.OnRemoveComponent(type); } }
 }

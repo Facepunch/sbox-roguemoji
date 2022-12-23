@@ -52,4 +52,6 @@ public class Projectile : ThingComponent
     {
         Remove();
     }
+
+    // todo: test when a solid thing moves onto your cell
 }

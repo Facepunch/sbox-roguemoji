@@ -50,5 +50,7 @@ public abstract class ThingComponent
     public virtual void OnBumpedIntoThing(Thing thing) { }
     public virtual void OnBumpedIntoBy(Thing thing) { }
     public virtual void OnChangedGridPos() { }
+    public virtual void OnAddComponent(TypeDescription type) { }
+    public virtual void OnRemoveComponent(TypeDescription type) { }
     public virtual void OnRemove() { }
 }

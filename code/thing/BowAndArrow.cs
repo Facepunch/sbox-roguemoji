@@ -24,9 +24,9 @@ public partial class BowAndArrow : Thing
         var arrow = user.ContainingGridManager.SpawnThing<ProjectileArrow>(user.GridPos);
         arrow.SetTransformClient(degrees: GridManager.GetDegreesForDirection(direction));
 
-        var projectile = arrow.AddThingComponent<Projectile>();
+        var projectile = arrow.AddComponent<Projectile>();
         projectile.Direction = direction;
         projectile.MoveDelay = 0.1f;
-        projectile.RemainingDistance = 5;
+        projectile.RemainingDistance = 8;
     }
 }

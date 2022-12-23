@@ -24,4 +24,14 @@ public partial class ProjectileArrow : Thing
         base.OnBumpedIntoThing(thing);
         Destroy();
     }
+
+    public override void OnRemoveComponent(TypeDescription type)
+    {
+        base.OnRemoveComponent(type);
+
+        if(type == TypeLibrary.GetType(typeof(Projectile)))
+            Destroy();
+    }
+
+    // todo: test when a solid thing moves onto your cell
 }

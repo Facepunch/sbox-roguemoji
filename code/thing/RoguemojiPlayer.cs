@@ -71,7 +71,7 @@ public partial class RoguemojiPlayer : Thing
     {
         base.Spawn();
 
-        Acting = AddThingComponent<Acting>();
+        Acting = AddComponent<Acting>();
         Acting.ActionDelay = _startingActionDelay;
     }
 
@@ -525,7 +525,7 @@ public partial class RoguemojiPlayer : Thing
         if (WieldedThing == null || direction == Direction.None)
             return;
 
-        var projectile = WieldedThing.AddThingComponent<Projectile>();
+        var projectile = WieldedThing.AddComponent<Projectile>();
         projectile.Direction = direction;
         projectile.MoveDelay = 0.1f;
         projectile.RemainingDistance = 5;
