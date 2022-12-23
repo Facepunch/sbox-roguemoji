@@ -17,7 +17,6 @@ public partial class Scroll : Thing
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Flags = ThingFlags.Selectable | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
-        //Radius = 6;
 
         SetTattoo("✨", 0.5f, new Vector2(0, -1));
     }
@@ -42,7 +41,7 @@ public partial class Scroll : Thing
     {
         base.OnWieldedBy(thing);
 
-        Radius = thing.GetStatClamped(StatType.Intelligence);
+        Radius = Math.Max(thing.GetStatClamped(StatType.Intelligence), 1);
     }
 
     public override HashSet<IntVector> GetAimingTargetCellsClient() 

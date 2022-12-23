@@ -232,6 +232,19 @@ public partial class GridManager : Entity
 		return Vector2.Zero;
 	}
 
+    public static float GetDegreesForDirection(Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.Left: return 90f;
+            case Direction.Right: return -90f;
+            case Direction.Down: return 0f;
+            case Direction.Up: return 180f;
+        }
+
+        return 0f;
+    }
+
     public static Direction GetDirectionForIntVector(IntVector vec)
     {
 		if (vec.x == -1 && vec.y == 0)

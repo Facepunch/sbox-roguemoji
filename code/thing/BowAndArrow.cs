@@ -21,5 +21,12 @@ public partial class BowAndArrow : Thing
     {
         base.Use(user, direction);
 
+        var arrow = user.ContainingGridManager.SpawnThing<ProjectileArrow>(user.GridPos);
+        arrow.SetTransformClient(degrees: GridManager.GetDegreesForDirection(direction));
+
+        var projectile = arrow.AddThingComponent<Projectile>();
+        projectile.Direction = direction;
+        projectile.MoveDelay = 0.1f;
+        projectile.RemainingDistance = 5;
     }
 }

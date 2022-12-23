@@ -313,6 +313,14 @@ public partial class Thing : Entity
         panel.StateHasChanged();
     }
 
+    [ClientRpc]
+    public void SetTransformClient(float offsetX = 0f, float offsetY = 0f, float degrees = 0f, float scale = 1f)
+    {
+        TargetOffset = new Vector2(offsetX, offsetY);
+        RotationDegrees = degrees;
+        IconScale = scale;
+    }
+
     public void SetOffset(Vector2 offset)
     {
         TargetOffset = offset;
