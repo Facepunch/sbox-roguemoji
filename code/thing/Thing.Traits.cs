@@ -13,6 +13,18 @@ public partial class Trait : BaseNetworkable
     [Net] public Color BackgroundColor { get; set; }
     [Net] public float Progress { get; set; }
     [Net] public string Source { get; set; }
+    [Net] public bool HasTattoo { get; set; }
+    [Net] public string TattooIcon { get; set; }
+    [Net] public float TattooScale { get; set; }
+    [Net] public Vector2 TattooOffset { get; set; }
+
+    public void SetTattoo(string icon, float scale, Vector2 offset)
+    {
+        HasTattoo = true;
+        TattooIcon = icon;
+        TattooScale = scale;
+        TattooOffset = offset;
+    }
 }
 
 public partial class Thing : Entity
@@ -33,6 +45,13 @@ public partial class Thing : Entity
             Traits = new List<Trait>();
 
         Traits.Add(trait);
+        return trait;
+    }
+
+    public Trait AddTrait(string name, string icon, string description, string tattooIcon, float tattooScale, Vector2 tattooOffset, string source = "")
+    {
+        Trait trait = AddTrait(name, icon, description, source);
+        trait.SetTattoo(tattooIcon, tattooScale, tattooOffset);
         return trait;
     }
 

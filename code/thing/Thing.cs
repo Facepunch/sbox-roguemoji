@@ -186,6 +186,7 @@ public partial class Thing : Entity
 
         if (target.HasStat(StatType.Health))
         {
+            // todo: use floater instead so it can be anchored to ht thing
             var explosion = target.ContainingGridManager.SpawnThing<Explosion>(target.GridPos);
             explosion.VfxShake(0.15f, 6f);
             explosion.VfxScale(0.15f, 0.5f, 1f);

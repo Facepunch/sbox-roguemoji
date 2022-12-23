@@ -30,6 +30,17 @@
         margin: 0px;
         overflow: hidden;
     }
+
+    .trait_tattoo
+    {
+        width: 100%;
+        height: 100%;
+        padding: 2px;
+        position: absolute;
+        //background-color: #0000ff88;
+        justify-content: center;
+        align-items: center;
+    }
 </style>
 
 <root class="trait_container">
@@ -38,7 +49,18 @@
         return;
     }
 
-    <div class="trait_icon"> @($"{Trait.Icon}") </div>
+    <div class="trait_icon"> 
+        @($"{Trait.Icon}") 
+
+        @if (Trait.HasTattoo)
+        {
+            int fontSize = MathX.FloorToInt(28f * Trait.TattooScale);
+            var offset = Trait.TattooOffset;
+            <div class="trait_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
+                @Trait.TattooIcon
+            </div>
+        }
+    </div>
 </root>
 
 @code
