@@ -63,6 +63,11 @@ public partial class Thing : Entity
 
     [Net] public LevelId CurrentLevelId { get; set; }
 
+    [Net] public bool HasTattoo { get; set; }
+    [Net] public string TattooIcon { get; set; }
+    [Net] public float TattooScale { get; set; }
+    [Net] public Vector2 TattooOffset { get; set; }
+
     public Thing()
     {
         ShouldUpdate = true;
@@ -548,6 +553,19 @@ public partial class Thing : Entity
 
     public virtual HashSet<IntVector> GetAimingTargetCellsClient() { return null; }
     public virtual bool IsPotentialAimingTargetCell(IntVector gridPos) { return false; }
+
+    public void SetTattoo(string icon, float scale, Vector2 offset)
+    {
+        HasTattoo = true;
+        TattooIcon = icon;
+        TattooScale = scale;
+        TattooOffset = offset;
+    }
+
+    public void RemoveTattoo()
+    {
+        HasTattoo = false;
+    }
 
     public virtual void OnWieldThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnWieldThing(thing); } }
     public virtual void OnNoLongerWieldingThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnNoLongerWieldingThing(thing); } }

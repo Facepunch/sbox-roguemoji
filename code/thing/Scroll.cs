@@ -9,12 +9,14 @@ public partial class Scroll : Thing
 	public Scroll()
 	{
 		DisplayIcon = "📜";
-        DisplayName = "Scroll";
+        DisplayName = "Scroll of Blink";
         Description = "Blink to a target location nearby.";
-        Tooltip = "A magical scroll.";
+        Tooltip = "A scroll of Blink.";
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Flags = ThingFlags.Selectable | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
+
+        SetTattoo("✨", 0.5f, new Vector2(0, -1));
     }
 
     public override void Use(Thing user, IntVector targetGridPos)
