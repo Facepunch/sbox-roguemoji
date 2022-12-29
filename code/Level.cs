@@ -93,11 +93,11 @@ public partial class Level : Entity
                     GridManager.SpawnThing<TreeEvergreen>(gridPos);
             }
 
-            //for (int i = 0; i < 5; i++)
-            //{
-            //    if (GridManager.GetRandomEmptyGridPos(out var gridPos))
-            //        GridManager.SpawnThing<Squirrel>(gridPos);
-            //}
+            for (int i = 0; i < 15; i++)
+            {
+                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
+                    GridManager.SpawnThing<Squirrel>(gridPos);
+            }
         }
         else if(levelId == LevelId.Forest1)
         {

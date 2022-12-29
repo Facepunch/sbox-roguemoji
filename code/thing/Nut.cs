@@ -8,9 +8,10 @@ public partial class Nut : Thing
 	{
 		DisplayIcon = "🌰";
         DisplayName = "Nut";
+        Description = "Some sort of nut.";
+        Tooltip = "A nut.";
         IconDepth = 0;
         ShouldLogBehaviour = true;
-		Tooltip = "A nut.";
 		Flags = ThingFlags.Selectable | ThingFlags.Useable;
     }
 }

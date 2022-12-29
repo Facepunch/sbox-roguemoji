@@ -93,9 +93,9 @@ public partial class RoguemojiPlayer : Thing
         ClearStats();
         InitStat(StatType.Health, 10, 0, 10);
         InitStat(StatType.Attack, 1);
-        InitStat(StatType.Speed, 1);
+        InitStat(StatType.Speed, 5);
         InitStat(StatType.Intelligence, 4);
-        InitStat(StatType.Charisma, 1);
+        InitStat(StatType.Charisma, 3);
         InitStat(StatType.Sight, 9);
         InitStat(StatType.Hearing, 3);
         //InitStat(StatType.Smell, 1);

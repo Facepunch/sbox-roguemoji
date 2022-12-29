@@ -4,6 +4,8 @@ using System;
 namespace Roguemoji;
 public partial class Potato : Thing
 {
+    public int EatHealth { get; set; }
+
 	public Potato()
 	{
 		DisplayIcon = "🥔";
@@ -13,10 +15,12 @@ public partial class Potato : Thing
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Flags = ThingFlags.Selectable | ThingFlags.Useable;
+        EatHealth = 2;
 
         if (Game.IsServer)
         {
             InitStat(StatType.Attack, 1);
+            AddTrait("", "🍽️", $"Eat for +{EatHealth}❤️", tattooIcon: "❤️", tattooScale: 0.6f, tattooOffset: new Vector2(0f, 2f));
         }
     }
 
@@ -24,7 +28,7 @@ public partial class Potato : Thing
     {
         base.Use(user);
 
-        user.AdjustStat(StatType.Health, 2);
+        user.AdjustStat(StatType.Health, EatHealth);
         Destroy();
     }
 

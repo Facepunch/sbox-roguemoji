@@ -610,7 +610,7 @@ public partial class Thing : Entity
     public virtual void OnActionRecharged() { foreach (var component in ThingComponents) { component.Value.OnActionRecharged(); } }
     public virtual void OnBumpedIntoThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoThing(thing); } }
     public virtual void OnBumpedIntoBy(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoBy(thing); } }
-
+    public virtual void OnChangedStat(StatType statType) { foreach (var component in ThingComponents) { component.Value.OnChangedStat(statType); } }
     public virtual void OnChangedGridPos() { foreach (var component in ThingComponents) { component.Value.OnChangedGridPos(); } }
     public virtual void OnAddComponent(TypeDescription type) { foreach (var component in ThingComponents) { component.Value.OnAddComponent(type); } }
     public virtual void OnRemoveComponent(TypeDescription type) { foreach (var component in ThingComponents) { component.Value.OnRemoveComponent(type); } }

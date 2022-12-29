@@ -19,7 +19,7 @@ public partial class WhiteCane : Thing
         if (Game.IsServer)
         {
             InitStat(StatType.Attack, 1);
-            AddTrait("", "👁️", "Prevents your 👁️ from reaching zero.");
+            AddTrait("", "😎", "Prevents your 👁️ from reaching zero.", tattooIcon: "🦯", tattooScale: 0.7f, tattooOffset: new Vector2(7f, 6f));
         }
     }
 

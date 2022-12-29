@@ -144,11 +144,6 @@ public partial class Thing : Entity
         }
     }
 
-	public virtual void OnChangedStat(StatType statType) 
-    {
-        
-    }
-
     public bool HasStat(StatType statType)
     {
         return HasStats && Stats.ContainsKey(statType);
