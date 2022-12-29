@@ -23,6 +23,7 @@ public partial class BowAndArrow : Thing
 
         var arrow = user.ContainingGridManager.SpawnThing<ProjectileArrow>(user.GridPos);
         arrow.SetTransformClient(degrees: GridManager.GetDegreesForDirection(direction));
+        arrow.Direction = direction;
 
         var projectile = arrow.AddComponent<Projectile>();
         projectile.Direction = direction;

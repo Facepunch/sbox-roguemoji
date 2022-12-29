@@ -4,6 +4,8 @@ using System;
 namespace Roguemoji;
 public partial class ProjectileArrow : Thing
 {
+    public Direction Direction { get; set; }
+
 	public ProjectileArrow()
 	{
 		DisplayIcon = "🔰";
@@ -22,6 +24,13 @@ public partial class ProjectileArrow : Thing
     public override void OnBumpedIntoThing(Thing thing)
     {
         base.OnBumpedIntoThing(thing);
+        Destroy();
+    }
+
+    public override void OnMovedOntoBy(Thing thing)
+    {
+        base.OnMovedOntoBy(thing);
+        DamageOther(thing, Direction);
         Destroy();
     }
 

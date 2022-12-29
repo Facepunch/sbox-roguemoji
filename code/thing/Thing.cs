@@ -141,7 +141,10 @@ public partial class Thing : Entity
         IntVector newGridPos = GridPos + vec;
 
         if (!ContainingGridManager.IsGridPosInBounds(newGridPos))
+        {
+            VfxNudge(direction, 0.1f, 10f);
             return false;
+        }
 
         Thing other = ContainingGridManager.GetThingsAt(newGridPos).WithAll(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
         if (other != null)
@@ -263,6 +266,15 @@ public partial class Thing : Entity
 
     public virtual void Destroy()
     {
+        if(ThingWieldingThis != null)
+        {
+            ThingWieldingThis.OnNoLongerWieldingThing(this);
+            OnNoLongerWieldedBy(ThingWieldingThis);
+        }
+            
+        if (WieldedThing != null)
+            WieldedThing.OnNoLongerWieldedBy(this);
+
         Remove();
     }
 
@@ -270,6 +282,18 @@ public partial class Thing : Entity
     {
         //if ( GridPos.Equals( gridPos ) && !forceRefresh )
         //	return;
+
+        var existingThings = ContainingGridManager.GetThingsAt(gridPos);
+        for(int i = existingThings.Count() - 1; i >= 0; i--)
+        {
+            var thing = existingThings.ElementAt(i);
+
+            OnMovedOntoThing(thing);
+            thing.OnMovedOntoBy(this);
+        }
+
+        if (this == null || !IsValid)
+            return;
 
         ContainingGridManager.SetGridPos(this, gridPos);
         GridPos = gridPos;
@@ -612,6 +636,8 @@ public partial class Thing : Entity
     public virtual void OnActionRecharged() { foreach (var component in ThingComponents) { component.Value.OnActionRecharged(); } }
     public virtual void OnBumpedIntoThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoThing(thing); } }
     public virtual void OnBumpedIntoBy(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoBy(thing); } }
+    public virtual void OnMovedOntoThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnMovedOntoThing(thing); } }
+    public virtual void OnMovedOntoBy(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnMovedOntoBy(thing); } }
     public virtual void OnChangedStat(StatType statType) { foreach (var component in ThingComponents) { component.Value.OnChangedStat(statType); } }
     public virtual void OnChangedGridPos() { foreach (var component in ThingComponents) { component.Value.OnChangedGridPos(); } }
     public virtual void OnAddComponent(TypeDescription type) { foreach (var component in ThingComponents) { component.Value.OnAddComponent(type); } }
