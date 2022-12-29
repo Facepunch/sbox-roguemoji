@@ -204,9 +204,9 @@ public partial class RoguemojiPlayer : Thing
                 component.Update(dt);
         }
 
-        //DebugText = "";
-        //if (QueuedAction != null)
-        //    DebugText = QueuedActionName;
+        DebugText = "";
+        if (QueuedAction != null)
+            DebugText = QueuedActionName;
 
         //DebugText = $"IsAiming: {IsAiming}";
     }
@@ -562,8 +562,39 @@ public partial class RoguemojiPlayer : Thing
         }
         else
         {
+            if (!Acting.IsActionReady)
+            {
+                QueuedAction = new UseWieldedThingAction();
+                QueuedActionName = QueuedAction.ToString();
+                return;
+            }
+
             WieldedThing.Use(this);
         }
+    }
+
+    public override void UseWieldedThing(Direction direction)
+    {
+        if (!Acting.IsActionReady)
+        {
+            QueuedAction = new UseWieldedThingDirectionAction(direction);
+            QueuedActionName = QueuedAction.ToString();
+            return;
+        }
+
+        base.UseWieldedThing(direction);
+    }
+
+    public override void UseWieldedThing(IntVector targetGridPos)
+    {
+        if (!Acting.IsActionReady)
+        {
+            QueuedAction = new UseWieldedThingTargetAction(targetGridPos);
+            QueuedActionName = QueuedAction.ToString();
+            return;
+        }
+
+        base.UseWieldedThing(targetGridPos);
     }
 
     public void MoveThingTo(Thing thing, GridType targetGridType, IntVector targetGridPos, bool dontRequireAction = false, bool wieldIfPossible = false)
@@ -921,6 +952,13 @@ public partial class RoguemojiPlayer : Thing
 
     public void StartAiming(AimingSource aimingSource, AimingType aimingType)
     {
+        if (!Acting.IsActionReady)
+        {
+            QueuedAction = new StartAimingAction(aimingSource, aimingType);
+            QueuedActionName = QueuedAction.ToString();
+            return;
+        }
+
         IsAiming = true;
         AimingSource = aimingSource;
         AimingType = aimingType;
@@ -1124,11 +1162,77 @@ public class ThrowThingAction : IQueuedAction
     }
 }
 
-// todo
+public class StartAimingAction : IQueuedAction
+{
+    public AimingSource AimingSource { get; set; }
+    public AimingType AimingType { get; set; }
+
+    public StartAimingAction(AimingSource aimingSource, AimingType aimingType)
+    {
+        AimingSource = aimingSource;
+        AimingType = aimingType;
+    }
+
+    public void Execute(RoguemojiPlayer player)
+    {
+        player.StartAiming(AimingSource, AimingType);
+    }
+
+    public override string ToString()
+    {
+        return $"StartAiming {AimingSource} {AimingType}";
+    }
+}
+
 public class UseWieldedThingAction : IQueuedAction
 {
     public void Execute(RoguemojiPlayer player)
     {
+        player.UseWieldedThing();
+    }
 
+    public override string ToString()
+    {
+        return $"UseWieldedThing";
+    }
+}
+
+public class UseWieldedThingDirectionAction : IQueuedAction
+{
+    public Direction Direction { get; set; }
+
+    public UseWieldedThingDirectionAction(Direction direction)
+    {
+        Direction = direction;
+    }
+
+    public void Execute(RoguemojiPlayer player)
+    {
+        player.UseWieldedThing(Direction);
+    }
+
+    public override string ToString()
+    {
+        return $"UseWieldedThing {Direction}";
+    }
+}
+
+public class UseWieldedThingTargetAction : IQueuedAction
+{
+    public IntVector TargetGridPos { get; set; }
+
+    public UseWieldedThingTargetAction(IntVector targetGridPos)
+    {
+        TargetGridPos = targetGridPos;
+    }
+
+    public void Execute(RoguemojiPlayer player)
+    {
+        player.UseWieldedThing(TargetGridPos);
+    }
+
+    public override string ToString()
+    {
+        return $"UseWieldedThing {TargetGridPos}";
     }
 }

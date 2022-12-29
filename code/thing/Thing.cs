@@ -249,6 +249,7 @@ public partial class Thing : Entity
         if(user.GetComponent(TypeLibrary.GetType(typeof(Acting)), out var acting))
             ((Acting)acting).PerformedAction();
     }
+
     public virtual void Use(Thing user, Direction direction) 
     {
         if (user.GetComponent(TypeLibrary.GetType(typeof(Acting)), out var acting))
