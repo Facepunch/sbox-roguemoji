@@ -518,6 +518,8 @@ public partial class Thing : Entity
         }
     }
 
+
+    /// <summary> Use MoveThingTo to equip things, and this will be called automatically. </summary>
     public void EquipThing(Thing thing)
     {
         if (EquippedThings == null)

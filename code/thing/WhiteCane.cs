@@ -29,7 +29,7 @@ public partial class WhiteCane : Thing
 
         thing.AdjustStatMin(StatType.Sight, 3);
         thing.AdjustStat(StatType.Attack, GetStatClamped(StatType.Attack));
-        Trait = thing.AddTrait("", "👁️", "Your 👁️ can't go down to zero.", DisplayName);
+        Trait = thing.AddTrait("", "😎", "Your 👁️ can't go down to zero.", tattooIcon: "🦯", tattooScale: 0.7f, tattooOffset: new Vector2(7f, 6f), source: DisplayName);
     }
 
     public override void OnNoLongerWieldedBy(Thing thing)
