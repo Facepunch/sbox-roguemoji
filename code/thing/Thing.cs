@@ -290,7 +290,7 @@ public partial class Thing : Entity
             thing.OnMovedOntoBy(this);
         }
 
-        if (this == null || !IsValid)
+        if (this == null || !IsValid || IsRemoved)
             return;
 
         ContainingGridManager.SetGridPos(this, gridPos);

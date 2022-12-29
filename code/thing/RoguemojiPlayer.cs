@@ -204,9 +204,9 @@ public partial class RoguemojiPlayer : Thing
                 component.Update(dt);
         }
 
-        DebugText = "";
-        if (QueuedAction != null)
-            DebugText = QueuedActionName;
+        //DebugText = "";
+        //if (QueuedAction != null)
+        //    DebugText = QueuedActionName;
 
         //DebugText = $"IsAiming: {IsAiming}";
     }
@@ -239,6 +239,7 @@ public partial class RoguemojiPlayer : Thing
                     else if (Input.Pressed(InputButton.Use))                                                    PickUpTopItem();
                     else if (Input.Pressed(InputButton.Drop))                                                   DropWieldedItem();
                     else if (Input.Pressed(InputButton.Jump))                                                   UseWieldedThing();
+                    else if (Input.Pressed(InputButton.Menu))                                                   WieldThing(null);
                     else if (Input.Pressed(InputButton.View))                                                   CharacterHotkeyPressed();
                     else if (Input.Pressed(InputButton.Left))                                                   TryMove(Direction.Left, shouldQueueAction: true);
                     else if (Input.Pressed(InputButton.Right))                                                  TryMove(Direction.Right, shouldQueueAction: true);
@@ -952,11 +953,10 @@ public partial class RoguemojiPlayer : Thing
 
     public void StartAiming(AimingSource aimingSource, AimingType aimingType)
     {
-        if (!Acting.IsActionReady)
+        if (QueuedAction != null)
         {
-            QueuedAction = new StartAimingAction(aimingSource, aimingType);
-            QueuedActionName = QueuedAction.ToString();
-            return;
+            QueuedAction = null;
+            QueuedActionName = "";
         }
 
         IsAiming = true;
@@ -1159,28 +1159,6 @@ public class ThrowThingAction : IQueuedAction
     public override string ToString()
     {
         return $"Throw {Thing?.DisplayName ?? null} {Direction}";
-    }
-}
-
-public class StartAimingAction : IQueuedAction
-{
-    public AimingSource AimingSource { get; set; }
-    public AimingType AimingType { get; set; }
-
-    public StartAimingAction(AimingSource aimingSource, AimingType aimingType)
-    {
-        AimingSource = aimingSource;
-        AimingType = aimingType;
-    }
-
-    public void Execute(RoguemojiPlayer player)
-    {
-        player.StartAiming(AimingSource, AimingType);
-    }
-
-    public override string ToString()
-    {
-        return $"StartAiming {AimingSource} {AimingType}";
     }
 }
 
