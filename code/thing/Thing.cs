@@ -189,10 +189,7 @@ public partial class Thing : Entity
 
         if (target.HasStat(StatType.Health))
         {
-            // todo: use floater instead so it can be anchored to ht thing
-            var explosion = target.ContainingGridManager.SpawnThing<Explosion>(target.GridPos);
-            explosion.VfxShake(0.15f, 6f);
-            explosion.VfxScale(0.15f, 0.5f, 1f);
+            RoguemojiGame.Instance.AddFloater("💥", target.GridPos, 0.45f, CurrentLevelId, Vector2.Zero, Vector2.Zero, "", requireSight: true, EasingType.SineIn, 0.025f, parent: target);
 
             var damagingThing = ThingWieldingThis != null ? ThingWieldingThis : this;
             target.TakeDamage(damagingThing);
