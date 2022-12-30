@@ -30,7 +30,7 @@
     {
         width:100%;
         font-size: 72px;
-        background-color: #111111;
+        background-color: #101010;
         border-radius:3px;
         text-align: center;
         justify-content: center;
@@ -47,22 +47,27 @@
         white-space: nowrap;
     }
 
-    .hp_display
+    .char_stat_display
     {
+        flex-direction: row;
+        flex-wrap: wrap;
         margin: 4px 0 5px 0;
+        justify-content: center;
     }
 
-    .hp_icon {
+    .char_stat_icon {
         font-size: 22px;
         color: white;
         text-align: center;
         padding-bottom: 2px;
     }
 
-    .hp_label {
+    .char_stat_label {
         font-size: 22px;
         color: #ffffff55;
-        text-align: center;
+        //text-align: center;
+        justify-content: flex-end;
+        min-width: 26px;
     }
 
     .level_label
@@ -122,9 +127,15 @@
             <div class="input_recharge_bar_overlay" style="width: @Utils.Map(player.ActionRechargePercent, 0f, 1f, 0f, 100f, EasingType.SineInOut)%; opacity: @Utils.Map(player.ActionRechargePercent, 0f, 1f, 0.25f, 1f, EasingType.ExpoIn);"></div>
         </div>
 
-        <div class="hp_display">
-            <span class="hp_icon">@($"{Thing.GetStatIcon(StatType.Health)}") </span>
-            <span class="hp_label">@($"{player.GetStatClamped(StatType.Health)}") </span>
+        <div class="char_stat_display" style="max-width: 130px;">
+            @foreach (var pair in player.Stats)
+            {
+                var statType = pair.Key;
+                if (Thing.ShouldShowOnCharacterPanel(statType))
+                {
+                    <StatContainer Stat=@pair.Value></StatContainer>
+                }
+            }
         </div>
 
         <!-- <div class="level_label"> @($"Level: {player.CurrentLevelId}") </div> -->

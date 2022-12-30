@@ -90,6 +90,29 @@ public partial class Thing : Entity
         return "#ffffff";
     }
 
+    public static bool ShouldShowOnCharacterPanel(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.Health: return true;
+            case StatType.Attack: return true;
+            case StatType.Intelligence: return true;
+            case StatType.Speed: return true;
+        }
+
+        return false;
+    }
+
+    public static bool ShouldShowMaxOnTooltip(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.Health: return true;
+        }
+
+        return false;
+    }
+
     public virtual void InitStat(StatType statType, int current, int min = 0, int max = int.MaxValue)
 	{
 		if (!HasStats)

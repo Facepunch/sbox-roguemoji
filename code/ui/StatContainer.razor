@@ -69,6 +69,7 @@
         var panel = Hud.Instance.AddChild<StatTooltip>();
         panel.StatName = Tooltip;
         panel.StatType = Stat.StatType;
+        panel.Stat = Stat;
         return panel;
     }
 }

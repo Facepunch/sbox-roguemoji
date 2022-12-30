@@ -17,16 +17,29 @@
 
     .stat_tooltip_name {
         font-size: 18px;
+        flex-direction: row;
     }
 
     .stat_tooltip_desc {
         font-size: 16px;
         color: #ffffff99;
     }
+
+    .stat_tooltip_max {
+        color: #ffffff55;
+        padding-left: 6px;
+    }
 </style>
 
 <root class="stat_tooltip">
-    <div class="stat_tooltip_name" style="color: @(Thing.GetStatColor(StatType));">@StatName</div>
+    <div class="stat_tooltip_name" style="color: @(Thing.GetStatColor(StatType));">
+        <span>@StatName</span>
+
+        @if(Thing.ShouldShowMaxOnTooltip(StatType))
+        {
+            <span class="stat_tooltip_max">@($"{Stat.CurrentValue}/{Stat.MaxValue}")</span>
+        }
+    </div>
     <div class="stat_tooltip_desc">@(Thing.GetStatDescription(StatType)</div>
 </root>
 
@@ -34,4 +47,5 @@
 {
     public string StatName { get; set; }
     public StatType StatType { get; set; }
+    public Stat Stat { get; set; }
 }
