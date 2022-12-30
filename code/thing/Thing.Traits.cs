@@ -13,10 +13,17 @@ public partial class Trait : BaseNetworkable
     [Net] public Color BackgroundColor { get; set; }
     [Net] public float Progress { get; set; }
     [Net] public string Source { get; set; }
+    
     [Net] public bool HasTattoo { get; set; }
     [Net] public string TattooIcon { get; set; }
     [Net] public float TattooScale { get; set; }
     [Net] public Vector2 TattooOffset { get; set; }
+    
+    [Net] public bool HasLabel { get; set; }
+    [Net] public string LabelText { get; set; }
+    [Net] public int LabelFontSize { get; set; }
+    [Net] public Vector2 LabelOffset { get; set; }
+    [Net] public Color LabelColor { get; set; }
 
     public void SetTattoo(string icon, float scale, Vector2 offset)
     {
@@ -24,6 +31,15 @@ public partial class Trait : BaseNetworkable
         TattooIcon = icon;
         TattooScale = scale;
         TattooOffset = offset;
+    }
+
+    public void SetLabel(string text, int fontSize, Vector2 offset, Color color)
+    {
+        HasLabel = true;
+        LabelText = text;
+        LabelFontSize = fontSize;
+        LabelOffset = offset;
+        LabelColor = color;
     }
 }
 
@@ -52,6 +68,14 @@ public partial class Thing : Entity
     {
         Trait trait = AddTrait(name, icon, description, source);
         trait.SetTattoo(tattooIcon, tattooScale, tattooOffset);
+        return trait;
+    }
+
+    public Trait AddTrait(string name, string icon, string description, string tattooIcon, float tattooScale, Vector2 tattooOffset, string labelText, int labelFontSize, Vector2 labelOffset, Color labelColor, string source = "")
+    {
+        Trait trait = AddTrait(name, icon, description, source);
+        trait.SetTattoo(tattooIcon, tattooScale, tattooOffset);
+        trait.SetLabel(labelText, labelFontSize, labelOffset, labelColor);
         return trait;
     }
 

@@ -41,6 +41,18 @@
         justify-content: center;
         align-items: center;
     }
+
+    .trait_label
+    {
+        width: 100%;
+        height: 100%;
+        padding: 2px;
+        position: absolute;
+        justify-content: center;
+        align-items: center;
+        text-stroke-color: #000000;
+        text-stroke-width: 4px;
+    }
 </style>
 
 <root class="trait_container">
@@ -58,6 +70,14 @@
             var offset = Trait.TattooOffset;
             <div class="trait_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
                 @Trait.TattooIcon
+            </div>
+        }
+
+        @if (Trait.HasLabel)
+        {
+            var offset = Trait.LabelOffset;
+            <div class="trait_label" style="font-size: @(Trait.LabelFontSize)px; left: @(offset.x)px; top: @(offset.y)px; color: @(Trait.LabelColor.Hex)">
+                @Trait.LabelText
             </div>
         }
     </div>

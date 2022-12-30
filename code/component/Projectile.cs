@@ -53,5 +53,9 @@ public class Projectile : ThingComponent
         Remove();
     }
 
-    // todo: test when a solid thing moves onto your cell
+    public override void OnMovedOntoBy(Thing thing)
+    {
+        Thing.DamageOther(thing, Direction);
+        Remove();
+    }
 }

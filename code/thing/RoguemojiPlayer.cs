@@ -10,11 +10,6 @@ public enum AimingType { Direction, TargetCell }
 
 public partial class RoguemojiPlayer : Thing
 {
-	//public TimeSince TimeSinceAction { get; set; }
-	//[Net] public float ActionDelay { get; set; }
- //   [Net] public float ActionRechargePercent { get; set; }
- //   [Net] public bool IsActionReady { get; set; }
-
     public Acting Acting { get; private set; }
     private float _startingActionDelay = 0.5f;
 
@@ -215,13 +210,6 @@ public partial class RoguemojiPlayer : Thing
 	{
 		if(Game.IsServer)
 		{
-            //bool wasInputReady = IsActionReady;
-            //IsActionReady = TimeSinceAction >= ActionDelay;
-            //ActionRechargePercent = Math.Clamp(TimeSinceAction / ActionDelay, 0f, 1f);
-
-            //if (IsActionReady && !wasInputReady)
-            //    ActionRecharged();
-
             if (!IsDead)
             {
                 if (!IsAiming)
@@ -269,14 +257,6 @@ public partial class RoguemojiPlayer : Thing
         }
 	}
     
-    //public override void PerformedAction()
-    //{
-    //    base.PerformedAction();
-
-    //    TimeSinceAction = 0f;
-    //    IsActionReady = false;
-    //}
-
     public override void OnActionRecharged()
     {
         if(QueuedAction != null)

@@ -20,7 +20,7 @@ public partial class Squirrel : Thing
         PathfindMovementCost = 5f;
         SightBlockAmount = 8;
 
-        InitStat(StatType.Health, 3, 0, 3);
+        InitStat(StatType.Health, 5, 0, 5);
         InitStat(StatType.Attack, 1);
         InitStat(StatType.Speed, 2);
         InitStat(StatType.Sight, 7);
@@ -35,8 +35,8 @@ public partial class Squirrel : Thing
         Targeting = AddComponent<Targeting>();
         Pathfinding = AddComponent<Pathfinding>();
         Acting = AddComponent<Acting>();
-        Acting.ActionDelay = 2f;
-        Acting.TimeSinceAction = Game.Random.Float(0f, 2f);
+        Acting.ActionDelay = 1f;
+        Acting.TimeElapsed = Game.Random.Float(0f, 1f);
     }
 
     public override void Update(float dt)
@@ -73,7 +73,8 @@ public partial class Squirrel : Thing
 
     public override void Destroy()
     {
-        ContainingGridManager.SpawnThing<Bone>(GridPos);
+        if(Game.Random.Float(0f, 1f) < 0.5f)
+            ContainingGridManager.SpawnThing<Bone>(GridPos);
 
         base.Destroy();
     }

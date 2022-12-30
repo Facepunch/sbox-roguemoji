@@ -374,21 +374,22 @@ public partial class Thing : Entity
             return null;
         }
 
+        ThingComponent component = null;
+
         if (ThingComponents.ContainsKey(type))
         {
-            var component = ThingComponents[type];
+            component = ThingComponents[type];
             component.ReInitialize();
-            return component;
         }
         else
         {
-            var component = type.Create<ThingComponent>();
+            component = type.Create<ThingComponent>();
             component.Init(this);
             ThingComponents.Add(type, component);
-            return component;
         }
 
         OnAddComponent(type);
+        return component;
     }
 
     public T AddComponent<T>() where T : ThingComponent

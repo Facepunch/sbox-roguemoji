@@ -4,7 +4,9 @@ using System;
 namespace Roguemoji;
 public partial class Nut : Thing
 {
-	public Nut()
+    public int EatHealth { get; set; }
+
+    public Nut()
 	{
 		DisplayIcon = "🌰";
         DisplayName = "Nut";
@@ -13,5 +15,19 @@ public partial class Nut : Thing
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Flags = ThingFlags.Selectable | ThingFlags.Useable;
+        EatHealth = 1;
+
+        if (Game.IsServer)
+        {
+            AddTrait("", "🍽️", $"Eat for +{EatHealth}❤️", tattooIcon: "❤️", tattooScale: 0.7f, tattooOffset: new Vector2(0f, 1.5f), labelText: $"+{EatHealth}", labelFontSize: 13, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
+        }
+    }
+
+    public override void Use(Thing user)
+    {
+        base.Use(user);
+
+        user.AdjustStat(StatType.Health, EatHealth);
+        Destroy();
     }
 }

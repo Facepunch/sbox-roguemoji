@@ -5,7 +5,7 @@ namespace Roguemoji;
 
 public class Acting : ThingComponent
 {
-    public TimeSince TimeSinceAction { get; set; }
+    public float TimeElapsed { get; set; }
     public float ActionDelay { get; set; }
     public bool IsActionReady { get; set; }
 
@@ -14,25 +14,28 @@ public class Acting : ThingComponent
         base.Init(thing);
 
         ShouldUpdate = true;
-        TimeSinceAction = 0f;
+        TimeElapsed = 0f;
+        IsActionReady = false;
     }
 
     public override void Update(float dt)
     {
         base.Update(dt);
 
+        TimeElapsed += dt;
+
         bool wasInputReady = IsActionReady;
-        IsActionReady = TimeSinceAction >= ActionDelay;
+        IsActionReady = (TimeElapsed >= ActionDelay);
 
         if (IsActionReady && !wasInputReady)
             Thing.OnActionRecharged();
 
-        Thing.ActionRechargePercent = Math.Clamp(TimeSinceAction / ActionDelay, 0f, 1f);
+        Thing.ActionRechargePercent = Math.Clamp(TimeElapsed / ActionDelay, 0f, 1f);
     }
 
     public void PerformedAction()
     {
-        TimeSinceAction = 0f;
+        TimeElapsed = 0f;
         IsActionReady = false;
     }
 }
