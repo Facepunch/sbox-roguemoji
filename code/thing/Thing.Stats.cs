@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public enum StatType { Health, Attack, Speed, Intelligence, Charisma, Sight, Hearing, Smell }
+public enum StatType { Health, Energy, Mana, Attack, Speed, Intelligence, Charisma, Sight, Hearing, Smell }
 
 public partial class Stat : BaseNetworkable
 {
@@ -27,6 +27,8 @@ public partial class Thing : Entity
         switch(statType)
         {
             case StatType.Health: return "❤️";
+            case StatType.Energy: return "🔋";
+            case StatType.Mana: return "🔮";
             case StatType.Attack: return "⚔️";
             case StatType.Speed: return "⏳";
             case StatType.Intelligence: return "🧠";
@@ -44,6 +46,8 @@ public partial class Thing : Entity
         switch (statType)
         {
             case StatType.Health: return "Health";
+            case StatType.Energy: return "Energy";
+            case StatType.Mana: return "Mana";
             case StatType.Attack: return "Attack";
             case StatType.Speed: return "Speed";
             case StatType.Intelligence: return "Intelligence";
@@ -61,6 +65,8 @@ public partial class Thing : Entity
         switch (statType)
         {
             case StatType.Health: return "Amount of life remaining.";
+            case StatType.Energy: return "Resource used for abilities.";
+            case StatType.Mana: return "Magical resource used for spells.";
             case StatType.Attack: return "Amount of physical damage dealt.";
             case StatType.Speed: return "Reduces the delay between actions.";
             case StatType.Intelligence: return "Skill with magic and technology.";
@@ -78,6 +84,8 @@ public partial class Thing : Entity
         switch (statType)
         {
             case StatType.Health: return "#ff1111";
+            case StatType.Energy: return "#33ff33";
+            case StatType.Mana: return "#8888ff";
             case StatType.Attack: return "#444444";
             case StatType.Speed: return "#5555ff";
             case StatType.Intelligence: return "#9922ff";
@@ -95,9 +103,8 @@ public partial class Thing : Entity
         switch (statType)
         {
             case StatType.Health: return true;
-            case StatType.Attack: return true;
-            case StatType.Intelligence: return true;
-            case StatType.Speed: return true;
+            case StatType.Energy: return true;
+            case StatType.Mana: return true;
         }
 
         return false;
@@ -108,6 +115,8 @@ public partial class Thing : Entity
         switch (statType)
         {
             case StatType.Health: return true;
+            case StatType.Energy: return true;
+            case StatType.Mana: return true;
         }
 
         return false;
