@@ -28,9 +28,9 @@
 
     .char_icon
     {
-        width:100%;
-        font-size: 72px;
-        background-color: #101010;
+        width:100px;
+        font-size: 64px;
+        background-color: #090909;
         border-radius:3px;
         text-align: center;
         justify-content: center;
@@ -53,6 +53,8 @@
         flex-wrap: wrap;
         margin: 4px 0 5px 0;
         justify-content: center;
+        max-width: 160px;
+        padding-top: 4px;
     }
 
     .char_stat_icon {
@@ -95,10 +97,11 @@
 
     .input_recharge_bar
     {
-        width: 100%;
+        width: 100px;
         height: 4px;
         flex-shrink: 0;
         background-color: #333333;
+        border-radius: 1px;
     }
 
     .input_recharge_bar_overlay 
@@ -107,6 +110,7 @@
         transform-origin: left;
         position: absolute;
         background-color: #5555ff;
+        border-radius: 1px;
     }
 
     .wielding_use_tag 
@@ -142,7 +146,7 @@
             <div class="input_recharge_bar_overlay" style="width: @Utils.Map(player.ActionRechargePercent, 0f, 1f, 0f, 100f, EasingType.SineInOut)%; opacity: @Utils.Map(player.ActionRechargePercent, 0f, 1f, 0.25f, 1f, EasingType.ExpoIn);"></div>
         </div>
 
-        <div class="char_stat_display" style="max-width: 130px;">
+        <div class="char_stat_display">
             @foreach (var pair in player.Stats)
             {
                 var statType = pair.Key;
@@ -182,7 +186,15 @@
     protected override int BuildHash()
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
-        return HashCode.Combine(player.GetInfoDisplayHash(), player.ActionRechargePercent);
+
+        int statHash = 0;
+        foreach(var pair in player.Stats)
+        {
+            if(Thing.ShouldShowOnCharacterPanel(pair.Key))
+                statHash += pair.Value.HashCode;
+        }
+
+        return HashCode.Combine(player.GetInfoDisplayHash(), player.ActionRechargePercent, statHash);
     }
 
     public void OnMouseDownPlayerIcon(MousePanelEvent e)

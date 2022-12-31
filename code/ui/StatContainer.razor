@@ -6,31 +6,54 @@
 @namespace Roguemoji
 
 <style>
-    .stat_container
-    {
+    .stat_container {
         height: 32px;
         border: 1px solid #151515;
         border-radius: 3px;
         margin: 2px;
         background-color: #050505;
-        padding: 2px;
-        justify-content: space-around;
+        //padding: 2px;
+        justify-content: space-between;
     }
 
-    .stat_icon
-    {
+    .stat_icon {
         font-size: 18px;
+        min-width: 26px;
         color: white;
         text-align: center;
-        padding: 0px;
+        //padding: 0px;
+        padding-left: 2px;
+        //padding: 2px 0 0 2px;
+        justify-content: center;
     }
 
-    .stat_label
-    {
+    .stat_label {
         font-size: 18px;
         justify-content: flex-end;
-        padding: 0 2px 0 0;
+        padding-right: 6px;
+        //padding: 2px 2px 0 0;
         min-width: 22px;
+    }
+
+    .stat_bar {
+        width: 100%;
+        //left: 2px;
+        height: 3px;
+        background-color: #111111;
+        align-self: center;
+        position: absolute;
+        bottom: 0px;
+        border-radius: 1px;
+    }
+
+    .stat_bar_overlay {
+        height: 3px;
+        //left: 2px;
+        bottom: 0px;
+        border-radius: 1px;
+        position: absolute;
+        align-self: center;
+        transform-origin: left;
     }
 </style>
 
@@ -40,8 +63,21 @@
         return;
     }
 
-    <span class="stat_icon"> @($"{Thing.GetStatIcon(Stat.StatType)}") </span>
-    <span class="stat_label" style="color: @(Stat.ClampedValue < 0 ? "#ff000055" : "#ffffff88");"> @($"{Stat.ClampedValue}") </span>
+    @{
+        var showBar = Thing.ShouldShowBar(Stat.StatType);
+    }
+
+    <span class="stat_icon" style="padding-top: @(showBar ? 0 : 2)px;"> @($"{Thing.GetStatIcon(Stat.StatType)}") </span>
+    <span class="stat_label" style="padding-top: @(showBar ? 0 : 2)px; color: @(Stat.ClampedValue < 0 ? "#ff000055" : "#ffffff88");"> @($"{Stat.ClampedValue}") </span>
+
+    @if (showBar)
+    {
+        var percent = Math.Clamp((float)Stat.ClampedValue / (float)Stat.MaxValue, 0f, 1f);
+        string colorHex = Thing.GetStatColor(Stat.StatType);
+
+        <div class="stat_bar"></div>
+        <div class="stat_bar_overlay" style="width: @(percent * 100f)%; background-color: @(colorHex);"></div>
+    }
 </root>
 
 @code

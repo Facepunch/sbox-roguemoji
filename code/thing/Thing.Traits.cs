@@ -52,8 +52,6 @@ public partial class Thing : Entity
 {
     [Net] public IList<Trait> Traits { get; private set; }
 
-    //[Net] public IList<TestBaseNetworkable> TestList { get; set; }
-
     public Trait AddTrait(string name, string icon, string description, string source = "")
     {
         var trait = new Trait()

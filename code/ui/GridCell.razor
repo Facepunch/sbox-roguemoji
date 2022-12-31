@@ -76,8 +76,8 @@
     .grid_cell_hpbar 
     {
         width: 100%;
-        height: 3px;
-        background-color: #000000aa;
+        height: 2px;
+        background-color: #000000bb;
         align-self: center;
         position: absolute;
         bottom: 0px;
@@ -86,7 +86,7 @@
 
     .grid_cell_hpbar_overlay 
     {
-        height: 3px;
+        height: 2px;
         bottom: 0px;
         border-radius: 1px;
         position: absolute;
@@ -116,10 +116,10 @@
             if(hp < hpMax && hp > 0)
             {
                 var hpPercent = Math.Clamp((float)hp / (float)hpMax, 0f, 1f);
-                var hpBarColor = Lerp3(new Color(0f, 0.9f, 0f), new Color(0.75f, 0.25f, 0f), new Color(1f, 0f, 0f), 1f - hpPercent);
+                //var hpBarColor = Lerp3(new Color(0f, 0.9f, 0f), new Color(0.75f, 0.25f, 0f), new Color(1f, 0f, 0f), 1f - hpPercent);
 
                 <div class="grid_cell_hpbar"></div>
-                <div class="grid_cell_hpbar_overlay" style="width: @(hpPercent * 100f)%; background-color: @(hpBarColor.Hex);"></div>    
+                <div class="grid_cell_hpbar_overlay" style="width: @(hpPercent * 100f)%; background-color: @(Thing.GetStatColor(StatType.Health));"></div>
             }
         }
     </div>

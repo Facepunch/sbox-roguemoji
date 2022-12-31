@@ -84,11 +84,12 @@ public partial class RoguemojiPlayer : Thing
         RefreshVisibility();
         SightBlockAmount = 10;
         IsAiming = false;
+        SelectedThing = null;
 
         ClearStats();
         InitStat(StatType.Health, 10, 0, 10);
         InitStat(StatType.Energy, 5, 0, 5);
-        InitStat(StatType.Mana, 0, 0, 3);
+        InitStat(StatType.Mana, 1, 0, 3);
         InitStat(StatType.Attack, 1);
         InitStat(StatType.Strength, 2);
         InitStat(StatType.Speed, 5);
@@ -132,38 +133,6 @@ public partial class RoguemojiPlayer : Thing
         SetStartingValues();
         Acting.ActionDelay = _startingActionDelay;
         Acting.IsActionReady = false;
-
-        Log.Info("--------- # Traits Server: " + Traits.Count);
-        foreach (var trait in Traits)
-        {
-            Log.Info(trait.Name + ": " + trait.LabelText);
-        }
-
-        //Log.Info("--------- # Test Server: " + TestList.Count);
-        //foreach (var testObj in TestList)
-        //{
-        //    Log.Info("testObj: " + testObj);
-        //    Log.Info("testObj.Value: " + testObj.Value);
-        //}
-
-        RestartClient();
-    }
-
-    [ClientRpc]
-    public void RestartClient()
-    {
-        Log.Info("--------- # Traits Client: " + Traits.Count);
-        foreach (var trait in Traits)
-        {
-            Log.Info(trait.Name + ": " + trait.LabelText);
-        }
-
-        //Log.Info("--------- # Test Client: " + TestList.Count);
-        //foreach (var testObj in TestList)
-        //{
-        //    Log.Info("testObj: " + testObj);
-        //    Log.Info("testObj.Value: " + testObj.Value);
-        //}
     }
 
     void SpawnRandomInventoryThing(IntVector gridPos)

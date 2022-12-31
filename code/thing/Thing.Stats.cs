@@ -15,6 +15,7 @@ public partial class Stat : Entity
     [Net] public int MaxValue { get; set; }
 
     public int ClampedValue => Math.Clamp(CurrentValue, MinValue, MaxValue);
+    public int HashCode => CurrentValue + MinValue + MaxValue;
 
     public Stat()
     {
@@ -40,7 +41,7 @@ public partial class Thing : Entity
             case StatType.Mana: return "🔮";
             case StatType.Attack: return "⚔️";
             case StatType.Strength: return "💪";
-            case StatType.Speed: return "⏳";
+            case StatType.Speed: return "🕒️";
             case StatType.Intelligence: return "🧠";
             case StatType.Charisma: return "💋";
             case StatType.Sight: return "👁";
@@ -124,6 +125,18 @@ public partial class Thing : Entity
     }
 
     public static bool ShouldShowMaxOnTooltip(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.Health: return true;
+            case StatType.Energy: return true;
+            case StatType.Mana: return true;
+        }
+
+        return false;
+    }
+
+    public static bool ShouldShowBar(StatType statType)
     {
         switch (statType)
         {
