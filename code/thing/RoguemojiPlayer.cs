@@ -88,8 +88,9 @@ public partial class RoguemojiPlayer : Thing
         ClearStats();
         InitStat(StatType.Health, 10, 0, 10);
         InitStat(StatType.Energy, 5, 0, 5);
-        InitStat(StatType.Mana, 3, 0, 3);
+        InitStat(StatType.Mana, 0, 0, 3);
         InitStat(StatType.Attack, 1);
+        InitStat(StatType.Strength, 2);
         InitStat(StatType.Speed, 5);
         InitStat(StatType.Intelligence, 4);
         InitStat(StatType.Charisma, 3);
@@ -105,11 +106,14 @@ public partial class RoguemojiPlayer : Thing
         //AddTrait("Trait", "🕹️", "Trait description.");
         //AddTrait("Trait", "📮", "Trait description.");
 
+        //int eatHealth = Game.Random.Int(0, 999);
+        //AddTrait("", "🍽️", $"Eat for +{eatHealth}❤️", tattooIcon: "❤️", tattooScale: 0.7f, tattooOffset: new Vector2(0f, 2f), labelText: $"+{eatHealth}", labelFontSize: 18, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
+
         InventoryGridManager.Restart();
         EquipmentGridManager.Restart();
 
-        for (int x = 0; x < RoguemojiGame.InventoryWidth - 2; x++)
-            for (int y = 0; y < RoguemojiGame.InventoryHeight - 2; y++)
+        for (int x = 0; x < RoguemojiGame.InventoryWidth - 1; x++)
+            for (int y = 0; y < RoguemojiGame.InventoryHeight - 1; y++)
                 SpawnRandomInventoryThing(new IntVector(x, y));
 
         //for (int x = 0; x < 3; x++)
@@ -128,6 +132,38 @@ public partial class RoguemojiPlayer : Thing
         SetStartingValues();
         Acting.ActionDelay = _startingActionDelay;
         Acting.IsActionReady = false;
+
+        Log.Info("--------- # Traits Server: " + Traits.Count);
+        foreach (var trait in Traits)
+        {
+            Log.Info(trait.Name + ": " + trait.LabelText);
+        }
+
+        //Log.Info("--------- # Test Server: " + TestList.Count);
+        //foreach (var testObj in TestList)
+        //{
+        //    Log.Info("testObj: " + testObj);
+        //    Log.Info("testObj.Value: " + testObj.Value);
+        //}
+
+        RestartClient();
+    }
+
+    [ClientRpc]
+    public void RestartClient()
+    {
+        Log.Info("--------- # Traits Client: " + Traits.Count);
+        foreach (var trait in Traits)
+        {
+            Log.Info(trait.Name + ": " + trait.LabelText);
+        }
+
+        //Log.Info("--------- # Test Client: " + TestList.Count);
+        //foreach (var testObj in TestList)
+        //{
+        //    Log.Info("testObj: " + testObj);
+        //    Log.Info("testObj.Value: " + testObj.Value);
+        //}
     }
 
     void SpawnRandomInventoryThing(IntVector gridPos)

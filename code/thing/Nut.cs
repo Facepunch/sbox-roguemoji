@@ -19,7 +19,7 @@ public partial class Nut : Thing
 
         if (Game.IsServer)
         {
-            AddTrait("", "🍽️", $"Eat for +{EatHealth}❤️", tattooIcon: "❤️", tattooScale: 0.7f, tattooOffset: new Vector2(0f, 1.5f), labelText: $"+{EatHealth}", labelFontSize: 13, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
+            AddTrait("", "🍽️", $"Eat for +{EatHealth}❤️", tattooIcon: "❤️", tattooScale: 0.8f, tattooOffset: new Vector2(0f, 2f), labelText: $"+{EatHealth}", labelFontSize: 18, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
         }
     }
 

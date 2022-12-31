@@ -165,8 +165,7 @@
 
     protected override int BuildHash()
     {
-        var player = RoguemojiGame.Instance.LocalPlayer;
-        if (Thing == null || player == null)
+        if (Thing == null)
             return base.BuildHash();
 
         return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, Thing.GetStatClamped(StatType.Health));

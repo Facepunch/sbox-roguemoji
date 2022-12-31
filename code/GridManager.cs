@@ -53,6 +53,9 @@ public partial class GridManager : Entity
 	{
 		for (int i = things.Count - 1; i >= 0; i--)
 		{
+			if(i >= things.Count)
+				continue;
+
 			var thing = things[i];
 
 			if (!thing.DoneFirstUpdate)

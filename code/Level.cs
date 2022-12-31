@@ -87,13 +87,19 @@ public partial class Level : Entity
                     GridManager.SpawnThing<Hole>(gridPos);
             }
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 50; i++)
             {
                 if (GridManager.GetRandomEmptyGridPos(out var gridPos))
                     GridManager.SpawnThing<TreeEvergreen>(gridPos);
             }
 
-            //for (int i = 0; i < 15; i++)
+            for (int i = 0; i < 50; i++)
+            {
+                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
+                    GridManager.SpawnThing<TreeDeciduous>(gridPos);
+            }
+
+            //for (int i = 0; i < 8; i++)
             //{
             //    if (GridManager.GetRandomEmptyGridPos(out var gridPos))
             //        GridManager.SpawnThing<Squirrel>(gridPos);

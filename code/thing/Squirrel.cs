@@ -35,8 +35,8 @@ public partial class Squirrel : Thing
         Targeting = AddComponent<Targeting>();
         Pathfinding = AddComponent<Pathfinding>();
         Acting = AddComponent<Acting>();
-        Acting.ActionDelay = 1f;
-        Acting.TimeElapsed = Game.Random.Float(0f, 1f);
+        Acting.ActionDelay = 1.5f;
+        Acting.TimeElapsed = Game.Random.Float(0f, 1.5f);
     }
 
     public override void Update(float dt)
@@ -73,6 +73,8 @@ public partial class Squirrel : Thing
 
     public override void Destroy()
     {
+        Log.Info("Destroy - ContainingGridManager: " + ContainingGridManager);
+
         if(Game.Random.Float(0f, 1f) < 0.5f)
             ContainingGridManager.SpawnThing<Bone>(GridPos);
 

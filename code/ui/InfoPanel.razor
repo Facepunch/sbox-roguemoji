@@ -6,8 +6,7 @@
 @namespace Roguemoji
 
 <style>
-    .info
-    {
+    .info {
         flex-direction: row;
         align-items:center;
         justify-content:flex-start;
@@ -25,8 +24,7 @@
         margin: 0 20px 0 20px;
     }
 
-    .icon
-    {
+    .icon {
         //width: 82px;
         //height: 82px;
         margin: 0 0 10px 0;
@@ -34,12 +32,12 @@
         //background-color: #ff000066;
     }
 
-    .equipped {
+    .info_wielded {
         width: 40px;
         height: 40px;
         position: absolute;
-        left: 35px;
-        top: 35px;
+        left: 38px;
+        top: 38px;
         font-size: 32px;
         pointer-events: none;
         text-stroke-color: #00000000;
@@ -81,8 +79,7 @@
         font-size: 12px;
     }
 
-    .info_panel_tattoo
-    {
+    .info_panel_tattoo {
         position: absolute;
         //background-color: #0000ff88;
         justify-content: center;
@@ -113,8 +110,8 @@
                 </div>
             }
 
-            @if (SelectedThing.WieldedThing != null) { 
-                <div class="equipped"> 
+            @if (SelectedThing.WieldedThing != null) {
+                <div class="info_wielded">
                     @SelectedThing.WieldedThing.DisplayIcon.Substring(SelectedThing.WieldedThing.CharSkip)
 
                     @if (SelectedThing.WieldedThing.HasTattoo)

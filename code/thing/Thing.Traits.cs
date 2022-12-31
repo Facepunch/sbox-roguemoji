@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public partial class Trait : BaseNetworkable
+public partial class Trait : Entity
 {
     [Net] public string Name { get; set; }
     [Net] public string Icon { get; set; }
@@ -24,6 +24,11 @@ public partial class Trait : BaseNetworkable
     [Net] public int LabelFontSize { get; set; }
     [Net] public Vector2 LabelOffset { get; set; }
     [Net] public Color LabelColor { get; set; }
+
+    public Trait()
+    {
+        Transmit = TransmitType.Always;
+    }
 
     public void SetTattoo(string icon, float scale, Vector2 offset)
     {
@@ -46,6 +51,8 @@ public partial class Trait : BaseNetworkable
 public partial class Thing : Entity
 {
     [Net] public IList<Trait> Traits { get; private set; }
+
+    //[Net] public IList<TestBaseNetworkable> TestList { get; set; }
 
     public Trait AddTrait(string name, string icon, string description, string source = "")
     {

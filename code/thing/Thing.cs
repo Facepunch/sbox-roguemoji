@@ -110,10 +110,15 @@ public partial class Thing : Entity
 
         //DrawDebugText(ContainingGridManager?.Name.ToString() ?? "null");
         //DrawDebugText(Flags.ToString());
+        
+        //if(HasStat(StatType.Health))
+        //    DrawDebugText($"{GetStat(StatType.Health).CurrentValue}");
     }
 
     public virtual void Update(float dt)
     {
+        //DebugText = $"{GetStatClamped(StatType.Health)}";
+
         //DebugText = "Server Components (" + Components.Count + "):\n";
         foreach (KeyValuePair<TypeDescription, ThingComponent> pair in ThingComponents)
         {
@@ -189,13 +194,16 @@ public partial class Thing : Entity
 
         if (target.HasStat(StatType.Health))
         {
-            RoguemojiGame.Instance.AddFloater("💥", target.GridPos, 0.45f, CurrentLevelId, Vector2.Zero, Vector2.Zero, "", requireSight: true, EasingType.SineIn, 0.025f, parent: target);
+            var levelId = ThingWieldingThis?.CurrentLevelId ?? CurrentLevelId;
+            var startOffset = new Vector2(Game.Random.Float(-5f, 4f), Game.Random.Float(-5f, 4f));
+            var endOffset = new Vector2(Game.Random.Float(-5f, 4f), Game.Random.Float(-5f, 4f));
+            RoguemojiGame.Instance.AddFloater("💥", target.GridPos, 0.45f, levelId, startOffset, endOffset, "", requireSight: true, EasingType.SineIn, 0.025f, parent: target);
 
             var damagingThing = ThingWieldingThis != null ? ThingWieldingThis : this;
             target.TakeDamage(damagingThing);
 
-            int amount = damagingThing.GetStatClamped(StatType.Attack);
-            RoguemojiGame.Instance.LogMessage($"{damagingThing.DisplayIcon}{damagingThing.DisplayName} attacked {target.DisplayIcon}{target.DisplayName} for {amount}⚔️!", damagingThing.PlayerNum);
+            //int amount = damagingThing.GetStatClamped(StatType.Attack);
+            //RoguemojiGame.Instance.LogMessage($"{damagingThing.DisplayIcon}{damagingThing.DisplayName} attacked {target.DisplayIcon}{target.DisplayName} for {amount}⚔️!", damagingThing.PlayerNum);
         }
     }
 

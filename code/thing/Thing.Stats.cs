@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public enum StatType { Health, Energy, Mana, Attack, Speed, Intelligence, Charisma, Sight, Hearing, Smell }
+public enum StatType { Health, Energy, Mana, Attack, Strength, Speed, Intelligence, Charisma, Sight, Hearing, Smell }
 
-public partial class Stat : BaseNetworkable
+public partial class Stat : Entity
 {
     [Net] public StatType StatType { get; set; }
     [Net] public int CurrentValue { get; set; }
@@ -15,12 +15,21 @@ public partial class Stat : BaseNetworkable
     [Net] public int MaxValue { get; set; }
 
     public int ClampedValue => Math.Clamp(CurrentValue, MinValue, MaxValue);
+
+    public Stat()
+    {
+        Transmit = TransmitType.Always;
+    }
 }
 
 public partial class Thing : Entity
 {
 	[Net] public bool HasStats { get; private set; }
 	[Net] public IDictionary<StatType, Stat> Stats { get; private set; }
+
+    [Net] public IDictionary<StatType, int> StatsCurrent { get; private set; }
+    [Net] public IDictionary<StatType, int> StatsMin { get; private set; }
+    [Net] public IDictionary<StatType, int> StatsMax { get; private set; }
 
     public static string GetStatIcon(StatType statType)
     {
@@ -30,6 +39,7 @@ public partial class Thing : Entity
             case StatType.Energy: return "🔋";
             case StatType.Mana: return "🔮";
             case StatType.Attack: return "⚔️";
+            case StatType.Strength: return "💪";
             case StatType.Speed: return "⏳";
             case StatType.Intelligence: return "🧠";
             case StatType.Charisma: return "💋";
@@ -49,6 +59,7 @@ public partial class Thing : Entity
             case StatType.Energy: return "Energy";
             case StatType.Mana: return "Mana";
             case StatType.Attack: return "Attack";
+            case StatType.Strength: return "Strength";
             case StatType.Speed: return "Speed";
             case StatType.Intelligence: return "Intelligence";
             case StatType.Charisma: return "Charisma";
@@ -68,6 +79,7 @@ public partial class Thing : Entity
             case StatType.Energy: return "Resource used for abilities.";
             case StatType.Mana: return "Magical resource used for spells.";
             case StatType.Attack: return "Amount of physical damage dealt.";
+            case StatType.Strength: return "Physical power and ability to move heavy objects.";
             case StatType.Speed: return "Reduces the delay between actions.";
             case StatType.Intelligence: return "Skill with magic and technology.";
             case StatType.Charisma: return "Likeability and attractiveness.";
@@ -87,6 +99,7 @@ public partial class Thing : Entity
             case StatType.Energy: return "#33ff33";
             case StatType.Mana: return "#8888ff";
             case StatType.Attack: return "#444444";
+            case StatType.Strength: return "#ff8844";
             case StatType.Speed: return "#5555ff";
             case StatType.Intelligence: return "#9922ff";
             case StatType.Charisma: return "#ffff55";
@@ -117,6 +130,16 @@ public partial class Thing : Entity
             case StatType.Health: return true;
             case StatType.Energy: return true;
             case StatType.Mana: return true;
+        }
+
+        return false;
+    }
+
+    public static bool IsHiddenOnInfoPanel(StatType statType)
+    {
+        switch (statType)
+        {
+            
         }
 
         return false;
