@@ -1037,7 +1037,14 @@ public partial class RoguemojiPlayer : Thing
         RefreshVisibility(To.Single(this));
 
         var nearbyThings = ContainingGridManager.GetThingsWithinRange(GridPos, 2, allFlags: ThingFlags.Solid);
-        DebugText = $"{nearbyThings.Count()}";
+        foreach(var thing in nearbyThings)
+        {
+            if (thing == this)
+                continue;
+
+            RoguemojiGame.Instance.DebugGridLine(GridPos, thing.GridPos, Color.Red, 0.1f, ContainingGridManager.LevelId);
+            RoguemojiGame.Instance.DebugGridCell(thing.GridPos, Color.Red, 1f, ContainingGridManager.LevelId);
+        }
     }
 
     public bool IsInInventory(Thing thing)

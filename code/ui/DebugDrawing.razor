@@ -23,12 +23,14 @@
         public Vector2 a { get; set; }
         public Vector2 b { get; set; }
         public Color color { get; set; }
+        public float time { get; set; }
 
-        public DebugLineData(Vector2 a, Vector2 b, Color color)
+        public DebugLineData(Vector2 a, Vector2 b, Color color, float time)
         {
             this.a = a;
             this.b = b;
             this.color = color;
+            this.time = time;
         }
     }
 
@@ -36,16 +38,41 @@
     {
         public IntVector gridPos { get; set; }
         public Color color { get; set; }
+        public float time { get; set; }
 
-        public DebugGridCellData(IntVector gridPos, Color color)
+        public DebugGridCellData(IntVector gridPos, Color color, float time)
         {
             this.gridPos = gridPos;
             this.color = color;
+            this.time = time;
         }
     }
 
     public List<DebugLineData> DebugLines { get; private set; } = new List<DebugLineData>();
     public List<DebugGridCellData> DebugGridCells { get; private set; } = new List<DebugGridCellData>();
+
+    public override void Tick()
+    {
+        base.Tick();
+
+        float dt = Time.Delta;
+
+        for(int i = DebugLines.Count - 1; i >= 0; i--)
+        {
+            var line = DebugLines[i];
+            line.time -= dt;
+            if(line.time < 0f)
+                DebugLines.RemoveAt(i);
+        }
+
+        for (int i = DebugGridCells.Count - 1; i >= 0; i--)
+        {
+            var cell = DebugGridCells[i];
+            cell.time -= dt;
+            if (cell.time < 0f)
+                DebugGridCells.RemoveAt(i);
+        }
+    }
 
     public override bool HasContent => true;
 
@@ -60,13 +87,13 @@
         foreach (var cell in DebugGridCells)
             GraphicsX.Circle(Hud.Instance.GetScreenPosForArenaGridPos(cell.gridPos), 18f / ScaleFromScreen, 15f / ScaleFromScreen, cell.color);
 
-        DebugLines.Clear();
-        DebugGridCells.Clear();
+        //DebugLines.Clear();
+        //DebugGridCells.Clear();
     }
 
-    public void GridLine(IntVector a, IntVector b, Color color)
+    public void GridLine(IntVector a, IntVector b, Color color, float time)
     {
-        DebugLines.Add(new DebugLineData(Hud.Instance.GetScreenPosForArenaGridPos(a), Hud.Instance.GetScreenPosForArenaGridPos(b), color));
+        DebugLines.Add(new DebugLineData(Hud.Instance.GetScreenPosForArenaGridPos(a), Hud.Instance.GetScreenPosForArenaGridPos(b), color, time));
     }
 
     //public void Line(Vector2 a, Vector2 b, Color color)
@@ -74,8 +101,8 @@
     //    DebugLines.Add(new DebugLineData(Hud.Instance.GetScreenPosForPos(a), Hud.Instance.GetScreenPosForPos(b), color));
     //}
 
-    public void GridCell(IntVector gridPos, Color color)
+    public void GridCell(IntVector gridPos, Color color, float time)
     {
-        DebugGridCells.Add(new DebugGridCellData(gridPos, color));
+        DebugGridCells.Add(new DebugGridCellData(gridPos, color, time));
     }
 }

@@ -371,4 +371,34 @@ public partial class RoguemojiGame : GameManager
         Thing parent = (parentIdent == -1) ? null : Entity.FindByIndex(parentIdent) as Thing;
         Hud.Instance.AddFloater(icon, new IntVector(x, y), time, offsetStart, offsetEnd, text, requireSight, offsetEasingType, fadeInTime, scale, parent);
     }
+
+	public void DebugGridLine(IntVector a, IntVector b, Color color, float time, LevelId levelId)
+	{
+        foreach (var player in Players)
+        {
+			if (player.CurrentLevelId == levelId)
+                DebugGridLineClient(To.Single(player), a, b, color, time);
+        }
+    }
+
+    [ClientRpc]
+	public void DebugGridLineClient(IntVector a, IntVector b, Color color, float time)
+	{
+		Hud.Instance.DebugDrawing.GridLine(a, b, color, time);
+	}
+
+    public void DebugGridCell(IntVector gridPos, Color color, float time, LevelId levelId)
+    {
+        foreach (var player in Players)
+        {
+            if (player.CurrentLevelId == levelId)
+                DebugGridCellClient(To.Single(player), gridPos, color, time);
+        }
+    }
+
+    [ClientRpc]
+    public void DebugGridCellClient(IntVector gridPos, Color color, float time)
+    {
+        Hud.Instance.DebugDrawing.GridCell(gridPos, color, time);
+    }
 }
