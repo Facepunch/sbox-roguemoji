@@ -1035,6 +1035,9 @@ public partial class RoguemojiPlayer : Thing
         base.OnChangedGridPos();
 
         RefreshVisibility(To.Single(this));
+
+        var nearbyThings = ContainingGridManager.GetThingsWithinRange(GridPos, 2, allFlags: ThingFlags.Solid);
+        DebugText = $"{nearbyThings.Count()}";
     }
 
     public bool IsInInventory(Thing thing)

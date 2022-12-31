@@ -46,7 +46,7 @@ public partial class Squirrel : Thing
         if (Targeting == null)
             return;
 
-        if (Targeting.Target == null)
+        if (!Targeting.HasTarget)
         {
             Targeting.Target = RoguemojiGame.Instance.GetClosestPlayer(GridPos);
         }

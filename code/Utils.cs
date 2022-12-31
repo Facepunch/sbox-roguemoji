@@ -98,6 +98,12 @@ public static class Utils
         return (int)Math.Round(Math.Sqrt(x * x + y * y));
     }
 
+    public static int GetDistance(IntVector a, IntVector b)
+    {
+        var diff = b - a;
+        return (int)Math.Round(Math.Sqrt(diff.x * diff.x + diff.y * diff.y));
+    }
+
     public static float FastSin(float input)
     {
         // wrap input angle to -PI..PI
