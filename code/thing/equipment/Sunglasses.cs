@@ -16,8 +16,8 @@ public partial class Sunglasses : Thing
 
         if (Game.IsServer)
         {
-            InitStat(StatType.Charisma, 3);
-            InitStat(StatType.Sight, -3, int.MinValue);
+            InitStat(StatType.Charisma, 3, isModifier: true);
+            InitStat(StatType.Sight, -3, int.MinValue, isModifier: true);
         }
     }
 

@@ -13,6 +13,7 @@ public partial class Stat : Entity
     [Net] public int CurrentValue { get; set; }
     [Net] public int MinValue { get; set; }
     [Net] public int MaxValue { get; set; }
+    [Net] public bool IsModifier { get; set; }
 
     public int ClampedValue => Math.Clamp(CurrentValue, MinValue, MaxValue);
     public int HashCode => CurrentValue + MinValue + MaxValue;
@@ -158,7 +159,7 @@ public partial class Thing : Entity
         return false;
     }
 
-    public virtual void InitStat(StatType statType, int current, int min = 0, int max = int.MaxValue)
+    public virtual void InitStat(StatType statType, int current, int min = 0, int max = int.MaxValue, bool isModifier = false)
 	{
 		if (!HasStats)
 		{
@@ -169,11 +170,12 @@ public partial class Thing : Entity
 		}
 
         Stats[statType] = new Stat()
-		{
+        {
             StatType = statType,
-			CurrentValue = current,
-			MinValue = min,
-			MaxValue = max,
+            CurrentValue = current,
+            MinValue = min,
+            MaxValue = max,
+            IsModifier = isModifier,
 		};
     }
 
