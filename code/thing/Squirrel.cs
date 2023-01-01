@@ -52,16 +52,27 @@ public partial class Squirrel : Thing
         }
         else
         {
-            if (Acting.IsActionReady)
+            if (Targeting.Target.CurrentLevelId != CurrentLevelId)
             {
-                var path = Pathfinding.GetPathTo(GridPos, Targeting.Target.GridPos);
-                if (path != null && path.Count > 0 && !path[0].Equals(GridPos))
-                {
-                    var dir = GridManager.GetDirectionForIntVector(path[0] - GridPos);
-                    TryMove(dir);
-                }
+                Targeting.Target = null;
+            }
+            else
+            {
+                Color color = ContainingGridManager.HasLineOfSight(GridPos, Targeting.Target.GridPos, GetStatClamped(StatType.Sight), out IntVector collisionCell) ? Color.Blue : Color.Red;
+                //Log.Info("GridPos: " + GridPos + " Targeting.Target.GridPos: " + Targeting.Target.GridPos + " collisionCell: " + collisionCell);
+                RoguemojiGame.Instance.DebugGridLine(GridPos, collisionCell, color, 0.05f, CurrentLevelId);
 
-                Acting.PerformedAction();
+                if (Acting.IsActionReady)
+                {
+                    var path = Pathfinding.GetPathTo(GridPos, Targeting.Target.GridPos);
+                    if (path != null && path.Count > 0 && !path[0].Equals(GridPos))
+                    {
+                        var dir = GridManager.GetDirectionForIntVector(path[0] - GridPos);
+                        TryMove(dir);
+                    }
+
+                    Acting.PerformedAction();
+                }
             }
         }
     }

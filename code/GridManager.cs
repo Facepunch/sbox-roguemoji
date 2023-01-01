@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using Sandbox;
 
 namespace Roguemoji;
@@ -390,69 +391,100 @@ public partial class GridManager : Entity
 		ContainedPlayers.Remove(player);
 	}
 
-    // Function to check if there is a clear line of sight between
-    // the two given points on a 2D grid
-    public bool HasLineOfSight(int x1, int y1, int x2, int y2, float visionStrength, Func<IntVector, float, bool> isSightBlocked)
+    public bool HasLineOfSight(IntVector gridPosA, IntVector gridPosB, int sight, out IntVector collisionCell)
     {
-        // Check if the two points have the same coordinates
-        if (x1 == x2 && y1 == y2)
-            return true;
+		int x1 = gridPosA.x;
+		int y1 = gridPosA.y;
+		int x2 = gridPosB.x;
+		int y2 = gridPosB.y;
 
-        // Calculate the difference between the x and y coordinates
-        int dx = Math.Abs(x2 - x1);
-        int dy = Math.Abs(y2 - y1);
+        collisionCell = gridPosB;
 
-        // Calculate the direction of the line
-        int sx = (x1 < x2) ? 1 : -1;
-        int sy = (y1 < y2) ? 1 : -1;
+		if (gridPosA.Equals(gridPosB))
+			return true;
 
-        // Check if the line is steep or not
-        bool isSteep = (dy > dx);
-        if (isSteep)
-        {
-            // Swap the x and y coordinates if the line is steep
-            int temp = x1;
-            x1 = y1;
-            y1 = temp;
+        // check if nearby and visible to prevent false negative
+        IntVector diff = gridPosB - gridPosA;
+		if(diff.ManhattanLength == 3 && diff.x != 0 && diff.y != 0)
+		{
+			// test the 2 squares that would allow you to see target
+			IntVector cellA = gridPosA + (Math.Abs(diff.x) > Math.Abs(diff.y) ? new IntVector(Math.Sign(diff.x), 0) : new IntVector(0, Math.Sign(diff.y)));
+			if(!BlocksSight(cellA, sight))
+                return true;
 
-            temp = x2;
-            x2 = y2;
-            y2 = temp;
-
-            // Recalculate the difference between the x and y coordinates
-            dx = Math.Abs(x2 - x1);
-            dy = Math.Abs(y2 - y1);
+			IntVector cellB = gridPosA + new IntVector(Math.Sign(diff.x), Math.Sign(diff.y));
+			if(BlocksSight(cellB, sight)) 
+			{
+                collisionCell = cellB;
+                RoguemojiGame.Instance.DebugGridCell(cellB, new Color(1f, 0f, 1f, 0.3f), 0.05f, LevelId);
+                return false;
+            }
+			else
+			{
+				return true;
+			}
         }
 
-        // Calculate the error value
-        int error = dx / 2;
-
-        // Calculate the coordinates of the first point on the line
-        int x = x1;
-        int y = y1;
-
-        // Loop through the points on the line
-        for (int i = 0; i <= dx; i++)
+        int w = x2 - x1;
+        int h = y2 - y1;
+        int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0;
+        if (w < 0) dx1 = -1; else if (w > 0) dx1 = 1;
+        if (h < 0) dy1 = -1; else if (h > 0) dy1 = 1;
+        if (w < 0) dx2 = -1; else if (w > 0) dx2 = 1;
+        int longest = Math.Abs(w);
+        int shortest = Math.Abs(h);
+        if (!(longest > shortest))
         {
-            // Check if there is an obstacle at the current point
-            if (isSightBlocked(new IntVector(x, y), visionStrength))
-                return false;
+            longest = Math.Abs(h);
+            shortest = Math.Abs(w);
+            if (h < 0) dy2 = -1; else if (h > 0) dy2 = 1;
+            dx2 = 0;
+        }
+        int numerator = longest >> 1;
+        for (int i = 0; i <= longest; i++)
+        {
+            var currGridPos = new IntVector(x1, y1);
+			if(!currGridPos.Equals(gridPosA) && !currGridPos.Equals(gridPosB))
+			{
+				if(BlocksSight(currGridPos, sight))
+				{
+                    collisionCell = currGridPos;
+                    RoguemojiGame.Instance.DebugGridCell(currGridPos, new Color(1f, 0f, 0f, 0.3f), 0.05f, LevelId);
+                    return false;
+                }
 
-            // Update the error value
-            error -= dy;
-            if (error < 0)
-            {
-                // Move to the next point on the line
-                y += sy;
-                error += dx;
+                RoguemojiGame.Instance.DebugGridCell(currGridPos, new Color(0f, 0f, 1f, 0.3f), 0.05f, LevelId);
             }
 
-            // Move to the next point on the line
-            x += sx;
+            numerator += shortest;
+            if (!(numerator < longest))
+            {
+                numerator -= longest;
+                x1 += dx1;
+                y1 += dy1;
+            }
+            else
+            {
+                x1 += dx2;
+                y1 += dy2;
+            }
         }
 
-        // There is a clear line of sight between the two given points
+        //var things = GetThingsAt(gridPosB).Where()
+        //return ContainingGridManager.GetThingsAtClient(new IntVector(x, y)).Where(x => x.SightBlockAmount >= GetStatClamped(StatType.Sight)).Count() > 0;
+
         return true;
+    }
+
+	bool BlocksSight(IntVector gridPos, int sight)
+	{
+        foreach (var thing in GetThingsAt(gridPos))
+        {
+            if (thing.SightBlockAmount >= sight)
+				return true;
+        }
+
+		return false;
     }
 
     public void PrintGridThings()
