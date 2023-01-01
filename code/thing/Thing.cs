@@ -69,6 +69,11 @@ public partial class Thing : Entity
     [Net] public Vector2 TattooOffset { get; set; }
 
     [Net] public bool IsRemoved { get; set; }
+    [Net] public bool IsOnCooldown { get; set; }
+    [Net] public float CooldownProgressPercent { get; set; }
+
+    [Net] public float CooldownTimer { get; set; }
+    [Net] public float CooldownDuration { get; set; }
 
     public Thing()
     {
@@ -81,6 +86,7 @@ public partial class Thing : Entity
         IconScale = 1f;
         ThingId = RoguemojiGame.ThingId++;
         IsRemoved = false;
+        IsOnCooldown = false;
     }
 
     // Server only
@@ -130,6 +136,15 @@ public partial class Thing : Entity
         }
 
         //DrawDebugText(Flags.ToString());
+
+        if(IsOnCooldown)
+        {
+            CooldownTimer -= dt;
+            if (CooldownTimer < 0f)
+                FinishCooldown();
+            else
+                CooldownProgressPercent = Utils.Map(CooldownTimer, CooldownDuration, 0f, 0f, 1f);
+        }
     }
 
     public virtual void FirstUpdate()
@@ -620,6 +635,21 @@ public partial class Thing : Entity
         HasTattoo = false;
     }
 
+    public void StartCooldown(float time)
+    {
+        CooldownDuration = time;
+        CooldownTimer = time;
+        IsOnCooldown = true;
+        CooldownProgressPercent = 0f;
+        OnCooldownStart();
+    }
+
+    public void FinishCooldown()
+    {
+        IsOnCooldown = false;
+        OnCooldownFinish();
+    }
+
     public virtual void OnWieldThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnWieldThing(thing); } }
     public virtual void OnNoLongerWieldingThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnNoLongerWieldingThing(thing); } }
 
@@ -650,4 +680,6 @@ public partial class Thing : Entity
     public virtual void OnChangedGridPos() { foreach (var component in ThingComponents) { component.Value.OnChangedGridPos(); } }
     public virtual void OnAddComponent(TypeDescription type) { foreach (var component in ThingComponents) { component.Value.OnAddComponent(type); } }
     public virtual void OnRemoveComponent(TypeDescription type) { foreach (var component in ThingComponents) { component.Value.OnRemoveComponent(type); } }
+    public virtual void OnCooldownStart() { foreach (var component in ThingComponents) { component.Value.OnCooldownStart(); } }
+    public virtual void OnCooldownFinish() { foreach (var component in ThingComponents) { component.Value.OnCooldownFinish(); } }
 }

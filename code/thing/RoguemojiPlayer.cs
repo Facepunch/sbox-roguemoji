@@ -85,6 +85,8 @@ public partial class RoguemojiPlayer : Thing
         SightBlockAmount = 10;
         IsAiming = false;
         SelectedThing = null;
+        IsRemoved = false;
+        IsOnCooldown = false;
 
         ClearStats();
         InitStat(StatType.Health, 10, 0, 10);

@@ -416,7 +416,7 @@ public partial class GridManager : Entity
 			if(BlocksSight(cellB, sight)) 
 			{
                 collisionCell = cellB;
-                RoguemojiGame.Instance.DebugGridCell(cellB, new Color(1f, 0f, 1f, 0.3f), 0.05f, LevelId);
+                //RoguemojiGame.Instance.DebugGridCell(cellB, new Color(1f, 0f, 1f, 0.3f), 0.05f, LevelId);
                 return false;
             }
 			else
@@ -449,11 +449,11 @@ public partial class GridManager : Entity
 				if(BlocksSight(currGridPos, sight))
 				{
                     collisionCell = currGridPos;
-                    RoguemojiGame.Instance.DebugGridCell(currGridPos, new Color(1f, 0f, 0f, 0.3f), 0.05f, LevelId);
+                    //RoguemojiGame.Instance.DebugGridCell(currGridPos, new Color(1f, 0f, 0f, 0.3f), 0.05f, LevelId);
                     return false;
                 }
 
-                RoguemojiGame.Instance.DebugGridCell(currGridPos, new Color(0f, 0f, 1f, 0.3f), 0.05f, LevelId);
+                //RoguemojiGame.Instance.DebugGridCell(currGridPos, new Color(0f, 0f, 1f, 0.3f), 0.05f, LevelId);
             }
 
             numerator += shortest;
@@ -469,9 +469,6 @@ public partial class GridManager : Entity
                 y1 += dy2;
             }
         }
-
-        //var things = GetThingsAt(gridPosB).Where()
-        //return ContainingGridManager.GetThingsAtClient(new IntVector(x, y)).Where(x => x.SightBlockAmount >= GetStatClamped(StatType.Sight)).Count() > 0;
 
         return true;
     }

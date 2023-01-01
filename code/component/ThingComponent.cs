@@ -55,5 +55,7 @@ public abstract class ThingComponent
     public virtual void OnChangedGridPos() { }
     public virtual void OnAddComponent(TypeDescription type) { }
     public virtual void OnRemoveComponent(TypeDescription type) { }
+    public virtual void OnCooldownStart() { }
+    public virtual void OnCooldownFinish() { }
     public virtual void OnRemove() { }
 }

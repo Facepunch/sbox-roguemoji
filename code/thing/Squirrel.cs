@@ -58,9 +58,8 @@ public partial class Squirrel : Thing
             }
             else
             {
-                Color color = ContainingGridManager.HasLineOfSight(GridPos, Targeting.Target.GridPos, GetStatClamped(StatType.Sight), out IntVector collisionCell) ? Color.Blue : Color.Red;
-                //Log.Info("GridPos: " + GridPos + " Targeting.Target.GridPos: " + Targeting.Target.GridPos + " collisionCell: " + collisionCell);
-                RoguemojiGame.Instance.DebugGridLine(GridPos, collisionCell, color, 0.05f, CurrentLevelId);
+                //Color color = ContainingGridManager.HasLineOfSight(GridPos, Targeting.Target.GridPos, GetStatClamped(StatType.Sight), out IntVector collisionCell) ? Color.Blue : Color.Red;
+                //RoguemojiGame.Instance.DebugGridLine(GridPos, collisionCell, color, 0.05f, CurrentLevelId);
 
                 if (Acting.IsActionReady)
                 {

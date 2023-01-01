@@ -19,6 +19,9 @@ public partial class BowAndArrow : Thing
 
     public override void Use(Thing user, Direction direction)
     {
+        if (IsOnCooldown)
+            return;
+
         base.Use(user, direction);
 
         var arrow = user.ContainingGridManager.SpawnThing<ProjectileArrow>(user.GridPos);
@@ -29,5 +32,7 @@ public partial class BowAndArrow : Thing
         projectile.Direction = direction;
         projectile.MoveDelay = 0.1f;
         projectile.RemainingDistance = 8;
+
+        StartCooldown(13f);
     }
 }
