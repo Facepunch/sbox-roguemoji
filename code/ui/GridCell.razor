@@ -51,8 +51,8 @@
         transition: opacity 0.1s ease-in;
     }
 
-    .grid_icon_cooldown {
-        color: #ffffff66;
+    .cell_icon_cooldown {
+        color: #ffffff99;
     }
 
     .wielded {
@@ -112,7 +112,7 @@
 </style>
 
 <root class="icon @GetWieldedClass() @GetSolidClass()" )>
-    <div class="image @GetPlayerClass() @GetDraggingClass() @GetCooldownClass()" @ref=IconPanel> 
+    <div class="image @GetPlayerClass() @GetDraggingClass() @GetCooldownClass(Thing)" @ref=IconPanel> 
         @Thing.DisplayIcon.Substring(Thing.CharSkip) 
 
         @if(Thing.HasTattoo)
@@ -142,7 +142,7 @@
 
     @if (Thing.WieldedThing != null)
     {
-        <div class="wielded_thing"> 
+        <div class="wielded_thing @GetCooldownClass(Thing.WieldedThing)">
             @Thing.WieldedThing.DisplayIcon.Substring(Thing.WieldedThing.CharSkip)
 
             @if (Thing.WieldedThing.HasTattoo)
@@ -175,7 +175,7 @@
     string GetPlayerClass()     { return Thing.PlayerNum > 0 ? $"icon-player-{Thing.PlayerNum}" : ""; }
     string GetSolidClass()      { return Thing.Flags.HasFlag(ThingFlags.Solid) ? "solid" : ""; }
     string GetDraggingClass()   { return Thing == Hud.Instance.DraggedThing ? "dragging" : ""; }
-    string GetCooldownClass()   { return Thing.IsOnCooldown && Thing.ContainingGridManager.GridType != GridType.Arena ? "grid_icon_cooldown" : ""; }
+    string GetCooldownClass(Thing thing) { return thing.IsOnCooldown && thing.ContainingGridManager.GridType != GridType.Arena ? "cell_icon_cooldown" : ""; }
     string GetWieldedClass()    { return IsWielded() ? "wielded" : ""; }
     bool IsWielded()            { return Thing == RoguemojiGame.Instance.LocalPlayer?.WieldedThing; }
 
@@ -194,7 +194,9 @@
             return base.BuildHash();
 
         var cooldownHash = Thing.IsOnCooldown ? Thing.CooldownProgressPercent : 0f;
-        return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, Thing.GetStatClamped(StatType.Health), cooldownHash);
+        var wieldedThing = Thing.WieldedThing;
+        var wieldedCooldownHash = wieldedThing != null && wieldedThing.IsOnCooldown ? wieldedThing.CooldownProgressPercent : 0f;
+        return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, Thing.GetStatClamped(StatType.Health), cooldownHash, wieldedCooldownHash);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

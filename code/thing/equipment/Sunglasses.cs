@@ -4,7 +4,10 @@ using System;
 namespace Roguemoji;
 public partial class Sunglasses : Thing
 {
-	public Sunglasses()
+    public int CharismaAmount { get; private set; }
+    public int SightAmount { get; private set; }
+
+    public Sunglasses()
 	{
 		DisplayIcon = "🕶️";
         DisplayName = "Sunglasses";
@@ -16,8 +19,11 @@ public partial class Sunglasses : Thing
 
         if (Game.IsServer)
         {
-            InitStat(StatType.Charisma, 3, isModifier: true);
-            InitStat(StatType.Sight, -3, int.MinValue, isModifier: true);
+            CharismaAmount = 3;
+            SightAmount = -2;
+
+            InitStat(StatType.Charisma, CharismaAmount, isModifier: true);
+            InitStat(StatType.Sight, SightAmount, int.MinValue, isModifier: true);
         }
     }
 

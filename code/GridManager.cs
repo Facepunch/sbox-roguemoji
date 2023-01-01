@@ -391,6 +391,35 @@ public partial class GridManager : Entity
 		ContainedPlayers.Remove(player);
 	}
 
+	public void SetWidth(int width)
+	{
+		if (width == GridWidth || width < 1)
+			return;
+
+		bool isReducingSize = width < GridWidth;
+
+        GridWidth = width;
+
+		if(isReducingSize)
+		{
+            foreach (var pair in GridThings)
+            {
+                if(!IsGridPosInBounds(pair.Key))
+				{
+					if(GridType == GridType.Inventory && OwningPlayer != null)
+					{
+						var things = pair.Value;
+						for(int i = things.Count - 1; i >= 0; i--)
+						{
+							var thing = things[i];
+                            OwningPlayer.MoveThingTo(thing, GridType.Arena, OwningPlayer.GridPos, dontRequireAction: true);
+                        }
+					}
+				}
+            }
+        }
+	}
+
     public bool HasLineOfSight(IntVector gridPosA, IntVector gridPosB, int sight, out IntVector collisionCell)
     {
 		int x1 = gridPosA.x;

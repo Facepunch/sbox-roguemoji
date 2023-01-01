@@ -113,6 +113,8 @@ public partial class RoguemojiPlayer : Thing
         //AddTrait("", "🍽️", $"Eat for +{eatHealth}❤️", tattooIcon: "❤️", tattooScale: 0.7f, tattooOffset: new Vector2(0f, 2f), labelText: $"+{eatHealth}", labelFontSize: 18, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
 
         InventoryGridManager.Restart();
+        InventoryGridManager.SetWidth(RoguemojiGame.InventoryWidth);
+
         EquipmentGridManager.Restart();
 
         for (int x = 0; x < RoguemojiGame.InventoryWidth - 1; x++)
@@ -278,6 +280,9 @@ public partial class RoguemojiPlayer : Thing
 
     void WieldHotbarSlot(int index)
     {
+        if (index >= InventoryGridManager.GridWidth)
+            return;
+
         var thing = InventoryGridManager.GetThingsAt(InventoryGridManager.GetGridPos(index)).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 
         if (thing != null && Input.Down(InputButton.Run))
@@ -1041,6 +1046,7 @@ public partial class RoguemojiPlayer : Thing
 
         RefreshVisibility(To.Single(this));
 
+        //InventoryGridManager.SetWidth(InventoryGridManager.GridWidth - 1);
         //var nearbyThings = ContainingGridManager.GetThingsWithinRange(GridPos, 2, allFlags: ThingFlags.Solid);
         //foreach(var thing in nearbyThings)
         //{

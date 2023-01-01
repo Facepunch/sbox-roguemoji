@@ -87,6 +87,10 @@
     }
 </style>
 
+@{
+    var player = RoguemojiGame.Instance.LocalPlayer;
+}
+
 <root class="root">
     <div class="upper_row" style="height: @(40 * RoguemojiGame.ArenaHeight)px;">
         <ArenaPanel style="width: @(40 * RoguemojiGame.ArenaWidth)px;" @ref=ArenaPanel></ArenaPanel>
@@ -99,7 +103,7 @@
 
     <div class="lower_row">
         <CharacterPanel class="character" @ref=CharacterPanel></CharacterPanel>
-        <InventoryPanel class="inventory" style="width: @(40 * RoguemojiGame.InventoryWidth + 4)px; height: @(40 * RoguemojiGame.InventoryHeight + 3)px;" @ref=InventoryPanel></InventoryPanel>
+        <InventoryPanel class="inventory" style="width: @(40 * player.InventoryGridManager.GridWidth + 4)px; height: @(40 * player.InventoryGridManager.GridHeight + 3)px;" @ref=InventoryPanel></InventoryPanel>
         <NearbyPanel class="nearby" @ref=NearbyPanel></NearbyPanel>
 
         @{
@@ -125,6 +129,7 @@
 
     protected override int BuildHash()
     {
-        return HashCode.Combine(RoguemojiGame.Instance.LocalPlayer?.SelectedThing?.NetworkIdent ?? 0);
+        var inventoryWidthHash = RoguemojiGame.Instance.LocalPlayer.InventoryGridManager.GridWidth;
+        return HashCode.Combine(RoguemojiGame.Instance.LocalPlayer?.SelectedThing?.NetworkIdent ?? 0, inventoryWidthHash);
     }
 }

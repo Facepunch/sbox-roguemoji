@@ -74,11 +74,6 @@
 @{
     var player = RoguemojiGame.Instance.LocalPlayer;
     var wieldedThing = player.WieldedThing;
-
-    if(wieldedThing != null)
-    {
-        Log.Info("wieldedThing.IsOnCooldown: " + wieldedThing.IsOnCooldown);
-    }
 }
 
 <root class="wielding @GetWieldingClass(wieldedThing)">

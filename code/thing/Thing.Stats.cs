@@ -42,7 +42,7 @@ public partial class Thing : Entity
             case StatType.Mana: return "🔮";
             case StatType.Attack: return "⚔️";
             case StatType.Strength: return "💪";
-            case StatType.Speed: return "🕒️";
+            case StatType.Speed: return "🕓️";
             case StatType.Intelligence: return "🧠";
             case StatType.Charisma: return "💋";
             case StatType.Sight: return "👁";
