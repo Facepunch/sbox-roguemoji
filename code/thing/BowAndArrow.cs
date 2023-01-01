@@ -6,6 +6,8 @@ using System.Linq;
 namespace Roguemoji;
 public partial class BowAndArrow : Thing
 {
+    public float CooldownTime { get; private set; }
+
 	public BowAndArrow()
 	{
 		DisplayIcon = "🏹";
@@ -15,6 +17,7 @@ public partial class BowAndArrow : Thing
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Flags = ThingFlags.Selectable | ThingFlags.Useable | ThingFlags.UseRequiresAiming;
+        CooldownTime = 7f;
     }
 
     public override void Use(Thing user, Direction direction)
@@ -33,6 +36,6 @@ public partial class BowAndArrow : Thing
         projectile.MoveDelay = 0.1f;
         projectile.RemainingDistance = 8;
 
-        StartCooldown(13f);
+        StartCooldown(CooldownTime);
     }
 }

@@ -544,6 +544,9 @@ public partial class RoguemojiPlayer : Thing
 
             return;
         }
+
+        if (WieldedThing.IsOnCooldown)
+            return;
             
         if (WieldedThing.Flags.HasFlag(ThingFlags.UseRequiresAiming))
         {
