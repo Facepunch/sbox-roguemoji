@@ -153,5 +153,7 @@
             Hud.Instance.WieldingClicked(rightClick, shift);
         else
             Hud.Instance.StartDragging(player.WieldedThing, this, rightClick, PanelType.Wielding);
+
+        Hud.Instance.UnfocusChatbox();
     }
 }

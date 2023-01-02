@@ -186,6 +186,8 @@
             else 
                 Hud.Instance.GridCellClicked(gridPos, GridType.Arena, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), doubleClick: false, visible);
         }
+
+        Hud.Instance.UnfocusChatbox();
     }
 
     //protected override int BuildHash()

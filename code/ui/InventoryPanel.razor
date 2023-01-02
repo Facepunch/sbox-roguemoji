@@ -101,6 +101,8 @@
 
         if(player.InventoryGridManager.IsGridPosInBounds(gridPos))
             Hud.Instance.GridCellClicked(gridPos, GridType.Inventory, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), doubleClick: false);
+
+        Hud.Instance.UnfocusChatbox();
     }
 
     //protected override void OnAfterTreeRender(bool firstTime)

@@ -66,6 +66,8 @@
 
         if (player.EquipmentGridManager.IsGridPosInBounds(gridPos))
             Hud.Instance.GridCellClicked(gridPos, GridType.Equipment, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), doubleClick: false);
+
+        Hud.Instance.UnfocusChatbox();
     }
 
     protected override int BuildHash()

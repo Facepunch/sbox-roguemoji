@@ -129,6 +129,11 @@ public partial class Hud : RootPanel
         RoguemojiGame.PlayerIconClickedCmd(rightClick, shift);
     }
 
+    public void UnfocusChatbox()
+    {
+        MainPanel.Chatbox.Unfocus();
+    }
+
     protected override void OnMouseUp(MousePanelEvent e)
     {
         base.OnMouseUp(e);
@@ -344,5 +349,6 @@ public partial class Hud : RootPanel
     {
         Floaters.Clear();
         StopDragging();
+        MainPanel.Chatbox.Restart();
     }
 }

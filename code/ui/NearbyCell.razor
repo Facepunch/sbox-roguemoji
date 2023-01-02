@@ -130,6 +130,8 @@
             Hud.Instance.StartDragging(Thing, this, rightClick, PanelType.Nearby);
 
         e.StopPropagation();
+
+        Hud.Instance.UnfocusChatbox();
     }
 
     protected override void OnDoubleClick(MousePanelEvent e)

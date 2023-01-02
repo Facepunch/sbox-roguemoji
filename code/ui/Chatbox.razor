@@ -93,6 +93,12 @@
         RoguemojiGame.Instance.LogMessage(player.DisplayIcon + "(" + player.DisplayName + ") says: \"" + msg + "\"", player.PlayerNum);
     }
 
+    public void Unfocus()
+    {
+        if(HasClass("open"))
+            Close();
+    }
+
     void Blur()
     {
         //Input.Text = DefaultText;
@@ -109,5 +115,11 @@
         Open();
         Input.Text += icon;
         Input.CaretPosition = Input.TextLength;
+    }
+
+    public void Restart()
+    {
+        Input.Text = "";
+        Close();
     }
 }
