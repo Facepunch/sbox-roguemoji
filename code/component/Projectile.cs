@@ -43,11 +43,6 @@ public class Projectile : ThingComponent
         //Thing.DebugText = $"{RemainingDistance}";
     }
 
-    public void PerformedAction()
-    {
-        TimeSinceMove = 0f;
-    }
-
     public override void OnBumpedIntoThing(Thing thing)
     {
         Remove();

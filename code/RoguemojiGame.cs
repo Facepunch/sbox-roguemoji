@@ -157,7 +157,12 @@ public partial class RoguemojiGame : GameManager
 		LogMessageClient(text, playerNum);
 	}
 
-	[ClientRpc]
+    public void LogPersonalMessage(RoguemojiPlayer player, string text)
+    {
+        LogMessageClient(To.Single(player), text, playerNum: 0);
+    }
+
+    [ClientRpc]
 	public void LogMessageClient(string text, int playerNum)
 	{
 		if (Hud.MainPanel.LogPanel == null)

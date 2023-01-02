@@ -155,7 +155,7 @@ public partial class Hud : RootPanel
 
             if(destinationPanelType == PanelType.Chatbox || destinationPanelType == PanelType.Log)
             {
-                MainPanel.Chatbox.AddIcon(DraggedThing.DisplayIcon);
+                MainPanel.Chatbox.AddIcon(DraggedThing.ChatDisplayIcons);
                 StopDragging();
                 return;
             }

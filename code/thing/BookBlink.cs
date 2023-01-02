@@ -11,7 +11,9 @@ public partial class BookBlink : Thing
     public int ManaCost { get; private set; }
     public int ReqInt { get; private set; }
     public float CooldownTime { get; private set; }
-    
+
+    public override string ChatDisplayIcons => "📘✨";
+
     public BookBlink()
 	{
 		DisplayIcon = "📘";
@@ -33,6 +35,29 @@ public partial class BookBlink : Thing
             AddTrait("", "🧠", $"Intelligence required: {ReqInt}", offset: new Vector2(0f, -1f), labelText: $"≥{ReqInt}", labelFontSize: 15, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 15, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
         }
+    }
+
+    public override bool TryStartUsing(Thing user)
+    {
+        var intelligence = user.GetStatClamped(StatType.Intelligence);
+        if (intelligence < ReqInt)
+        {
+            if (user is RoguemojiPlayer player)
+                RoguemojiGame.Instance.LogPersonalMessage(player, $"You need {ReqInt}🧠 to use {ChatDisplayIcons} but you only have {intelligence}🧠");
+
+            return false;
+        }
+
+        var mana = user.GetStatClamped(StatType.Mana);
+        if(mana < ManaCost)
+        {
+            if(user is RoguemojiPlayer player)
+                RoguemojiGame.Instance.LogPersonalMessage(player, $"You need {ManaCost}🔮 to use {ChatDisplayIcons} but you only have {mana}🔮");
+
+            return false;
+        }
+
+        return true;
     }
 
     public override void Use(Thing user, IntVector targetGridPos)

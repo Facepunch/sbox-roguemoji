@@ -10,6 +10,8 @@ public partial class ScrollBlink : Thing
 
     public int ReqInt { get; private set; }
 
+    public override string ChatDisplayIcons => "📜✨";
+
     public ScrollBlink()
 	{
 		DisplayIcon = "📜";
@@ -28,6 +30,20 @@ public partial class ScrollBlink : Thing
             AddTrait("", "🧠", $"Intelligence required: {ReqInt}", offset: new Vector2(0f, -1f), labelText: $"≥{ReqInt}", labelFontSize: 15, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", "🔥", "Scrolls are destroyed when used.", offset: new Vector2(0f, -2f), tattooIcon: "📜", tattooScale: 0.45f, tattooOffset: new Vector2(0f, 4f));
         }
+    }
+
+    public override bool TryStartUsing(Thing user)
+    {
+        var intelligence = user.GetStatClamped(StatType.Intelligence);
+        if (intelligence < ReqInt)
+        {
+            if (user is RoguemojiPlayer player)
+                RoguemojiGame.Instance.LogPersonalMessage(player, $"You need {ReqInt}🧠 to use {ChatDisplayIcons} but you only have {intelligence}🧠");
+
+            return false;
+        }
+
+        return true;
     }
 
     public override void Use(Thing user, IntVector targetGridPos)

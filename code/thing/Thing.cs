@@ -38,6 +38,7 @@ public partial class Thing : Entity
     [Net] public string DisplayName { get; protected set; }
     [Net] public string Description { get; protected set; }
     [Net] public string Tooltip { get; protected set; }
+    public virtual string ChatDisplayIcons => DisplayIcon;
 
     public bool ShouldUpdate { get; set; }
     public bool DoneFirstUpdate { get; protected set; }
@@ -276,19 +277,28 @@ public partial class Thing : Entity
         WieldedThing.Use(this, targetGridPos);
     }
 
+    // Override and return false when user doesn't have required resources (IsOnCooldown already handled elsewhere).
+    public virtual bool TryStartUsing(Thing user)
+    {
+        return true;
+    }
+
     public virtual void Use(Thing user) 
     {
-        if(user.GetComponent(TypeLibrary.GetType(typeof(Acting)), out var acting))
-            ((Acting)acting).PerformedAction();
+        PerformedAction(user);
     }
 
     public virtual void Use(Thing user, Direction direction) 
     {
-        if (user.GetComponent(TypeLibrary.GetType(typeof(Acting)), out var acting))
-            ((Acting)acting).PerformedAction();
+        PerformedAction(user);
     }
 
     public virtual void Use(Thing user, IntVector targetGridPos) 
+    {
+        PerformedAction(user);
+    }
+
+    public virtual void PerformedAction(Thing user)
     {
         if (user.GetComponent(TypeLibrary.GetType(typeof(Acting)), out var acting))
             ((Acting)acting).PerformedAction();

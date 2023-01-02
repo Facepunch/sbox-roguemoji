@@ -553,9 +553,15 @@ public partial class RoguemojiPlayer : Thing
             return;
         }
 
-        if (WieldedThing.IsOnCooldown || !WieldedThing.Flags.HasFlag(ThingFlags.Useable))
+        if (!WieldedThing.Flags.HasFlag(ThingFlags.Useable))
+            return;
+
+        if (WieldedThing.IsOnCooldown)
             return;
             
+        if(!WieldedThing.TryStartUsing(this))
+            return;
+
         if (WieldedThing.Flags.HasFlag(ThingFlags.UseRequiresAiming))
         {
             AimingType aimingType = WieldedThing.Flags.HasFlag(ThingFlags.AimTypeTargetCell) ? AimingType.TargetCell : AimingType.Direction;
