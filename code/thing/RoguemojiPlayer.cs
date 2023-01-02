@@ -616,9 +616,6 @@ public partial class RoguemojiPlayer : Thing
         var sourceGridType = thing.ContainingGridManager.GridType;
         Sandbox.Diagnostics.Assert.True(sourceGridType != targetGridType);
 
-        if(sourceGridType == GridType.Equipment)
-            thing.ContainingGridManager.OwningPlayer.UnequipThing(thing);
-
         RoguemojiGame.Instance.RefreshGridPanelClient(To.Single(this), gridType: sourceGridType);
         RoguemojiGame.Instance.RefreshGridPanelClient(To.Single(this), gridType: targetGridType);
 
@@ -651,6 +648,9 @@ public partial class RoguemojiPlayer : Thing
                 MoveThingTo(targetThing, sourceGridType, sourceGridPos, dontRequireAction: true);
             }
         }
+
+        if (sourceGridType == GridType.Equipment)
+            thing.ContainingGridManager.OwningPlayer.UnequipThing(thing);
 
         if (targetGridType == GridType.Arena && thing == WieldedThing)
             WieldThing(null, dontRequireAction: true);

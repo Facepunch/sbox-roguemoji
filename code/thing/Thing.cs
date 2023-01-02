@@ -574,7 +574,7 @@ public partial class Thing : Entity
         }
     }
 
-    /// <summary> Use MoveThingTo to equip things, and this will be called automatically. </summary>
+    /// <summary> For players, use MoveThingTo to equip things, and this will be called automatically. </summary>
     public void EquipThing(Thing thing)
     {
         if (EquippedThings == null)
@@ -588,6 +588,7 @@ public partial class Thing : Entity
         thing.OnEquippedTo(this);
     }
 
+    /// <summary> For players, use MoveThingTo to unequip things, and this will be called automatically. </summary>
     public void UnequipThing(Thing thing)
     {
         RoguemojiGame.Instance.AddFloater(thing.DisplayIcon, GridPos, 0.6f, CurrentLevelId, new Vector2(0f, -8f), new Vector2(0f, 0f), "", requireSight: true, EasingType.SineOut, 0.05f, parent: this);
