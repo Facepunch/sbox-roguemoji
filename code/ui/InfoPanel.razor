@@ -103,10 +103,10 @@
 
             @if (SelectedThing.HasTattoo)
             {
-                int fontSize = MathX.FloorToInt(55f * SelectedThing.TattooScale);
-                var offset = SelectedThing.TattooOffset;
-                <div class="info_panel_tattoo" style="width: 64px; height: 64px; font-size: @(fontSize)px; left: @(offset.x + 8)px; top: @(offset.y + 7)px;">
-                    @SelectedThing.TattooIcon
+                int fontSize = MathX.FloorToInt(55f * SelectedThing.TattooData.Scale);
+                var offset = SelectedThing.TattooData.OffsetInfo;
+                <div class="info_panel_tattoo" style="width: 64px; height: 64px; font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
+                    @SelectedThing.TattooData.Icon
                 </div>
             }
 
@@ -116,10 +116,10 @@
 
                     @if (SelectedThing.WieldedThing.HasTattoo)
                     {
-                        int fontSize = MathX.FloorToInt(32f * SelectedThing.WieldedThing.TattooScale);
-                        var offset = SelectedThing.WieldedThing.TattooOffset;
-                        <div class="info_panel_tattoo" style="width: 40px; height: 40px; font-size: @(fontSize)px; left: @(offset.x + 2)px; top: @(offset.y + 2)px;">
-                            @SelectedThing.WieldedThing.TattooIcon
+                        int fontSize = MathX.FloorToInt(32f * SelectedThing.WieldedThing.TattooData.Scale);
+                        var offset = SelectedThing.WieldedThing.TattooData.OffsetInfoWielded;
+                        <div class="info_panel_tattoo" style="width: 40px; height: 40px; font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
+                            @SelectedThing.WieldedThing.TattooData.Icon
                         </div>
                     }
                 </div> 

@@ -29,6 +29,11 @@
         color: #ffffff55;
         padding-left: 6px;
     }
+
+    .stat_tooltip_info_desc {
+        font-size: 16px;
+        color: #ffffff66;
+    }
 </style>
 
 <root class="stat_tooltip">
@@ -40,7 +45,13 @@
             <span class="stat_tooltip_max">@($"{Stat.CurrentValue}/{Stat.MaxValue}")</span>
         }
     </div>
-    <div class="stat_tooltip_desc">@(Thing.GetStatDescription(StatType)</div>
+    <div class="stat_tooltip_desc">
+        @(Thing.GetStatDescription(StatType))
+    </div>
+
+    <div class="stat_tooltip_info_desc">
+        @(Thing.GetStatInfoDescription(StatType, Thing))
+    </div>
 </root>
 
 @code
@@ -48,4 +59,5 @@
     public string StatName { get; set; }
     public StatType StatType { get; set; }
     public Stat Stat { get; set; }
+    public Thing Thing { get; set; }
 }

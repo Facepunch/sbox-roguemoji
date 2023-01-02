@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Roguemoji;
-public partial class Scroll : Thing
+public partial class ScrollBlink : Thing
 {
     [Net] public int Radius { get; set; }
 
-	public Scroll()
+	public ScrollBlink()
 	{
 		DisplayIcon = "📜";
         DisplayName = "Scroll of Blink";
@@ -18,7 +18,7 @@ public partial class Scroll : Thing
         ShouldLogBehaviour = true;
 		Flags = ThingFlags.Selectable | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
 
-        SetTattoo("✨", 0.5f, new Vector2(0, -1));
+        SetTattoo("✨", scale: 0.5f, offset: new Vector2(1f, 0), offsetWielded: new Vector2(0f, 0f), offsetInfo: new Vector2(8f, 5f), offsetCharWielded: new Vector2(2f, 0f), offsetInfoWielded: new Vector2(3f, 2f));
     }
 
     public override void Use(Thing user, IntVector targetGridPos)

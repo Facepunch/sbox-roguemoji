@@ -18,6 +18,17 @@ public enum ThingFlags
     CanUseThings = 64,
 }
 
+public class TattooData
+{
+    public string Icon { get; set; }
+    public float Scale { get; set; }
+    public Vector2 Offset { get; set; }
+    public Vector2 OffsetWielded { get; set; }
+    public Vector2 OffsetInfo { get; set; }
+    public Vector2 OffsetCharWielded { get; set; }
+    public Vector2 OffsetInfoWielded { get; set; }
+}
+
 public partial class Thing : Entity
 {
     [Net] public IntVector GridPos { get; protected set; }
@@ -63,10 +74,8 @@ public partial class Thing : Entity
 
     [Net] public LevelId CurrentLevelId { get; set; }
 
-    [Net] public bool HasTattoo { get; set; }
-    [Net] public string TattooIcon { get; set; }
-    [Net] public float TattooScale { get; set; }
-    [Net] public Vector2 TattooOffset { get; set; }
+    public bool HasTattoo { get; set; } // Client-only
+    public TattooData TattooData { get; set; } // Client-only
 
     [Net] public bool IsRemoved { get; set; }
     [Net] public bool IsOnCooldown { get; set; }
@@ -621,12 +630,25 @@ public partial class Thing : Entity
     public virtual HashSet<IntVector> GetAimingTargetCellsClient() { return null; }
     public virtual bool IsPotentialAimingTargetCell(IntVector gridPos) { return false; }
 
-    public void SetTattoo(string icon, float scale, Vector2 offset)
+    public void SetTattoo(string icon, float scale, Vector2 offset, Vector2 offsetWielded, Vector2 offsetInfo, Vector2 offsetCharWielded, Vector2 offsetInfoWielded)
+    {
+        SetTattooClient(icon, scale, offset, offsetWielded, offsetInfo, offsetCharWielded, offsetInfoWielded);
+    }
+
+    [ClientRpc]
+    public void SetTattooClient(string icon, float scale, Vector2 offset, Vector2 offsetWielded, Vector2 offsetInfo, Vector2 offsetCharWielded, Vector2 offsetInfoWielded)
     {
         HasTattoo = true;
-        TattooIcon = icon;
-        TattooScale = scale;
-        TattooOffset = offset;
+        TattooData = new TattooData()
+        {
+            Icon = icon,
+            Scale = scale,
+            Offset = offset,
+            OffsetWielded = offsetWielded,
+            OffsetInfo = offsetInfo,
+            OffsetCharWielded = offsetCharWielded,
+            OffsetInfoWielded = offsetInfoWielded,
+        };
     }
 
     public void RemoveTattoo()

@@ -89,10 +89,10 @@
 
         @if(wieldedThing.HasTattoo)
         {
-            int fontSize = MathX.FloorToInt(48f * wieldedThing.TattooScale);
-            var offset = wieldedThing.TattooOffset;
-            <div class="wielding_tattoo" style="font-size: @(fontSize)px; left: @(offset.x + 2)px; top: @(offset.y + 2)px;">
-                @(wieldedThing.TattooIcon)
+            int fontSize = MathX.FloorToInt(48f * wieldedThing.TattooData.Scale);
+            var offset = wieldedThing.TattooData.OffsetCharWielded;
+            <div class="wielding_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
+                @(wieldedThing.TattooData.Icon)
             </div>
         }
 

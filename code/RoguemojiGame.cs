@@ -35,7 +35,7 @@ public partial class RoguemojiGame : GameManager
 
 	public const int ArenaWidth = 29;
 	public const int ArenaHeight = 19;
-	public const int InventoryWidth = 5;
+	public const int InventoryWidth = 9; //5;
 	public const int InventoryHeight = 6;
     public const int EquipmentWidth = 4;
     public const int EquipmentHeight = 2;

@@ -102,6 +102,16 @@ public partial class Thing : Entity
         return "???";
     }
 
+    public static string GetStatInfoDescription(StatType statType, Thing thing)
+    {
+        switch (statType)
+        {
+            case StatType.Speed: return $"Delay: {Acting.CalculateActionDelay(thing.GetStatClamped(StatType.Speed)).ToString("N2")}s";
+        }
+
+        return "";
+    }
+
     public static string GetStatColor(StatType statType)
     {
         switch (statType)

@@ -77,12 +77,13 @@
         {
             var offsetGridPos = thing.GridPos - player.CameraGridOffset;
             var index = GetIndex(offsetGridPos);
-            <GridCell style="left: @((offsetGridPos.x * 40) + player.CameraPixelOffset.x + thing.Offset.x * ScaleToScreen); top: @((offsetGridPos.y * 40) + player.CameraPixelOffset.y + thing.Offset.y * ScaleToScreen);" Thing=@thing GridIndex=@index />
 
             if (thing == player.SelectedThing)
             {
                 <div class="selected" style="left: @((offsetGridPos.x * 40) + player.CameraPixelOffset.x + thing.Offset.x * ScaleToScreen); top: @((offsetGridPos.y * 40) + player.CameraPixelOffset.y + thing.Offset.y * ScaleToScreen);"></div>
             }
+
+            <GridCell style="left: @((offsetGridPos.x * 40) + player.CameraPixelOffset.x + thing.Offset.x * ScaleToScreen); top: @((offsetGridPos.y * 40) + player.CameraPixelOffset.y + thing.Offset.y * ScaleToScreen);" Thing=@thing GridIndex=@index />
         }
     }
 

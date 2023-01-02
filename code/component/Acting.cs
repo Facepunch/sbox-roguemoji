@@ -38,4 +38,9 @@ public class Acting : ThingComponent
         TimeElapsed = 0f;
         IsActionReady = false;
     }
+
+    public static float CalculateActionDelay(int speed)
+    {
+        return Utils.Map(speed, 0, 10, 1.0f, 0.1f);
+    }
 }

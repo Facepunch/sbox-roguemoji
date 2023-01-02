@@ -67,7 +67,8 @@ public partial class RoguemojiPlayer : Thing
         base.Spawn();
 
         Acting = AddComponent<Acting>();
-        Acting.ActionDelay = _startingActionDelay;
+        //Acting.ActionDelay = _startingActionDelay;
+        Acting.ActionDelay = Acting.CalculateActionDelay(GetStatClamped(StatType.Speed));
     }
 
     void SetStartingValues()
@@ -141,7 +142,7 @@ public partial class RoguemojiPlayer : Thing
 
     void SpawnRandomInventoryThing(IntVector gridPos)
     {
-        int rand = Game.Random.Int(0, 14);
+        int rand = Game.Random.Int(0, 15);
         switch (rand)
         {
             case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -156,9 +157,10 @@ public partial class RoguemojiPlayer : Thing
             case 9: InventoryGridManager.SpawnThing<Sunglasses>(gridPos); break;
             case 10: InventoryGridManager.SpawnThing<Telescope>(gridPos); break;
             case 11: InventoryGridManager.SpawnThing<WhiteCane>(gridPos); break;
-            case 12: InventoryGridManager.SpawnThing<Scroll>(gridPos); break;
+            case 12: InventoryGridManager.SpawnThing<ScrollBlink>(gridPos); break;
             case 13: InventoryGridManager.SpawnThing<BowAndArrow>(gridPos); break;
             case 14: InventoryGridManager.SpawnThing<Backpack>(gridPos); break;
+            case 15: InventoryGridManager.SpawnThing<BookBlink>(gridPos); break;
         }
     }
 
@@ -551,7 +553,7 @@ public partial class RoguemojiPlayer : Thing
             return;
         }
 
-        if (WieldedThing.IsOnCooldown)
+        if (WieldedThing.IsOnCooldown || !WieldedThing.Flags.HasFlag(ThingFlags.Useable))
             return;
             
         if (WieldedThing.Flags.HasFlag(ThingFlags.UseRequiresAiming))
@@ -938,6 +940,8 @@ public partial class RoguemojiPlayer : Thing
     {
         if (statType == StatType.Sight)
             RefreshVisibility(To.Single(this));
+        else if(statType == StatType.Speed)
+            Acting.ActionDelay = Acting.CalculateActionDelay(GetStatClamped(StatType.Speed));
     }
 
     public void StartAimingThrow()

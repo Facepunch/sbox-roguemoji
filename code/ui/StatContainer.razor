@@ -84,6 +84,7 @@
 @code
 {
     public Stat Stat { get; set; }
+    public Thing Thing { get; set; }
 
     protected override int BuildHash()
     {
@@ -109,6 +110,7 @@
         panel.StatName = Tooltip;
         panel.StatType = Stat.StatType;
         panel.Stat = Stat;
+        panel.Thing = Thing;
         return panel;
     }
 }
