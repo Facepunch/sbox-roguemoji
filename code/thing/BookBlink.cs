@@ -8,17 +8,31 @@ public partial class BookBlink : Thing
 {
     [Net] public int Radius { get; set; }
 
-	public BookBlink()
+    public int ManaCost { get; private set; }
+    public int ReqInt { get; private set; }
+    public float CooldownTime { get; private set; }
+    
+    public BookBlink()
 	{
 		DisplayIcon = "📘";
         DisplayName = "Book of Blink";
-        Description = "Blink to a target location nearby.";
+        Description = "Teleport to a target location nearby.";
         Tooltip = "A book of Blink.";
         IconDepth = 0;
         ShouldLogBehaviour = true;
-		Flags = ThingFlags.Selectable | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
+        Flags = ThingFlags.Selectable | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
 
-        SetTattoo("✨", scale: 0.5f, offset: new Vector2(0.5f, -2f), offsetWielded: new Vector2(0f, -2f), offsetInfo: new Vector2(1f, -1f), offsetCharWielded: new Vector2(1f, -3f), offsetInfoWielded: new Vector2(-1f, -2f));
+        SetTattoo("✨", scale: 0.5f, offset: new Vector2(0.5f, -2f), offsetWielded: new Vector2(0f, -2f), offsetInfo: new Vector2(1f, -1f), offsetCharWielded: new Vector2(2f, -4f), offsetInfoWielded: new Vector2(-1f, -2f));
+
+        if (Game.IsServer)
+        {
+            ManaCost = 2;
+            ReqInt = 5;
+            CooldownTime = 3f;
+            AddTrait("", "🔮", $"Mana cost: {ManaCost}", offset: new Vector2(0f, -1f), labelText: $"{ManaCost}", labelFontSize: 15, labelOffset: new Vector2(0.5f, -1f), labelColor: new Color(1f, 1f, 1f));
+            AddTrait("", "🧠", $"Intelligence required: {ReqInt}", offset: new Vector2(0f, -1f), labelText: $"≥{ReqInt}", labelFontSize: 15, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
+            AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 15, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
+        }
     }
 
     public override void Use(Thing user, IntVector targetGridPos)
@@ -34,7 +48,7 @@ public partial class BookBlink : Thing
 
         user.SetGridPos(targetGridPos);
 
-        Destroy();
+        StartCooldown(CooldownTime);
     }
 
     public override void OnWieldedBy(Thing thing)

@@ -34,11 +34,24 @@
 </style>
 
 <root class="trait_tooltip">
-    @if (!string.IsNullOrEmpty(Trait.Name)) { <div class="trait_tooltip_name">@Trait.Name </div> }
+    @if (!string.IsNullOrEmpty(Trait.TraitName)) 
+    { 
+        <div class="trait_tooltip_name">
+            @Trait.TraitName 
+        </div> 
+    }
     
     <div class="trait_tooltip_desc"> @Trait.Description </div>
 
-    @if (!string.IsNullOrEmpty(Trait.Source)) { <span class="trait_tooltip_source"> From: <span style="font-weight: bold; padding-left: 5px;">@Trait.Source </span></span> }
+    @if (!string.IsNullOrEmpty(Trait.Source)) 
+    { 
+        <span class="trait_tooltip_source"> 
+            From: 
+            <span style="font-weight: bold; padding-left: 5px;">
+                @Trait.Source 
+            </span>
+        </span> 
+    }
 </root>
 
 @code

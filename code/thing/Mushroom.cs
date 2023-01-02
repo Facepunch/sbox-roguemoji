@@ -16,7 +16,7 @@ public partial class Mushroom : Thing
 
         if (Game.IsServer)
         {
-            AddTrait("", "🍽️", "Eat for a random positive or negative effect.", tattooIcon: "🍄", tattooScale: 0.425f, tattooOffset: Vector2.Zero);
+            AddTrait("", "🍽️", "Eat for a random positive or negative effect.", offset: Vector2.Zero, tattooIcon: "🍄", tattooScale: 0.425f, tattooOffset: Vector2.Zero);
         }
     }
 }

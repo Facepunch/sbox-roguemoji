@@ -12,13 +12,14 @@ public partial class ScrollBlink : Thing
 	{
 		DisplayIcon = "📜";
         DisplayName = "Scroll of Blink";
-        Description = "Blink to a target location nearby.";
+        Description = "Teleport to a target location nearby.";
         Tooltip = "A scroll of Blink.";
         IconDepth = 0;
         ShouldLogBehaviour = true;
-		Flags = ThingFlags.Selectable | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
+        Flags = ThingFlags.Selectable | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
 
         SetTattoo("✨", scale: 0.5f, offset: new Vector2(1f, 0), offsetWielded: new Vector2(0f, 0f), offsetInfo: new Vector2(8f, 5f), offsetCharWielded: new Vector2(2f, 0f), offsetInfoWielded: new Vector2(3f, 2f));
+        AddTrait("", "📜", $"Scrolls are destroyed after a single use.", offset: new Vector2(0f, -1f));
     }
 
     public override void Use(Thing user, IntVector targetGridPos)
