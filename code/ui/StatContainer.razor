@@ -87,8 +87,10 @@
 
     protected override int BuildHash()
     {
-        // todo
-        return HashCode.Combine(Stat?.ClampedValue ?? 0);
+        if (Stat == null)
+            return 0;
+
+        return HashCode.Combine(Stat.ClampedValue, Stat.MaxValue);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

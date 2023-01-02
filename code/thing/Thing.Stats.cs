@@ -5,7 +5,10 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public enum StatType { Health, Energy, Mana, Attack, Strength, Speed, Intelligence, Charisma, Sight, Hearing, Smell }
+public enum StatType { 
+    Health, Energy, Mana, Attack, Strength, Speed, Intelligence, Charisma, Sight, Hearing, Smell,
+    MaxHealth,
+}
 
 public partial class Stat : Entity
 {
@@ -48,6 +51,8 @@ public partial class Thing : Entity
             case StatType.Sight: return "👁";
             case StatType.Hearing: return "👂️";
             case StatType.Smell: return "👃";
+
+            case StatType.MaxHealth: return "💕";
         }
 
         return "❓️";
@@ -68,6 +73,8 @@ public partial class Thing : Entity
             case StatType.Sight: return "Sight";
             case StatType.Hearing: return "Hearing";
             case StatType.Smell: return "Smell";
+
+            case StatType.MaxHealth: return "Max Health";
         }
 
         return "???";
@@ -88,6 +95,8 @@ public partial class Thing : Entity
             case StatType.Sight: return "The ability to see farther and see past objects.";
             case StatType.Hearing: return "The ability to notice sounds from a distance.";
             case StatType.Smell: return "The ability to detect odors left by things.";
+
+            case StatType.MaxHealth: return "Maximum amount of life available.";
         }
 
         return "???";
@@ -108,6 +117,8 @@ public partial class Thing : Entity
             case StatType.Sight: return "#448844";
             case StatType.Hearing: return "#aa5500";
             case StatType.Smell: return "#5b3e31";
+
+            case StatType.MaxHealth: return "#ff1111";
         }
 
         return "#ffffff";
@@ -153,7 +164,7 @@ public partial class Thing : Entity
     {
         switch (statType)
         {
-            
+
         }
 
         return false;

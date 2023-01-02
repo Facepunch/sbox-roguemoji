@@ -196,7 +196,8 @@
         var cooldownHash = Thing.IsOnCooldown ? Thing.CooldownProgressPercent : 0f;
         var wieldedThing = Thing.WieldedThing;
         var wieldedCooldownHash = wieldedThing != null && wieldedThing.IsOnCooldown ? wieldedThing.CooldownProgressPercent : 0f;
-        return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, Thing.GetStatClamped(StatType.Health), cooldownHash, wieldedCooldownHash);
+        var hpHash = Thing.HasStat(StatType.Health) ? Thing.GetStatClamped(StatType.Health) + Thing.GetStatMax(StatType.Health) : 0;
+        return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, Thing.GetStatClamped(StatType.Health), cooldownHash, wieldedCooldownHash, hpHash);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

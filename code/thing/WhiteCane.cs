@@ -11,7 +11,7 @@ public partial class WhiteCane : Thing
 		DisplayIcon = "🦯";
         DisplayName = "White Cane";
         Description = "Useful when you can't see anything.";
-        Tooltip = "A white cane for the vision impaired.";
+        Tooltip = "A white cane.";
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Flags = ThingFlags.Selectable;
