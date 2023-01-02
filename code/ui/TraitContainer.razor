@@ -12,7 +12,7 @@
         height: 43px;
         border: 1px solid #151515;
         border-radius: 3px;
-        margin: 2px;
+        margin: 1px;
         background-color: #050505;
         padding: 2px;
     }
@@ -40,6 +40,8 @@
         //background-color: #0000ff88;
         justify-content: center;
         align-items: center;
+        text-stroke-color: #000000;
+        text-stroke-width: 2px;
     }
 
     .trait_label
@@ -55,7 +57,7 @@
     }
 </style>
 
-<root class="trait_container">
+<root class="trait_container" style="border-color: @(string.IsNullOrEmpty(Trait.TraitName) ? "#151515" : "#777777");">
     @if(Trait == null)
     {
         return;

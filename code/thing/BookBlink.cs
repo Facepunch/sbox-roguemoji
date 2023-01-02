@@ -13,6 +13,7 @@ public partial class BookBlink : Thing
     public float CooldownTime { get; private set; }
 
     public override string ChatDisplayIcons => "📘✨";
+    public override string AbilityName => "Read Book";
 
     public BookBlink()
 	{
@@ -31,8 +32,10 @@ public partial class BookBlink : Thing
             ManaCost = 2;
             ReqInt = 5;
             CooldownTime = 3f;
-            AddTrait("", "🔮", $"Mana cost: {ManaCost}", offset: new Vector2(0f, -1f), labelText: $"{ManaCost}", labelFontSize: 15, labelOffset: new Vector2(0.5f, -1f), labelColor: new Color(1f, 1f, 1f));
-            AddTrait("", "🧠", $"Intelligence required: {ReqInt}", offset: new Vector2(0f, -1f), labelText: $"≥{ReqInt}", labelFontSize: 15, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
+
+            AddTrait(AbilityName, "📖", "Spend 🔮 to cast the spell Blink.", offset: new Vector2(0f, -2f), tattooIcon: "✨", tattooScale: 0.7f, tattooOffset: new Vector2(0f, -5f));
+            AddTrait("", "🔮", $"{ManaCost}🔮 required to cast spell.", offset: new Vector2(0f, -1f), labelText: $"{ManaCost}", labelFontSize: 15, labelOffset: new Vector2(0.5f, -1f), labelColor: new Color(1f, 1f, 1f));
+            AddTrait("", "🧠", $"{ReqInt}🧠 required to read book.", offset: new Vector2(0f, -1f), labelText: $"≥{ReqInt}", labelFontSize: 15, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 15, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
         }
     }

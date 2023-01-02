@@ -111,7 +111,7 @@ public partial class RoguemojiPlayer : Thing
         //AddTrait("Trait", "📮", "Trait description.");
 
         //int eatHealth = Game.Random.Int(0, 999);
-        //AddTrait("", "🍽️", $"Eat for +{eatHealth}❤️", tattooIcon: "❤️", tattooScale: 0.7f, tattooOffset: new Vector2(0f, 2f), labelText: $"+{eatHealth}", labelFontSize: 18, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
+        //AddTrait("", "🍽️", $"Consume for +{eatHealth}❤️", tattooIcon: "❤️", tattooScale: 0.7f, tattooOffset: new Vector2(0f, 2f), labelText: $"+{eatHealth}", labelFontSize: 18, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
 
         InventoryGridManager.Restart();
         InventoryGridManager.SetWidth(RoguemojiGame.InventoryWidth);

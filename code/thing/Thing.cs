@@ -85,6 +85,8 @@ public partial class Thing : Entity
     [Net] public float CooldownTimer { get; set; }
     [Net] public float CooldownDuration { get; set; }
 
+    public virtual string AbilityName => "Ability";
+
     public Thing()
     {
         ShouldUpdate = true;

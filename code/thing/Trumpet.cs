@@ -8,9 +8,10 @@ public partial class Trumpet : Thing
 	{
 		DisplayIcon = "🎺";
         DisplayName = "Trumpet";
+        Description = "Very loud and annoying.";
+        Tooltip = "A trumpet.";
         IconDepth = 0;
         ShouldLogBehaviour = true;
-		Tooltip = "A trumpet.";
 		Flags = ThingFlags.Selectable;
     }
 }

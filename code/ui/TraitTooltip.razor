@@ -16,18 +16,35 @@
         flex-wrap: wrap;
     }
 
+    .trait_tooltip_ability_label {
+        font-size: 18px;
+        padding-right: 10px;
+        color: #333333;
+    }
+
+    .trait_tooltip_name_container {
+        flex-direction: row;
+        padding-bottom: 4px;
+    }
+
     .trait_tooltip_name {
         font-size: 18px;
-        color: white;
+        color: #777777;
+    }
+
+    .trait_tooltip_ability_bind {
+        font-size: 18px;
+        padding-left: 10px;
+        color: #333333;
     }
 
     .trait_tooltip_desc {
-        font-size: 16px;
+        font-size: 15px;
         color: #666666;
     }
 
     .trait_tooltip_source {
-        font-size: 14px;
+        font-size: 13px;
         color: #ffffff44;
         padding: 4px 0 0 0;
     }
@@ -35,10 +52,12 @@
 
 <root class="trait_tooltip">
     @if (!string.IsNullOrEmpty(Trait.TraitName)) 
-    { 
-        <div class="trait_tooltip_name">
-            @Trait.TraitName 
-        </div> 
+    {
+        <div class="trait_tooltip_name_container">
+            <span class="trait_tooltip_ability_label"> Ability: </span>
+            <span class="trait_tooltip_name"> @Trait.TraitName </span>
+            <span class="trait_tooltip_ability_bind"> [Space] </span>
+        </div>
     }
     
     <div class="trait_tooltip_desc"> @Trait.Description </div>

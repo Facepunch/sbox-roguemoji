@@ -4,7 +4,9 @@ using System;
 namespace Roguemoji;
 public partial class Mushroom : Thing
 {
-	public Mushroom()
+    public override string AbilityName => "Eat";
+
+    public Mushroom()
 	{
 		DisplayIcon = "🍄";
         DisplayName = "Mushroom";
@@ -16,7 +18,7 @@ public partial class Mushroom : Thing
 
         if (Game.IsServer)
         {
-            AddTrait("", "🍽️", "Eat for a random positive or negative effect.", offset: Vector2.Zero, tattooIcon: "🍄", tattooScale: 0.425f, tattooOffset: Vector2.Zero);
+            AddTrait(AbilityName, "🍽️", "Consume for a random positive or negative effect.", offset: Vector2.Zero, tattooIcon: "🍄", tattooScale: 0.425f, tattooOffset: new Vector2(-0.3f, 0.1f));
         }
     }
 }

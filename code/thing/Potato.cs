@@ -5,12 +5,13 @@ namespace Roguemoji;
 public partial class Potato : Thing
 {
     public int EatHealth { get; set; }
+    public override string AbilityName => "Eat";
 
-	public Potato()
+    public Potato()
 	{
 		DisplayIcon = "🥔";
         DisplayName = "Potato";
-        Description = "Uncooked and as hard as a rock.";
+        Description = "Uncooked and hard as a rock.";
         Tooltip = "A potato.";
         IconDepth = 0;
         ShouldLogBehaviour = true;
@@ -20,7 +21,7 @@ public partial class Potato : Thing
             Flags = ThingFlags.Selectable | ThingFlags.Useable;
             EatHealth = 2;
             InitStat(StatType.Attack, 1);
-            AddTrait("", "🍽️", $"Eat for +{EatHealth}❤️", offset: Vector2.Zero, tattooIcon: "❤️", tattooScale: 0.7f, tattooOffset: new Vector2(0f, 2f), labelText: $"+{EatHealth}", labelFontSize: 18, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
+            AddTrait(AbilityName, "🍽️", $"Consume for +{EatHealth}❤️", offset: Vector2.Zero, tattooIcon: "❤️", tattooScale: 0.7f, tattooOffset: new Vector2(0f, 2f), labelText: $"+{EatHealth}", labelFontSize: 18, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
         }
     }
 

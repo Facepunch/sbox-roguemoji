@@ -76,7 +76,7 @@
     var wieldedThing = player.WieldedThing;
 }
 
-<root class="wielding @GetWieldingClass(wieldedThing)">
+<root class="wielding @GetWieldingClass(wieldedThing)" style="border-color: @(wieldedThing == null || !wieldedThing.Flags.HasFlag(ThingFlags.Useable) ? "#303030" : "#777777");">
     @if(wieldedThing == null)
     {
         <div>🖐️</div>

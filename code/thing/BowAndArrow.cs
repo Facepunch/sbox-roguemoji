@@ -8,7 +8,9 @@ public partial class BowAndArrow : Thing
 {
     public float CooldownTime { get; private set; }
 
-	public BowAndArrow()
+    public override string AbilityName => "Shoot Arrow";
+
+    public BowAndArrow()
 	{
 		DisplayIcon = "🏹";
         DisplayName = "Bow and Arrow";
@@ -21,6 +23,8 @@ public partial class BowAndArrow : Thing
         if (Game.IsServer)
         {
             CooldownTime = 7f;
+
+            AddTrait(AbilityName, "🔰", "Shoot an arrow in any direction.", offset: new Vector2(0f, -1f));
             AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 15, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
         }
     }

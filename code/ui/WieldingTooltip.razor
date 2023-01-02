@@ -30,7 +30,7 @@
 
     .wielding_action
     {
-        color: #444444;
+        color: #333333;
         padding-right: 6px;
     }
 
@@ -63,7 +63,7 @@
     @if(Thing.Flags.HasFlag(ThingFlags.Useable))
     {
         <div class="wielding_line">
-            <span class="wielding_action">Use</span>
+            <span class="wielding_action" style="color: #666666;">@(Thing.AbilityName)</span>
             <span class="wielding_bind">[Space]</span>
         </div>
     }
