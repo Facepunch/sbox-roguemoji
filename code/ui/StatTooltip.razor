@@ -45,13 +45,17 @@
             <span class="stat_tooltip_max">@($"{Stat.CurrentValue}/{Stat.MaxValue}")</span>
         }
     </div>
+
     <div class="stat_tooltip_desc">
         @(Thing.GetStatDescription(StatType))
     </div>
 
-    <div class="stat_tooltip_info_desc">
-        @(Thing.GetStatInfoDescription(StatType, Thing))
-    </div>
+    @if (!Stat.IsModifier)
+    {
+        <div class="stat_tooltip_info_desc">
+            @(Thing.GetStatInfoDescription(StatType, Thing))
+        </div>
+    }
 </root>
 
 @code

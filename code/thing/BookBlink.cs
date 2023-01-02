@@ -58,32 +58,14 @@ public partial class BookBlink : Thing
         Radius = Math.Max(thing.GetStatClamped(StatType.Intelligence), 1);
     }
 
-    public override HashSet<IntVector> GetAimingTargetCellsClient() 
+    public override HashSet<IntVector> GetAimingTargetCellsClient()
     {
         Game.AssertClient();
 
         if (ThingWieldingThis == null)
             return null;
 
-        HashSet<IntVector> aimingCells = new HashSet<IntVector>();
-
-        for(int x = -Radius; x <= Radius; x++)
-        {
-            for(int y = -Radius; y <= Radius; y++)
-            {
-                int distance = Utils.GetDistance(x, y);
-                if (distance > Radius)
-                    continue;
-
-                var gridPos = ThingWieldingThis.GridPos + new IntVector(x, y);
-                if (ThingWieldingThis.ContainingGridManager.GetThingsAtClient(gridPos).WithAll(ThingFlags.Solid).ToList().Count > 0)
-                    continue;
-
-                aimingCells.Add(gridPos);
-            }
-        }
-
-        return aimingCells;
+        return ScrollBlink.BlinkGetAimingCells(Radius, ThingWieldingThis);
     }
 
     public override bool IsPotentialAimingTargetCell(IntVector gridPos)
@@ -91,20 +73,6 @@ public partial class BookBlink : Thing
         if (ThingWieldingThis == null)
             return false;
 
-        for (int x = -Radius; x <= Radius; x++)
-        {
-            for (int y = -Radius; y <= Radius; y++)
-            {
-                int distance = Utils.GetDistance(x, y);
-                if (distance > Radius)
-                    continue;
-
-                var currGridPos = ThingWieldingThis.GridPos + new IntVector(x, y);
-                if (gridPos.Equals(currGridPos))
-                    return true;
-            }
-        }
-
-        return false;
+        return ScrollBlink.BlinkIsPotentialAimingCell(gridPos, Radius, ThingWieldingThis);
     }
 }
