@@ -129,9 +129,7 @@ public partial class RoguemojiGame : GameManager
         RoguemojiPlayer player = level0.GridManager.SpawnThing<RoguemojiPlayer>(gridPos);
 		player.CurrentLevelId = LevelId.Forest0;
 		player.PlayerNum = ++PlayerNum;
-
-        var middleCell = new IntVector(MathX.FloorToInt((float)ArenaWidth / 2f), MathX.FloorToInt((float)ArenaHeight / 2f));
-		player.SetCameraGridOffset(gridPos - middleCell);
+		player.RecenterCamera();
 
 		client.Pawn = player;
 
@@ -348,8 +346,7 @@ public partial class RoguemojiGame : GameManager
         player.CurrentLevelId = levelId;
         level.GridManager.GetRandomEmptyGridPos(out var gridPos);
         player.SetGridPos(gridPos);
-        var middleCell = new IntVector(MathX.FloorToInt((float)ArenaWidth / 2f), MathX.FloorToInt((float)ArenaHeight / 2f));
-        player.SetCameraGridOffset(gridPos - middleCell);
+		player.RecenterCamera();
     }
 
 	Level CreateLevel(LevelId levelId)

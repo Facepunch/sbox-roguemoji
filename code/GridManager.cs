@@ -349,18 +349,26 @@ public partial class GridManager : Entity
 		return false;
 	}
 
-	public bool GetRandomEmptyGridPos(out IntVector gridPos)
+	public bool GetRandomEmptyGridPos(out IntVector gridPos, bool allowNonSolid = false)
 	{
-		int NUM_TRIES = 100;
-		for(int i = 0; i < NUM_TRIES; i++)
+		HashSet<int> gridIndexes = new();
+		for (int x = 0; x < GridWidth; x++)
+			for (int y = 0; y < GridHeight; y++)
+				gridIndexes.Add(GetIndex(x, y, GridWidth));
+
+		while(gridIndexes.Count > 0)
 		{
-			var currGridPos = new IntVector(Game.Random.Int(0, GridWidth - 1), Game.Random.Int(0, GridHeight - 1));
-			var things = GetThingsAt(currGridPos);
+			int index = Game.Random.Int(0, gridIndexes.Count - 1);
+			var currGridPos = GetGridPos(index);
+
+            var things = allowNonSolid ? GetThingsAt(currGridPos).WithAll(ThingFlags.Solid) : GetThingsAt(currGridPos);
             if (things.Count() == 0)
             {
                 gridPos = currGridPos;
                 return true;
             }
+
+			gridIndexes.Remove(index);
         }
 
         gridPos = IntVector.Zero;

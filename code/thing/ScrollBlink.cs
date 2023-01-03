@@ -60,6 +60,9 @@ public partial class ScrollBlink : Thing
 
         user.SetGridPos(targetGridPos);
 
+        if (user is RoguemojiPlayer player)
+            player.RecenterCamera();
+
         Destroy();
     }
 

@@ -141,7 +141,7 @@ public partial class RoguemojiPlayer : Thing
 
     void SpawnRandomInventoryThing(IntVector gridPos)
     {
-        int rand = Game.Random.Int(0, 18);
+        int rand = Game.Random.Int(0, 19);
         switch (rand)
         {
             case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -163,6 +163,7 @@ public partial class RoguemojiPlayer : Thing
             case 16: InventoryGridManager.SpawnThing<PotionMana>(gridPos); break;
             case 17: InventoryGridManager.SpawnThing<PotionHealth>(gridPos); break;
             case 18: InventoryGridManager.SpawnThing<PotionEnergy>(gridPos); break;
+            case 19: InventoryGridManager.SpawnThing<ScrollTeleport>(gridPos); break;
         }
     }
 
@@ -398,6 +399,12 @@ public partial class RoguemojiPlayer : Thing
 
 		SelectedThing = thing;
 	}
+
+    public void RecenterCamera()
+    {
+        var middleCell = new IntVector(MathX.FloorToInt((float)ContainingGridManager.GridWidth / 2f), MathX.FloorToInt((float)ContainingGridManager.GridHeight / 2f));
+        SetCameraGridOffset(GridPos - middleCell);
+    }
 
     /// <summary>Returns true if offset changed.</summary>
     public bool SetCameraGridOffset(IntVector offset)
