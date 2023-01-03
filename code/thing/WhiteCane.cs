@@ -19,7 +19,7 @@ public partial class WhiteCane : Thing
         if (Game.IsServer)
         {
             InitStat(StatType.Attack, 1);
-            AddTrait("", "😎", "Prevents your 👁️ from reaching zero.", offset: Vector2.Zero, tattooIcon: "🦯", tattooScale: 0.7f, tattooOffset: new Vector2(7f, 6f));
+            AddTrait("", "😎", $"Prevents your {GetStatIcon(StatType.Sight)} from reaching zero.", offset: Vector2.Zero, tattooIcon: "🦯", tattooScale: 0.7f, tattooOffset: new Vector2(7f, 6f));
         }
     }
 
@@ -29,7 +29,7 @@ public partial class WhiteCane : Thing
 
         thing.AdjustStatMin(StatType.Sight, 3);
         thing.AdjustStat(StatType.Attack, GetStatClamped(StatType.Attack));
-        Trait = thing.AddTrait("", "😎", "Your 👁️ can't go down to zero.", offset: Vector2.Zero, tattooIcon: "🦯", tattooScale: 0.7f, tattooOffset: new Vector2(7f, 6f), source: DisplayName);
+        Trait = thing.AddTrait("", "😎", $"Your {GetStatIcon(StatType.Sight)} can't go down to zero.", offset: Vector2.Zero, tattooIcon: "🦯", tattooScale: 0.7f, tattooOffset: new Vector2(7f, 6f), source: DisplayName);
     }
 
     public override void OnNoLongerWieldedBy(Thing thing)

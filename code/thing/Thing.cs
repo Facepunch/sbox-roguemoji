@@ -230,7 +230,7 @@ public partial class Thing : Entity
             target.TakeDamage(damagingThing);
 
             //int amount = damagingThing.GetStatClamped(StatType.Attack);
-            //RoguemojiGame.Instance.LogMessage($"{damagingThing.DisplayIcon}{damagingThing.DisplayName} attacked {target.DisplayIcon}{target.DisplayName} for {amount}⚔️!", damagingThing.PlayerNum);
+            //RoguemojiGame.Instance.LogMessage($"{damagingThing.DisplayIcon}{damagingThing.DisplayName} attacked {target.DisplayIcon}{target.DisplayName} for {amount}{GetStatIcon(StatType.Attack)}!", damagingThing.PlayerNum);
         }
     }
 

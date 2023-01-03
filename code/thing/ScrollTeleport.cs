@@ -27,7 +27,7 @@ public partial class ScrollTeleport : Thing
         {
             ReqInt = 1;
             AddTrait(AbilityName, "🔥", "Sacrifice scroll to cast the inscribed spell.", offset: new Vector2(0f, -2f), tattooIcon: "📜", tattooScale: 0.45f, tattooOffset: new Vector2(0f, 4f));
-            AddTrait("", "🧠", $"{ReqInt}🧠 required to read.", offset: new Vector2(0f, -1f), labelText: $"≥{ReqInt}", labelFontSize: 15, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
+            AddTrait("", GetStatIcon(StatType.Intelligence), $"{ReqInt}{GetStatIcon(StatType.Intelligence)} required to read.", offset: new Vector2(0f, -1f), labelText: $"≥{ReqInt}", labelFontSize: 16, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
         }
     }
 
@@ -37,7 +37,7 @@ public partial class ScrollTeleport : Thing
         if (intelligence < ReqInt)
         {
             if (user is RoguemojiPlayer player)
-                RoguemojiGame.Instance.LogPersonalMessage(player, $"You need {ReqInt}🧠 to use {ChatDisplayIcons} but you only have {intelligence}🧠");
+                RoguemojiGame.Instance.LogPersonalMessage(player, $"You need {ReqInt}{GetStatIcon(StatType.Intelligence)}  to use {ChatDisplayIcons} but you only have {intelligence}{GetStatIcon(StatType.Intelligence)}");
 
             return false;
         }

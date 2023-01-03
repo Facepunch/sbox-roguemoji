@@ -6,7 +6,7 @@ using System.Linq;
 namespace Roguemoji;
 public partial class PotionMana : Thing
 {
-    public override string ChatDisplayIcons => "🧉🔮";
+    public override string ChatDisplayIcons => $"🧉{GetStatIcon(StatType.Mana)}";
     public override string AbilityName => "Drink Potion";
     public int ManaAmount { get; private set; }
 
@@ -20,13 +20,13 @@ public partial class PotionMana : Thing
         ShouldLogBehaviour = true;
         Flags = ThingFlags.Selectable | ThingFlags.Useable;
 
-        SetTattoo("🔮", scale: 0.475f, offset: new Vector2(-0.825f, 6.5f), offsetWielded: new Vector2(-1.5f, 4f), offsetInfo: new Vector2(-4f, 16f), offsetCharWielded: new Vector2(-0.9f, 9.5f), offsetInfoWielded: new Vector2(-4f, 7f));
+        SetTattoo(GetStatIcon(StatType.Mana), scale: 0.475f, offset: new Vector2(-0.825f, 6.5f), offsetWielded: new Vector2(-1.5f, 4f), offsetInfo: new Vector2(-4f, 16f), offsetCharWielded: new Vector2(-0.9f, 9.5f), offsetInfoWielded: new Vector2(-4f, 7f));
 
         if (Game.IsServer)
         {
             ManaAmount = 5;
             AddTrait(AbilityName, "😋", "Consume potion to cause an effect.", offset: new Vector2(0f, -1f), tattooIcon: "🧉", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f));
-            AddTrait("", "🔮", $"Drinking recovers {ManaAmount}🔮", offset: new Vector2(0f, -1f), labelText: $"+{ManaAmount}", labelFontSize: 15, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
+            AddTrait("", GetStatIcon(StatType.Mana), $"Drinking recovers {ManaAmount}{GetStatIcon(StatType.Mana)}", offset: new Vector2(0f, -3f), labelText: $"+{ManaAmount}", labelFontSize: 16, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
         }
     }
 
@@ -40,7 +40,7 @@ public partial class PotionMana : Thing
         if (mana == manaMax)
         {
             if (user is RoguemojiPlayer player)
-                RoguemojiGame.Instance.LogPersonalMessage(player, $"You already have max 🔮");
+                RoguemojiGame.Instance.LogPersonalMessage(player, $"You already have max {GetStatIcon(StatType.Mana)}");
 
             return false;
         }
@@ -51,7 +51,7 @@ public partial class PotionMana : Thing
     public override void Use(Thing user)
     {
         int amountRecovered = Math.Min(ManaAmount, user.GetStatMax(StatType.Mana) - user.GetStatClamped(StatType.Mana));
-        RoguemojiGame.Instance.AddFloater("🔮", user.GridPos, 1.2f, user.CurrentLevelId, new Vector2(0f, 1f), new Vector2(0f, -6f), $"+{amountRecovered}", requireSight: true, EasingType.SineOut, 0.25f, parent: user);
+        RoguemojiGame.Instance.AddFloater(GetStatIcon(StatType.Mana), user.GridPos, 1.2f, user.CurrentLevelId, new Vector2(0f, 1f), new Vector2(0f, -6f), $"+{amountRecovered}", requireSight: true, EasingType.SineOut, 0.25f, parent: user);
 
         user.AdjustStat(StatType.Mana, ManaAmount);
 

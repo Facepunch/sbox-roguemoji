@@ -42,7 +42,7 @@ public partial class Thing : Entity
         {
             case StatType.Health: return "❤️";
             case StatType.Energy: return "🔋";
-            case StatType.Mana: return "🔮";
+            case StatType.Mana: return "💠";
             case StatType.Attack: return "⚔️";
             case StatType.Strength: return "💪";
             case StatType.Speed: return "🕓️";
@@ -84,17 +84,17 @@ public partial class Thing : Entity
     {
         switch (statType)
         {
-            case StatType.Health: return "Amount of life remaining.";
-            case StatType.Energy: return "Regenerating resource used for certain abilities.";
-            case StatType.Mana: return "Magical resource used for spells.";
-            case StatType.Attack: return "Amount of physical damage dealt.";
-            case StatType.Strength: return "Physical power and ability to move heavy objects.";
-            case StatType.Speed: return "Reduces the delay between actions.";
-            case StatType.Intelligence: return "Skill with magic and technology, and increases 🔮";
-            case StatType.Charisma: return "Likeability and attractiveness.";
-            case StatType.Sight: return "The ability to see farther and see through objects.";
-            case StatType.Hearing: return "The ability to notice sounds from a distance.";
-            case StatType.Smell: return "The ability to detect odors left by things.";
+            case StatType.Health: return $"Amount of life remaining.";
+            case StatType.Energy: return $"Regenerating resource used for certain abilities.";
+            case StatType.Mana: return $"Magical resource used for spells.";
+            case StatType.Attack: return $"Amount of physical damage dealt.";
+            case StatType.Strength: return $"Physical power and ability to move heavy objects.";
+            case StatType.Speed: return $"Reduces the delay between actions.";
+            case StatType.Intelligence: return $"Skill with magic and technology, and increases {GetStatIcon(StatType.Mana)}";
+            case StatType.Charisma: return $"Likeability and attractiveness.";
+            case StatType.Sight: return $"The ability to see farther and see through objects.";
+            case StatType.Hearing: return $"The ability to notice sounds from a distance.";
+            case StatType.Smell: return $"The ability to detect odors left by things.";
 
             case StatType.MaxHealth: return "Maximum amount of life available.";
         }
