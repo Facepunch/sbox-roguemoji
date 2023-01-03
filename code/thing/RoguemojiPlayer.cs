@@ -36,7 +36,8 @@ public partial class RoguemojiPlayer : Thing
     public RoguemojiPlayer()
 	{
 		IconDepth = 5;
-		ShouldLogBehaviour = true;
+        ShouldUpdate = true;
+        ShouldLogBehaviour = true;
 		DisplayName = "Player";
 		Tooltip = "";
         PathfindMovementCost = 10f;
@@ -74,7 +75,6 @@ public partial class RoguemojiPlayer : Thing
         DisplayIcon = "🙂";
         Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanUseThings;
         IsDead = false;
-        DoneFirstUpdate = false;
         CurrentLevelId = LevelId.None;
         //ActionDelay = TimeSinceAction = 0.5f;
         //IsActionReady = true;
@@ -195,7 +195,7 @@ public partial class RoguemojiPlayer : Thing
         //Log.Info("Player:Client - Sight: " + GetStat(StatType.Sight));
     }
 
-    public override void Update( float dt )
+    public override void Update(float dt)
 	{
 		base.Update( dt );
 
@@ -394,7 +394,7 @@ public partial class RoguemojiPlayer : Thing
 
     public void RecenterCamera()
     {
-        var middleCell = new IntVector(MathX.FloorToInt((float)ContainingGridManager.GridWidth / 2f), MathX.FloorToInt((float)ContainingGridManager.GridHeight / 2f));
+        var middleCell = new IntVector(MathX.FloorToInt((float)RoguemojiGame.ArenaWidth / 2f), MathX.FloorToInt((float)RoguemojiGame.ArenaHeight / 2f));
         SetCameraGridOffset(GridPos - middleCell);
     }
 

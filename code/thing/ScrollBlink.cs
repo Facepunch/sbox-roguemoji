@@ -10,7 +10,7 @@ public partial class ScrollBlink : Thing
 
     public int ReqInt { get; private set; }
 
-    public override string ChatDisplayIcons => "📜✨";
+    public override string ChatDisplayIcons => $"📜{Globals.Icon(IconType.Blink)}";
     public override string AbilityName => "Read Scroll";
 
     public ScrollBlink()
@@ -23,12 +23,12 @@ public partial class ScrollBlink : Thing
         ShouldLogBehaviour = true;
         Flags = ThingFlags.Selectable | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
 
-        SetTattoo("✨", scale: 0.5f, offset: new Vector2(1f, 0), offsetWielded: new Vector2(0f, 0f), offsetInfo: new Vector2(8f, 5f), offsetCharWielded: new Vector2(2f, 0f), offsetInfoWielded: new Vector2(3f, 2f));
+        SetTattoo(Globals.Icon(IconType.Blink), scale: 0.5f, offset: new Vector2(1f, 0), offsetWielded: new Vector2(0f, 0f), offsetInfo: new Vector2(8f, 5f), offsetCharWielded: new Vector2(2f, 0f), offsetInfoWielded: new Vector2(3f, 2f));
 
         if (Game.IsServer)
         {
             ReqInt = 2;
-            AddTrait(AbilityName, "🔥", "Sacrifice scroll to cast the inscribed spell.", offset: new Vector2(0f, -2f), tattooIcon: "📜", tattooScale: 0.45f, tattooOffset: new Vector2(0f, 4f));
+            AddTrait(AbilityName, "🔥", "Sacrifice to cast the inscribed spell.", offset: new Vector2(0f, -2f), tattooIcon: "📜", tattooScale: 0.45f, tattooOffset: new Vector2(0f, 4f));
             AddTrait("", GetStatIcon(StatType.Intelligence), $"{ReqInt}{GetStatIcon(StatType.Intelligence)} required to read.", offset: new Vector2(0f, -1f), labelText: $"≥{ReqInt}", labelFontSize: 16, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", "📈", $"{GetStatIcon(StatType.Intelligence)} increases spell's range.", offset: new Vector2(0f, -1f), tattooIcon: GetStatIcon(StatType.Intelligence), tattooScale: 0.6f, tattooOffset: new Vector2(6f, -8f));
         }

@@ -14,7 +14,6 @@ public partial class TreeDeciduous : Thing
         ShouldLogBehaviour = true;
 		Flags = ThingFlags.Solid | ThingFlags.Selectable;
 		PathfindMovementCost = 999f;
-        ShouldUpdate = false;
 		SightBlockAmount = 13;
     }
 }

@@ -12,9 +12,10 @@ public partial class Explosion : Thing
         DisplayIcon = "💥";
 		IconDepth = 9;
 		_spawnTime = 0f;
+		ShouldUpdate = true;
 	}
 
-	public override void Update( float dt )
+	public override void Update(float dt)
 	{
 		base.Update( dt );
 

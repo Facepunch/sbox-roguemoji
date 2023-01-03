@@ -41,8 +41,6 @@ public partial class Thing : Entity
     public virtual string ChatDisplayIcons => DisplayIcon;
 
     public bool ShouldUpdate { get; set; }
-    public bool DoneFirstUpdate { get; protected set; }
-
     [Net] public int PlayerNum { get; set; }
 
     [Net] public int IconDepth { get; set; }
@@ -89,7 +87,7 @@ public partial class Thing : Entity
 
     public Thing()
     {
-        ShouldUpdate = true;
+        ShouldUpdate = false;
         DisplayIcon = ".";
         DisplayName = Name;
         Tooltip = "";
@@ -107,30 +105,6 @@ public partial class Thing : Entity
         base.Spawn();
 
         Transmit = TransmitType.Always;
-    }
-
-    [Event.Tick.Client]
-    public virtual void ClientTick()
-    {
-        float dt = Time.Delta;
-
-        foreach (KeyValuePair<TypeDescription, ThingComponent> pair in ThingComponents)
-        {
-            var component = pair.Value;
-            if (component.ShouldUpdate)
-                component.Update(dt);
-        }
-
-        if (!string.IsNullOrEmpty(DebugText))
-            DrawDebugText(DebugText);
-
-        Offset = Utils.DynamicEaseTo(Offset, TargetOffset, 0.6f, dt);
-
-        //DrawDebugText(ContainingGridManager?.Name.ToString() ?? "null");
-        //DrawDebugText(Flags.ToString());
-        
-        //if(HasStat(StatType.Health))
-        //    DrawDebugText($"{GetStat(StatType.Health).CurrentValue}");
     }
 
     public virtual void Update(float dt)
@@ -159,10 +133,28 @@ public partial class Thing : Entity
         }
     }
 
-    public virtual void FirstUpdate()
+    [Event.Tick.Client]
+    public virtual void ClientTick()
     {
-        //SetGridPos(GridPos);
-        DoneFirstUpdate = true;
+        float dt = Time.Delta;
+
+        foreach (KeyValuePair<TypeDescription, ThingComponent> pair in ThingComponents)
+        {
+            var component = pair.Value;
+            if (component.ShouldUpdate)
+                component.Update(dt);
+        }
+
+        if (!string.IsNullOrEmpty(DebugText))
+            DrawDebugText(DebugText);
+
+        Offset = Utils.DynamicEaseTo(Offset, TargetOffset, 0.6f, dt);
+
+        //DrawDebugText(ContainingGridManager?.Name.ToString() ?? "null");
+        //DrawDebugText(Flags.ToString());
+
+        //if(HasStat(StatType.Health))
+        //    DrawDebugText($"{GetStat(StatType.Health).CurrentValue}");
     }
 
     public virtual bool TryMove(Direction direction, bool shouldAnimate = true)

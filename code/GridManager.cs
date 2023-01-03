@@ -59,9 +59,6 @@ public partial class GridManager : Entity
 
 			var thing = things[i];
 
-			if (!thing.DoneFirstUpdate)
-				thing.FirstUpdate();
-
 			// todo: only update if a component needs updating
 			if (thing.ShouldUpdate || thing.ThingComponents.Count > 0)
 				thing.Update(dt);

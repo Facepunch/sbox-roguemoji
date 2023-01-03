@@ -14,7 +14,6 @@ public partial class TreeEvergreen : Thing
         ShouldLogBehaviour = true;
 		Flags = ThingFlags.Solid | ThingFlags.Selectable;
 		PathfindMovementCost = 999f;
-        ShouldUpdate = false;
 		SightBlockAmount = 14;
     }
 }
