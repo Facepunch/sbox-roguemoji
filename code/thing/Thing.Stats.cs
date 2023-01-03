@@ -6,7 +6,7 @@ using System.Linq;
 namespace Roguemoji;
 
 public enum StatType { 
-    Health, Energy, Mana, Attack, Strength, Speed, Intelligence, Charisma, Sight, Hearing, Smell,
+    Health, Energy, Mana, Attack, Strength, Speed, Intelligence, Stamina, Charisma, Sight, Hearing, Smell,
     MaxHealth,
 }
 
@@ -47,6 +47,7 @@ public partial class Thing : Entity
             case StatType.Strength: return "💪";
             case StatType.Speed: return "🕓️";
             case StatType.Intelligence: return "🧠";
+            case StatType.Stamina: return "🏃";
             case StatType.Charisma: return "💋";
             case StatType.Sight: return "👁";
             case StatType.Hearing: return "👂️";
@@ -69,6 +70,7 @@ public partial class Thing : Entity
             case StatType.Strength: return "Strength";
             case StatType.Speed: return "Speed";
             case StatType.Intelligence: return "Intelligence";
+            case StatType.Stamina: return "Stamina";
             case StatType.Charisma: return "Charisma";
             case StatType.Sight: return "Sight";
             case StatType.Hearing: return "Hearing";
@@ -90,7 +92,8 @@ public partial class Thing : Entity
             case StatType.Attack: return $"Amount of physical damage dealt.";
             case StatType.Strength: return $"Physical power and ability to move heavy objects.";
             case StatType.Speed: return $"Reduces the delay between actions.";
-            case StatType.Intelligence: return $"Skill with magic and technology, and increases {GetStatIcon(StatType.Mana)}";
+            case StatType.Intelligence: return $"Skill with magic and technology.";
+            case StatType.Stamina: return $"Regenerates energy more quickly.";
             case StatType.Charisma: return $"Likeability and attractiveness.";
             case StatType.Sight: return $"The ability to see farther and see through objects.";
             case StatType.Hearing: return $"The ability to notice sounds from a distance.";
@@ -107,6 +110,8 @@ public partial class Thing : Entity
         switch (statType)
         {
             case StatType.Speed: return $"Delay: {Acting.CalculateActionDelay(thing.GetStatClamped(StatType.Speed)).ToString("N2")}s";
+            case StatType.Intelligence: return $"Increases {GetStatIcon(StatType.Mana)} capacity.";
+            case StatType.Stamina: return $"Increases {GetStatIcon(StatType.Energy)} capacity.";
         }
 
         return "";
@@ -123,8 +128,9 @@ public partial class Thing : Entity
             case StatType.Strength: return "#ff8844";
             case StatType.Speed: return "#5555ff";
             case StatType.Intelligence: return "#9922ff";
-            case StatType.Charisma: return "#ffff55";
-            case StatType.Sight: return "#448844";
+            case StatType.Stamina: return "#448844";
+            case StatType.Charisma: return "#dd33bb";
+            case StatType.Sight: return "#ffff55";
             case StatType.Hearing: return "#aa5500";
             case StatType.Smell: return "#5b3e31";
 
