@@ -198,6 +198,8 @@ public partial class Thing : Entity
             MaxValue = max,
             IsModifier = isModifier,
 		};
+
+        OnChangedStat(statType);
     }
 
     public void AdjustStat(StatType statType, int amount)
@@ -209,7 +211,7 @@ public partial class Thing : Entity
 
             stat.CurrentValue += amount;
 
-            if (ShouldClampCurrentStat(statType))
+            if (ShouldClampCurrentValue(statType))
                 stat.CurrentValue = stat.ClampedValue;
 
             if(stat.CurrentValue != oldValue)
@@ -281,11 +283,15 @@ public partial class Thing : Entity
         HasStats = false;
     }
 
-    /// <summary> Clamp non-permanent stats like Health, don't clamp stats like Sight. </summary>
-    public bool ShouldClampCurrentStat(StatType statType)
+    /// <summary> Clamp non-permanent resource stats like Health, don't clamp stats like Sight. </summary>
+    public bool ShouldClampCurrentValue(StatType statType)
     {
-        if (statType == StatType.Health)
-            return true;
+        switch (statType)
+        {
+            case StatType.Health: return true;
+            case StatType.Energy: return true;
+            case StatType.Mana: return true;
+        }
 
         return false;
     }

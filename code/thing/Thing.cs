@@ -701,6 +701,17 @@ public partial class Thing : Entity
         foreach (var component in ThingComponents) { component.Value.OnNoLongerWieldedBy(thing); }
     }
 
+    public virtual bool TrySpendMana(int manaCost)
+    {
+        int mana = GetStatClamped(StatType.Mana);
+
+        if(mana < manaCost)
+            return false;
+
+        AdjustStat(StatType.Mana, -manaCost);
+        return true;
+    }
+
     public virtual void OnEquipThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnEquipThing(thing); } }
     public virtual void OnUnequipThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnUnequipThing(thing); } }
     public virtual void OnEquippedTo(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnEquippedTo(thing); } }

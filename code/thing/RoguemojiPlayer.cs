@@ -67,8 +67,6 @@ public partial class RoguemojiPlayer : Thing
         base.Spawn();
 
         Acting = AddComponent<Acting>();
-        //Acting.ActionDelay = _startingActionDelay;
-        Acting.ActionDelay = Acting.CalculateActionDelay(GetStatClamped(StatType.Speed));
     }
 
     void SetStartingValues()
@@ -92,11 +90,11 @@ public partial class RoguemojiPlayer : Thing
         ClearStats();
         InitStat(StatType.Health, 10, 0, 10);
         InitStat(StatType.Energy, 5, 0, 5);
-        InitStat(StatType.Mana, 1, 0, 3);
+        InitStat(StatType.Mana, 5, 0, 5);
         InitStat(StatType.Attack, 1);
         InitStat(StatType.Strength, 2);
         InitStat(StatType.Speed, 5);
-        InitStat(StatType.Intelligence, 4);
+        InitStat(StatType.Intelligence, 5);
         InitStat(StatType.Charisma, 3);
         InitStat(StatType.Sight, 9);
         InitStat(StatType.Hearing, 3);
