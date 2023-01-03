@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public class Pathfinding : ThingComponent
+public class CompPathfinding : ThingComponent
 {
     public List<IntVector> GridPath { get; private set; } = new List<IntVector>();
     

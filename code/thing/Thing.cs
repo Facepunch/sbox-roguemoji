@@ -81,7 +81,6 @@ public partial class Thing : Entity
     [Net] public float CooldownProgressPercent { get; set; }
 
     [Net] public float CooldownTimer { get; set; }
-    [Net] public float CooldownDuration { get; set; }
 
     public virtual string AbilityName => "Ability";
 
@@ -119,17 +118,6 @@ public partial class Thing : Entity
                 component.Update(dt);
 
             //DebugText += component.GetType().Name + "\n";
-        }
-
-        //DrawDebugText(Flags.ToString());
-
-        if(IsOnCooldown)
-        {
-            CooldownTimer -= dt;
-            if (CooldownTimer < 0f)
-                FinishCooldown();
-            else
-                CooldownProgressPercent = Utils.Map(CooldownTimer, CooldownDuration, 0f, 0f, 1f);
         }
     }
 
@@ -294,8 +282,8 @@ public partial class Thing : Entity
 
     public virtual void PerformedAction(Thing user)
     {
-        if (user.GetComponent(TypeLibrary.GetType(typeof(Acting)), out var acting))
-            ((Acting)acting).PerformedAction();
+        if (user.GetComponent(TypeLibrary.GetType(typeof(CompActing)), out var acting))
+            ((CompActing)acting).PerformedAction();
     }
 
     public virtual void Destroy()
@@ -659,21 +647,6 @@ public partial class Thing : Entity
     public void RemoveTattoo()
     {
         HasTattoo = false;
-    }
-
-    public void StartCooldown(float time)
-    {
-        CooldownDuration = time;
-        CooldownTimer = time;
-        IsOnCooldown = true;
-        CooldownProgressPercent = 0f;
-        OnCooldownStart();
-    }
-
-    public void FinishCooldown()
-    {
-        IsOnCooldown = false;
-        OnCooldownFinish();
     }
 
     public virtual void OnWieldThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnWieldThing(thing); } }

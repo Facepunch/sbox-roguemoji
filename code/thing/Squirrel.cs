@@ -4,9 +4,9 @@ using System;
 namespace Roguemoji;
 public partial class Squirrel : Thing
 {
-    public Targeting Targeting { get; private set; }
-    public Pathfinding Pathfinding { get; private set; }
-    public Acting Acting { get; private set; }
+    public CompTargeting Targeting { get; private set; }
+    public CompPathfinding Pathfinding { get; private set; }
+    public CompActing Acting { get; private set; }
 
     public Squirrel()
 	{
@@ -34,9 +34,9 @@ public partial class Squirrel : Thing
     {
         base.Spawn();
 
-        Targeting = AddComponent<Targeting>();
-        Pathfinding = AddComponent<Pathfinding>();
-        Acting = AddComponent<Acting>();
+        Targeting = AddComponent<CompTargeting>();
+        Pathfinding = AddComponent<CompPathfinding>();
+        Acting = AddComponent<CompActing>();
         Acting.ActionDelay = 1.5f;
         Acting.TimeElapsed = Game.Random.Float(0f, 1.5f);
     }

@@ -13,6 +13,8 @@ public partial class BookTeleport : Thing
     public override string ChatDisplayIcons => $"📘{Globals.Icon(IconType.Teleport)}";
     public override string AbilityName => "Read Book";
 
+    public CompCooldown Cooldown { get; private set; }
+
     public BookTeleport()
 	{
 		DisplayIcon = "📘";
@@ -35,6 +37,8 @@ public partial class BookTeleport : Thing
             AddTrait("", GetStatIcon(StatType.Mana), $"{ManaCost}{GetStatIcon(StatType.Mana)} used to cast spell.", offset: new Vector2(0f, -3f), labelText: $"{ManaCost}", labelFontSize: 16, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", GetStatIcon(StatType.Intelligence), $"{ReqInt}{GetStatIcon(StatType.Intelligence)} required to read.", offset: new Vector2(0f, -1f), labelText: $"≥{ReqInt}", labelFontSize: 16, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
+
+            Cooldown = AddComponent<CompCooldown>();
         }
     }
 
@@ -76,7 +80,7 @@ public partial class BookTeleport : Thing
             if (user is RoguemojiPlayer player)
                 player.RecenterCamera();
 
-            StartCooldown(CooldownTime);
+            Cooldown.StartCooldown(CooldownTime);
 
             base.Use(user);
         }

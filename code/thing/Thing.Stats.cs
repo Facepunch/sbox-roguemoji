@@ -109,7 +109,7 @@ public partial class Thing : Entity
     {
         switch (statType)
         {
-            case StatType.Speed: return $"Delay: {Acting.CalculateActionDelay(thing.GetStatClamped(StatType.Speed)).ToString("N2")}s";
+            case StatType.Speed: return $"Delay: {CompActing.CalculateActionDelay(thing.GetStatClamped(StatType.Speed)).ToString("N2")}s";
             case StatType.Intelligence: return $"Increases {GetStatIcon(StatType.Mana)} capacity.";
             case StatType.Stamina: return $"Increases {GetStatIcon(StatType.Energy)} capacity.";
         }

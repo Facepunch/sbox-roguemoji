@@ -38,7 +38,7 @@ public partial class ProjectileArrow : Thing
     {
         base.OnRemoveComponent(type);
 
-        if(type == TypeLibrary.GetType(typeof(Projectile)))
+        if(type == TypeLibrary.GetType(typeof(CompProjectile)))
             Destroy();
     }
 

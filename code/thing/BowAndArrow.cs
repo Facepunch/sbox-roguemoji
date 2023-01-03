@@ -11,6 +11,8 @@ public partial class BowAndArrow : Thing
 
     public override string AbilityName => "Shoot Arrow";
 
+    public CompCooldown Cooldown { get; private set; }
+
     public BowAndArrow()
 	{
 		DisplayIcon = "🏹";
@@ -29,6 +31,8 @@ public partial class BowAndArrow : Thing
             AddTrait(AbilityName, "🔰", "Shoot an arrow in any direction.", offset: new Vector2(0f, -1f));
             AddTrait("", GetStatIcon(StatType.Energy), $"{EnergyCost}{GetStatIcon(StatType.Energy)} used to perform ability.", offset: new Vector2(0f, -3f), labelText: $"{EnergyCost}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
+
+            Cooldown = AddComponent<CompCooldown>();
         }
     }
 
@@ -58,12 +62,12 @@ public partial class BowAndArrow : Thing
         arrow.SetTransformClient(degrees: GridManager.GetDegreesForDirection(direction));
         arrow.Direction = direction;
 
-        var projectile = arrow.AddComponent<Projectile>();
+        var projectile = arrow.AddComponent<CompProjectile>();
         projectile.Direction = direction;
         projectile.MoveDelay = 0.1f;
         projectile.RemainingDistance = 8;
 
-        StartCooldown(CooldownTime);
+        Cooldown.StartCooldown(CooldownTime);
 
         base.Use(user, direction);
     }

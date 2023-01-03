@@ -10,7 +10,7 @@ public enum AimingType { Direction, TargetCell }
 
 public partial class RoguemojiPlayer : Thing
 {
-    public Acting Acting { get; private set; }
+    public CompActing Acting { get; private set; }
     private float _startingActionDelay = 0.5f;
 
     [Net] public IntVector CameraGridOffset { get; set; }
@@ -67,7 +67,7 @@ public partial class RoguemojiPlayer : Thing
     {
         base.Spawn();
 
-        Acting = AddComponent<Acting>();
+        Acting = AddComponent<CompActing>();
     }
 
     void SetStartingValues()
@@ -520,7 +520,7 @@ public partial class RoguemojiPlayer : Thing
         if (WieldedThing == null || direction == Direction.None)
             return;
 
-        var projectile = WieldedThing.AddComponent<Projectile>();
+        var projectile = WieldedThing.AddComponent<CompProjectile>();
         projectile.Direction = direction;
         projectile.MoveDelay = 0.1f;
         projectile.RemainingDistance = 5;
@@ -954,7 +954,7 @@ public partial class RoguemojiPlayer : Thing
         }
         else if(statType == StatType.Speed)
         {
-            Acting.ActionDelay = Acting.CalculateActionDelay(GetStatClamped(StatType.Speed));
+            Acting.ActionDelay = CompActing.CalculateActionDelay(GetStatClamped(StatType.Speed));
         }
         else if(statType == StatType.Intelligence)
         {
