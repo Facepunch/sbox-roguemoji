@@ -25,7 +25,7 @@ public partial class PotionMana : Thing
         if (Game.IsServer)
         {
             ManaAmount = 5;
-            AddTrait(AbilityName, "😋", "Consume potion to cause an effect.", offset: Vector2.Zero, tattooIcon: "🧴", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f));
+            AddTrait(AbilityName, "😋", "Consume potion to cause an effect.", offset: new Vector2(0f, -1f), tattooIcon: "🧴", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f));
             AddTrait("", "🔮", $"Drinking recovers {ManaAmount}🔮", offset: new Vector2(0f, -1f), labelText: $"+{ManaAmount}", labelFontSize: 15, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
         }
     }

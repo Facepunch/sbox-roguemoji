@@ -6,13 +6,13 @@ using System.Linq;
 namespace Roguemoji;
 public partial class PotionHealth : Thing
 {
-    public override string ChatDisplayIcons => "🧴❤️";
+    public override string ChatDisplayIcons => "🧉❤️";
     public override string AbilityName => "Drink Potion";
     public int HealthAmount { get; private set; }
 
     public PotionHealth()
 	{
-		DisplayIcon = "🧴";
+		DisplayIcon = "🧉";
         DisplayName = "Health Potion";
         Description = "Recover some health.";
         Tooltip = "A health potion.";
@@ -20,12 +20,12 @@ public partial class PotionHealth : Thing
         ShouldLogBehaviour = true;
         Flags = ThingFlags.Selectable | ThingFlags.Useable;
 
-        SetTattoo("❤️", scale: 0.43f, offset: new Vector2(-0.6f, 4.5f), offsetWielded: new Vector2(-2.5f, 2f), offsetInfo: new Vector2(-8.5f, 11.5f), offsetCharWielded: new Vector2(-0.5f, 5.5f), offsetInfoWielded: new Vector2(-6.9f, 6f));
+        SetTattoo("❤️", scale: 0.5f, offset: new Vector2(-0.8575f, 6.5f), offsetWielded: new Vector2(-1.5f, 4f), offsetInfo: new Vector2(-4f, 16f), offsetCharWielded: new Vector2(-0.9f, 9.5f), offsetInfoWielded: new Vector2(-4f, 8f));
 
         if (Game.IsServer)
         {
             HealthAmount = 5;
-            AddTrait(AbilityName, "😋", "Consume potion to cause an effect.", offset: Vector2.Zero, tattooIcon: "🧴", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f));
+            AddTrait(AbilityName, "😋", "Consume potion to cause an effect.", offset: new Vector2(0f, -1f), tattooIcon: "🧉", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f));
             AddTrait("", "❤️", $"Drinking recovers {HealthAmount}🔮", offset: new Vector2(0f, -1f), labelText: $"+{HealthAmount}", labelFontSize: 15, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
         }
     }
