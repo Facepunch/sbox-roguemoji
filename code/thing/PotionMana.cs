@@ -52,8 +52,8 @@ public partial class PotionMana : Thing
     {
         base.Use(user);
 
-        //RoguemojiGame.Instance.AddFloater("✨", user.GridPos, 0.8f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), "", requireSight: true, EasingType.SineOut, fadeInTime: 0.2f);
-        //RoguemojiGame.Instance.AddFloater("✨", targetGridPos, 0.5f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), "", requireSight: true, EasingType.SineOut, fadeInTime: 0.1f);
+        int amountRecovered = Math.Min(ManaAmount, user.GetStatMax(StatType.Mana) - user.GetStatClamped(StatType.Mana));
+        RoguemojiGame.Instance.AddFloater("🔮", user.GridPos, 1.2f, user.CurrentLevelId, new Vector2(0f, 1f), new Vector2(0f, -6f), $"+{amountRecovered}", requireSight: true, EasingType.SineOut, 0.25f, parent: user);
 
         user.AdjustStat(StatType.Mana, ManaAmount);
 
