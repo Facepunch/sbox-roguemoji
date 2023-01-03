@@ -81,6 +81,10 @@ public partial class Thing : Entity
     [Net] public float CooldownProgressPercent { get; set; }
 
     [Net] public float CooldownTimer { get; set; }
+    [Net] public float CooldownDuration { get; set; }
+
+    [Net] public float StaminaTimer { get; set; }
+    [Net] public float StaminaDelay { get; set; }
 
     public virtual string AbilityName => "Ability";
 
@@ -119,6 +123,14 @@ public partial class Thing : Entity
 
             //DebugText += component.GetType().Name + "\n";
         }
+
+        //DrawDebugText(Flags.ToString());
+
+        if (IsOnCooldown)
+            HandleCooldown(dt);
+
+        if (HasStat(StatType.Energy) && HasStat(StatType.Stamina))
+            HandleStamina(dt);
     }
 
     [Event.Tick.Client]
@@ -607,9 +619,14 @@ public partial class Thing : Entity
 
     public virtual void Restart()
     {
+        CurrentLevelId = LevelId.None;
+        IsRemoved = false;
         EquippedThings.Clear();
         WieldedThing = null;
         ThingWieldingThis = null;
+        IsOnCooldown = false;
+        StaminaTimer = 0f;
+        StaminaDelay = 0f;
     }
 
     public bool CanUseThing(Thing thing)
@@ -647,6 +664,46 @@ public partial class Thing : Entity
     public void RemoveTattoo()
     {
         HasTattoo = false;
+    }
+
+    public void StartCooldown(float time)
+    {
+        CooldownDuration = time;
+        CooldownTimer = time;
+        IsOnCooldown = true;
+        CooldownProgressPercent = 0f;
+        OnCooldownStart();
+    }
+
+    void HandleCooldown(float dt)
+    {
+        CooldownTimer -= dt;
+        if (CooldownTimer < 0f)
+            FinishCooldown();
+        else
+            CooldownProgressPercent = Utils.Map(CooldownTimer, CooldownDuration, 0f, 0f, 1f);
+    }
+
+    public void FinishCooldown()
+    {
+        IsOnCooldown = false;
+        OnCooldownFinish();
+    }
+
+    void HandleStamina(float dt)
+    {
+        int energy = GetStatClamped(StatType.Energy);
+        int energyMax = GetStatMax(StatType.Energy);
+
+        if(energy < energyMax)
+        {
+            StaminaTimer -= dt;
+            if (StaminaTimer < 0f)
+            {
+                StaminaTimer += StaminaDelay;
+                AdjustStat(StatType.Energy, 1);
+            }
+        }
     }
 
     public virtual void OnWieldThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnWieldThing(thing); } }

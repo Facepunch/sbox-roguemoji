@@ -75,7 +75,6 @@ public partial class RoguemojiPlayer : Thing
         DisplayIcon = "🙂";
         Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanUseThings;
         IsDead = false;
-        CurrentLevelId = LevelId.None;
         //ActionDelay = TimeSinceAction = 0.5f;
         //IsActionReady = true;
         QueuedAction = null;
@@ -84,8 +83,6 @@ public partial class RoguemojiPlayer : Thing
         SightBlockAmount = 10;
         IsAiming = false;
         SelectedThing = null;
-        IsRemoved = false;
-        IsOnCooldown = false;
 
         ClearStats();
         InitStat(StatType.Health, 10, 0, 10);
@@ -101,6 +98,8 @@ public partial class RoguemojiPlayer : Thing
         InitStat(StatType.Hearing, 3);
         //InitStat(StatType.Smell, 1);
         FinishInitStats();
+
+        StaminaTimer = StaminaDelay;
 
         ClearTraits();
 
@@ -213,7 +212,7 @@ public partial class RoguemojiPlayer : Thing
         //if (QueuedAction != null)
         //    DebugText = QueuedActionName;
 
-        //DebugText = $"IsAiming: {IsAiming}";
+        //DebugText = $"{StaminaTimer} -- {StaminaDelay}";
     }
 
 	public override void Simulate(IClient cl )
@@ -967,6 +966,7 @@ public partial class RoguemojiPlayer : Thing
             int amount = changeCurrent * 2;
             AdjustStatMax(StatType.Energy, amount);
             AdjustStat(StatType.Energy, amount);
+            StaminaDelay = Utils.Map(GetStatClamped(StatType.Stamina), 0, 20, 2.5f, 0.1f);
         }
     }
 

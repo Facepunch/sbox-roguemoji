@@ -15,8 +15,6 @@ public partial class BookBlink : Thing
     public override string ChatDisplayIcons => $"📘{Globals.Icon(IconType.Blink)}";
     public override string AbilityName => "Read Book";
 
-    public CompCooldown Cooldown { get; private set; }
-
     public BookBlink()
 	{
 		DisplayIcon = "📘";
@@ -40,8 +38,6 @@ public partial class BookBlink : Thing
             AddTrait("", GetStatIcon(StatType.Intelligence), $"{ReqInt}{GetStatIcon(StatType.Intelligence)} required to read.", offset: new Vector2(0f, -1f), labelText: $"≥{ReqInt}", labelFontSize: 16, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", "📈", $"{GetStatIcon(StatType.Intelligence)} increases spell's range.", offset: new Vector2(0f, -1f), tattooIcon: GetStatIcon(StatType.Intelligence), tattooScale: 0.6f, tattooOffset: new Vector2(6f, -8f));
-
-            Cooldown = AddComponent<CompCooldown>();
         }
     }
 
@@ -85,7 +81,7 @@ public partial class BookBlink : Thing
         if (user is RoguemojiPlayer player)
             player.RecenterCamera();
 
-        Cooldown.StartCooldown(CooldownTime);
+        StartCooldown(CooldownTime);
 
         base.Use(user, targetGridPos);
     }

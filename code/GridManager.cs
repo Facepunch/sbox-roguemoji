@@ -60,7 +60,7 @@ public partial class GridManager : Entity
 			var thing = things[i];
 
 			// todo: only update if a component needs updating
-			if (thing.ShouldUpdate || thing.ThingComponents.Count > 0)
+			if (thing.ShouldUpdate || thing.ThingComponents.Count > 0 || thing.IsOnCooldown)
 				thing.Update(dt);
 		}
 	}
