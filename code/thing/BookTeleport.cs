@@ -63,7 +63,7 @@ public partial class BookTeleport : Thing
 
     public override void Use(Thing user)
     {
-        if (!user.TrySpendMana(ManaCost))
+        if (!user.TrySpendStat(StatType.Mana, ManaCost))
             return;
 
         if (user.ContainingGridManager.GetRandomEmptyGridPos(out var targetGridPos, allowNonSolid: true))

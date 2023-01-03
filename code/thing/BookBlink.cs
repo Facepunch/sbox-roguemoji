@@ -70,7 +70,7 @@ public partial class BookBlink : Thing
         if (things.Count > 0)
             return;
 
-        if (!user.TrySpendMana(ManaCost))
+        if (!user.TrySpendStat(StatType.Mana, ManaCost))
             return;
 
         RoguemojiGame.Instance.AddFloater("✨", user.GridPos, 0.8f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), "", requireSight: true, EasingType.SineOut, fadeInTime: 0.2f);

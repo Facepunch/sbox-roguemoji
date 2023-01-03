@@ -701,14 +701,14 @@ public partial class Thing : Entity
         foreach (var component in ThingComponents) { component.Value.OnNoLongerWieldedBy(thing); }
     }
 
-    public virtual bool TrySpendMana(int manaCost)
+    public virtual bool TrySpendStat(StatType statType, int cost)
     {
-        int mana = GetStatClamped(StatType.Mana);
+        int available = GetStatClamped(statType);
 
-        if(mana < manaCost)
+        if(available < cost)
             return false;
 
-        AdjustStat(StatType.Mana, -manaCost);
+        AdjustStat(statType, -cost);
         return true;
     }
 
