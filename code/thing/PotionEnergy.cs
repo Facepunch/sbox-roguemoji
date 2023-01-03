@@ -50,13 +50,13 @@ public partial class PotionEnergy : Thing
 
     public override void Use(Thing user)
     {
-        base.Use(user);
-
         int amountRecovered = Math.Min(EnergyAmount, user.GetStatMax(StatType.Energy) - user.GetStatClamped(StatType.Energy));
         RoguemojiGame.Instance.AddFloater("🔋", user.GridPos, 1.2f, user.CurrentLevelId, new Vector2(0f, 1f), new Vector2(0f, -6f), $"+{amountRecovered}", requireSight: true, EasingType.SineOut, 0.25f, parent: user);
 
         user.AdjustStat(StatType.Energy, EnergyAmount);
 
         Destroy();
+
+        base.Use(user);
     }
 }

@@ -26,9 +26,9 @@ public partial class Cheese : Thing
 
     public override void Use(Thing user)
     {
-        base.Use(user);
-
         user.AdjustStat(StatType.Health, EatHealth);
         Destroy();
+
+        base.Use(user);
     }
 }

@@ -50,13 +50,13 @@ public partial class PotionMana : Thing
 
     public override void Use(Thing user)
     {
-        base.Use(user);
-
         int amountRecovered = Math.Min(ManaAmount, user.GetStatMax(StatType.Mana) - user.GetStatClamped(StatType.Mana));
         RoguemojiGame.Instance.AddFloater("🔮", user.GridPos, 1.2f, user.CurrentLevelId, new Vector2(0f, 1f), new Vector2(0f, -6f), $"+{amountRecovered}", requireSight: true, EasingType.SineOut, 0.25f, parent: user);
 
         user.AdjustStat(StatType.Mana, ManaAmount);
 
         Destroy();
+
+        base.Use(user);
     }
 }

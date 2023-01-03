@@ -94,7 +94,7 @@ public partial class RoguemojiPlayer : Thing
         InitStat(StatType.Attack, 1);
         InitStat(StatType.Strength, 2);
         InitStat(StatType.Speed, 5);
-        InitStat(StatType.Intelligence, 5);
+        InitStat(StatType.Intelligence, 15);
         InitStat(StatType.Charisma, 3);
         InitStat(StatType.Sight, 9);
         InitStat(StatType.Hearing, 3);
@@ -141,7 +141,7 @@ public partial class RoguemojiPlayer : Thing
 
     void SpawnRandomInventoryThing(IntVector gridPos)
     {
-        int rand = Game.Random.Int(0, 19);
+        int rand = Game.Random.Int(0, 20);
         switch (rand)
         {
             case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -164,6 +164,7 @@ public partial class RoguemojiPlayer : Thing
             case 17: InventoryGridManager.SpawnThing<PotionHealth>(gridPos); break;
             case 18: InventoryGridManager.SpawnThing<PotionEnergy>(gridPos); break;
             case 19: InventoryGridManager.SpawnThing<ScrollTeleport>(gridPos); break;
+            case 20: InventoryGridManager.SpawnThing<BookTeleport>(gridPos); break;
         }
     }
 

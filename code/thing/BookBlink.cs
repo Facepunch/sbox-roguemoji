@@ -65,8 +65,6 @@ public partial class BookBlink : Thing
 
     public override void Use(Thing user, IntVector targetGridPos)
     {
-        base.Use(user, targetGridPos);
-
         var things = ContainingGridManager.GetThingsAt(targetGridPos).WithAll(ThingFlags.Solid).ToList();
         if (things.Count > 0)
             return;
@@ -80,6 +78,8 @@ public partial class BookBlink : Thing
         user.SetGridPos(targetGridPos);
 
         StartCooldown(CooldownTime);
+
+        base.Use(user, targetGridPos);
     }
 
     public override void OnWieldedBy(Thing thing)

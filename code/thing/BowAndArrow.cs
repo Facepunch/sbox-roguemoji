@@ -34,8 +34,6 @@ public partial class BowAndArrow : Thing
         if (IsOnCooldown)
             return;
 
-        base.Use(user, direction);
-
         var arrow = user.ContainingGridManager.SpawnThing<ProjectileArrow>(user.GridPos);
         arrow.SetTransformClient(degrees: GridManager.GetDegreesForDirection(direction));
         arrow.Direction = direction;
@@ -46,5 +44,7 @@ public partial class BowAndArrow : Thing
         projectile.RemainingDistance = 8;
 
         StartCooldown(CooldownTime);
+
+        base.Use(user, direction);
     }
 }

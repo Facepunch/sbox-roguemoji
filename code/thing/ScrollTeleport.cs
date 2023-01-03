@@ -47,8 +47,6 @@ public partial class ScrollTeleport : Thing
 
     public override void Use(Thing user)
     {
-        base.Use(user);
-
         if(user.ContainingGridManager.GetRandomEmptyGridPos(out var targetGridPos, allowNonSolid: true))
         {
             RoguemojiGame.Instance.AddFloater("✨", user.GridPos, 0.8f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), "", requireSight: true, EasingType.SineOut, fadeInTime: 0.2f);
@@ -60,6 +58,8 @@ public partial class ScrollTeleport : Thing
                 player.RecenterCamera();
 
             Destroy();
+
+            base.Use(user);
         }
     }
 }

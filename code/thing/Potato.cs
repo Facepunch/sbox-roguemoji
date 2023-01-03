@@ -27,10 +27,10 @@ public partial class Potato : Thing
 
     public override void Use(Thing user)
     {
-        base.Use(user);
-
         user.AdjustStat(StatType.Health, EatHealth);
         Destroy();
+
+        base.Use(user);
     }
 
     public override void OnWieldedBy(Thing thing)
