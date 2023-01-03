@@ -19,7 +19,7 @@ public partial class BookBlink : Thing
 	{
 		DisplayIcon = "📘";
         DisplayName = "Book of Blink";
-        Description = "Teleport to a target location nearby.";
+        Description = "Teleport to a target place nearby.";
         Tooltip = "A book of Blink.";
         IconDepth = 0;
         ShouldLogBehaviour = true;
@@ -37,6 +37,7 @@ public partial class BookBlink : Thing
             AddTrait("", GetStatIcon(StatType.Mana), $"{ManaCost}{GetStatIcon(StatType.Mana)} used to cast spell.", offset: new Vector2(0f, -3f), labelText: $"{ManaCost}", labelFontSize: 16, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", GetStatIcon(StatType.Intelligence), $"{ReqInt}{GetStatIcon(StatType.Intelligence)} required to read.", offset: new Vector2(0f, -1f), labelText: $"≥{ReqInt}", labelFontSize: 16, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
+            AddTrait("", "📈", $"{GetStatIcon(StatType.Intelligence)} increases spell's range.", offset: new Vector2(0f, -1f), tattooIcon: GetStatIcon(StatType.Intelligence), tattooScale: 0.6f, tattooOffset: new Vector2(6f, -8f));
         }
     }
 
@@ -86,7 +87,7 @@ public partial class BookBlink : Thing
     {
         base.OnWieldedBy(thing);
 
-        Radius = Math.Max(thing.GetStatClamped(StatType.Intelligence), 1);
+        Radius = Math.Clamp(thing.GetStatClamped(StatType.Intelligence), 1, 10);
     }
 
     public override HashSet<IntVector> GetAimingTargetCellsClient()
