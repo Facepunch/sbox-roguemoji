@@ -12,9 +12,9 @@ public partial class Sunglasses : Thing
 		DisplayIcon = "🕶️";
         DisplayName = "Sunglasses";
         Description = "Obscures your vision but looks cool.";
+        Tooltip = "A pair of sunglasses.";
         IconDepth = 0;
         ShouldLogBehaviour = true;
-		Tooltip = "Dark sunglasses.";
 		Flags = ThingFlags.Selectable | ThingFlags.Equipment;
 
         if (Game.IsServer)

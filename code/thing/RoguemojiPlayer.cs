@@ -90,7 +90,7 @@ public partial class RoguemojiPlayer : Thing
         ClearStats();
         InitStat(StatType.Health, 10, 0, 10);
         InitStat(StatType.Energy, 5, 0, 5);
-        InitStat(StatType.Mana, 5, 0, 5);
+        InitStat(StatType.Mana, 0, 0, 0);
         InitStat(StatType.Attack, 1);
         InitStat(StatType.Strength, 2);
         InitStat(StatType.Speed, 5);
@@ -99,6 +99,7 @@ public partial class RoguemojiPlayer : Thing
         InitStat(StatType.Sight, 9);
         InitStat(StatType.Hearing, 3);
         //InitStat(StatType.Smell, 1);
+        FinishInitStats();
 
         ClearTraits();
         //AddTrait("Trait", "🌟", "Trait description.", DisplayName);
@@ -140,7 +141,7 @@ public partial class RoguemojiPlayer : Thing
 
     void SpawnRandomInventoryThing(IntVector gridPos)
     {
-        int rand = Game.Random.Int(0, 17);
+        int rand = Game.Random.Int(0, 18);
         switch (rand)
         {
             case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -161,6 +162,7 @@ public partial class RoguemojiPlayer : Thing
             case 15: InventoryGridManager.SpawnThing<BookBlink>(gridPos); break;
             case 16: InventoryGridManager.SpawnThing<PotionMana>(gridPos); break;
             case 17: InventoryGridManager.SpawnThing<PotionHealth>(gridPos); break;
+            case 18: InventoryGridManager.SpawnThing<PotionEnergy>(gridPos); break;
         }
     }
 
@@ -942,12 +944,23 @@ public partial class RoguemojiPlayer : Thing
         return null;
     }
 
-    public override void OnChangedStat(StatType statType)
+    public override void OnChangedStat(StatType statType, int changeCurrent, int changeMin, int changeMax)
     {
+        base.OnChangedStat(statType, changeCurrent, changeMin, changeMax);
+
         if (statType == StatType.Sight)
+        {
             RefreshVisibility(To.Single(this));
+        }
         else if(statType == StatType.Speed)
+        {
             Acting.ActionDelay = Acting.CalculateActionDelay(GetStatClamped(StatType.Speed));
+        }
+        else if(statType == StatType.Intelligence)
+        {
+            AdjustStatMax(StatType.Mana, changeCurrent);
+            AdjustStat(StatType.Mana, changeCurrent);
+        }
     }
 
     public void StartAimingThrow()

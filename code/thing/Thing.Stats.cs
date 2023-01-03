@@ -85,14 +85,14 @@ public partial class Thing : Entity
         switch (statType)
         {
             case StatType.Health: return "Amount of life remaining.";
-            case StatType.Energy: return "Resource used for abilities.";
+            case StatType.Energy: return "Regenerating resource used for certain abilities.";
             case StatType.Mana: return "Magical resource used for spells.";
             case StatType.Attack: return "Amount of physical damage dealt.";
             case StatType.Strength: return "Physical power and ability to move heavy objects.";
             case StatType.Speed: return "Reduces the delay between actions.";
-            case StatType.Intelligence: return "Skill with magic and technology.";
+            case StatType.Intelligence: return "Skill with magic and technology, and increases 🔮";
             case StatType.Charisma: return "Likeability and attractiveness.";
-            case StatType.Sight: return "The ability to see farther and see past objects.";
+            case StatType.Sight: return "The ability to see farther and see through objects.";
             case StatType.Hearing: return "The ability to notice sounds from a distance.";
             case StatType.Smell: return "The ability to detect odors left by things.";
 
@@ -198,8 +198,16 @@ public partial class Thing : Entity
             MaxValue = max,
             IsModifier = isModifier,
 		};
+    }
 
-        OnChangedStat(statType);
+    public void FinishInitStats()
+    {
+        foreach(var pair in Stats)
+        {
+            var statType = pair.Key;
+            var stat = pair.Value;
+            OnChangedStat(statType, changeCurrent: stat.CurrentValue, changeMin: stat.MinValue, changeMax: stat.MaxValue);
+        }
     }
 
     public void AdjustStat(StatType statType, int amount)
@@ -214,8 +222,9 @@ public partial class Thing : Entity
             if (ShouldClampCurrentValue(statType))
                 stat.CurrentValue = stat.ClampedValue;
 
-            if(stat.CurrentValue != oldValue)
-                OnChangedStat(statType);
+            int change = stat.CurrentValue - oldValue;
+            if (change != 0)
+                OnChangedStat(statType, changeCurrent: change, changeMin: 0, changeMax: 0);
         }
     }
 
@@ -224,7 +233,7 @@ public partial class Thing : Entity
         if (HasStats && Stats.ContainsKey(statType))
 		{
             Stats[statType].MinValue += amount;
-            OnChangedStat(statType);
+            OnChangedStat(statType, changeCurrent: 0, changeMin: amount, changeMax: 0);
         }
     }
 
@@ -233,7 +242,7 @@ public partial class Thing : Entity
         if (HasStats && Stats.ContainsKey(statType))
 		{
             Stats[statType].MaxValue += amount;
-			OnChangedStat(statType);
+            OnChangedStat(statType, changeCurrent: 0, changeMin: 0, changeMax: amount);
         }
     }
 

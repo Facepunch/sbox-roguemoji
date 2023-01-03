@@ -58,7 +58,7 @@ public partial class Thing : Entity
 
     [Net] public string DebugText { get; set; }
 
-    [Net] public int ThingId { get; private set; }
+    [Net] public uint ThingId { get; private set; }
 
     public Dictionary<TypeDescription, ThingComponent> ThingComponents = new Dictionary<TypeDescription, ThingComponent>();
 
@@ -546,7 +546,7 @@ public partial class Thing : Entity
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(DisplayIcon, WieldedThing?.DisplayIcon ?? "", PlayerNum + ThingId, RotationDegrees, IconScale, IconDepth, Flags);
+        return HashCode.Combine(DisplayIcon, WieldedThing?.ThingId ?? 0, PlayerNum + ThingId, RotationDegrees, IconScale, IconDepth, Flags);
         //return HashCode.Combine((DisplayIcon + ThingId.ToString()), PlayerNum, Offset, RotationDegrees, IconScale, IconDepth, Flags);
     }
 
@@ -721,7 +721,7 @@ public partial class Thing : Entity
     public virtual void OnBumpedIntoBy(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoBy(thing); } }
     public virtual void OnMovedOntoThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnMovedOntoThing(thing); } }
     public virtual void OnMovedOntoBy(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnMovedOntoBy(thing); } }
-    public virtual void OnChangedStat(StatType statType) { foreach (var component in ThingComponents) { component.Value.OnChangedStat(statType); } }
+    public virtual void OnChangedStat(StatType statType, int changeCurrent, int changeMin, int changeMax) { foreach (var component in ThingComponents) { component.Value.OnChangedStat(statType, changeCurrent, changeMin, changeMax); } }
     public virtual void OnChangedGridPos() { foreach (var component in ThingComponents) { component.Value.OnChangedGridPos(); } }
     public virtual void OnAddComponent(TypeDescription type) { foreach (var component in ThingComponents) { component.Value.OnAddComponent(type); } }
     public virtual void OnRemoveComponent(TypeDescription type) { foreach (var component in ThingComponents) { component.Value.OnRemoveComponent(type); } }

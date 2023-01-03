@@ -29,7 +29,7 @@ public partial class RoguemojiGame : GameManager
 	public static RoguemojiGame Instance { get; private set; }
 
 	public static int PlayerNum { get; set; }
-	public static int ThingId { get; set; }
+	public static uint ThingId { get; set; }
 
 	public Hud Hud { get; private set; }
 

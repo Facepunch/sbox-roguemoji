@@ -26,6 +26,7 @@ public partial class Squirrel : Thing
         InitStat(StatType.Sight, 7);
         InitStat(StatType.Hearing, 3);
         //InitStat(StatType.Smell, 3);
+        FinishInitStats();
     }
 
     public override void Spawn()

@@ -27,6 +27,7 @@
     .player-6 { background-color: #2299ffaa; }
     .player-7 { background-color: #8800bbaa; }
     .player-8 { background-color: #ff8800aa; }
+    .equipment_tooltip { background-color: #111111aa; color: #888888; }
 
     .cell_tooltip_line 
     {
@@ -45,7 +46,7 @@
     }
 </style>
 
-<root class="cell_tooltip">
+<root class="cell_tooltip @GetEquipmentClass()">
     @Text
 
     @if (Thing != null && ShowPickUpKey)
@@ -63,4 +64,6 @@
     public string Text { get; set; }
     public Thing Thing { get; set; }
     public bool ShowPickUpKey { get; set; }
+
+    string GetEquipmentClass() { return Thing != null && Thing.Flags.HasFlag(ThingFlags.Equipment) ? "equipment_tooltip" : ""; }
 }

@@ -51,7 +51,7 @@ public abstract class ThingComponent
     public virtual void OnBumpedIntoBy(Thing thing) { }
     public virtual void OnMovedOntoThing(Thing thing) { }
     public virtual void OnMovedOntoBy(Thing thing) { }
-    public virtual void OnChangedStat(StatType statType) { }
+    public virtual void OnChangedStat(StatType statType, int changeCurrent, int changeMin, int changeMax) { }
     public virtual void OnChangedGridPos() { }
     public virtual void OnAddComponent(TypeDescription type) { }
     public virtual void OnRemoveComponent(TypeDescription type) { }
