@@ -24,6 +24,7 @@ public partial class Stat : Entity
     public Stat()
     {
         Transmit = TransmitType.Always;
+        CurrentValue = 0;
     }
 }
 
@@ -188,7 +189,7 @@ public partial class Thing : Entity
         return false;
     }
 
-    public virtual void InitStat(StatType statType, int current, int min = 0, int max = int.MaxValue, bool isModifier = false)
+    public virtual void InitStat(StatType statType, int current, int min = 0, int max = 999, bool isModifier = false)
 	{
 		if (!HasStats)
 		{
@@ -208,7 +209,7 @@ public partial class Thing : Entity
 		};
     }
 
-    public void FinishInitStats()
+    public virtual void FinishInitStats()
     {
         foreach(var pair in Stats)
         {

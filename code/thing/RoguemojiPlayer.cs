@@ -128,7 +128,7 @@ public partial class RoguemojiPlayer : Thing
 
     void SpawnRandomInventoryThing(IntVector gridPos)
     {
-        int rand = Game.Random.Int(0, 20);
+        int rand = Game.Random.Int(0, 21);
         switch (rand)
         {
             case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -152,6 +152,7 @@ public partial class RoguemojiPlayer : Thing
             case 18: InventoryGridManager.SpawnThing<PotionEnergy>(gridPos); break;
             case 19: InventoryGridManager.SpawnThing<ScrollTeleport>(gridPos); break;
             case 20: InventoryGridManager.SpawnThing<BookTeleport>(gridPos); break;
+            case 21: InventoryGridManager.SpawnThing<AcademicCap>(gridPos); break;
         }
     }
 
@@ -931,8 +932,6 @@ public partial class RoguemojiPlayer : Thing
 
     public override void OnChangedStat(StatType statType, int changeCurrent, int changeMin, int changeMax)
     {
-        base.OnChangedStat(statType, changeCurrent, changeMin, changeMax);
-
         if (statType == StatType.Sight)
         {
             RefreshVisibility(To.Single(this));
@@ -945,15 +944,28 @@ public partial class RoguemojiPlayer : Thing
         {
             int amount = changeCurrent * 1;
             AdjustStatMax(StatType.Mana, amount);
-            AdjustStat(StatType.Mana, amount);
         }
         else if (statType == StatType.Stamina)
         {
             int amount = changeCurrent * 2;
             AdjustStatMax(StatType.Energy, amount);
-            AdjustStat(StatType.Energy, amount);
             StaminaDelay = Utils.Map(GetStatClamped(StatType.Stamina), 0, 20, 2.5f, 0.1f);
         }
+
+        base.OnChangedStat(statType, changeCurrent, changeMin, changeMax);
+    }
+
+    public override void FinishInitStats()
+    {
+        base.FinishInitStats();
+
+        var mana = GetStat(StatType.Mana);
+        if (mana != null)
+            mana.CurrentValue = mana.MaxValue;
+
+        var energy = GetStat(StatType.Energy);
+        if (energy != null)
+            energy.CurrentValue = energy.MaxValue;
     }
 
     public void StartAimingThrow()
