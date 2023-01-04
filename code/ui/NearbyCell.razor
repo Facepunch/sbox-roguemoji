@@ -47,7 +47,7 @@
     }
 </style>
 
-<root class="nearby_icon @GetSelectedClass()">
+<root class="nearby_icon @GetSelectedClass() @GetUnusableClass(Thing, RoguemojiGame.Instance.LocalPlayer)">
     <div class="@GetPlayerClass() @GetDraggingClass()" @ref=IconPanel>
         @Thing.DisplayIcon
 
@@ -87,6 +87,17 @@
         return Thing == RoguemojiGame.Instance.LocalPlayer?.SelectedThing;
     }
 
+    string GetUnusableClass(Thing thing, RoguemojiPlayer player)
+    {
+        if (thing.Flags.HasFlag(ThingFlags.Useable))
+        {
+            if (!thing.CanBeUsedBy(player, ignoreResources: true))
+                return "unusable_item";
+        }
+
+        return "";
+    }
+
     protected override Panel CreateTooltipPanel()
     {
         var panel = Hud.Instance.AddChild<CellTooltip>();
@@ -106,7 +117,8 @@
         if (Thing == null)
             return base.BuildHash();
 
-        return HashCode.Combine(Thing.GetNearbyCellHash(), IsSelected());
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        return HashCode.Combine(Thing.GetNearbyCellHash(), IsSelected(), player.StatHash);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

@@ -108,13 +108,9 @@ public partial class RoguemojiPlayer : Thing
 
         EquipmentGridManager.Restart();
 
-        for (int x = 0; x < RoguemojiGame.InventoryWidth - 1; x++)
-            for (int y = 0; y < RoguemojiGame.InventoryHeight - 1; y++)
+        for (int x = 0; x < RoguemojiGame.InventoryWidth; x++)
+            for (int y = 0; y < RoguemojiGame.InventoryHeight; y++)
                 SpawnRandomInventoryThing(new IntVector(x, y));
-
-        //for (int x = 0; x < 3; x++)
-        //    for (int y = 0; y < 2; y++)
-        //        SpawnRandomEquipmentThing(new IntVector(x, y));
 
         RoguemojiGame.Instance.RefreshGridPanelClient(GridType.Inventory);
         RoguemojiGame.Instance.RefreshGridPanelClient(GridType.Equipment);
@@ -156,16 +152,6 @@ public partial class RoguemojiPlayer : Thing
             case 18: InventoryGridManager.SpawnThing<PotionEnergy>(gridPos); break;
             case 19: InventoryGridManager.SpawnThing<ScrollTeleport>(gridPos); break;
             case 20: InventoryGridManager.SpawnThing<BookTeleport>(gridPos); break;
-        }
-    }
-
-    void SpawnRandomEquipmentThing(IntVector gridPos)
-    {
-        int rand = Game.Random.Int(0, 1);
-        switch (rand)
-        {
-            case 0: EquipmentGridManager.SpawnThing<Coat>(gridPos); break;
-            case 1: EquipmentGridManager.SpawnThing<SafetyVest>(gridPos); break;
         }
     }
 
@@ -560,7 +546,7 @@ public partial class RoguemojiPlayer : Thing
         if (WieldedThing.IsOnCooldown)
             return;
             
-        if(!WieldedThing.TryStartUsing(this))
+        if(!WieldedThing.CanBeUsedBy(this, shouldLogMessage: true))
             return;
 
         if (WieldedThing.Flags.HasFlag(ThingFlags.UseRequiresAiming))

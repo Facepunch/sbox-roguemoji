@@ -20,7 +20,7 @@ public partial class GridManager : Entity
 
     public Dictionary<IntVector, List<Thing>> GridThings = new Dictionary<IntVector, List<Thing>>();
 
-	public RoguemojiPlayer OwningPlayer { get; set; }
+	[Net] public RoguemojiPlayer OwningPlayer { get; set; }
 
 	public HashSet<RoguemojiPlayer> ContainedPlayers = new HashSet<RoguemojiPlayer>();
 	public HashSet<RoguemojiPlayer> VisionChangedPlayers = new HashSet<RoguemojiPlayer>(); // players who need an update to their field of view

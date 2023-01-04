@@ -332,6 +332,19 @@ public partial class Hud : RootPanel
         return rect.TopLeft + arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset;
     }
 
+    public string GetUnusableClass(Thing thing)
+    {
+        var gridManager = thing.ContainingGridManager;
+        if (thing.Flags.HasFlag(ThingFlags.Useable) && gridManager.GridType == GridType.Inventory)
+        {
+            var owningPlayer = gridManager.OwningPlayer;
+            if (owningPlayer != null && !thing.CanBeUsedBy(owningPlayer, ignoreResources: true))
+                return "unusable_item";
+        }
+
+        return "";
+    }
+
     //public Vector2 GetScreenPosForPos(Vector2 pos)
     //{
     //    var player = RoguemojiGame.Instance.LocalPlayer;

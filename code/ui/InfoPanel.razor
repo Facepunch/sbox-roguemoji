@@ -96,11 +96,18 @@
     }
 
      <div class="selected_info">
-        <div class="name_label"> @SelectedThing.DisplayName </div>
+        <div class="name_label"> 
+            @SelectedThing.DisplayName 
+        </div>
 
-        @if (SelectedThing.Flags.HasFlag(ThingFlags.Equipment)) { <div class="equipment_label"> Accessory </div> }
+        @if (SelectedThing.Flags.HasFlag(ThingFlags.Equipment))
+        { 
+            <div class="equipment_label">
+                Accessory 
+            </div> 
+        }
 
-        <div class="icon @GetPlayerClass()">
+        <div class="icon @GetPlayerClass() @Hud.Instance.GetUnusableClass(SelectedThing)">
             @SelectedThing.DisplayIcon
 
             @if (SelectedThing.HasTattoo)
@@ -151,6 +158,7 @@
 
     protected override int BuildHash()
     {
-        return HashCode.Combine(SelectedThing?.GetInfoDisplayHash() ?? 0);
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        return HashCode.Combine(SelectedThing?.GetInfoDisplayHash() ?? 0, player.StatHash);
     }
 }

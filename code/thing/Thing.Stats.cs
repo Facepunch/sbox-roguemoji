@@ -36,6 +36,8 @@ public partial class Thing : Entity
     [Net] public IDictionary<StatType, int> StatsMin { get; private set; }
     [Net] public IDictionary<StatType, int> StatsMax { get; private set; }
 
+    [Net] public int StatHash { get; private set; }
+
     public static string GetStatIcon(StatType statType)
     {
         switch(statType)

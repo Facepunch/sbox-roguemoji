@@ -85,7 +85,7 @@
     }
     else
     {
-        <div class="@GetCooldownClass(wieldedThing)">
+        <div class="@GetCooldownClass(wieldedThing) @Hud.Instance.GetUnusableClass(wieldedThing)">
             @(wieldedThing.DisplayIcon.Substring(wieldedThing.CharSkip))
         </div>
 
@@ -128,7 +128,7 @@
         var wieldedThing = player.WieldedThing;
         var cooldownHash = wieldedThing != null && wieldedThing.IsOnCooldown ? wieldedThing.CooldownProgressPercent : 0f;
 
-        return HashCode.Combine(wieldedThing?.NetworkIdent ?? 0, cooldownHash);
+        return HashCode.Combine(wieldedThing?.NetworkIdent ?? 0, cooldownHash, player.StatHash);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

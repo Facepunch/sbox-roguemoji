@@ -8,7 +8,7 @@ public partial class ScrollBlink : Thing
 {
     [Net] public int Radius { get; set; }
 
-    public int ReqInt { get; private set; }
+    [Net] public int ReqInt { get; private set; }
 
     public override string ChatDisplayIcons => $"📜{Globals.Icon(IconType.Blink)}";
     public override string AbilityName => "Read Scroll";
@@ -34,12 +34,12 @@ public partial class ScrollBlink : Thing
         }
     }
 
-    public override bool TryStartUsing(Thing user)
+    public override bool CanBeUsedBy(Thing user, bool ignoreResources = false, bool shouldLogMessage = false)
     {
         var intelligence = user.GetStatClamped(StatType.Intelligence);
         if (intelligence < ReqInt)
         {
-            if (user is RoguemojiPlayer player)
+            if (shouldLogMessage && user is RoguemojiPlayer player)
                 RoguemojiGame.Instance.LogPersonalMessage(player, $"You need {ReqInt}{GetStatIcon(StatType.Intelligence)} to use {ChatDisplayIcons} but you only have {intelligence}{GetStatIcon(StatType.Intelligence)}");
 
             return false;

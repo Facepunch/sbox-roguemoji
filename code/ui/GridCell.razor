@@ -119,7 +119,7 @@
 </style>
 
 <root class="icon @GetWieldedClass() @GetSolidClass()" )>
-    <div class="image @GetPlayerClass() @GetDraggingClass() @GetCooldownClass(Thing)" @ref=IconPanel> 
+    <div class="image @GetPlayerClass() @GetDraggingClass() @GetCooldownClass(Thing) @Hud.Instance.GetUnusableClass(Thing)" @ref=IconPanel>
         @Thing.DisplayIcon.Substring(Thing.CharSkip) 
 
         @if(Thing.HasTattoo)
@@ -182,10 +182,10 @@
     string GetPlayerClass()     { return Thing.PlayerNum > 0 ? $"icon-player-{Thing.PlayerNum}" : ""; }
     string GetSolidClass()      { return Thing.Flags.HasFlag(ThingFlags.Solid) ? "solid" : ""; }
     string GetDraggingClass()   { return Thing == Hud.Instance.DraggedThing ? "dragging" : ""; }
-    string GetCooldownClass(Thing thing) { return thing.IsOnCooldown && thing.ContainingGridManager.GridType != GridType.Arena ? "cell_icon_cooldown" : ""; }
     string GetWieldedClass()    { return IsWielded() ? "wielded" : ""; }
     bool IsWielded()            { return Thing == RoguemojiGame.Instance.LocalPlayer?.WieldedThing; }
     string GetEquipmentClass()  { return Thing.Flags.HasFlag(ThingFlags.Equipment) ? "icon_equipment" : ""; }
+    string GetCooldownClass(Thing thing)    { return thing.IsOnCooldown && thing.ContainingGridManager.GridType != GridType.Arena ? "cell_icon_cooldown" : ""; }
 
     protected override Panel CreateTooltipPanel()
     {
@@ -204,8 +204,8 @@
         var cooldownHash = Thing.IsOnCooldown ? Thing.CooldownProgressPercent : 0f;
         var wieldedThing = Thing.WieldedThing;
         var wieldedCooldownHash = wieldedThing != null && wieldedThing.IsOnCooldown ? wieldedThing.CooldownProgressPercent : 0f;
-        var hpHash = Thing.HasStat(StatType.Health) ? Thing.GetStatClamped(StatType.Health) + Thing.GetStatMax(StatType.Health) : 0;
-        return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, Thing.GetStatClamped(StatType.Health), cooldownHash, wieldedCooldownHash, hpHash);
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, Thing.GetStatClamped(StatType.Health), cooldownHash, wieldedCooldownHash, player.StatHash);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

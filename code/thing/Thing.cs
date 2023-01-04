@@ -271,8 +271,8 @@ public partial class Thing : Entity
         WieldedThing.Use(this, targetGridPos);
     }
 
-    // Override and return false when user doesn't have required resources (IsOnCooldown already handled elsewhere).
-    public virtual bool TryStartUsing(Thing user)
+    // Override and return false when user doesn't have required stats (IsOnCooldown already handled elsewhere).
+    public virtual bool CanBeUsedBy(Thing user, bool ignoreResources = false, bool shouldLogMessage = false)
     {
         return true;
     }
@@ -627,14 +627,7 @@ public partial class Thing : Entity
         IsOnCooldown = false;
         StaminaTimer = 0f;
         StaminaDelay = 0f;
-    }
-
-    public bool CanUseThing(Thing thing)
-    {
-        if (!Flags.HasFlag(ThingFlags.CanUseThings) || !thing.Flags.HasFlag(ThingFlags.Useable))
-            return false;
-
-        return true;
+        StatHash = 0;
     }
 
     public virtual HashSet<IntVector> GetAimingTargetCellsClient() { return null; }
@@ -734,6 +727,16 @@ public partial class Thing : Entity
         return true;
     }
 
+    public virtual void OnChangedStat(StatType statType, int changeCurrent, int changeMin, int changeMax) 
+    {
+        StatHash = 0;
+        foreach (var pair in Stats)
+            StatHash += pair.Value.HashCode;
+
+        foreach (var component in ThingComponents) 
+            component.Value.OnChangedStat(statType, changeCurrent, changeMin, changeMax);
+    }
+
     public virtual void OnEquipThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnEquipThing(thing); } }
     public virtual void OnUnequipThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnUnequipThing(thing); } }
     public virtual void OnEquippedTo(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnEquippedTo(thing); } }
@@ -743,7 +746,6 @@ public partial class Thing : Entity
     public virtual void OnBumpedIntoBy(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoBy(thing); } }
     public virtual void OnMovedOntoThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnMovedOntoThing(thing); } }
     public virtual void OnMovedOntoBy(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnMovedOntoBy(thing); } }
-    public virtual void OnChangedStat(StatType statType, int changeCurrent, int changeMin, int changeMax) { foreach (var component in ThingComponents) { component.Value.OnChangedStat(statType, changeCurrent, changeMin, changeMax); } }
     public virtual void OnChangedGridPos() { foreach (var component in ThingComponents) { component.Value.OnChangedGridPos(); } }
     public virtual void OnAddComponent(TypeDescription type) { foreach (var component in ThingComponents) { component.Value.OnAddComponent(type); } }
     public virtual void OnRemoveComponent(TypeDescription type) { foreach (var component in ThingComponents) { component.Value.OnRemoveComponent(type); } }

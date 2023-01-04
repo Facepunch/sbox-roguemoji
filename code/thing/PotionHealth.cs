@@ -30,20 +30,10 @@ public partial class PotionHealth : Thing
         }
     }
 
-    public override bool TryStartUsing(Thing user)
+    public override bool CanBeUsedBy(Thing user, bool ignoreResources = false, bool shouldLogMessage = false)
     {
         if (!user.HasStat(StatType.Health))
             return false;
-
-        var health = user.GetStatClamped(StatType.Health);
-        var healthMax = user.GetStatMax(StatType.Health);
-        if (health == healthMax)
-        {
-            if (user is RoguemojiPlayer player)
-                RoguemojiGame.Instance.LogPersonalMessage(player, $"You already have max {GetStatIcon(StatType.Health)}");
-
-            return false;
-        }
 
         return true;
     }

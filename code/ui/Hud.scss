@@ -5,19 +5,49 @@
 
     cursor: none;
 
-    .icon-player-1 { text-stroke-color: #3333ff; text-stroke-width: 4px; }
-    .icon-player-2 { text-stroke-color: #ff0000; text-stroke-width: 4px; }
-    .icon-player-3 { text-stroke-color: #009900; text-stroke-width: 4px; }
-    .icon-player-4 { text-stroke-color: #ff00ff; text-stroke-width: 4px; }
-    .icon-player-5 { text-stroke-color: #ffff00; text-stroke-width: 4px; }
-    .icon-player-6 { text-stroke-color: #2299ff; text-stroke-width: 4px; }
-    .icon-player-7 { text-stroke-color: #8800bb; text-stroke-width: 4px; }
-    .icon-player-8 { text-stroke-color: #ff8800; text-stroke-width: 4px; }
+    .icon-player-1 {
+        text-stroke-color: #3333ff;
+        text-stroke-width: 4px;
+    }
 
-    .selected 
-    {
+    .icon-player-2 {
+        text-stroke-color: #ff0000;
+        text-stroke-width: 4px;
+    }
+
+    .icon-player-3 {
+        text-stroke-color: #009900;
+        text-stroke-width: 4px;
+    }
+
+    .icon-player-4 {
+        text-stroke-color: #ff00ff;
+        text-stroke-width: 4px;
+    }
+
+    .icon-player-5 {
+        text-stroke-color: #ffff00;
+        text-stroke-width: 4px;
+    }
+
+    .icon-player-6 {
+        text-stroke-color: #2299ff;
+        text-stroke-width: 4px;
+    }
+
+    .icon-player-7 {
+        text-stroke-color: #8800bb;
+        text-stroke-width: 4px;
+    }
+
+    .icon-player-8 {
+        text-stroke-color: #ff8800;
+        text-stroke-width: 4px;
+    }
+
+    .selected {
         border: 1px solid #bbbbff44;
-        border-radius:3px;
+        border-radius: 3px;
         width: 40px;
         height: 40px;
         z-index: 10000;
@@ -32,14 +62,17 @@
     //    animation-name: appear;
     //    animation-duration: 0.5s;
     //}
-
     //@keyframes appear {
     //    0% {
     //        opacity: 0;
     //    }
-
     //    100% {
     //        opacity: 1;
     //    }
     //}
+
+    .unusable_item {
+        color: #ffffff77;
+        text-shadow: 0 0 1px #ff0000;
+    }
 }

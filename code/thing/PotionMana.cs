@@ -30,20 +30,10 @@ public partial class PotionMana : Thing
         }
     }
 
-    public override bool TryStartUsing(Thing user)
+    public override bool CanBeUsedBy(Thing user, bool ignoreResources = false, bool shouldLogMessage = false)
     {
         if (!user.HasStat(StatType.Mana))
             return false;
-
-        var mana = user.GetStatClamped(StatType.Mana);
-        var manaMax = user.GetStatMax(StatType.Mana);
-        if (mana == manaMax)
-        {
-            if (user is RoguemojiPlayer player)
-                RoguemojiGame.Instance.LogPersonalMessage(player, $"You already have max {GetStatIcon(StatType.Mana)}");
-
-            return false;
-        }
 
         return true;
     }
