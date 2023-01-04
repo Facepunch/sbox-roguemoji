@@ -6,8 +6,7 @@
 @namespace Roguemoji
 
 <style>
-    .root
-    {
+    .root {
         width: 100%;
         height: 100%;
         flex-direction:column;
@@ -15,8 +14,7 @@
         font-family: RobotoMono;
     }
 
-    .upper_row
-    {
+    .upper_row {
         flex-direction:row;
         width: 100%;
         //height: 100%;
@@ -25,8 +23,7 @@
         padding-right: 40px;
     }
 
-    .upper_right_column
-    {
+    .upper_right_column {
         margin-left: 20px;
         flex-grow: 1;
         flex-direction: column;
@@ -34,8 +31,7 @@
         flex-wrap: nowrap;
     }
 
-    .lower_row
-    {
+    .lower_row {
         flex-direction:row;
         padding: 0 35px 35px 35px;
         //background-color: #333300;
@@ -43,8 +39,7 @@
         //border: 1px solid #ff88ff05;
     }
 
-    .log
-    {
+    .log {
         width: 100%;
         height: 100%;
         flex-grow: 1;
@@ -52,36 +47,27 @@
         margin-bottom:5px;
     }
 
-    .chatbox
-    {
-        
-    }
-
-    .character
-    {
+    .character {
         //background-color: #440044;
         width: 400px;
         border: 1px solid #303030;
         border-radius: 3px;
     }
 
-    .nearby
-    {
+    .nearby {
         width: 45px;
         margin: 0 20px 0 20px;
         border: 1px solid #303030;
         border-radius: 3px;
     }
 
-    .inventory
-    {
+    .inventory {
         border: 1px solid #303030;
         border-radius: 3px;
         margin: 0 0 0 20px;
     }
 
-    .info
-    {
+    .info {
         border-radius: 3px;
         margin-right: 20px;
     }
@@ -97,9 +83,9 @@
 
         <div class="upper_right_column">
             <LogPanel class="log" @ref=LogPanel></LogPanel>
-            <Chatbox class="chatbox" @ref=Chatbox></Chatbox>
+            <Chatbox @ref=Chatbox></Chatbox>
         </div>
-     </div>
+    </div>
 
     <div class="lower_row">
         <CharacterPanel class="character" @ref=CharacterPanel></CharacterPanel>

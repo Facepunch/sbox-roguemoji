@@ -360,6 +360,14 @@ public partial class RoguemojiGame : GameManager
 		return level;
     }
 
+	public Level GetLevel(LevelId levelId)
+	{
+		if (Levels.ContainsKey(levelId))
+			return Levels[levelId];
+
+		return null;
+	}
+
     public void AddFloater(string icon, IntVector gridPos, float time, LevelId levelId, Vector2 offsetStart, Vector2 offsetEnd, string text = "", bool requireSight = true, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, Thing parent = null)
     {
 		foreach(var player in Players)

@@ -7,7 +7,7 @@ using static Roguemoji.DebugDrawing;
 
 namespace Roguemoji;
 
-public enum PanelType { None, ArenaGrid, InventoryGrid, EquipmentGrid, Wielding, PlayerIcon, Log, Nearby, Info, Character, Stats, Chatbox };
+public enum PanelType { None, ArenaGrid, InventoryGrid, EquipmentGrid, Wielding, PlayerIcon, Log, Nearby, Info, Character, Stats, Chatbox, LevelLabel };
 public enum CursorMode { Point, Pinch, Invalid, Write, PointDown, ThumbsUp, Ok, Check, Pin, MiddleFinger, Point2, PointLeft, PointRight }
 
 public struct FloaterData
@@ -223,26 +223,17 @@ public partial class Hud : RootPanel
 
 	public PanelType GetContainingPanelType(Vector2 pos)
 	{
-		if (Contains(GetRect(PanelType.ArenaGrid), pos))
-			return PanelType.ArenaGrid;
-		else if (Contains(GetRect(PanelType.InventoryGrid), pos))
-			return PanelType.InventoryGrid;
-		else if (Contains(GetRect(PanelType.Nearby), pos))
-			return PanelType.Nearby;
-        else if (Contains(GetRect(PanelType.Log), pos))
-            return PanelType.Log;
-        else if (Contains(GetRect(PanelType.EquipmentGrid), pos))
-            return PanelType.EquipmentGrid;
-        else if (Contains(GetRect(PanelType.Wielding), pos))
-            return PanelType.Wielding;
-        else if (Contains(GetRect(PanelType.PlayerIcon), pos))
-            return PanelType.PlayerIcon;
-        else if (Contains(GetRect(PanelType.Character), pos))
-            return PanelType.Character;
-        else if (Contains(GetRect(PanelType.Info), pos))
-            return PanelType.Info;
-        else if (Contains(GetRect(PanelType.Chatbox), pos))
-            return PanelType.Chatbox;
+        if (Contains(GetRect(PanelType.LevelLabel), pos))           return PanelType.LevelLabel;
+        else if (Contains(GetRect(PanelType.ArenaGrid), pos))       return PanelType.ArenaGrid;
+		else if (Contains(GetRect(PanelType.InventoryGrid), pos))   return PanelType.InventoryGrid;
+		else if (Contains(GetRect(PanelType.Nearby), pos))          return PanelType.Nearby;
+        else if (Contains(GetRect(PanelType.Log), pos))             return PanelType.Log;
+        else if (Contains(GetRect(PanelType.EquipmentGrid), pos))   return PanelType.EquipmentGrid;
+        else if (Contains(GetRect(PanelType.Wielding), pos))        return PanelType.Wielding;
+        else if (Contains(GetRect(PanelType.PlayerIcon), pos))      return PanelType.PlayerIcon;
+        else if (Contains(GetRect(PanelType.Character), pos))       return PanelType.Character;
+        else if (Contains(GetRect(PanelType.Info), pos))            return PanelType.Info;
+        else if (Contains(GetRect(PanelType.Chatbox), pos))         return PanelType.Chatbox;
 
         return PanelType.None;
 	}
@@ -256,26 +247,17 @@ public partial class Hud : RootPanel
 	{
         switch (panelType)
 		{
-			case PanelType.ArenaGrid:
-				return MainPanel.ArenaPanel;
-			case PanelType.InventoryGrid:
-                return MainPanel.InventoryPanel;
-			case PanelType.Log:
-                return MainPanel.LogPanel;
-			case PanelType.Nearby:
-                return MainPanel.NearbyPanel;
-			case PanelType.Character:
-				return MainPanel.CharacterPanel;
-            case PanelType.EquipmentGrid:
-                return MainPanel.CharacterPanel.EquipmentPanel;
-            case PanelType.Wielding:
-                return MainPanel.CharacterPanel.WieldingPanel;
-            case PanelType.PlayerIcon:
-                return MainPanel.CharacterPanel.PlayerIcon;
-            case PanelType.Info:
-                return MainPanel.InfoPanel;
-            case PanelType.Chatbox:
-                return MainPanel.Chatbox;
+			case PanelType.ArenaGrid:       return MainPanel.ArenaPanel;
+			case PanelType.InventoryGrid:   return MainPanel.InventoryPanel;
+			case PanelType.Log:             return MainPanel.LogPanel;
+			case PanelType.Nearby:          return MainPanel.NearbyPanel;
+			case PanelType.Character:       return MainPanel.CharacterPanel;
+            case PanelType.EquipmentGrid:   return MainPanel.CharacterPanel.EquipmentPanel;
+            case PanelType.Wielding:        return MainPanel.CharacterPanel.WieldingPanel;
+            case PanelType.PlayerIcon:      return MainPanel.CharacterPanel.PlayerIcon;
+            case PanelType.Info:            return MainPanel.InfoPanel;
+            case PanelType.Chatbox:         return MainPanel.Chatbox;
+            case PanelType.LevelLabel:      return MainPanel.ArenaPanel.LevelLabel;
         }
 
 		return null;
@@ -287,12 +269,9 @@ public partial class Hud : RootPanel
 
         switch (gridType)
         {
-            case GridType.Arena:
-                return MainPanel?.ArenaPanel ?? null;
-            case GridType.Inventory:
-                return MainPanel?.InventoryPanel ?? null;
-            case GridType.Equipment:
-                return MainPanel.CharacterPanel?.EquipmentPanel ?? null;
+            case GridType.Arena:        return MainPanel?.ArenaPanel ?? null;
+            case GridType.Inventory:    return MainPanel?.InventoryPanel ?? null;
+            case GridType.Equipment:    return MainPanel.CharacterPanel?.EquipmentPanel ?? null;
         }
 
 		return null;
@@ -302,12 +281,9 @@ public partial class Hud : RootPanel
     {
 		switch(panelType)
 		{
-            case PanelType.ArenaGrid:
-                return GridType.Arena;
-            case PanelType.InventoryGrid:
-				return GridType.Inventory; ;
-            case PanelType.EquipmentGrid:
-                return GridType.Equipment;
+            case PanelType.ArenaGrid:       return GridType.Arena;
+            case PanelType.InventoryGrid:   return GridType.Inventory;
+            case PanelType.EquipmentGrid:   return GridType.Equipment;
         }
 
 		return GridType.None;

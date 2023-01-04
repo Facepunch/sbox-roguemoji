@@ -12,6 +12,8 @@ public partial class Level : Entity
 
     [Net] public LevelId LevelId { get; private set; }
 
+    [Net] public string LevelName { get; private set; }
+
     public void Init(LevelId levelId)
     {
         LevelId = levelId;
@@ -22,6 +24,8 @@ public partial class Level : Entity
         GridManager.Init(width, height);
         GridManager.GridType = GridType.Arena;
         GridManager.LevelId = LevelId;
+
+        LevelName = LevelId.ToString();
 
         Transmit = TransmitType.Always;
 
