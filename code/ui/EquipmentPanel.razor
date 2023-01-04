@@ -2,13 +2,13 @@
 @using Sandbox;
 @using Sandbox.UI;
 @using System.Collections.Generic;
+@using System.Linq;
 
 @inherits GridPanel;
 @namespace Roguemoji
 
 <style>
-    .equipment_bg 
-    {
+    .equipment_bg {
         opacity: 0.005;
         background-color: transparent;
         box-shadow: 0px 0px 0px #0000ff;
@@ -21,6 +21,17 @@
         width:100%;
         height:100%;
     }
+
+    .nothing_equipped {
+        color: transparent;
+        text-shadow: 0 0 0.4px #00000044;
+        font-size: 25px;
+        position: absolute;
+        padding: 0 0 3px 0px;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
 </style>
 
 <root>
@@ -28,11 +39,28 @@
 
     @{
         var player = RoguemojiGame.Instance.LocalPlayer;
+        var gridManager = player.EquipmentGridManager;
     }
 
     @if (player?.EquipmentGridManager?.Things == null)
     {
         return;
+    }
+
+    @for(int x = 0; x < GridWidth; x++)
+    {
+        for(int y = 0; y < GridHeight; y++)
+        {
+            var gridPos = new IntVector(x, y);
+            if (gridManager.GetThingsAtClient(gridPos).Count() == 0)
+            {
+                var index = gridManager.GetIndex(gridPos);
+                var offset = GetNothingEquippedOffset(index);
+                <div class="nothing_equipped" style="left: @(gridPos.x * 40 + offset.x); top: @(gridPos.y * 40 + offset.y);">
+                    @(GetNothingEquippedIcon(gridManager.GetIndex(gridPos)))
+                </div>
+            }
+        }
     }
 
     @foreach(var thing in GetThings())
@@ -73,5 +101,40 @@
     protected override int BuildHash()
     {
         return HashCode.Combine(GetThings().Count);
+    }
+
+    string GetNothingEquippedIcon(int index)
+    {
+        switch(index)
+        {
+            case 0: return "👕";
+            case 1: return "👗";
+            case 2: return "🧣";
+            case 3: return "🎀";
+            case 4: return "🎒";
+            case 5: return "🩰";
+            case 6: return "🧤";
+            case 7: return "💍";
+            case 8: return "💍";
+        }
+
+        return "";
+    }
+
+    Vector2 GetNothingEquippedOffset(int index)
+    {
+        switch (index)
+        {
+            case 0: return new Vector2(2f, 2f);
+            case 1: return new Vector2(4f, 2f);
+            case 2: return new Vector2(2f, 2f);
+            case 3: return new Vector2(2f, 2f);
+            case 4: return new Vector2(2f, 2f);
+            case 5: return new Vector2(2f, 2f);
+            case 6: return new Vector2(2f, 2f);
+            case 7: return new Vector2(6f, 2f);
+        }
+
+        return Vector2.Zero;
     }
 }

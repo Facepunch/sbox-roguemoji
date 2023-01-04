@@ -713,7 +713,7 @@ public partial class RoguemojiPlayer : Thing
             //RoguemojiGame.Instance.AddFloater("❗️", gridPos, 1f, CurrentLevelId, new Vector2(0f, -25f), new Vector2(0, -35f), "", requireSight: true, EasingType.Linear, 0.1f, 1.1f, parent: this);
             //RoguemojiGame.Instance.AddFloater("❔", gridPos, 1.1f, CurrentLevelId, new Vector2(0f, -29f), new Vector2(0, -33f), "", requireSight: true, EasingType.SineIn, 0.25f, 1f, parent: this);
 
-            var level = RoguemojiGame.Instance.Levels[CurrentLevelId];
+            var level = RoguemojiGame.Instance.GetLevel(CurrentLevelId);
             var thing = level.GridManager.GetThingsAt(gridPos).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 
             if (!visible && thing != null)
