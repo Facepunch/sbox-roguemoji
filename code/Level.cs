@@ -25,7 +25,7 @@ public partial class Level : Entity
         GridManager.GridType = GridType.Arena;
         GridManager.LevelId = LevelId;
 
-        LevelName = LevelId.ToString();
+        LevelName = GetLevelName(levelId);
 
         Transmit = TransmitType.Always;
 
@@ -47,22 +47,21 @@ public partial class Level : Entity
     {
         switch (levelId)
         {
-            case LevelId.Forest0:
-                width = 40;
-                height = 25;
-                break;
-            case LevelId.Forest1:
-                width = 30;
-                height = 22;
-                break;
-            case LevelId.Forest2:
-                width = 30;
-                height = 22;
-                break;
-            default:
-                width = 0;
-                height = 0;
-                break;
+            case LevelId.Forest0: width = 40; height = 25; break;
+            case LevelId.Forest1: width = 30; height = 22; break;
+            case LevelId.Forest2: width = 30; height = 22; break;
+            default: width = 0; height = 0;break;
+        }
+    }
+
+    string GetLevelName(LevelId levelId)
+    {
+        switch (levelId)
+        {
+            case LevelId.Forest0: return "Forest 1";
+            case LevelId.Forest1: return "Forest 2";
+            case LevelId.Forest2: return "Cheese Fields";
+            default: return "???";
         }
     }
 
