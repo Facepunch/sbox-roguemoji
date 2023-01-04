@@ -228,9 +228,4 @@
         var player = RoguemojiGame.Instance.LocalPlayer;
         GridBg.Style.Set($"background-position: {((player.CameraGridOffset.x % 2 == 0 ? -40f : -80f) + player.CameraPixelOffset.x * 0.9f) * ScaleToScreen}px {((player.CameraGridOffset.y % 2 == 0 ? -40f : -80f) + player.CameraPixelOffset.y * 0.9f) * ScaleToScreen}px;");
     }
-
-    bool IsOdd(IntVector gridPos)
-    {
-        return gridPos.x % 2 == gridPos.y % 2;
-    }
 }

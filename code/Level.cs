@@ -65,6 +65,17 @@ public partial class Level : Entity
         }
     }
 
+    public static string GetLevelBgColor(LevelId levelId, bool odd)
+    {
+        switch (levelId)
+        {
+            case LevelId.Forest0: return odd ? "#051509" : "#041408";
+            case LevelId.Forest1: return odd ? "#051509" : "#041408";
+            case LevelId.Forest2: return odd ? "#051509" : "#041408";
+            default: return "#000000";
+        }
+    }
+
     void SpawnStartingThings(LevelId levelId)
     {
         if(levelId == LevelId.Forest0)

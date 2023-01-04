@@ -13,7 +13,7 @@
         flex-direction:column;
         align-items:center;
         overflow: scroll;
-        background-color: #070707;
+        //background-color: #070707;
     }
 
     .nearby_bg
@@ -25,7 +25,7 @@
     }
 </style>
 
-<root class="nearby">
+<root class="nearby" style="background-color:@(Level.GetLevelBgColor(RoguemojiGame.Instance.LocalPlayer.CurrentLevelId, IsOdd(RoguemojiGame.Instance.LocalPlayer.GridPos)));">
     <div class="nearby_bg"></div> 
 
     @{
@@ -114,5 +114,10 @@
         panel.Thing = null;
         panel.Style.Opacity = 0.5f;
         return panel;
+    }
+
+    bool IsOdd(IntVector gridPos)
+    {
+        return gridPos.x % 2 == gridPos.y % 2;
     }
 }
