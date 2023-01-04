@@ -6,8 +6,6 @@ using System.Linq;
 namespace Roguemoji;
 public partial class BookBlink : Thing
 {
-    [Net] public int Radius { get; set; }
-
     [Net] public int ManaCost { get; private set; }
     [Net] public int ReqInt { get; private set; }
     public float CooldownTime { get; private set; }
@@ -86,13 +84,6 @@ public partial class BookBlink : Thing
         base.Use(user, targetGridPos);
     }
 
-    public override void OnWieldedBy(Thing thing)
-    {
-        base.OnWieldedBy(thing);
-
-        Radius = Math.Clamp(thing.GetStatClamped(StatType.Intelligence), 1, 10);
-    }
-
     public override HashSet<IntVector> GetAimingTargetCellsClient()
     {
         Game.AssertClient();
@@ -100,7 +91,8 @@ public partial class BookBlink : Thing
         if (ThingWieldingThis == null)
             return null;
 
-        return ScrollBlink.BlinkGetAimingCells(Radius, ThingWieldingThis);
+        int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 1, 10);
+        return ScrollBlink.BlinkGetAimingCells(radius, ThingWieldingThis);
     }
 
     public override bool IsPotentialAimingTargetCell(IntVector gridPos)
@@ -108,6 +100,7 @@ public partial class BookBlink : Thing
         if (ThingWieldingThis == null)
             return false;
 
-        return ScrollBlink.BlinkIsPotentialAimingCell(gridPos, Radius, ThingWieldingThis);
+        int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 1, 10);
+        return ScrollBlink.BlinkIsPotentialAimingCell(gridPos, radius, ThingWieldingThis);
     }
 }
