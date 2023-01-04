@@ -104,6 +104,11 @@ public static class Utils
         return (int)Math.Round(Math.Sqrt(diff.x * diff.x + diff.y * diff.y));
     }
 
+    public static bool IsOdd(IntVector gridPos)
+    {
+        return gridPos.x % 2 == gridPos.y % 2;
+    }
+
     public static float FastSin(float input)
     {
         // wrap input angle to -PI..PI

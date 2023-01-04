@@ -25,11 +25,11 @@
     }
 </style>
 
-<root class="nearby" style="background-color:@(Level.GetLevelBgColor(RoguemojiGame.Instance.LocalPlayer.CurrentLevelId, IsOdd(RoguemojiGame.Instance.LocalPlayer.GridPos)));">
+<root class="nearby" style="background-color:@(Player.ContainingGridManager.GetNearbyBgColor(Player.GridPos));">
     <div class="nearby_bg"></div> 
 
     @{
-        RoguemojiPlayer player = RoguemojiGame.Instance.LocalPlayer;
+        RoguemojiPlayer player = Player;
     }
 
     @if (player?.ContainingGridManager?.GetThingsAtClient(player.GridPos) == null)
@@ -50,6 +50,8 @@
 
 @code
 {
+    public RoguemojiPlayer Player => RoguemojiGame.Instance.LocalPlayer;
+
     public int FlickerFrames { get; set; }
     Vector2 _scrollOffset;
 
@@ -114,10 +116,5 @@
         panel.Thing = null;
         panel.Style.Opacity = 0.5f;
         return panel;
-    }
-
-    bool IsOdd(IntVector gridPos)
-    {
-        return gridPos.x % 2 == gridPos.y % 2;
     }
 }

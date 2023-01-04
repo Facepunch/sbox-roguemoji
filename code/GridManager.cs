@@ -425,6 +425,11 @@ public partial class GridManager : Entity
         }
 	}
 
+	public string GetNearbyBgColor(IntVector gridPos)
+	{
+		return Level.GetLevelBgColor(LevelId, Utils.IsOdd(gridPos));
+	}
+
     public bool HasLineOfSight(IntVector gridPosA, IntVector gridPosB, int sight, out IntVector collisionCell)
     {
 		int x1 = gridPosA.x;

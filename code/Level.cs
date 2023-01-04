@@ -69,9 +69,11 @@ public partial class Level : Entity
     {
         switch (levelId)
         {
-            case LevelId.Forest0: return odd ? "#051509" : "#041408";
-            case LevelId.Forest1: return odd ? "#051509" : "#041408";
-            case LevelId.Forest2: return odd ? "#051509" : "#041408";
+            case LevelId.Forest0: return odd ? "#082b0f" : "#07270e";
+            //case LevelId.Forest0: return odd ? "#083211" : "#082e10";
+            //case LevelId.Forest0: return odd ? "#051609" : "#041408";
+            case LevelId.Forest1: return odd ? "#051609" : "#041408";
+            case LevelId.Forest2: return odd ? "#051609" : "#041408";
             default: return "#000000";
         }
     }

@@ -7,8 +7,7 @@
 @namespace Roguemoji
 
 <style>
-    .log 
-    {
+    .log {
         width:100%;
         //height:100%;
         //height:780px;
@@ -17,7 +16,7 @@
         justify-content: flex-end;
         //overflow: scroll;
         overflow: hidden;
-        border: 1px solid #ffffff15;
+        border: 1px solid #424242;
         border-radius: 3px;
         
     }
@@ -45,7 +44,7 @@
 
     public void WriteMessage(string text, int playerNum)
     {
-        //while (Messages.Count() > MAX_MESSAGES)
+        //while (Messages.Count() > 5)
         //    Messages.Dequeue();
 
         Messages.Enqueue((text, playerNum));
