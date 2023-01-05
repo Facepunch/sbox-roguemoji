@@ -5,66 +5,59 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public class CompPathfinding : ThingComponent
+public partial class Thing : Entity
 {
-    public List<IntVector> GridPath { get; private set; } = new List<IntVector>();
-    
-    public TimeSince TimeSincePathfind { get; private set; }
-
-    public override void Init(Thing thing)
-    {
-        base.Init(thing);
-
-        TimeSincePathfind = 0f;
-    }
+    private List<IntVector> _gridPath;
+    private List<IntVector> _walkable;
 
     public List<IntVector> GetPathTo(IntVector a, IntVector b)
     {
-        TimeSincePathfind = 0f;
+        if (_gridPath == null)
+            _gridPath = new List<IntVector>();
+        else
+            _gridPath.Clear();
 
-        GridManager grid = Thing.ContainingGridManager;
+        _gridPath.Clear();
 
-        GridPath.Clear();
-
-        if((a - b).ManhattanLength <= 1)
+        if ((a - b).ManhattanLength <= 1)
         {
-            GridPath.Add(b);
-            return GridPath;
+            _gridPath.Add(b);
+            return _gridPath;
         }
 
         List<IntVector> tempPath = new List<IntVector>();
-        if(Utils.AStar<IntVector>(a, b, tempPath, GetEdges, GetHScoreFromGridPosToGridPos))
+        if (Utils.AStar<IntVector>(a, b, tempPath, GetEdges, GetHScoreFromGridPosToGridPos))
         {
-            GridPath.AddRange(tempPath);
+            _gridPath.AddRange(tempPath);
 
             // remove start pos
-            GridPath.RemoveAt(0);
+            _gridPath.RemoveAt(0);
         }
 
-        return GridPath;
+        return _gridPath;
     }
-
-    private readonly List<IntVector> _walkable = new List<IntVector>();
 
     public List<IntVector> GetWalkableAdjacentGridPositions(IntVector start)
     {
-        _walkable.Clear();
-        GridManager grid = Thing.ContainingGridManager;
+        if (_walkable == null)
+            _walkable = new List<IntVector>();
+        else
+            _walkable.Clear();
 
         IntVector left = start + new IntVector(-1, 0);
-        if (grid.IsGridPosInBounds(left))
+        if (ContainingGridManager.IsGridPosInBounds(left))
             _walkable.Add(left);
 
         IntVector right = start + new IntVector(1, 0);
-        if (grid.IsGridPosInBounds(right))
+        if (ContainingGridManager.IsGridPosInBounds(right))
             _walkable.Add(right);
 
         IntVector down = start + new IntVector(0, -1);
-        if (grid.IsGridPosInBounds(down))
+        if (ContainingGridManager.IsGridPosInBounds(down))
             _walkable.Add(down);
 
         IntVector up = start + new IntVector(0, 1);
-        if (grid.IsGridPosInBounds(up))
+        if (ContainingGridManager.IsGridPosInBounds(up))
             _walkable.Add(up);
 
         return _walkable;
@@ -84,9 +77,6 @@ public class CompPathfinding : ThingComponent
 
     float GetCostToMoveFromGridPosToAdjacentGridPos(IntVector a, IntVector b)
     {
-        GridManager grid = Thing.ContainingGridManager;
-        float cost = 1f + grid.GetPathfindMovementCost(b);
-
-        return cost;
+        return 1f + ContainingGridManager.GetPathfindMovementCost(b);
     }
 }

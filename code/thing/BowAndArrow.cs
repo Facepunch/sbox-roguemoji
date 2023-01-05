@@ -14,9 +14,9 @@ public partial class BowAndArrow : Thing
     public BowAndArrow()
 	{
 		DisplayIcon = "🏹";
-        DisplayName = "Bow and Arrow";
+        DisplayName = "Longbow";
         Description = "Shoots arrows.";
-        Tooltip = "A bow and arrow.";
+        Tooltip = "A longbow.";
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Flags = ThingFlags.Selectable | ThingFlags.Useable | ThingFlags.UseRequiresAiming;

@@ -71,7 +71,6 @@ public partial class Level : Entity
         {
             case LevelId.Forest0: return odd ? "#082b0f" : "#07270e";
             //case LevelId.Forest0: return odd ? "#083211" : "#082e10";
-            //case LevelId.Forest0: return odd ? "#051609" : "#041408";
             case LevelId.Forest1: return odd ? "#051609" : "#041408";
             case LevelId.Forest2: return odd ? "#051609" : "#041408";
             default: return "#000000";
@@ -94,7 +93,7 @@ public partial class Level : Entity
                 GridManager.SpawnThing<OilBarrel>(new IntVector(GridManager.GridWidth - 1, y));
             }
 
-            GridManager.SpawnThing<Rock>(new IntVector(10, 10));
+            //GridManager.SpawnThing<Golem>(new IntVector(10, 10));
             GridManager.SpawnThing<Leaf>(new IntVector(9, 10));
             GridManager.SpawnThing<Leaf>(new IntVector(21, 19));
 
@@ -115,11 +114,11 @@ public partial class Level : Entity
                     GridManager.SpawnThing<TreeDeciduous>(gridPos);
             }
 
-            //for (int i = 0; i < 2; i++)
-            //{
-            //    if (GridManager.GetRandomEmptyGridPos(out var gridPos))
-            //        GridManager.SpawnThing<Squirrel>(gridPos);
-            //}
+            for (int i = 0; i < 2; i++)
+            {
+                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
+                    GridManager.SpawnThing<Squirrel>(gridPos);
+            }
         }
         else if(levelId == LevelId.Forest1)
         {
