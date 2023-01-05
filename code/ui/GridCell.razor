@@ -27,8 +27,8 @@
         //transform-origin: 0% 50%;
     }
 
-    .image {
-        //background-color: #0000ff88;
+    .is_in_inventory {
+        transition: text-shadow 0.3s linear;
     }
 
     .wielded_thing {
@@ -119,7 +119,7 @@
 </style>
 
 <root class="icon @GetWieldedClass() @GetSolidClass()" )>
-    <div class="image @GetPlayerClass() @GetDraggingClass() @GetCooldownClass(Thing) @Hud.Instance.GetUnusableClass(Thing)" @ref=IconPanel>
+    <div class="@GetPlayerClass() @GetDraggingClass() @GetCooldownClass(Thing) @Hud.Instance.GetUnusableClass(Thing) @GetInventoryClass() @Hud.Instance.GetEquipmentHighlightClass(Thing)" @ref=IconPanel>
         @Thing.DisplayIcon.Substring(Thing.CharSkip) 
 
         @if(Thing.HasTattoo)
@@ -185,6 +185,7 @@
     string GetWieldedClass()    { return IsWielded() ? "wielded" : ""; }
     bool IsWielded()            { return Thing == RoguemojiGame.Instance.LocalPlayer?.WieldedThing; }
     string GetEquipmentClass()  { return Thing.Flags.HasFlag(ThingFlags.Equipment) ? "icon_equipment" : ""; }
+    string GetInventoryClass()  { return Thing.ContainingGridManager.GridType == GridType.Inventory ? "is_in_inventory" : ""; }
     string GetCooldownClass(Thing thing)    { return thing.IsOnCooldown && thing.ContainingGridManager.GridType != GridType.Arena ? "cell_icon_cooldown" : ""; }
 
     protected override Panel CreateTooltipPanel()
@@ -201,11 +202,12 @@
         if (Thing == null)
             return base.BuildHash();
 
+        var player = RoguemojiGame.Instance.LocalPlayer;
         var cooldownHash = Thing.IsOnCooldown ? Thing.CooldownProgressPercent : 0f;
         var wieldedThing = Thing.WieldedThing;
         var wieldedCooldownHash = wieldedThing != null && wieldedThing.IsOnCooldown ? wieldedThing.CooldownProgressPercent : 0f;
-        var player = RoguemojiGame.Instance.LocalPlayer;
-        return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, Thing.GetStatClamped(StatType.Health), cooldownHash, wieldedCooldownHash, player.StatHash);
+        var equipmentHighlightHash = Hud.Instance.GetContainingPanelType(Hud.Instance.MousePosition) == PanelType.EquipmentGrid ? 1 : 0;
+        return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, Thing.GetStatClamped(StatType.Health), cooldownHash, wieldedCooldownHash, equipmentHighlightHash, player.StatHash);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

@@ -321,6 +321,20 @@ public partial class Hud : RootPanel
         return "";
     }
 
+    public string GetEquipmentHighlightClass(Thing thing)
+    {
+        if(GetContainingPanelType(MousePosition) == PanelType.EquipmentGrid && !IsDraggingThing)
+        {
+            var gridManager = thing.ContainingGridManager;
+            if (thing.Flags.HasFlag(ThingFlags.Equipment) && gridManager.GridType == GridType.Inventory)
+            {
+                return "equipment_item_highlight";
+            }
+        }
+
+        return "";
+    }
+
     //public Vector2 GetScreenPosForPos(Vector2 pos)
     //{
     //    var player = RoguemojiGame.Instance.LocalPlayer;
