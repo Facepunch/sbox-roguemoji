@@ -4,14 +4,15 @@ using System;
 namespace Roguemoji;
 public partial class SafetyVest : Thing
 {
-    public int MaxHealthAmount { get; private set; }
-    public int CharismaAmount { get; private set; }
+    public int StealthAmount { get; private set; }
+
+    // todo: resist fire
 
     public SafetyVest()
 	{
 		DisplayIcon = "🦺";
         DisplayName = "Safety Vest";
-        Description = "High visibility, low style.";
+        Description = "Highly visible.";
         Tooltip = "A safety vest.";
         IconDepth = 0;
         ShouldLogBehaviour = true;
@@ -19,23 +20,19 @@ public partial class SafetyVest : Thing
 
         if (Game.IsServer)
         {
-            MaxHealthAmount = 2;
-            CharismaAmount = -1;
+            StealthAmount = -2;
 
-            InitStat(StatType.MaxHealth, MaxHealthAmount, isModifier: true);
-            InitStat(StatType.Charisma, CharismaAmount, int.MinValue, isModifier: true);
+            InitStat(StatType.Stealth, StealthAmount, min: -999, isModifier: true);
         }
     }
 
     public override void OnEquippedTo(Thing thing)
     {
-        thing.AdjustStatMax(StatType.Health, MaxHealthAmount);
-        thing.AdjustStat(StatType.Charisma, CharismaAmount);
+        thing.AdjustStat(StatType.Stealth, StealthAmount);
     }
 
     public override void OnUnequippedFrom(Thing thing)
     {
-        thing.AdjustStatMax(StatType.Health, -MaxHealthAmount);
-        thing.AdjustStat(StatType.Charisma, -CharismaAmount);
+        thing.AdjustStat(StatType.Stealth, -StealthAmount);
     }
 }

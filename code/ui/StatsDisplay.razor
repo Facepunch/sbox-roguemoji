@@ -27,10 +27,10 @@
 
     @foreach(var pair in Thing.Stats)
     {
-        if(!Thing.IsHiddenOnInfoPanel(pair.Key))
+        Stat stat = pair.Value;
+        if (!Thing.IsHiddenOnInfoPanel(stat))
         {
-            <!-- if(pair.Value.CurrentValue != 0) -->
-                <StatContainer Stat=@pair.Value Thing=@Thing></StatContainer>        
+            <StatContainer Stat=@stat Thing=@Thing></StatContainer>        
         }
     }
 </root>
@@ -41,7 +41,9 @@
 
     protected override int BuildHash()
     {
-        // todo
-        return HashCode.Combine( Thing?.GetInfoDisplayHash() ?? 0 );
+        if(Thing == null)
+            return 0;
+
+        return HashCode.Combine( Thing.StatHash );
     }
 }

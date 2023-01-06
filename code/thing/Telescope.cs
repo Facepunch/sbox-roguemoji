@@ -21,8 +21,8 @@ public partial class Telescope : Thing
         {
             SightAmount = 4;
             SpeedAmount = -3;
-            InitStat(StatType.Sight, SightAmount, int.MinValue, isModifier: true);
-            InitStat(StatType.Speed, SpeedAmount, int.MinValue, isModifier: true);
+            InitStat(StatType.Sight, SightAmount, min: -999, isModifier: true);
+            InitStat(StatType.Speed, SpeedAmount, min: -999, isModifier: true);
         }
     }
 

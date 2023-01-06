@@ -26,6 +26,8 @@ public partial class Trait : Entity
     [Net] public Vector2 LabelOffset { get; set; }
     [Net] public Color LabelColor { get; set; }
 
+    public int Hash => HashCode.Combine(Icon, HasTattoo ? TattooIcon : "", HasLabel ? LabelText : "");
+
     public Trait()
     {
         Transmit = TransmitType.Always;
@@ -52,6 +54,7 @@ public partial class Trait : Entity
 public partial class Thing : Entity
 {
     [Net] public IList<Trait> Traits { get; private set; }
+    [Net] public int TraitHash { get; private set; }
 
     public Trait AddTrait(string name, string icon, string description, Vector2 offset, string source = "")
     {
@@ -75,6 +78,7 @@ public partial class Thing : Entity
     {
         Trait trait = AddTrait(name, icon, description, offset, source);
         trait.SetTattoo(tattooIcon, tattooScale, tattooOffset);
+        RefreshTraitHash();
         return trait;
     }
 
@@ -83,6 +87,7 @@ public partial class Thing : Entity
         Trait trait = AddTrait(name, icon, description, offset, source);
         trait.SetTattoo(tattooIcon, tattooScale, tattooOffset);
         trait.SetLabel(labelText, labelFontSize, labelOffset, labelColor);
+        RefreshTraitHash();
         return trait;
     }
 
@@ -90,13 +95,24 @@ public partial class Thing : Entity
     {
         Trait trait = AddTrait(name, icon, description, offset, source);
         trait.SetLabel(labelText, labelFontSize, labelOffset, labelColor);
+        RefreshTraitHash();
         return trait;
     }
 
     public void RemoveTrait(Trait trait)
     {
         if (Traits.Contains(trait))
+        {
             Traits.Remove(trait);
+            RefreshTraitHash();
+        }
+    }
+
+    public void RefreshTraitHash()
+    {
+        TraitHash = 0;
+        foreach (var trait in Traits)
+            TraitHash += trait.Hash;
     }
 
     public void ClearTraits()

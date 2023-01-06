@@ -21,7 +21,7 @@ public partial class Squirrel : Thing
 		Tooltip = "A squirrel.";
 		Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanUseThings;
         PathfindMovementCost = 5f;
-        SightBlockAmount = 8;
+        SightBlockAmount = 5;
         Faction = FactionType.Enemy;
         CantSeeTargetLoseDelay = 4f;
 

@@ -9,7 +9,8 @@ public class CompProjectile : ThingComponent
     public float MoveDelay { get; set; }
     public TimeSince TimeSinceMove { get; set; }
     public int RemainingDistance { get; set; }
-    
+    public Thing Thrower { get; set; }
+
     public override void Init(Thing thing)
     {
         base.Init(thing);

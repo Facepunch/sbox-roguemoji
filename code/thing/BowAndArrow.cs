@@ -62,6 +62,7 @@ public partial class BowAndArrow : Thing
         projectile.Direction = direction;
         projectile.MoveDelay = 0.1f;
         projectile.RemainingDistance = 8;
+        projectile.Thrower = user;
 
         StartCooldown(CooldownTime);
 

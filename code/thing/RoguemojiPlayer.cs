@@ -94,6 +94,7 @@ public partial class RoguemojiPlayer : Thing
         InitStat(StatType.Speed, 5);
         InitStat(StatType.Intelligence, 5);
         InitStat(StatType.Stamina, 5);
+        InitStat(StatType.Stealth, 0, -999, 999);
         InitStat(StatType.Charisma, 3);
         InitStat(StatType.Sight, 9);
         InitStat(StatType.Hearing, 3);
@@ -514,6 +515,7 @@ public partial class RoguemojiPlayer : Thing
         projectile.Direction = direction;
         projectile.MoveDelay = 0.1f;
         projectile.RemainingDistance = 5;
+        projectile.Thrower = this;
 
         MoveThingTo(WieldedThing, GridType.Arena, GridPos);
     }
@@ -955,7 +957,7 @@ public partial class RoguemojiPlayer : Thing
         {
             int amount = changeCurrent * 2;
             AdjustStatMax(StatType.Energy, amount);
-            StaminaDelay = Utils.Map(GetStatClamped(StatType.Stamina), 0, 20, 2.5f, 0.1f);
+            StaminaDelay = Utils.Map(GetStatClamped(StatType.Stamina), 0, 20, 3f, 0.1f);
         }
 
         base.OnChangedStat(statType, changeCurrent, changeMin, changeMax);

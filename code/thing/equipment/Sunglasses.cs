@@ -23,7 +23,7 @@ public partial class Sunglasses : Thing
             SightAmount = -2;
 
             InitStat(StatType.Charisma, CharismaAmount, isModifier: true);
-            InitStat(StatType.Sight, SightAmount, int.MinValue, isModifier: true);
+            InitStat(StatType.Sight, SightAmount, min: -999, isModifier: true);
         }
     }
 

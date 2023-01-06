@@ -6,7 +6,7 @@ using System.Linq;
 namespace Roguemoji;
 
 public enum StatType { 
-    Health, Energy, Mana, Attack, Strength, Speed, Intelligence, Stamina, Charisma, Sight, Hearing, Smell,
+    Health, Energy, Mana, Attack, Strength, Speed, Intelligence, Stamina, Stealth, Charisma, Sight, Hearing, Smell,
     MaxHealth,
 }
 
@@ -51,6 +51,7 @@ public partial class Thing : Entity
             case StatType.Speed: return "🕓️";
             case StatType.Intelligence: return "🧠";
             case StatType.Stamina: return "🏃";
+            case StatType.Stealth: return "🕵️";
             case StatType.Charisma: return "💋";
             case StatType.Sight: return "👁";
             case StatType.Hearing: return "👂️";
@@ -74,6 +75,7 @@ public partial class Thing : Entity
             case StatType.Speed: return "Speed";
             case StatType.Intelligence: return "Intelligence";
             case StatType.Stamina: return "Stamina";
+            case StatType.Stealth: return "Stealth";
             case StatType.Charisma: return "Charisma";
             case StatType.Sight: return "Sight";
             case StatType.Hearing: return "Hearing";
@@ -97,6 +99,7 @@ public partial class Thing : Entity
             case StatType.Speed: return $"Reduces the delay between actions.";
             case StatType.Intelligence: return $"Skill with magic and technology.";
             case StatType.Stamina: return $"Regenerates energy more quickly.";
+            case StatType.Stealth: return $"Skill at avoiding detection.";
             case StatType.Charisma: return $"Likeability and attractiveness.";
             case StatType.Sight: return $"The ability to see farther and see through objects.";
             case StatType.Hearing: return $"The ability to notice sounds from a distance.";
@@ -115,6 +118,8 @@ public partial class Thing : Entity
             case StatType.Speed: return $"Delay: {CompActing.CalculateActionDelay(thing.GetStatClamped(StatType.Speed)).ToString("N2")}s";
             case StatType.Intelligence: return $"Increases {GetStatIcon(StatType.Mana)} capacity.";
             case StatType.Stamina: return $"Increases {GetStatIcon(StatType.Energy)} capacity.";
+            case StatType.Stealth: return $"A value below 0 makes you more noticeable.";
+            case StatType.Charisma: return $"A value below zero makes you more disliked.";
         }
 
         return "";
@@ -127,11 +132,12 @@ public partial class Thing : Entity
             case StatType.Health: return "#ff1111";
             case StatType.Energy: return "#33ff33";
             case StatType.Mana: return "#8888ff";
-            case StatType.Attack: return "#444444";
+            case StatType.Attack: return "#aaaaaa";
             case StatType.Strength: return "#ff8844";
             case StatType.Speed: return "#5555ff";
             case StatType.Intelligence: return "#9922ff";
             case StatType.Stamina: return "#448844";
+            case StatType.Stealth: return "#444444";
             case StatType.Charisma: return "#dd33bb";
             case StatType.Sight: return "#ffff55";
             case StatType.Hearing: return "#aa5500";
@@ -179,12 +185,10 @@ public partial class Thing : Entity
         return false;
     }
 
-    public static bool IsHiddenOnInfoPanel(StatType statType)
+    public static bool IsHiddenOnInfoPanel(Stat stat)
     {
-        switch (statType)
-        {
-
-        }
+        if(stat.StatType == StatType.Stealth && stat.ClampedValue == 0)
+            return true;
 
         return false;
     }

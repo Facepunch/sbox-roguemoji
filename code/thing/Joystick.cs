@@ -54,6 +54,9 @@ public partial class Joystick : Thing
         if (things.Count > 0)
             return;
 
+        if (!user.TrySpendStat(StatType.Energy, EnergyCost))
+            return;
+
         user.SetGridPos(targetGridPos);
 
         if (user is RoguemojiPlayer player)

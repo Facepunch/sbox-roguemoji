@@ -198,8 +198,14 @@ public partial class Thing : Entity
         OnBumpedIntoThing(target);
         target.OnBumpedIntoBy(this);
 
-        var hittingThing = WieldedThing != null ? WieldedThing : this;
-        hittingThing.HitOther(target, direction, shouldUse: WieldedThing != null);
+        if(WieldedThing != null)
+        {
+            WieldedThing.HitOther(target, direction, shouldUse: true);
+        }
+        else
+        {
+            HitOther(target, direction, shouldUse: false);
+        }
     }
 
     public virtual void HitOther(Thing target, Direction direction, bool shouldUse)
@@ -209,6 +215,16 @@ public partial class Thing : Entity
         //    Use(target);
         
         DamageOther(target, direction);
+    }
+
+    public virtual bool InteractWith(Thing target)
+    {
+        return false;
+    }
+
+    public virtual bool BeInteractedWith(Thing wieldedThing)
+    {
+        return false;
     }
 
     public virtual void DamageOther(Thing target, Direction direction)

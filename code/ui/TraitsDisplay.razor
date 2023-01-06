@@ -37,7 +37,9 @@
 
     protected override int BuildHash()
     {
-        // todo
-        return HashCode.Combine( Thing?.GetInfoDisplayHash() ?? 0 );
+        if (Thing == null)
+            return 0;
+
+        return HashCode.Combine( Thing.TraitHash );
     }
 }
