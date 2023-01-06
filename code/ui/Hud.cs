@@ -340,6 +340,18 @@ public partial class Hud : RootPanel
         Floaters.Add(new FloaterData(icon, gridPos, time, offsetStart, offsetEnd, text, requireSight, offsetEasingType, fadeInTime, scale, parent));
     }
 
+    public void RemoveFloater(string icon, Thing parent = null)
+    {
+        for(int i = Floaters.Count - 1; i >= 0; i--)
+        {
+            var floater = Floaters[i];
+            if (floater.parent == parent && (floater.icon == icon || string.IsNullOrEmpty(icon)))
+            {
+                Floaters.RemoveAt(i);
+            }
+        }
+    }
+
     public void Restart()
     {
         Floaters.Clear();

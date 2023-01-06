@@ -68,7 +68,19 @@ public partial class Squirrel : Thing
 
                 //RoguemojiGame.Instance.DebugGridLine(GridPos, Targeting.Target.GridPos, cantSeeTarget ? new Color(1f, 0f, 0f, 0.2f) : new Color(0f, 0f, 1f, 0.2f), 0.1f, CurrentLevelId);
 
-                if(cantSeeTarget)
+                if (Acting.IsActionReady)
+                {
+                    var path = GetPathTo(GridPos, Targeting.Target.GridPos);
+                    if (path != null && path.Count > 0 && !path[0].Equals(GridPos))
+                    {
+                        var dir = GridManager.GetDirectionForIntVector(path[0] - GridPos);
+                        TryMove(dir);
+                    }
+
+                    Acting.PerformedAction();
+                }
+
+                if (cantSeeTarget)
                 {
                     CantSeeTargetElapsedTime += dt;
                     if(CantSeeTargetElapsedTime > CantSeeTargetLoseDelay)
@@ -77,18 +89,6 @@ public partial class Squirrel : Thing
                 else
                 {
                     CantSeeTargetElapsedTime = 0f;
-
-                    if (Acting.IsActionReady)
-                    {
-                        var path = GetPathTo(GridPos, Targeting.Target.GridPos);
-                        if (path != null && path.Count > 0 && !path[0].Equals(GridPos))
-                        {
-                            var dir = GridManager.GetDirectionForIntVector(path[0] - GridPos);
-                            TryMove(dir);
-                        }
-
-                        Acting.PerformedAction();
-                    }
                 }
             }
         }
@@ -98,6 +98,7 @@ public partial class Squirrel : Thing
     {
         base.OnFindTarget(target);
 
+        RoguemojiGame.Instance.RemoveFloater("❔", CurrentLevelId, parent: this);
         RoguemojiGame.Instance.AddFloater("❕", GridPos, 1.55f, CurrentLevelId, new Vector2(0f, -10f), new Vector2(0f, -35f), text: "", requireSight: true, EasingType.QuadOut, 0.05f, parent: this);
         Acting.PerformedAction();
         Acting.TimeElapsed = Game.Random.Float(0f, 0.1f);
