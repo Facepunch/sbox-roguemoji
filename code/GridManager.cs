@@ -200,6 +200,15 @@ public partial class GridManager : Entity
 		}
 	}
 
+	public void PlayerChangedGridPos(RoguemojiPlayer player)
+	{
+		foreach(var pair in GridThings)
+		{
+            foreach (var thing in pair.Value)
+                thing.OnPlayerChangedGridPos(player);
+        }
+	}
+
     int GetDistance(IntVector a, IntVector b)
     {
 		var xDiff = MathF.Abs(b.x - a.x);

@@ -757,4 +757,5 @@ public partial class Thing : Entity
     public virtual void OnCooldownFinish() { foreach (var component in ThingComponents) { component.Value.OnCooldownFinish(); } }
     public virtual void OnFindTarget(Thing target) { foreach (var component in ThingComponents) { component.Value.OnFindTarget(target); } }
     public virtual void OnLoseTarget() { foreach (var component in ThingComponents) { component.Value.OnLoseTarget(); } }
+    public virtual void OnPlayerChangedGridPos(RoguemojiPlayer player) { foreach (var component in ThingComponents) { component.Value.OnPlayerChangedGridPos(player); } }
 }

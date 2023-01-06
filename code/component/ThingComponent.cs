@@ -59,5 +59,6 @@ public abstract class ThingComponent
     public virtual void OnCooldownFinish() { }
     public virtual void OnFindTarget(Thing target) { }
     public virtual void OnLoseTarget() { }
+    public virtual void OnPlayerChangedGridPos(RoguemojiPlayer player) { }
     public virtual void OnRemove() { }
 }

@@ -335,14 +335,6 @@ public partial class Hud : RootPanel
         return "";
     }
 
-    //public Vector2 GetScreenPosForPos(Vector2 pos)
-    //{
-    //    var player = RoguemojiGame.Instance.LocalPlayer;
-    //    var rect = GetRect(PanelType.ArenaGrid);
-
-    //    return rect.TopLeft + pos - player.CameraGridOffset * (40f / ScaleFromScreen) + player.CameraPixelOffset;
-    //}
-
     public void AddFloater(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, string text = "", bool requireSight = true, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, Thing parent = null)
     {
         Floaters.Add(new FloaterData(icon, gridPos, time, offsetStart, offsetEnd, text, requireSight, offsetEasingType, fadeInTime, scale, parent));

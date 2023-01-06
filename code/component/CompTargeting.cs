@@ -34,8 +34,40 @@ public class CompTargeting : ThingComponent
         }
     }
 
+    public override void OnChangedGridPos()
+    {
+        //Log.Info("OnChangedGridPos");
+        CheckForTargets();
+    }
+
+    public override void OnPlayerChangedGridPos(RoguemojiPlayer player)
+    {
+        if (Thing == player)
+            return;
+
+        if (EvaluateTarget(player))
+            SetTarget(player);
+    }
+
+    public bool EvaluateTarget(Thing thing)
+    {
+        if (thing == null || thing.Faction != TargetFaction || thing.IsRemoved || thing == Target)
+            return false;
+
+        int sight = Thing.GetStatClamped(StatType.Sight);
+        int distance = Utils.GetDistance(Thing.GridPos, thing.GridPos);
+        int existingDistance = Target != null ? Utils.GetDistance(Thing.GridPos, Target.GridPos) : int.MaxValue;
+        if (distance <= sight && distance < existingDistance)
+        {
+            if (Thing.ContainingGridManager.HasLineOfSight(Thing.GridPos, thing.GridPos, sight, out IntVector collisionCell))
+                return true;
+        }
+
+        return false;
+    }
+
     private List<Thing> _potentialTargets = new List<Thing>();
-    public void CheckForTarget()
+    public void CheckForTargets()
     {
         var gridManager = Thing.ContainingGridManager;
         _potentialTargets.Clear();
@@ -48,9 +80,7 @@ public class CompTargeting : ThingComponent
                     continue;
 
                 if(thing.Faction == TargetFaction)
-                {
                     _potentialTargets.Add(thing);
-                }
             }
         }
 

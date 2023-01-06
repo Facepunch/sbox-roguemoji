@@ -1079,6 +1079,7 @@ public partial class RoguemojiPlayer : Thing
         base.OnChangedGridPos();
 
         RefreshVisibility(To.Single(this));
+        ContainingGridManager.PlayerChangedGridPos(this);
 
         //InventoryGridManager.SetWidth(InventoryGridManager.GridWidth - 1);
         //var nearbyThings = ContainingGridManager.GetThingsWithinRange(GridPos, 2, allFlags: ThingFlags.Solid);
