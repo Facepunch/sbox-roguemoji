@@ -18,6 +18,8 @@ public enum ThingFlags
     CanUseThings = 64,
 }
 
+public enum FactionType { Neutral, Player, Enemy }
+
 public class TattooData
 {
     public string Icon { get; set; }
@@ -85,6 +87,8 @@ public partial class Thing : Entity
 
     [Net] public float StaminaTimer { get; set; }
     [Net] public float StaminaDelay { get; set; }
+
+    [Net] public FactionType Faction { get; set; }
 
     public virtual string AbilityName => "Ability";
 
@@ -751,4 +755,6 @@ public partial class Thing : Entity
     public virtual void OnRemoveComponent(TypeDescription type) { foreach (var component in ThingComponents) { component.Value.OnRemoveComponent(type); } }
     public virtual void OnCooldownStart() { foreach (var component in ThingComponents) { component.Value.OnCooldownStart(); } }
     public virtual void OnCooldownFinish() { foreach (var component in ThingComponents) { component.Value.OnCooldownFinish(); } }
+    public virtual void OnFindTarget(Thing target) { foreach (var component in ThingComponents) { component.Value.OnFindTarget(target); } }
+    public virtual void OnLoseTarget() { foreach (var component in ThingComponents) { component.Value.OnLoseTarget(); } }
 }

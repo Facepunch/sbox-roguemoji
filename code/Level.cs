@@ -114,7 +114,7 @@ public partial class Level : Entity
                     GridManager.SpawnThing<TreeDeciduous>(gridPos);
             }
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 6; i++)
             {
                 if (GridManager.GetRandomEmptyGridPos(out var gridPos))
                     GridManager.SpawnThing<Squirrel>(gridPos);

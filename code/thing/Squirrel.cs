@@ -19,6 +19,7 @@ public partial class Squirrel : Thing
 		Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanUseThings;
         PathfindMovementCost = 5f;
         SightBlockAmount = 8;
+        Faction = FactionType.Enemy;
 
         InitStat(StatType.Health, 5, 0, 5);
         InitStat(StatType.Attack, 1);
@@ -35,8 +36,8 @@ public partial class Squirrel : Thing
 
         Targeting = AddComponent<CompTargeting>();
         Acting = AddComponent<CompActing>();
-        Acting.ActionDelay = 1.5f;
-        Acting.TimeElapsed = Game.Random.Float(0f, 1.5f);
+        Acting.ActionDelay = 1f;
+        Acting.TimeElapsed = Game.Random.Float(0f, 1f);
     }
 
     public override void Update(float dt)
@@ -48,7 +49,8 @@ public partial class Squirrel : Thing
 
         if (!Targeting.HasTarget)
         {
-            Targeting.Target = RoguemojiGame.Instance.GetClosestPlayer(GridPos);
+            Targeting.CheckForTarget();
+            //Targeting.Target = RoguemojiGame.Instance.GetClosestPlayer(GridPos);
         }
         else
         {
@@ -58,7 +60,7 @@ public partial class Squirrel : Thing
             }
             else
             {
-                //Color color = ContainingGridManager.HasLineOfSight(GridPos, Targeting.Target.GridPos, GetStatClamped(StatType.Sight), out IntVector collisionCell) ? Color.Blue : Color.Red;
+                //Color color = ContainingGridManager.HasLineOfSight(GridPos, Targeting.Target.GridPos, GetStatClamped(StatType.Sight), out IntVector collisionCell) ? new Color(0f, 0f, 1f, 0.1f) : new Color(1f, 0f, 0f, 0.1f);
                 //RoguemojiGame.Instance.DebugGridLine(GridPos, collisionCell, color, 0.05f, CurrentLevelId);
 
                 if (Acting.IsActionReady)
@@ -76,6 +78,15 @@ public partial class Squirrel : Thing
         }
     }
 
+    public override void OnFindTarget(Thing target)
+    {
+        base.OnFindTarget(target);
+
+        RoguemojiGame.Instance.AddFloater("❕", GridPos, 1.55f, CurrentLevelId, new Vector2(0f, -10f), new Vector2(0f, -35f), text: "", requireSight: true, EasingType.QuadOut, 0.1f, parent: this);
+        Acting.PerformedAction();
+        Acting.TimeElapsed = Game.Random.Float(0f, 0.1f);
+    }
+
     public override void TakeDamage(Thing source)
     {
         base.TakeDamage(source);
@@ -83,8 +94,6 @@ public partial class Squirrel : Thing
 
     public override void Destroy()
     {
-        Log.Info("Destroy - ContainingGridManager: " + ContainingGridManager);
-
         if(Game.Random.Float(0f, 1f) < 0.5f)
             ContainingGridManager.SpawnThing<Bone>(GridPos);
 

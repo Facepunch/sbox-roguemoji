@@ -8,7 +8,7 @@ using static Roguemoji.DebugDrawing;
 namespace Roguemoji;
 
 public enum PanelType { None, ArenaGrid, InventoryGrid, EquipmentGrid, Wielding, PlayerIcon, Log, Nearby, Info, Character, Stats, Chatbox, LevelLabel };
-public enum CursorMode { Point, Pinch, Invalid, Write, PointDown, ThumbsUp, Ok, Check, Pin, MiddleFinger, Point2, PointLeft, PointRight }
+public enum CursorMode { Point, Pinch, Invalid, Write, PointDown, ThumbsUp, Ok, Check, MiddleFinger, Point2, PointLeft, PointRight }
 
 public struct FloaterData
 {

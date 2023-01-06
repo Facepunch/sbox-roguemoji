@@ -83,6 +83,7 @@ public partial class RoguemojiPlayer : Thing
         SightBlockAmount = 10;
         IsAiming = false;
         SelectedThing = null;
+        Faction = FactionType.Player;
 
         ClearStats();
         InitStat(StatType.Health, 10, 0, 10);
@@ -206,6 +207,9 @@ public partial class RoguemojiPlayer : Thing
 	{
 		if(Game.IsServer)
 		{
+            if (Input.Pressed(InputButton.View)) 
+                CharacterHotkeyPressed();
+
             if (!IsDead)
             {
                 if (!IsAiming)
@@ -224,7 +228,6 @@ public partial class RoguemojiPlayer : Thing
                     else if (Input.Pressed(InputButton.Drop))                                                   DropWieldedItem();
                     else if (Input.Pressed(InputButton.Jump))                                                   UseWieldedThing();
                     else if (Input.Pressed(InputButton.Menu))                                                   WieldThing(null);
-                    else if (Input.Pressed(InputButton.View))                                                   CharacterHotkeyPressed();
                     else if (Input.Pressed(InputButton.Left))                                                   TryMove(Direction.Left, shouldQueueAction: true);
                     else if (Input.Pressed(InputButton.Right))                                                  TryMove(Direction.Right, shouldQueueAction: true);
                     else if (Input.Pressed(InputButton.Back))                                                   TryMove(Direction.Down, shouldQueueAction: true);
@@ -775,7 +778,7 @@ public partial class RoguemojiPlayer : Thing
 
     public void InventoryThingDragged(Thing thing, PanelType destinationPanelType, IntVector targetGridPos, bool draggedWieldedThing)
     {
-        if (destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.Nearby || destinationPanelType == PanelType.None)
+        if (destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.Nearby)// || destinationPanelType == PanelType.None)
         {
             MoveThingTo(thing, GridType.Arena, GridPos);
         }
@@ -831,7 +834,7 @@ public partial class RoguemojiPlayer : Thing
 
     public void EquipmentThingDragged(Thing thing, PanelType destinationPanelType, IntVector targetGridPos)
     {
-        if (destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.Nearby || destinationPanelType == PanelType.None)
+        if (destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.Nearby)// || destinationPanelType == PanelType.None)
         {
             MoveThingTo(thing, GridType.Arena, GridPos);
         }

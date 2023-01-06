@@ -57,5 +57,7 @@ public abstract class ThingComponent
     public virtual void OnRemoveComponent(TypeDescription type) { }
     public virtual void OnCooldownStart() { }
     public virtual void OnCooldownFinish() { }
+    public virtual void OnFindTarget(Thing target) { }
+    public virtual void OnLoseTarget() { }
     public virtual void OnRemove() { }
 }

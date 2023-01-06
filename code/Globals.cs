@@ -7,6 +7,7 @@ using Sandbox;
 namespace Roguemoji;
 
 public enum IconType { Blink, Teleport }
+public enum VerbType { Use, Read }
 
 public static class Globals
 {
@@ -19,5 +20,19 @@ public static class Globals
         }
 
         return "❓";
+    }
+
+    public static string GetStatReqString(StatType statType, int reqAmount, VerbType verbType)
+    {
+        string icon = Thing.GetStatIcon(statType);
+        string verb = "";
+
+        switch(verbType) 
+        {
+            case VerbType.Use: verb = "use"; break;
+            case VerbType.Read: verb = "read"; break;
+        }
+
+        return $"You need {reqAmount}{icon} to {verb} this.";
     }
 }
