@@ -116,7 +116,7 @@ public partial class RoguemojiPlayer : Thing
         EquipmentGridManager.Restart();
 
         for (int x = 0; x < RoguemojiGame.InventoryWidth; x++)
-            for (int y = 0; y < RoguemojiGame.InventoryHeight; y++)
+            for (int y = 0; y < RoguemojiGame.InventoryHeight - 1; y++)
                 SpawnRandomInventoryThing(new IntVector(x, y));
 
         RoguemojiGame.Instance.RefreshGridPanelClient(GridType.Inventory);
@@ -300,7 +300,7 @@ public partial class RoguemojiPlayer : Thing
         RoguemojiGame.Instance.FlickerWieldingPanel();
     }
 
-    public new bool TryMove( Direction direction, bool shouldQueueAction = false )
+    public new bool TryMove( Direction direction, bool shouldQueueAction = false, bool shouldAnimate = true )
 	{
         if (!Acting.IsActionReady)
         {
@@ -322,7 +322,9 @@ public partial class RoguemojiPlayer : Thing
                 SetIcon("😀");
 
             var movedCamera = RecenterCamera(shouldAnimate: true);
-            VfxSlide(direction, movedCamera ? 0.1f : 0.2f, 40f);
+
+            if(shouldAnimate)
+                VfxSlide(direction, movedCamera ? 0.1f : 0.2f, 40f);
         }
 		else 
 		{

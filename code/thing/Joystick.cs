@@ -50,19 +50,24 @@ public partial class Joystick : Thing
         if (IsOnCooldown)
             return;
 
-        var things = user.ContainingGridManager.GetThingsAt(targetGridPos).WithAll(ThingFlags.Solid).ToList();
-        if (things.Count > 0)
-            return;
-
         if (!user.TrySpendStat(StatType.Energy, EnergyCost))
             return;
 
         var startingGridPos = user.GridPos;
-        user.SetGridPos(targetGridPos);
-        user.VfxFly(startingGridPos, 0.2f);
 
-        if (user is RoguemojiPlayer player)
-            player.RecenterCamera(shouldAnimate: true);
+        var direction = GridManager.GetDirectionForIntVector(targetGridPos - startingGridPos);
+        var player = (RoguemojiPlayer)user;
+        bool success = player != null
+            ? player.TryMove(direction, shouldQueueAction: false, shouldAnimate: false) 
+            : user.TryMove(direction, shouldAnimate: false);
+
+        if(success)
+        {
+            user.VfxFly(startingGridPos, 0.2f);
+
+            if (player != null)
+                player.RecenterCamera(shouldAnimate: true);
+        }
 
         StartCooldown(CooldownTime);
 
@@ -87,7 +92,7 @@ public partial class Joystick : Thing
 
                 var gridPos = ThingWieldingThis.GridPos + new IntVector(x, y);
                 var gridManager = ThingWieldingThis.ContainingGridManager;
-                if (!gridManager.IsGridPosInBounds(gridPos) || gridManager.GetThingsAtClient(gridPos).WithAll(ThingFlags.Solid).ToList().Count > 0)
+                if (!gridManager.IsGridPosInBounds(gridPos))
                     continue;
 
                 aimingCells.Add(gridPos);
