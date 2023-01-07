@@ -63,8 +63,8 @@ public partial class Squirrel : Thing
             }
             else
             {
-                var sight = GetStatClamped(StatType.Sight);
-                bool cantSeeTarget = Utils.GetDistance(GridPos, Targeting.Target.GridPos) > sight || !ContainingGridManager.HasLineOfSight(GridPos, Targeting.Target.GridPos, sight, out IntVector collisionCell);
+                int adjustedSight = Math.Max(GetStatClamped(StatType.Sight) - Targeting.Target.GetStatClamped(StatType.Stealth), 1);
+                bool cantSeeTarget = Utils.GetDistance(GridPos, Targeting.Target.GridPos) > adjustedSight || !ContainingGridManager.HasLineOfSight(GridPos, Targeting.Target.GridPos, adjustedSight, out IntVector collisionCell);
 
                 //RoguemojiGame.Instance.DebugGridLine(GridPos, Targeting.Target.GridPos, cantSeeTarget ? new Color(1f, 0f, 0f, 0.2f) : new Color(0f, 0f, 1f, 0.2f), 0.1f, CurrentLevelId);
 
@@ -108,6 +108,7 @@ public partial class Squirrel : Thing
     {
         base.OnLoseTarget();
 
+        RoguemojiGame.Instance.RemoveFloater("❕", CurrentLevelId, parent: this);
         RoguemojiGame.Instance.AddFloater("❔", GridPos, Game.Random.Float(0.95f, 1.1f), CurrentLevelId, new Vector2(0f, -10f), new Vector2(0f, -30f), text: "", requireSight: false, EasingType.QuadOut, 0.1f, parent: this);
         Acting.PerformedAction();
         Acting.TimeElapsed = Game.Random.Float(0f, 0.1f);

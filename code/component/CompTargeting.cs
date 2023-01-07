@@ -36,7 +36,6 @@ public class CompTargeting : ThingComponent
 
     public override void OnChangedGridPos()
     {
-        //Log.Info("OnChangedGridPos");
         CheckForTargets();
     }
 
@@ -49,17 +48,17 @@ public class CompTargeting : ThingComponent
             SetTarget(player);
     }
 
-    public bool EvaluateTarget(Thing thing)
+    public bool EvaluateTarget(Thing other)
     {
-        if (thing == null || thing.Faction != TargetFaction || thing.IsRemoved || thing == Target)
+        if (other == null || other.Faction != TargetFaction || other.IsRemoved || other == Target)
             return false;
 
-        int sight = Thing.GetStatClamped(StatType.Sight);
-        int distance = Utils.GetDistance(Thing.GridPos, thing.GridPos);
+        int adjustedSight = Math.Max(Thing.GetStatClamped(StatType.Sight) - other.GetStatClamped(StatType.Stealth), 1);
+        int distance = Utils.GetDistance(Thing.GridPos, other.GridPos);
         int existingDistance = Target != null ? Utils.GetDistance(Thing.GridPos, Target.GridPos) : int.MaxValue;
-        if (distance <= sight && distance < existingDistance)
+        if (distance <= adjustedSight && distance < existingDistance)
         {
-            if (Thing.ContainingGridManager.HasLineOfSight(Thing.GridPos, thing.GridPos, sight, out IntVector collisionCell))
+            if (Thing.ContainingGridManager.HasLineOfSight(Thing.GridPos, other.GridPos, adjustedSight, out IntVector collisionCell))
                 return true;
         }
 
@@ -74,13 +73,13 @@ public class CompTargeting : ThingComponent
         foreach(var pair in gridManager.GridThings)
         {
             var things = pair.Value;
-            foreach(var thing in things)
+            foreach(var other in things)
             {
-                if (thing == null || thing == Thing || thing.IsRemoved)
+                if (other == null || other == Thing || other.IsRemoved)
                     continue;
 
-                if(thing.Faction == TargetFaction)
-                    _potentialTargets.Add(thing);
+                if(other.Faction == TargetFaction)
+                    _potentialTargets.Add(other);
             }
         }
 
@@ -88,14 +87,15 @@ public class CompTargeting : ThingComponent
         Thing target = null;
         int sight = Thing.GetStatClamped(StatType.Sight);
 
-        foreach (var thing in _potentialTargets)
+        foreach (var other in _potentialTargets)
         {
-            int distance = Utils.GetDistance(Thing.GridPos, thing.GridPos);
-            if(distance <= sight && distance < closestDistance)
+            int adjustedSight = Math.Max(sight - other.GetStatClamped(StatType.Stealth), 1);
+            int distance = Utils.GetDistance(Thing.GridPos, other.GridPos);
+            if (distance <= adjustedSight && distance < closestDistance)
             {
-                if(gridManager.HasLineOfSight(Thing.GridPos, thing.GridPos, sight, out IntVector collisionCell))
+                if(gridManager.HasLineOfSight(Thing.GridPos, other.GridPos, adjustedSight, out IntVector collisionCell))
                 {
-                    target = thing;
+                    target = other;
                     closestDistance = distance;
                 }
             }
