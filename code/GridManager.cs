@@ -75,6 +75,8 @@ public partial class GridManager : Entity
         thing.SetGridPos(gridPos);
 		thing.CurrentLevelId = LevelId;
 
+		thing.OnSpawned();
+
         return thing;
     }
 
@@ -82,8 +84,9 @@ public partial class GridManager : Entity
 	{
 		Things.Add(thing);
 		thing.ContainingGridManager = this;
+		thing.ContainingGridType = GridType;
 
-		var player = thing as RoguemojiPlayer;
+        var player = thing as RoguemojiPlayer;
 		if (player != null)
             AddPlayer(player);
     }
@@ -94,6 +97,7 @@ public partial class GridManager : Entity
 
 		Things.Remove(thing);
 		thing.ContainingGridManager = null;
+		thing.ContainingGridType = GridType.None;
 
         var player = thing as RoguemojiPlayer;
         if (player != null)
@@ -289,6 +293,16 @@ public partial class GridManager : Entity
         return Direction.None;
     }
 
+	public static List<Direction> GetCardinalDirections()
+	{
+		return new List<Direction>() { Direction.Left, Direction.Right, Direction.Down, Direction.Up };
+	}
+
+    public static List<Direction> GetAllDirections()
+    {
+        return new List<Direction>() { Direction.Left, Direction.LeftUp, Direction.Up, Direction.RightUp, Direction.Right, Direction.RightDown, Direction.Down, Direction.LeftDown };
+    }
+
     public IEnumerable<Thing> GetThingsAt(IntVector gridPos)
     {
         Game.AssertServer();
@@ -378,7 +392,40 @@ public partial class GridManager : Entity
         return false;
     }
 
-	public void Restart()
+    public bool GetRandomEmptyAdjacentGridPos(IntVector startGridPos, out IntVector gridPos, bool allowNonSolid = false, bool cardinalOnly = false)
+	{
+        List<IntVector> gridPositions = new();
+        gridPos = IntVector.Zero;
+
+        for (int x = -1; x <= 1; x++)
+		{
+            for (int y = -1; y <= 1; y++)
+			{
+				if (x == 0 && y == 0)
+					continue;
+
+				var currGridPos = startGridPos + new IntVector(x, y);
+				if(!IsGridPosInBounds(currGridPos))
+					return false;
+
+                var things = allowNonSolid ? GetThingsAt(currGridPos).WithAll(ThingFlags.Solid) : GetThingsAt(currGridPos);
+
+                if (things.Count() == 0)
+					gridPositions.Add(currGridPos);
+            }
+        }
+
+		if(gridPositions.Count > 0)
+		{
+			gridPos = gridPositions[Game.Random.Int(0, gridPositions.Count - 1)];
+			return true;
+		}
+
+        return false;
+    }
+
+
+    public void Restart()
 	{
         foreach (var thing in Things)
         {

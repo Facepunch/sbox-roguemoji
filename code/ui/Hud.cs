@@ -90,7 +90,7 @@ public partial class Hud : RootPanel
 		// if dragging a nearby thing, stop when moving
 		if(IsDraggingThing && !_dragStartPlayerGridPos.Equals(RoguemojiGame.Instance.LocalPlayer.GridPos))
 		{
-			if(DraggedThing != null && DraggedThing.ContainingGridManager.GridType == GridType.Arena)
+			if(DraggedThing != null && DraggedThing.ContainingGridType == GridType.Arena)
 				StopDragging();
 		}
 
@@ -165,9 +165,9 @@ public partial class Hud : RootPanel
                 return;
             }
 
-            if (DraggedThing.ContainingGridManager.GridType == GridType.Inventory)
+            if (DraggedThing.ContainingGridType == GridType.Inventory)
 				RoguemojiGame.InventoryThingDraggedCmd(DraggedThing.NetworkIdent, destinationPanelType, targetGridPos.x, targetGridPos.y, wieldedThingDragged: DraggedPanelType == PanelType.Wielding);
-			else if (DraggedThing.ContainingGridManager.GridType == GridType.Equipment)
+			else if (DraggedThing.ContainingGridType == GridType.Equipment)
                 RoguemojiGame.EquipmentThingDraggedCmd(DraggedThing.NetworkIdent, destinationPanelType, targetGridPos.x, targetGridPos.y);
             else
 				RoguemojiGame.NearbyThingDraggedCmd(DraggedThing.NetworkIdent, destinationPanelType, targetGridPos.x, targetGridPos.y);

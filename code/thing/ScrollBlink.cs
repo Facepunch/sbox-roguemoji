@@ -48,7 +48,7 @@ public partial class ScrollBlink : Thing
 
     public override void Use(Thing user, IntVector targetGridPos)
     {
-        var things = ContainingGridManager.GetThingsAt(targetGridPos).WithAll(ThingFlags.Solid).ToList();
+        var things = user.ContainingGridManager.GetThingsAt(targetGridPos).WithAll(ThingFlags.Solid).ToList();
         if (things.Count > 0)
             return;
 

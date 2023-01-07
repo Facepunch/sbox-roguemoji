@@ -35,17 +35,20 @@
         width: 20px;
         height: 20px;
         position: absolute;
-        left: 20px;
-        top: 17px;
-        font-size: 18px;
         pointer-events: none;
         //background-color: #ff000088;
+        //justify-content: center;
+        //align-items: center;
+        //text-align: center;
+        text-stroke-color: #000000;
+        text-stroke-width: 2px;
+        text-shadow: 0px 0px 0px #000000;
     }
 
     .solid {
-        text-shadow: 0px 0px 8px #000000;
+        text-shadow: 0px 0px 4px #000000;
     }
-    
+
     .dragging {
         opacity: 0.2;
         transition: opacity 0.1s ease-in;
@@ -149,21 +152,23 @@
 
     @if (Thing.WieldedThing != null)
     {
-        <div class="wielded_thing @GetCooldownClass(Thing.WieldedThing)">
-            @Thing.WieldedThing.DisplayIcon.Substring(Thing.WieldedThing.CharSkip)
+        var wieldedThing = Thing.WieldedThing;
+        var wieldedOffset = Thing.WieldedThingOffset;
+        <div class="wielded_thing @GetCooldownClass(wieldedThing)" style="left:@(wieldedOffset.x)px; top:@(wieldedOffset.y)px; font-size:@(Thing.WieldedThingFontSize);">
+            @wieldedThing.DisplayIcon.Substring(wieldedThing.CharSkip)
 
-            @if (Thing.WieldedThing.HasTattoo)
+            @if (wieldedThing.HasTattoo)
             {
-                int fontSize = MathX.FloorToInt(18f * Thing.WieldedThing.TattooData.Scale);
-                var offset = Thing.WieldedThing.TattooData.OffsetWielded;
+                int fontSize = MathX.FloorToInt(18f * wieldedThing.TattooData.Scale);
+                var offset = wieldedThing.TattooData.OffsetWielded;
                 <div class="grid_cell_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                    @Thing.WieldedThing.TattooData.Icon
+                    @wieldedThing.TattooData.Icon
                 </div>
             }
         </div>
     }
 
-    @if (Thing.IsOnCooldown && Thing.ContainingGridManager.GridType != GridType.Arena)
+    @if (Thing.IsOnCooldown && Thing.ContainingGridType != GridType.Arena)
     {
         var cooldownTimer = (Thing.CooldownTimer < 9.8f ? Thing.CooldownTimer : MathF.Ceiling(Thing.CooldownTimer));
 
@@ -185,8 +190,8 @@
     string GetWieldedClass()    { return IsWielded() ? "wielded" : ""; }
     bool IsWielded()            { return Thing == RoguemojiGame.Instance.LocalPlayer?.WieldedThing; }
     string GetEquipmentClass()  { return Thing.HasFlag(ThingFlags.Equipment) ? "icon_equipment" : ""; }
-    string GetInventoryClass()  { return Thing.ContainingGridManager.GridType == GridType.Inventory ? "is_in_inventory" : ""; }
-    string GetCooldownClass(Thing thing)    { return thing.IsOnCooldown && thing.ContainingGridManager.GridType != GridType.Arena ? "cell_icon_cooldown" : ""; }
+    string GetInventoryClass()  { return Thing.ContainingGridType == GridType.Inventory ? "is_in_inventory" : ""; }
+    string GetCooldownClass(Thing thing)    { return thing.IsOnCooldown && thing.ContainingGridType != GridType.Arena ? "cell_icon_cooldown" : ""; }
 
     protected override Panel CreateTooltipPanel()
     {
@@ -238,7 +243,7 @@
         bool shift = Input.Down(InputButton.Run);
         bool rightClick = e.Button == "mouseright";
 
-        if(Thing.ContainingGridManager.GridType == GridType.Arena)
+        if (Thing.ContainingGridType == GridType.Arena)
         {
             var player = RoguemojiGame.Instance.LocalPlayer;
             var gridPos = Thing.GridPos;
@@ -249,14 +254,14 @@
             else 
                 Hud.Instance.GridCellClicked(Thing.GridPos, GridType.Arena, rightClick, shift, doubleClick: false, visible);
         }
-        else if(Thing.ContainingGridManager.GridType == GridType.Inventory)
+        else if (Thing.ContainingGridType == GridType.Inventory)
         {
             if(shift || rightClick)
                 Hud.Instance.GridCellClicked(Thing.GridPos, GridType.Inventory, rightClick, shift, doubleClick: false);
             else
                 Hud.Instance.StartDragging(Thing, this, rightClick, PanelType.InventoryGrid);
         }
-        else if(Thing.ContainingGridManager.GridType == GridType.Equipment)
+        else if (Thing.ContainingGridType == GridType.Equipment)
         {
             if(shift || rightClick)
                 Hud.Instance.GridCellClicked(Thing.GridPos, GridType.Equipment, rightClick, shift, doubleClick: false);
@@ -276,7 +281,7 @@
         bool shift = Input.Down(InputButton.Run);
         bool rightClick = e.Button == "mouseright";
 
-        if (Thing.ContainingGridManager.GridType == GridType.Inventory)
+        if (Thing.ContainingGridType == GridType.Inventory)
         {
             Hud.Instance.GridCellClicked(Thing.GridPos, GridType.Inventory, rightClick, shift, doubleClick: true);
         }

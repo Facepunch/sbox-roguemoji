@@ -186,15 +186,7 @@
     protected override int BuildHash()
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
-
-        int statHash = 0;
-        foreach(var pair in player.Stats)
-        {
-            if(Thing.ShouldShowOnCharacterPanel(pair.Key))
-                statHash += pair.Value.HashCode;
-        }
-
-        return HashCode.Combine(player.GetInfoDisplayHash(), player.ActionRechargePercent, statHash);
+        return HashCode.Combine(player.GetInfoDisplayHash(), player.ActionRechargePercent, player.StatHash);
     }
 
     public void OnMouseDownPlayerIcon(MousePanelEvent e)

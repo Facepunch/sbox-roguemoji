@@ -35,6 +35,7 @@ public class TattooData
 public partial class Thing : Entity
 {
     [Net] public IntVector GridPos { get; protected set; }
+    [Net] public GridType ContainingGridType { get; set; }
     [Net] public GridManager ContainingGridManager { get; set; }
 
     [Net] public string DisplayIcon { get; protected set; }
@@ -68,6 +69,10 @@ public partial class Thing : Entity
 
     [Net] public Thing WieldedThing { get; protected set; }
     [Net] public Thing ThingWieldingThis { get; protected set; }
+    public Vector2 WieldedThingOffset { get; set; } // Client-only
+    public int WieldedThingFontSize { get; set; } // Client-only
+    public Vector2 InfoWieldedThingOffset { get; set; } // Client-only
+    public int InfoWieldedThingFontSize { get; set; } // Client-only
 
     [Net] public int SightBlockAmount { get; set; }
 
@@ -166,6 +171,7 @@ public partial class Thing : Entity
     public virtual bool TryMove(Direction direction, bool shouldAnimate = true)
     {
         Sandbox.Diagnostics.Assert.True(direction != Direction.None);
+        Sandbox.Diagnostics.Assert.True(ContainingGridType != GridType.None);
 
         IntVector vec = GridManager.GetIntVectorForDirection(direction);
         IntVector newGridPos = GridPos + vec;
@@ -373,15 +379,10 @@ public partial class Thing : Entity
             return;
 
         IsRemoved = true;
-        //if ( ShouldLogBehaviour )
-        //      {
-        //	if (HasFlag(ThingFlags.InInventory))
-        //		RoguemojiGame.Instance.LogMessage(DisplayIcon + DisplayName + " removed from " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
-        //	else
-        //		RoguemojiGame.Instance.LogMessage(DisplayIcon + DisplayName + " removed.", PlayerNum);
-        //}
 
-        ContainingGridManager.RemoveThing(this);
+        if(ContainingGridType != GridType.None)
+            ContainingGridManager.RemoveThing(this);
+
         Delete();
     }
 
@@ -391,7 +392,7 @@ public partial class Thing : Entity
         if (Hud.Instance == null)
             return;
 
-        GridPanel panel = Hud.Instance.GetGridPanel(ContainingGridManager.GridType);
+        GridPanel panel = Hud.Instance.GetGridPanel(ContainingGridType);
         if (panel == null)
             return;
 
@@ -494,7 +495,7 @@ public partial class Thing : Entity
             var player = RoguemojiGame.Instance.LocalPlayer;
             var offsetGridPos = GridPos - player.CameraGridOffset;
 
-            var panel = Hud.Instance.GetGridPanel(ContainingGridManager.GridType);
+            var panel = Hud.Instance.GetGridPanel(ContainingGridType);
             if (panel != null)
                 DebugOverlay.ScreenText(text, panel.GetCellPos(offsetGridPos), line, color, time);
         }
@@ -556,11 +557,12 @@ public partial class Thing : Entity
     }
 
     [ClientRpc]
-    public void VfxFly(IntVector startingGridPos, float lifetime)
+    public void VfxFly(IntVector startingGridPos, float lifetime, float heightY = 0f)
     {
         var fly = AddComponent<VfxFly>();
         fly.StartingGridPos = startingGridPos;
         fly.Lifetime = lifetime;
+        fly.HeightY = heightY;
     }
 
     public override int GetHashCode()
@@ -604,6 +606,14 @@ public partial class Thing : Entity
         {
             thing.OnWieldedBy(this);
         }
+    }
+
+    public void WieldAndRemoveFromGrid(Thing thing)
+    {
+        WieldThing(thing);
+
+        if (thing.ContainingGridType != GridType.None)
+            thing.ContainingGridManager.RemoveThing(thing);
     }
 
     /// <summary> For players, use MoveThingTo to equip things, and this will be called automatically. </summary>
@@ -766,6 +776,7 @@ public partial class Thing : Entity
             component.Value.OnChangedStat(statType, changeCurrent, changeMin, changeMax);
     }
 
+    public virtual void OnSpawned() { }
     public virtual void OnEquipThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnEquipThing(thing); } }
     public virtual void OnUnequipThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnUnequipThing(thing); } }
     public virtual void OnEquippedTo(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnEquippedTo(thing); } }

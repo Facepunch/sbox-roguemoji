@@ -203,7 +203,7 @@ public partial class RoguemojiGame : GameManager
         var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
         Thing thing = FindByIndex(networkIdent) as Thing;
 
-		if (thing.ContainingGridManager.GridType != GridType.Arena)
+		if (thing.ContainingGridType != GridType.Arena)
 		{
 			Log.Info("Trying to pick up " + thing.Name + " but it's no longer on the ground!");
             return;
@@ -367,6 +367,18 @@ public partial class RoguemojiGame : GameManager
 
 		return null;
 	}
+
+    public T SpawnThing<T>(LevelId levelId) where T : Thing
+    {
+        Game.AssertServer();
+
+        var thing = TypeLibrary.GetType(typeof(T)).Create<T>();
+        thing.CurrentLevelId = levelId;
+
+        thing.OnSpawned();
+
+        return thing;
+    }
 
     public void AddFloater(string icon, IntVector gridPos, float time, LevelId levelId, Vector2 offsetStart, Vector2 offsetEnd, string text = "", bool requireSight = true, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, Thing parent = null)
     {

@@ -23,7 +23,7 @@ public class CompProjectile : ThingComponent
     {
         base.Update(dt);
 
-        if(Thing.ContainingGridManager.GridType != GridType.Arena)
+        if(Thing.ContainingGridType != GridType.Arena)
         {
             Remove();
             return;

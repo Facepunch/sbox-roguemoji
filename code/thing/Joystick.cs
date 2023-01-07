@@ -50,7 +50,7 @@ public partial class Joystick : Thing
         if (IsOnCooldown)
             return;
 
-        var things = ContainingGridManager.GetThingsAt(targetGridPos).WithAll(ThingFlags.Solid).ToList();
+        var things = user.ContainingGridManager.GetThingsAt(targetGridPos).WithAll(ThingFlags.Solid).ToList();
         if (things.Count > 0)
             return;
 

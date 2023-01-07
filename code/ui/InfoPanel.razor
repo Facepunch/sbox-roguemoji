@@ -36,12 +36,10 @@
         width: 40px;
         height: 40px;
         position: absolute;
-        left: 38px;
-        top: 38px;
-        font-size: 32px;
         pointer-events: none;
-        text-stroke-color: #00000000;
-        text-stroke-width: 0px;
+        text-stroke-color: #000000;
+        text-stroke-width: 2px;
+        text-shadow: 0px 0px 0px #000000;
     }
 
     .name_label {
@@ -120,15 +118,17 @@
             }
 
             @if (SelectedThing.WieldedThing != null) {
-                <div class="info_wielded">
-                    @SelectedThing.WieldedThing.DisplayIcon.Substring(SelectedThing.WieldedThing.CharSkip)
+                var wieldedThing = SelectedThing.WieldedThing;
+                var wieldedOffset = SelectedThing.InfoWieldedThingOffset;
+                <div class="info_wielded" style="left:@(wieldedOffset.x)px; top:@(wieldedOffset.y)px; font-size:@(SelectedThing.InfoWieldedThingFontSize);">
+                    @wieldedThing.DisplayIcon.Substring(wieldedThing.CharSkip)
 
-                    @if (SelectedThing.WieldedThing.HasTattoo)
+                    @if (wieldedThing.HasTattoo)
                     {
-                        int fontSize = MathX.FloorToInt(32f * SelectedThing.WieldedThing.TattooData.Scale);
-                        var offset = SelectedThing.WieldedThing.TattooData.OffsetInfoWielded;
+                        int fontSize = MathX.FloorToInt(32f * wieldedThing.TattooData.Scale);
+                        var offset = wieldedThing.TattooData.OffsetInfoWielded;
                         <div class="info_panel_tattoo" style="width: 40px; height: 40px; font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                            @SelectedThing.WieldedThing.TattooData.Icon
+                            @wieldedThing.TattooData.Icon
                         </div>
                     }
                 </div> 

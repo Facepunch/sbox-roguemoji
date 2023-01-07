@@ -60,6 +60,11 @@ public partial class RoguemojiPlayer : Thing
         {
             VisibleCells = new HashSet<IntVector>();
             AimingCells = new HashSet<IntVector>();
+
+            WieldedThingOffset = new Vector2(20f, 17f);
+            WieldedThingFontSize = 18;
+            InfoWieldedThingOffset = new Vector2(38f, 38f);
+            InfoWieldedThingFontSize = 32;
         }
 	}
 
@@ -602,12 +607,12 @@ public partial class RoguemojiPlayer : Thing
 
         if(!Acting.IsActionReady && !dontRequireAction)
         {
-            QueuedAction = new MoveThingAction(thing, targetGridType, targetGridPos, thing.ContainingGridManager.GridType, thing.GridPos, wieldIfPossible);
+            QueuedAction = new MoveThingAction(thing, targetGridType, targetGridPos, thing.ContainingGridType, thing.GridPos, wieldIfPossible);
             QueuedActionName = QueuedAction.ToString();
             return;
         }
 
-        var sourceGridType = thing.ContainingGridManager.GridType;
+        var sourceGridType = thing.ContainingGridType;
         Sandbox.Diagnostics.Assert.True(sourceGridType != targetGridType);
 
         var owningPlayer = thing.ContainingGridManager.OwningPlayer;
@@ -853,7 +858,7 @@ public partial class RoguemojiPlayer : Thing
     public void NearbyThingDragged(Thing thing, PanelType destinationPanelType, IntVector targetGridPos)
     {
         // dont allow dragging nearby thing from different cells, or if the thing has been picked up by someone else
-        if (!GridPos.Equals(thing.GridPos) || thing.ContainingGridManager.GridType == GridType.Inventory)
+        if (!GridPos.Equals(thing.GridPos) || thing.ContainingGridType == GridType.Inventory)
             return;
 
         if (destinationPanelType == PanelType.InventoryGrid)
@@ -1007,7 +1012,7 @@ public partial class RoguemojiPlayer : Thing
     {
         AimingCells.Clear();
 
-        foreach (Direction dir in Enum.GetValues(typeof(Direction)))
+        foreach (var dir in GridManager.GetCardinalDirections())
         {
             IntVector gridPos = GridPos + GridManager.GetIntVectorForDirection(dir);
             AimingCells.Add(gridPos);
@@ -1143,7 +1148,7 @@ public class MoveThingAction : IQueuedAction
 
     public void Execute(RoguemojiPlayer player)
     {
-        if (Thing.ContainingGridManager.GridType != SourceGridType || !Thing.GridPos.Equals(SourceGridPos))
+        if (Thing.ContainingGridType != SourceGridType || !Thing.GridPos.Equals(SourceGridPos))
             return;
 
         player.MoveThingTo(Thing, TargetGridType, TargetGridPos, wieldIfPossible: WieldIfPossible);
