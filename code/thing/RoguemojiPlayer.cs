@@ -288,7 +288,14 @@ public partial class RoguemojiPlayer : Thing
         }
     }
 
-	public new bool TryMove( Direction direction, bool shouldQueueAction = false )
+    public override void OnWieldThing(Thing thing) 
+    {
+        base.OnWieldThing(thing);
+
+        RoguemojiGame.Instance.FlickerWieldingPanel();
+    }
+
+    public new bool TryMove( Direction direction, bool shouldQueueAction = false )
 	{
         if (!Acting.IsActionReady)
         {
@@ -683,8 +690,6 @@ public partial class RoguemojiPlayer : Thing
         }
 
         base.WieldThing(thing);
-
-        RoguemojiGame.Instance.FlickerWieldingPanel();
 
         if (!dontRequireAction)
             Acting.PerformedAction();

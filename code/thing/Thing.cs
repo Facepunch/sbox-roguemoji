@@ -321,13 +321,10 @@ public partial class Thing : Entity
     public virtual void Destroy()
     {
         if(ThingWieldingThis != null)
-        {
-            ThingWieldingThis.OnNoLongerWieldingThing(this);
-            OnNoLongerWieldedBy(ThingWieldingThis);
-        }
-            
+            ThingWieldingThis.WieldThing(null);
+
         if (WieldedThing != null)
-            WieldedThing.OnNoLongerWieldedBy(this);
+            WieldThing(null);
 
         Remove();
     }
@@ -591,9 +588,10 @@ public partial class Thing : Entity
 
         WieldedThing = thing;
 
+        OnWieldThing(thing); // thing may be null here
+
         if (WieldedThing != null)
         {
-            OnWieldThing(thing);
             thing.OnWieldedBy(this);
         }
     }
@@ -719,6 +717,7 @@ public partial class Thing : Entity
         }
     }
 
+    /// <summary> Thing may be null. </summary>
     public virtual void OnWieldThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnWieldThing(thing); } }
     public virtual void OnNoLongerWieldingThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnNoLongerWieldingThing(thing); } }
 

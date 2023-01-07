@@ -10,7 +10,7 @@ public partial class AcademicCap : Thing
 	{
 		DisplayIcon = "🎓";
         DisplayName = "Academic Cap";
-        Description = "Makes you smarter.";
+        Description = "Makes you feel smarter.";
         Tooltip = "An academic cap.";
         IconDepth = 0;
         ShouldLogBehaviour = true;
