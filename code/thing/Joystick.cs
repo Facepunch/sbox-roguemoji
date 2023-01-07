@@ -57,10 +57,12 @@ public partial class Joystick : Thing
         if (!user.TrySpendStat(StatType.Energy, EnergyCost))
             return;
 
+        var startingGridPos = user.GridPos;
         user.SetGridPos(targetGridPos);
+        user.VfxFly(startingGridPos, 0.2f);
 
         if (user is RoguemojiPlayer player)
-            player.RecenterCamera();
+            player.RecenterCamera(shouldAnimate: true);
 
         StartCooldown(CooldownTime);
 

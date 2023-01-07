@@ -6,7 +6,7 @@ using Sandbox;
 
 namespace Roguemoji;
 
-public enum Direction { None, Left, Right, Down, Up }
+public enum Direction { None, Left, Right, Down, Up, LeftDown, RightDown, LeftUp, RightUp }
 
 public enum GridType { None, Arena, Inventory, Equipment }
 
@@ -220,11 +220,15 @@ public partial class GridManager : Entity
 	{
 		switch(direction)
 		{
-			case Direction.Left:  return new IntVector( -1, 0 );
-			case Direction.Right: return new IntVector( 1, 0 );
-			case Direction.Down: return new IntVector( 0, 1 );
-			case Direction.Up: return new IntVector( 0, -1 );
-		}
+			case Direction.Left:  return new IntVector(-1, 0);
+			case Direction.Right: return new IntVector(1, 0);
+			case Direction.Down: return new IntVector(0, 1);
+			case Direction.Up: return new IntVector(0, -1);
+            case Direction.LeftDown: return new IntVector(-1, 1);
+            case Direction.RightDown: return new IntVector(1, 1);
+            case Direction.LeftUp: return new IntVector(-1, -1);
+            case Direction.RightUp: return new IntVector(1, -1);
+        }
 
 		return IntVector.Zero;
 	}
@@ -237,7 +241,11 @@ public partial class GridManager : Entity
 			case Direction.Right: return new Vector2(1f, 0f);
 			case Direction.Down: return new Vector2(0f, 1f);
 			case Direction.Up: return new Vector2(0f, -1f);
-		}
+            case Direction.LeftDown: return new Vector2(-1f, 1f);
+            case Direction.RightDown: return new Vector2(1f, 1f);
+            case Direction.LeftUp: return new Vector2(-1f, -1f);
+            case Direction.RightUp: return new Vector2(1f, -1f);
+        }
 
 		return Vector2.Zero;
 	}
@@ -250,6 +258,10 @@ public partial class GridManager : Entity
             case Direction.Right: return -90f;
             case Direction.Down: return 0f;
             case Direction.Up: return 180f;
+            case Direction.LeftDown: return 135f;
+            case Direction.RightDown: return -135f;
+            case Direction.LeftUp: return 45f;
+            case Direction.RightUp: return -45f;
         }
 
         return 0f;
@@ -265,32 +277,17 @@ public partial class GridManager : Entity
             return Direction.Up;
         else if (vec.x == 0 && vec.y == 1)
             return Direction.Down;
+		else if (vec.x == -1 && vec.y == 1)
+            return Direction.LeftDown;
+        else if (vec.x == 1 && vec.y == 1)
+            return Direction.RightDown;
+        else if (vec.x == -1 && vec.y == -1)
+            return Direction.LeftUp;
+        else if (vec.x == 1 && vec.y == -1)
+            return Direction.RightUp;
 
-		return Direction.None;
+        return Direction.None;
     }
-
-    public static string GetDirectionText(Direction direction)
-	{
-		string output = "";
-
-		switch ( direction )
-		{
-			case Direction.Left:
-				output = "left";
-				break;
-			case Direction.Right:
-				output = "right";
-				break;
-			case Direction.Down:
-				output = "down";
-				break;
-			case Direction.Up:
-				output = "up";
-				break;
-		}
-
-		return output;
-	}
 
     public IEnumerable<Thing> GetThingsAt(IntVector gridPos)
     {

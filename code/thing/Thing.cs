@@ -555,6 +555,14 @@ public partial class Thing : Entity
         scale.EndAngle = endAngle;
     }
 
+    [ClientRpc]
+    public void VfxFly(IntVector startingGridPos, float lifetime)
+    {
+        var fly = AddComponent<VfxFly>();
+        fly.StartingGridPos = startingGridPos;
+        fly.Lifetime = lifetime;
+    }
+
     public override int GetHashCode()
     {
         return HashCode.Combine(DisplayIcon, WieldedThing?.ThingId ?? 0, PlayerNum + ThingId, RotationDegrees, IconScale, IconDepth, Flags);

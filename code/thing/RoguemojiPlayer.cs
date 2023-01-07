@@ -316,33 +316,8 @@ public partial class RoguemojiPlayer : Thing
             else
                 SetIcon("😀");
 
-			var middleCell = new IntVector(MathX.FloorToInt((float)RoguemojiGame.ArenaWidth / 2f), MathX.FloorToInt((float)RoguemojiGame.ArenaHeight / 2f));
-            var offsetGridPos = GridPos - CameraGridOffset;
-            var movedCamera = false;
-
-			if(direction == Direction.Left || direction == Direction.Right)
-			{
-                if (offsetGridPos.x < middleCell.x)         movedCamera = SetCameraGridOffset(CameraGridOffset + new IntVector(-1, 0));
-                else if (offsetGridPos.x > middleCell.x)    movedCamera = SetCameraGridOffset(CameraGridOffset + new IntVector(1, 0));
-            }
-            
-			if(direction == Direction.Down || direction == Direction.Up)
-			{
-                if (offsetGridPos.y < middleCell.y)         movedCamera = SetCameraGridOffset(CameraGridOffset + new IntVector(0, -1));
-                else if (offsetGridPos.y > middleCell.y)    movedCamera = SetCameraGridOffset(CameraGridOffset + new IntVector(0, 1));
-            }
-
-            if(movedCamera)
-            {
-                // todo: make an option to turn this off
-                VfxSlideCamera(direction, 0.25f, 40f);
-                VfxSlide(direction, 0.1f, 40f);
-            }
-            else
-            {
-                VfxSlide(direction, 0.2f, 40f);
-            }
-                
+            var movedCamera = RecenterCamera(shouldAnimate: true);
+            VfxSlide(direction, movedCamera ? 0.1f : 0.2f, 40f);
         }
 		else 
 		{
@@ -391,10 +366,21 @@ public partial class RoguemojiPlayer : Thing
 		SelectedThing = thing;
 	}
 
-    public void RecenterCamera()
+    /// <summary>Returns true if offset changed.</summary>
+    public bool RecenterCamera(bool shouldAnimate = false)
     {
         var middleCell = new IntVector(MathX.FloorToInt((float)RoguemojiGame.ArenaWidth / 2f), MathX.FloorToInt((float)RoguemojiGame.ArenaHeight / 2f));
-        SetCameraGridOffset(GridPos - middleCell);
+        var oldCamGridOffset = CameraGridOffset;
+        var movedCamera = SetCameraGridOffset(GridPos - middleCell);
+
+        if(movedCamera && shouldAnimate)
+        {
+            // todo: make an option to turn this off
+            var dir = GridManager.GetDirectionForIntVector(CameraGridOffset - oldCamGridOffset);
+            VfxSlideCamera(dir, 0.25f, 40f);
+        }
+
+        return movedCamera;
     }
 
     /// <summary>Returns true if offset changed.</summary>
@@ -490,6 +476,7 @@ public partial class RoguemojiPlayer : Thing
             return;
 
         IsDead = true;
+        StopAiming();
         SetIcon("😑");
     }
 
@@ -1088,6 +1075,9 @@ public partial class RoguemojiPlayer : Thing
 
         RefreshVisibility(To.Single(this));
         ContainingGridManager.PlayerChangedGridPos(this);
+
+        if(IsAiming)
+            RefreshWieldedThingTargetAiming();
 
         //InventoryGridManager.SetWidth(InventoryGridManager.GridWidth - 1);
         //var nearbyThings = ContainingGridManager.GetThingsWithinRange(GridPos, 2, allFlags: ThingFlags.Solid);
