@@ -52,7 +52,7 @@
 
         if (Hud.Instance.IsDraggingThing)
         {
-            var draggingEquipment = Hud.Instance.DraggedThing.Flags.HasFlag(ThingFlags.Equipment);
+            var draggingEquipment = Hud.Instance.DraggedThing.HasFlag(ThingFlags.Equipment);
 
             if (targetPanelType == PanelType.Chatbox || targetPanelType == PanelType.Log)
                 return CursorMode.Write;

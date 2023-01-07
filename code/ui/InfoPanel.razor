@@ -100,7 +100,7 @@
             @SelectedThing.DisplayName 
         </div>
 
-        @if (SelectedThing.Flags.HasFlag(ThingFlags.Equipment))
+        @if (SelectedThing.HasFlag(ThingFlags.Equipment))
         { 
             <div class="equipment_label">
                 Accessory 

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 namespace Roguemoji;
 
@@ -63,6 +64,7 @@ public partial class Thing : Entity
     public Dictionary<TypeDescription, ThingComponent> ThingComponents = new Dictionary<TypeDescription, ThingComponent>();
 
     [Net] public ThingFlags Flags { get; set; }
+    public bool HasFlag(ThingFlags flag) => Flags.HasFlag(flag);
 
     [Net] public Thing WieldedThing { get; protected set; }
     [Net] public Thing ThingWieldingThis { get; protected set; }
@@ -211,7 +213,7 @@ public partial class Thing : Entity
     public virtual void HitOther(Thing target, Direction direction, bool shouldUse)
     {
         // todo: a way to force-feed food to other units
-        //if (shouldUse && Flags.HasFlag(ThingFlags.Useable) && target.CanUseThing(this))
+        //if (shouldUse && HasFlag(ThingFlags.Useable) && target.CanUseThing(this))
         //    Use(target);
         
         DamageOther(target, direction);
@@ -358,7 +360,7 @@ public partial class Thing : Entity
 
         //if (ShouldLogBehaviour)
         //      {
-        //	if(Flags.HasFlag(ThingFlags.InInventory))
+        //	if(HasFlag(ThingFlags.InInventory))
         //		RoguemojiGame.Instance.LogMessage(DisplayIcon + DisplayName + " moved to (" + gridPos.x + ", " + gridPos.y + ") in " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
         //	else
         //		RoguemojiGame.Instance.LogMessage(DisplayIcon + DisplayName + " moved to (" + gridPos.x + ", " + gridPos.y + ").", PlayerNum);
@@ -373,7 +375,7 @@ public partial class Thing : Entity
         IsRemoved = true;
         //if ( ShouldLogBehaviour )
         //      {
-        //	if (Flags.HasFlag(ThingFlags.InInventory))
+        //	if (HasFlag(ThingFlags.InInventory))
         //		RoguemojiGame.Instance.LogMessage(DisplayIcon + DisplayName + " removed from " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
         //	else
         //		RoguemojiGame.Instance.LogMessage(DisplayIcon + DisplayName + " removed.", PlayerNum);

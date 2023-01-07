@@ -89,7 +89,7 @@
 
     string GetUnusableClass(Thing thing, RoguemojiPlayer player)
     {
-        if (thing.Flags.HasFlag(ThingFlags.Useable))
+        if (thing.HasFlag(ThingFlags.Useable))
         {
             if (!thing.CanBeUsedBy(player, ignoreResources: true))
                 return "unusable_item";

@@ -180,11 +180,11 @@
     public int GridIndex { get; set; }
 
     string GetPlayerClass()     { return Thing.PlayerNum > 0 ? $"icon-player-{Thing.PlayerNum}" : ""; }
-    string GetSolidClass()      { return Thing.Flags.HasFlag(ThingFlags.Solid) ? "solid" : ""; }
+    string GetSolidClass()      { return Thing.HasFlag(ThingFlags.Solid) ? "solid" : ""; }
     string GetDraggingClass()   { return Thing == Hud.Instance.DraggedThing ? "dragging" : ""; }
     string GetWieldedClass()    { return IsWielded() ? "wielded" : ""; }
     bool IsWielded()            { return Thing == RoguemojiGame.Instance.LocalPlayer?.WieldedThing; }
-    string GetEquipmentClass()  { return Thing.Flags.HasFlag(ThingFlags.Equipment) ? "icon_equipment" : ""; }
+    string GetEquipmentClass()  { return Thing.HasFlag(ThingFlags.Equipment) ? "icon_equipment" : ""; }
     string GetInventoryClass()  { return Thing.ContainingGridManager.GridType == GridType.Inventory ? "is_in_inventory" : ""; }
     string GetCooldownClass(Thing thing)    { return thing.IsOnCooldown && thing.ContainingGridManager.GridType != GridType.Arena ? "cell_icon_cooldown" : ""; }
 

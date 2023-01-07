@@ -60,7 +60,7 @@
     
     <!-- <div class="wielding_title">@Thing.Tooltip</div> -->
 
-    @if(Thing.Flags.HasFlag(ThingFlags.Useable))
+    @if(Thing.HasFlag(ThingFlags.Useable))
     {
         <div class="wielding_line">
             <span class="wielding_action" style="color: #666666;">@(Thing.AbilityName)</span>

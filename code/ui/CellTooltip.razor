@@ -69,5 +69,5 @@
     public Thing Thing { get; set; }
     public bool ShowPickUpKey { get; set; }
 
-    string GetEquipmentClass() { return Thing != null && Thing.Flags.HasFlag(ThingFlags.Equipment) ? "equipment_tooltip" : ""; }
+    string GetEquipmentClass() { return Thing != null && Thing.HasFlag(ThingFlags.Equipment) ? "equipment_tooltip" : ""; }
 }

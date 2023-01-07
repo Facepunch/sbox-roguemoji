@@ -311,7 +311,7 @@ public partial class Hud : RootPanel
     public string GetUnusableClass(Thing thing)
     {
         var gridManager = thing.ContainingGridManager;
-        if (thing.Flags.HasFlag(ThingFlags.Useable) && gridManager.GridType == GridType.Inventory)
+        if (thing.HasFlag(ThingFlags.Useable) && gridManager.GridType == GridType.Inventory)
         {
             var owningPlayer = gridManager.OwningPlayer;
             if (owningPlayer != null && !thing.CanBeUsedBy(owningPlayer, ignoreResources: true))
@@ -326,7 +326,7 @@ public partial class Hud : RootPanel
         if(GetContainingPanelType(MousePosition) == PanelType.EquipmentGrid && !IsDraggingThing)
         {
             var gridManager = thing.ContainingGridManager;
-            if (thing.Flags.HasFlag(ThingFlags.Equipment) && gridManager.GridType == GridType.Inventory)
+            if (thing.HasFlag(ThingFlags.Equipment) && gridManager.GridType == GridType.Inventory)
             {
                 return "equipment_item_highlight";
             }
