@@ -17,8 +17,8 @@ public partial class BookTeleport : Thing
 	{
 		DisplayIcon = "📘";
         DisplayName = "Book of Teleport";
-        Description = "Teleport to a random place on the current floor.";
-        Tooltip = "A book of Teleport.";
+        Description = "Teleport to a random place on the current floor";
+        Tooltip = "A book of Teleport";
         IconDepth = 0;
         ShouldLogBehaviour = true;
         Flags = ThingFlags.Selectable | ThingFlags.Useable;
@@ -31,8 +31,8 @@ public partial class BookTeleport : Thing
             ReqInt = 6;
             CooldownTime = 5f;
 
-            AddTrait(AbilityName, "📖", $"Spend {GetStatIcon(StatType.Mana)} to cast the spell Teleport.", offset: new Vector2(0f, -2f), tattooIcon: Globals.Icon(IconType.Teleport), tattooScale: 0.7f, tattooOffset: new Vector2(0f, -5f));
-            AddTrait("", GetStatIcon(StatType.Mana), $"{ManaCost}{GetStatIcon(StatType.Mana)} used to cast spell.", offset: new Vector2(0f, -3f), labelText: $"{ManaCost}", labelFontSize: 16, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
+            AddTrait(AbilityName, "📖", $"Spend {GetStatIcon(StatType.Mana)} to cast the spell Teleport", offset: new Vector2(0f, -2f), tattooIcon: Globals.Icon(IconType.Teleport), tattooScale: 0.7f, tattooOffset: new Vector2(0f, -5f));
+            AddTrait("", GetStatIcon(StatType.Mana), $"{ManaCost}{GetStatIcon(StatType.Mana)} used to cast spell", offset: new Vector2(0f, -3f), labelText: $"{ManaCost}", labelFontSize: 16, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", GetStatIcon(StatType.Intelligence), Globals.GetStatReqString(StatType.Intelligence, ReqInt, VerbType.Read), offset: new Vector2(0f, -1f), labelText: $"≥{ReqInt}", labelFontSize: 16, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
         }

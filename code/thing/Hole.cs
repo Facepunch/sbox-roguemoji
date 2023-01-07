@@ -8,8 +8,8 @@ public partial class Hole : Thing
 	{
         DisplayIcon = "️🕳";
         DisplayName = "Hole";
-        Description = "A deep hole leading to another area.";
-        Tooltip = "A hole.";
+        Description = "A deep hole leading to another area";
+        Tooltip = "A hole";
         IconDepth = 1;
         ShouldLogBehaviour = true;
         Flags = ThingFlags.Solid | ThingFlags.Selectable;

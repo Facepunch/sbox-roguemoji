@@ -11,8 +11,8 @@ public partial class Nut : Thing
 	{
 		DisplayIcon = "🌰";
         DisplayName = "Nut";
-        Description = "Some sort of nut.";
-        Tooltip = "A nut.";
+        Description = "Some sort of nut";
+        Tooltip = "A nut";
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Flags = ThingFlags.Selectable | ThingFlags.Useable;

@@ -8,10 +8,10 @@ public partial class Backpack : Thing
 	{
 		DisplayIcon = "🎒";
         DisplayName = "Backpack";
-        Description = "Increases your inventory size.";
+        Description = "Increases your inventory size";
         IconDepth = 0;
         ShouldLogBehaviour = true;
-		Tooltip = "A backpack.";
+		Tooltip = "A backpack";
 		Flags = ThingFlags.Selectable | ThingFlags.Equipment;
     }
 

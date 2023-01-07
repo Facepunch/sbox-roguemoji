@@ -8,8 +8,8 @@ public partial class TreeEvergreen : Thing
 	{
 		DisplayIcon = "🌲";
         DisplayName = "Evergreen Tree";
-        Description = "A tall tree.";
-        Tooltip = "An evergreen tree.";
+        Description = "A tall tree";
+        Tooltip = "An evergreen tree";
         IconDepth = 1;
         ShouldLogBehaviour = true;
 		Flags = ThingFlags.Solid | ThingFlags.Selectable;

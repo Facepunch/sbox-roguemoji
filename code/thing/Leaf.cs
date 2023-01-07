@@ -8,8 +8,8 @@ public partial class Leaf : Thing
 	{
 		DisplayIcon = "🍂";
         DisplayName = "Leaves";
-        Description = "Small pile of dry leaves.";
-        Tooltip = "A pile of leaves.";
+        Description = "Small pile of dry leaves";
+        Tooltip = "A pile of leaves";
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Flags = ThingFlags.Selectable;

@@ -14,11 +14,11 @@ public partial class Squirrel : Thing
 	{
 		DisplayIcon = "🐿";
         DisplayName = "Squirrel";
-        Description = "A bushy-tailed rodent.";
+        Description = "A bushy-tailed rodent";
         IconDepth = 1;
         ShouldUpdate = true;
         ShouldLogBehaviour = true;
-		Tooltip = "A squirrel.";
+		Tooltip = "A squirrel";
 		Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanUseThings;
         PathfindMovementCost = 5f;
         SightBlockAmount = 5;

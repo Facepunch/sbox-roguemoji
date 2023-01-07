@@ -11,8 +11,8 @@ public partial class Cheese : Thing
 	{
 		DisplayIcon = "🧀";
         DisplayName = "Cheese";
-        Tooltip = "A wedge of cheese.";
-        Description = "Stinky and delicious.";
+        Tooltip = "A wedge of cheese";
+        Description = "Stinky and delicious";
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Flags = ThingFlags.Selectable | ThingFlags.Useable;

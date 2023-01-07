@@ -11,8 +11,8 @@ public partial class Potato : Thing
 	{
 		DisplayIcon = "🥔";
         DisplayName = "Potato";
-        Description = "Uncooked and hard as a rock.";
-        Tooltip = "A potato.";
+        Description = "Uncooked and hard as a rock";
+        Tooltip = "A potato";
         IconDepth = 0;
         ShouldLogBehaviour = true;
 

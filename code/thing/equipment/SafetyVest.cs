@@ -12,8 +12,8 @@ public partial class SafetyVest : Thing
 	{
 		DisplayIcon = "🦺";
         DisplayName = "Safety Vest";
-        Description = "Highly visible.";
-        Tooltip = "A safety vest.";
+        Description = "Highly visible";
+        Tooltip = "A safety vest";
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Flags = ThingFlags.Selectable | ThingFlags.Equipment;

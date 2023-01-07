@@ -11,8 +11,8 @@ public partial class Golem : Thing
 	{
 		DisplayIcon = "🗿";
         DisplayName = "Golem";
-        Description = "Living rock that moves with mindless intent.";
-        Tooltip = "A golem.";
+        Description = "Living rock that moves with mindless intent";
+        Tooltip = "A golem";
         IconDepth = 1;
         ShouldLogBehaviour = true;
 		Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanUseThings;

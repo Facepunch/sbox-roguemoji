@@ -8,8 +8,8 @@ public partial class OilBarrel : Thing
 	{
 		DisplayIcon = "️🛢";
         DisplayName = "Oil Barrel";
-        Description = "An open barrel of flammable oil.";
-        Tooltip = "A barrel of oil.";
+        Description = "An open barrel of flammable oil";
+        Tooltip = "A barrel of oil";
         IconDepth = 1;
         ShouldLogBehaviour = true;
         Flags = ThingFlags.Solid | ThingFlags.Selectable;

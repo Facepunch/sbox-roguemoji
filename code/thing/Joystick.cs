@@ -14,8 +14,8 @@ public partial class Joystick : Thing
     {
         DisplayIcon = "🕹️";
         DisplayName = "Joystick";
-        Description = "Lets you move in any direction.";
-        Tooltip = "A joystick.";
+        Description = "Lets you move in any direction";
+        Tooltip = "A joystick";
         IconDepth = 0;
         ShouldLogBehaviour = true;
         Flags = ThingFlags.Selectable | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
@@ -25,7 +25,7 @@ public partial class Joystick : Thing
             EnergyCost = 3;
             CooldownTime = 30f;
 
-            AddTrait(AbilityName, "🕹️", "Move in any direction.", offset: new Vector2(0f, -1f));
+            AddTrait(AbilityName, "🕹️", "Move in any direction", offset: new Vector2(0f, -1f));
             AddTrait("", GetStatIcon(StatType.Energy), $"Ability requires {EnergyCost}{GetStatIcon(StatType.Energy)}", offset: new Vector2(0f, -3f), labelText: $"{EnergyCost}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
         }

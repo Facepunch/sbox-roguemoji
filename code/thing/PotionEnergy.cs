@@ -14,8 +14,8 @@ public partial class PotionEnergy : Thing
 	{
 		DisplayIcon = "🧴";
         DisplayName = "Energy Drink";
-        Description = "Recover some energy.";
-        Tooltip = "An energy drink.";
+        Description = "Recover some energy";
+        Tooltip = "An energy drink";
         IconDepth = 0;
         ShouldLogBehaviour = true;
         Flags = ThingFlags.Selectable | ThingFlags.Useable;
@@ -25,7 +25,7 @@ public partial class PotionEnergy : Thing
         if (Game.IsServer)
         {
             EnergyAmount = 5;
-            AddTrait(AbilityName, "😋", "Consume drink to cause an effect.", offset: new Vector2(0f, -1f), tattooIcon: "🧴", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f));
+            AddTrait(AbilityName, "😋", "Consume drink to cause an effect", offset: new Vector2(0f, -1f), tattooIcon: "🧴", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f));
             AddTrait("", GetStatIcon(StatType.Energy), $"Drinking recovers {EnergyAmount}{GetStatIcon(StatType.Energy)}", offset: new Vector2(0f, -3f), labelText: $"+{EnergyAmount}", labelFontSize: 16, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
         }
     }

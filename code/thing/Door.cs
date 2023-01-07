@@ -10,7 +10,7 @@ public partial class Door : Thing
         DisplayName = "Door";
         IconDepth = 1;
         ShouldLogBehaviour = true;
-		Tooltip = "A door.";
+		Tooltip = "A door";
         Flags = ThingFlags.Solid | ThingFlags.Selectable;
         PathfindMovementCost = 15f;
         SightBlockAmount = 20;

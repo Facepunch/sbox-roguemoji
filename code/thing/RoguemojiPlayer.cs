@@ -300,7 +300,7 @@ public partial class RoguemojiPlayer : Thing
         RoguemojiGame.Instance.FlickerWieldingPanel();
     }
 
-    public new bool TryMove( Direction direction, bool shouldQueueAction = false, bool shouldAnimate = true )
+    public bool TryMove( Direction direction, bool shouldQueueAction = false, bool shouldAnimate = true )
 	{
         if (!Acting.IsActionReady)
         {
@@ -981,7 +981,7 @@ public partial class RoguemojiPlayer : Thing
             return;
 
         StartAiming(AimingSource.Throwing, AimingType.Direction);
-        //RoguemojiGame.Instance.LogMessageClient(To.Single(this), "Press WASD to throw or F to cancel.", playerNum: 0);
+        //RoguemojiGame.Instance.LogMessageClient(To.Single(this), "Press WASD to throw or F to cancel", playerNum: 0);
     }
 
     public void StartAiming(AimingSource aimingSource, AimingType aimingType)

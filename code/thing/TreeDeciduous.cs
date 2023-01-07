@@ -9,8 +9,8 @@ public partial class TreeDeciduous : Thing
 	{
 		DisplayIcon = "🌳";
         DisplayName = "Deciduous Tree";
-        Description = "A tall tree.";
-        Tooltip = "A deciduous tree.";
+        Description = "A tall tree";
+        Tooltip = "A deciduous tree";
         IconDepth = 1;
         ShouldLogBehaviour = true;
 		Flags = ThingFlags.Solid | ThingFlags.Selectable;

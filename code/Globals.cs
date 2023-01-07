@@ -33,6 +33,6 @@ public static class Globals
             case VerbType.Read: verb = "read"; break;
         }
 
-        return $"You need {reqAmount}{icon} to {verb} this.";
+        return $"You need {reqAmount}{icon} to {verb} this";
     }
 }

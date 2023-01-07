@@ -10,7 +10,7 @@ public partial class Bone : Thing
 		DisplayName = "Bone";
         IconDepth = 0;
         ShouldLogBehaviour = true;
-		Tooltip = "A bone.";
+		Tooltip = "A bone";
 		Flags = ThingFlags.Selectable;
 
         if (Game.IsServer)

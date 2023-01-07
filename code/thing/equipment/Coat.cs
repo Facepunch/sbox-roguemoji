@@ -10,8 +10,8 @@ public partial class Coat : Thing
 	{
 		DisplayIcon = "🧥";
         DisplayName = "Coat";
-        Description = "Thick and warm.";
-        Tooltip = "A thick coat.";
+        Description = "Thick and warm";
+        Tooltip = "A thick coat";
         IconDepth = 0;
         ShouldLogBehaviour = true;
 		Flags = ThingFlags.Selectable | ThingFlags.Equipment;
