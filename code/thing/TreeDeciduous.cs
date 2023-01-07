@@ -43,7 +43,7 @@ public partial class TreeDeciduous : Thing
     {
         base.OnBumpedIntoBy(thing);
 
-        if(WieldedThing != null)
+        if(WieldedThing != null && Game.Random.Int(0, 1) == 0)
         {
             if(ContainingGridManager.GetRandomEmptyAdjacentGridPos(GridPos, out var dropGridPos, allowNonSolid: true))
             {
