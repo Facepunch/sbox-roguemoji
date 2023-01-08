@@ -204,9 +204,6 @@ public partial class Thing : Entity
     {
         VfxNudge(direction, 0.1f, 10f);
 
-        OnBumpedIntoThing(target);
-        target.OnBumpedIntoBy(this);
-
         if(WieldedThing != null)
         {
             WieldedThing.HitOther(target, direction, shouldUse: true);
@@ -215,6 +212,9 @@ public partial class Thing : Entity
         {
             HitOther(target, direction, shouldUse: false);
         }
+
+        OnBumpedIntoThing(target);
+        target.OnBumpedIntoBy(this);
     }
 
     public virtual void HitOther(Thing target, Direction direction, bool shouldUse)

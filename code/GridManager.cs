@@ -587,4 +587,56 @@ public partial class GridManager : Entity
 			Log.Info(pair.Key + ": " + (pair.Value?.Count ?? 0));
 		}
 	}
+
+    public HashSet<IntVector> GetPointsOnCircle(IntVector center, int radius)
+    {
+        HashSet<IntVector> points = new HashSet<IntVector>();
+
+        int x = radius;
+        int y = 0;
+        int decisionOver2 = 1 - x;   // Decision criterion divided by 2 evaluated at x=r, y=0
+
+        while (y <= x)
+        {
+            if (IsGridPosInBounds(new IntVector(center.x + x, center.y + y))) points.Add(new IntVector(center.x + x, center.y + y)); // Octant 1
+            if (IsGridPosInBounds(new IntVector(center.x - x, center.y + y))) points.Add(new IntVector(center.x - x, center.y + y)); // Octant 4
+            if (IsGridPosInBounds(new IntVector(center.x + x, center.y - y))) points.Add(new IntVector(center.x + x, center.y - y)); // Octant 8
+            if (IsGridPosInBounds(new IntVector(center.x - x, center.y - y))) points.Add(new IntVector(center.x - x, center.y - y)); // Octant 5
+            if (IsGridPosInBounds(new IntVector(center.x + y, center.y + x))) points.Add(new IntVector(center.x + y, center.y + x)); // Octant 2
+            if (IsGridPosInBounds(new IntVector(center.x - y, center.y + x))) points.Add(new IntVector(center.x - y, center.y + x)); // Octant 3
+            if (IsGridPosInBounds(new IntVector(center.x + y, center.y - x))) points.Add(new IntVector(center.x + y, center.y - x)); // Octant 7
+            if (IsGridPosInBounds(new IntVector(center.x - y, center.y - x))) points.Add(new IntVector(center.x - y, center.y - x)); // Octant 6
+
+            y++;
+            if (decisionOver2 <= 0)
+            {
+                decisionOver2 += 2 * y + 1;
+            }
+            else
+            {
+                x--;
+                decisionOver2 += 2 * (y - x) + 1;
+            }
+        }
+
+        return points;
+    }
+
+    public HashSet<IntVector> GetPointsWithinCircle(IntVector center, int radius)
+    {
+        HashSet<IntVector> points = new HashSet<IntVector>();
+
+        for (int y = -radius; y <= radius; y++)
+        {
+            for (int x = -radius; x <= radius; x++)
+            {
+                if (x * x + y * y < radius * radius + radius)
+                {
+                    if (IsGridPosInBounds(new IntVector(center.x + x, center.y + y))) points.Add(new IntVector(center.x + x, center.y + y));
+                }
+            }
+        }
+
+        return points;
+    }
 }

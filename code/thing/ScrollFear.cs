@@ -30,6 +30,29 @@ public partial class ScrollFear : Thing
     {
         Destroy();
 
+        int radius = 3;
+
+        var things = ContainingGridManager.GetThingsWithinRange(GridPos, radius, allFlags: ThingFlags.Solid);
+        foreach(var thing in things)
+        {
+            if (thing == user)
+                continue;
+
+            //if(!thing.HasComponent<Target>)
+        }
+        //foreach(var thing in nearbyThings)
+        //{
+        //    if (thing == this)
+        //        continue;
+
+        //    RoguemojiGame.Instance.DebugGridLine(GridPos, thing.GridPos, Color.Red, 0.1f, ContainingGridManager.LevelId);
+        //    RoguemojiGame.Instance.DebugGridCell(thing.GridPos, Color.Red, 1f, ContainingGridManager.LevelId);
+        //}
+
+        var circlePoints = user.ContainingGridManager.GetPointsOnCircle(user.GridPos, radius);
+        foreach (var point in circlePoints)
+            RoguemojiGame.Instance.AddFloater("💧", point, 0.66f, user.CurrentLevelId, Vector2.Zero, new Vector2(0f, 2f), text: "", requireSight: true, EasingType.QuadOut, 0.025f, parent: null);
+
         base.Use(user);
     }
 }

@@ -64,12 +64,12 @@ public partial class Squirrel : Thing
             {
                 int adjustedSight = Math.Max(GetStatClamped(StatType.Sight) - Targeting.Target.GetStatClamped(StatType.Stealth), 1);
                 bool cantSeeTarget = Utils.GetDistance(GridPos, Targeting.Target.GridPos) > adjustedSight || !ContainingGridManager.HasLineOfSight(GridPos, Targeting.Target.GridPos, adjustedSight, out IntVector collisionCell);
-                bool isFearful = HasComponent<CFearful>();
+                bool isFearful = GetComponent<CFearful>(out var fearful);
 
                 if (Acting.IsActionReady)
                 {
                     var targetPos = isFearful
-                            ? CFearful.GetTargetRetreatPoint(GridPos, Targeting.Target.GridPos, ContainingGridManager, 8)
+                            ? CFearful.GetTargetRetreatPoint(GridPos, ((CFearful)fearful).FearedThing.GridPos, ContainingGridManager)
                             : Targeting.Target.GridPos;
 
                     //RoguemojiGame.Instance.DebugGridLine(GridPos, targetPos, cantSeeTarget ? new Color(1f, 0f, 0f, 0.2f) : new Color(0f, 0f, 1f, 0.2f), 0.5f, CurrentLevelId);
@@ -125,10 +125,17 @@ public partial class Squirrel : Thing
     {
         base.TakeDamage(source);
 
-        if(GetStatClamped(StatType.Health) == 1 && !HasComponent<CFearful>())
+        int amount = source.GetStatClamped(StatType.Attack);
+
+        if (amount > 0 && GetStatClamped(StatType.Health) == 1 && !HasComponent<CFearful>())
         {
             var fearful = AddComponent<CFearful>();
             fearful.Lifetime = 5f;
+
+            if (source.GetComponent<CProjectile>(out var component))
+                fearful.FearedThing = ((CProjectile)component).Thrower;
+            else
+                fearful.FearedThing = source;
         }
     }
 

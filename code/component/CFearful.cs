@@ -6,6 +6,7 @@ namespace Roguemoji;
 
 public class CFearful : ThingComponent
 {
+    public Thing FearedThing { get; set; }
     public float TimeElapsed { get; set; }
     public float Lifetime { get; set; }
 
@@ -39,7 +40,7 @@ public class CFearful : ThingComponent
         RoguemojiGame.Instance.RemoveFloater("💧", Thing.CurrentLevelId, parent: Thing);
     }
 
-    public static IntVector GetTargetRetreatPoint(IntVector startingPoint, IntVector avoidPoint, GridManager gridManager, int maxDistToCorner)
+    public static IntVector GetTargetRetreatPoint(IntVector startingPoint, IntVector avoidPoint, GridManager gridManager)
     {
         IntVector diff = startingPoint - avoidPoint;
         IntVector targetPos = new IntVector(diff.x < 0 ? 0 : gridManager.GridWidth - 1, diff.y < 0 ? 0 : gridManager.GridHeight - 1);
