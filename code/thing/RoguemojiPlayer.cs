@@ -134,7 +134,7 @@ public partial class RoguemojiPlayer : Thing
 
     void SpawnRandomInventoryThing(IntVector gridPos)
     {
-        int rand = Game.Random.Int(0, 22);
+        int rand = Game.Random.Int(0, 23);
         switch (rand)
         {
             case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -160,6 +160,7 @@ public partial class RoguemojiPlayer : Thing
             case 20: InventoryGridManager.SpawnThing<BookTeleport>(gridPos); break;
             case 21: InventoryGridManager.SpawnThing<AcademicCap>(gridPos); break;
             case 22: InventoryGridManager.SpawnThing<Joystick>(gridPos); break;
+            case 23: InventoryGridManager.SpawnThing<ScrollFear>(gridPos); break;
         }
     }
 

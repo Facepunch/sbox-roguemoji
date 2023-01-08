@@ -64,38 +64,38 @@ public partial class Squirrel : Thing
             {
                 int adjustedSight = Math.Max(GetStatClamped(StatType.Sight) - Targeting.Target.GetStatClamped(StatType.Stealth), 1);
                 bool cantSeeTarget = Utils.GetDistance(GridPos, Targeting.Target.GridPos) > adjustedSight || !ContainingGridManager.HasLineOfSight(GridPos, Targeting.Target.GridPos, adjustedSight, out IntVector collisionCell);
-
-                //RoguemojiGame.Instance.DebugGridLine(GridPos, Targeting.Target.GridPos, cantSeeTarget ? new Color(1f, 0f, 0f, 0.2f) : new Color(0f, 0f, 1f, 0.2f), 0.1f, CurrentLevelId);
+                bool isFearful = HasComponent<CFearful>();
 
                 if (Acting.IsActionReady)
                 {
-                    if(HasComponent<CFearful>())
+                    var targetPos = isFearful
+                            ? CFearful.GetTargetRetreatPoint(GridPos, Targeting.Target.GridPos, ContainingGridManager, 8)
+                            : Targeting.Target.GridPos;
+
+                    //RoguemojiGame.Instance.DebugGridLine(GridPos, targetPos, cantSeeTarget ? new Color(1f, 0f, 0f, 0.2f) : new Color(0f, 0f, 1f, 0.2f), 0.5f, CurrentLevelId);
+
+                    var path = GetPathTo(GridPos, targetPos);
+                    if (path != null && path.Count > 0 && !path[0].Equals(GridPos))
                     {
-                        var dir = CFearful.GetRetreatDirection(this, Targeting.Target);
+                        var dir = GridManager.GetDirectionForIntVector(path[0] - GridPos);
                         TryMove(dir);
-                    }
-                    else
-                    {
-                        var path = GetPathTo(GridPos, Targeting.Target.GridPos);
-                        if (path != null && path.Count > 0 && !path[0].Equals(GridPos))
-                        {
-                            var dir = GridManager.GetDirectionForIntVector(path[0] - GridPos);
-                            TryMove(dir);
-                        }
                     }
 
                     Acting.PerformedAction();
                 }
 
-                if (cantSeeTarget)
+                if(!isFearful)
                 {
-                    CantSeeTargetElapsedTime += dt;
-                    if(CantSeeTargetElapsedTime > CantSeeTargetLoseDelay)
-                        Targeting.LoseTarget();
-                } 
-                else
-                {
-                    CantSeeTargetElapsedTime = 0f;
+                    if (cantSeeTarget)
+                    {
+                        CantSeeTargetElapsedTime += dt;
+                        if (CantSeeTargetElapsedTime > CantSeeTargetLoseDelay)
+                            Targeting.LoseTarget();
+                    }
+                    else
+                    {
+                        CantSeeTargetElapsedTime = 0f;
+                    }
                 }
             }
         }
@@ -128,7 +128,7 @@ public partial class Squirrel : Thing
         if(GetStatClamped(StatType.Health) == 1 && !HasComponent<CFearful>())
         {
             var fearful = AddComponent<CFearful>();
-            fearful.Lifetime = 3f;
+            fearful.Lifetime = 5f;
         }
     }
 

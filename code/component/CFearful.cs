@@ -1,5 +1,6 @@
 ﻿using Sandbox;
 using System;
+using System.Collections.Generic;
 
 namespace Roguemoji;
 
@@ -38,33 +39,11 @@ public class CFearful : ThingComponent
         RoguemojiGame.Instance.RemoveFloater("💧", Thing.CurrentLevelId, parent: Thing);
     }
 
-    public static Direction GetRetreatDirection(Thing fearfulThing, Thing fearedThing, bool cardinalOnly = true)
+    public static IntVector GetTargetRetreatPoint(IntVector startingPoint, IntVector avoidPoint, GridManager gridManager, int maxDistToCorner)
     {
-        var gridManager = fearfulThing.ContainingGridManager;
+        IntVector diff = startingPoint - avoidPoint;
+        IntVector targetPos = new IntVector(diff.x < 0 ? 0 : gridManager.GridWidth - 1, diff.y < 0 ? 0 : gridManager.GridHeight - 1);
 
-        var fearfulPos = fearfulThing.GridPos;
-        var fearedPos = fearedThing.GridPos;
-        var diff = fearfulPos - fearedPos;
-
-        if(diff.Equals(IntVector.Zero))
-        {
-            if(gridManager.GetRandomEmptyAdjacentGridPos(fearfulPos, out var gridPos, allowNonSolid: false, cardinalOnly))
-                return GridManager.GetDirectionForIntVector(gridPos - fearfulPos);
-
-            return Direction.None;
-        }
-
-        if(Math.Abs(diff.x) > Math.Abs(diff.y))
-        {
-            IntVector newGridPosX = fearfulPos + new IntVector(Math.Sign(diff.x), 0);
-            if(gridManager.IsGridPosInBounds(newGridPosX))
-                return GridManager.GetDirectionForIntVector(newGridPosX - fearfulPos);
-        }
-
-        IntVector newGridPosY = fearfulPos + new IntVector(0, Math.Sign(diff.y));
-        if (gridManager.IsGridPosInBounds(newGridPosY))
-            return GridManager.GetDirectionForIntVector(newGridPosY - fearfulPos);
-
-        return Direction.None;
+        return targetPos;
     }
 }

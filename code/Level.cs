@@ -81,6 +81,11 @@ public partial class Level : Entity
     {
         if(levelId == LevelId.Forest0)
         {
+            GridManager.SpawnThing<OilBarrel>(new IntVector(GridManager.GridWidth - 1, GridManager.GridHeight - 1));
+            GridManager.SpawnThing<OilBarrel>(new IntVector(GridManager.GridWidth - 2, GridManager.GridHeight - 1));
+            GridManager.SpawnThing<OilBarrel>(new IntVector(GridManager.GridWidth - 1, GridManager.GridHeight - 2));
+            GridManager.SpawnThing<OilBarrel>(new IntVector(GridManager.GridWidth - 2, GridManager.GridHeight - 2));
+
             //for (int x = 0; x < GridManager.GridWidth; x++)
             //{
             //    GridManager.SpawnThing<OilBarrel>(new IntVector(x, 0));
