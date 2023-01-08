@@ -24,10 +24,10 @@ public class CActing : ThingComponent
 
         TimeElapsed += dt;
 
-        bool wasInputReady = IsActionReady;
+        bool wasActionReady = IsActionReady;
         IsActionReady = (TimeElapsed >= ActionDelay);
 
-        if (IsActionReady && !wasInputReady)
+        if (IsActionReady && !wasActionReady)
             Thing.OnActionRecharged();
 
         Thing.ActionRechargePercent = Math.Clamp(TimeElapsed / ActionDelay, 0f, 1f);
@@ -42,5 +42,10 @@ public class CActing : ThingComponent
     public static float CalculateActionDelay(int speed)
     {
         return Utils.Map(speed, 0, 10, 1.0f, 0.1f);
+    }
+
+    public void RefreshAction()
+    {
+        TimeElapsed = ActionDelay;
     }
 }

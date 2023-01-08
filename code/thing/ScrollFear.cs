@@ -32,26 +32,25 @@ public partial class ScrollFear : Thing
 
         int radius = 3;
 
-        var things = ContainingGridManager.GetThingsWithinRange(GridPos, radius, allFlags: ThingFlags.Solid);
+        var things = user.ContainingGridManager.GetThingsWithinRange(user.GridPos, radius, allFlags: ThingFlags.Solid);
         foreach(var thing in things)
         {
-            if (thing == user)
+            if (thing == user || thing.HasComponent<CFearful>())
                 continue;
 
-            //if(!thing.HasComponent<Target>)
-        }
-        //foreach(var thing in nearbyThings)
-        //{
-        //    if (thing == this)
-        //        continue;
+            if (thing.GetComponent<CActing>(out var acting))
+            {
+                var fearful = thing.AddComponent<CFearful>();
+                fearful.Lifetime = 5f;
+                fearful.FearedThing = user;
 
-        //    RoguemojiGame.Instance.DebugGridLine(GridPos, thing.GridPos, Color.Red, 0.1f, ContainingGridManager.LevelId);
-        //    RoguemojiGame.Instance.DebugGridCell(thing.GridPos, Color.Red, 1f, ContainingGridManager.LevelId);
-        //}
+                ((CActing)acting).RefreshAction();
+            }
+        }
 
         var circlePoints = user.ContainingGridManager.GetPointsOnCircle(user.GridPos, radius);
         foreach (var point in circlePoints)
-            RoguemojiGame.Instance.AddFloater("💧", point, 0.66f, user.CurrentLevelId, Vector2.Zero, new Vector2(0f, 2f), text: "", requireSight: true, EasingType.QuadOut, 0.025f, parent: null);
+            RoguemojiGame.Instance.AddFloater("😱", point, Game.Random.Float(0.75f, 1.05f), user.CurrentLevelId, Vector2.Zero, new Vector2(0f, Game.Random.Float(-1f, -10f)), text: "", requireSight: false, EasingType.QuadOut, Game.Random.Float(0.35f, 0.45f), parent: null);
 
         base.Use(user);
     }

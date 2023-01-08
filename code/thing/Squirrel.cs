@@ -69,8 +69,8 @@ public partial class Squirrel : Thing
                 if (Acting.IsActionReady)
                 {
                     var targetPos = isFearful
-                            ? CFearful.GetTargetRetreatPoint(GridPos, ((CFearful)fearful).FearedThing.GridPos, ContainingGridManager)
-                            : Targeting.Target.GridPos;
+                        ? CFearful.GetTargetRetreatPoint(GridPos, ((CFearful)fearful).FearedThing.GridPos, ContainingGridManager)
+                        : Targeting.Target.GridPos;
 
                     //RoguemojiGame.Instance.DebugGridLine(GridPos, targetPos, cantSeeTarget ? new Color(1f, 0f, 0f, 0.2f) : new Color(0f, 0f, 1f, 0.2f), 0.5f, CurrentLevelId);
 
