@@ -81,17 +81,17 @@ public partial class Level : Entity
     {
         if(levelId == LevelId.Forest0)
         {
-            for (int x = 0; x < GridManager.GridWidth; x++)
-            {
-                GridManager.SpawnThing<OilBarrel>(new IntVector(x, 0));
-                GridManager.SpawnThing<OilBarrel>(new IntVector(x, GridManager.GridHeight - 1));
-            }
+            //for (int x = 0; x < GridManager.GridWidth; x++)
+            //{
+            //    GridManager.SpawnThing<OilBarrel>(new IntVector(x, 0));
+            //    GridManager.SpawnThing<OilBarrel>(new IntVector(x, GridManager.GridHeight - 1));
+            //}
 
-            for (int y = 1; y < GridManager.GridHeight - 1; y++)
-            {
-                GridManager.SpawnThing<OilBarrel>(new IntVector(0, y));
-                GridManager.SpawnThing<OilBarrel>(new IntVector(GridManager.GridWidth - 1, y));
-            }
+            //for (int y = 1; y < GridManager.GridHeight - 1; y++)
+            //{
+            //    GridManager.SpawnThing<OilBarrel>(new IntVector(0, y));
+            //    GridManager.SpawnThing<OilBarrel>(new IntVector(GridManager.GridWidth - 1, y));
+            //}
 
             //GridManager.SpawnThing<Golem>(new IntVector(10, 10));
             GridManager.SpawnThing<Leaf>(new IntVector(9, 10));

@@ -54,4 +54,9 @@ public class CompProjectile : ThingComponent
         Thing.DamageOther(thing, Direction);
         Remove();
     }
+
+    public override void OnBumpedOutOfBounds(Direction dir)
+    {
+        Remove();
+    }
 }
