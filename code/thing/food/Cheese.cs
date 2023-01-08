@@ -15,7 +15,6 @@ public partial class Cheese : Thing
         Tooltip = "A wedge of cheese";
         Description = "Stinky and delicious";
         IconDepth = 0;
-        ShouldLogBehaviour = true;
         Flags = ThingFlags.Selectable | ThingFlags.Useable;
 
         if (Game.IsServer)

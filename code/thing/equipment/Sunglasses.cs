@@ -14,7 +14,6 @@ public partial class Sunglasses : Thing
         Description = "Obscures your vision but looks cool";
         Tooltip = "A pair of sunglasses";
         IconDepth = 0;
-        ShouldLogBehaviour = true;
 		Flags = ThingFlags.Selectable | ThingFlags.Equipment;
 
         if (Game.IsServer)

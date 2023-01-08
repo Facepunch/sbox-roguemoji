@@ -12,7 +12,6 @@ public partial class TreeDeciduous : Thing
         Description = "A tall tree";
         Tooltip = "A deciduous tree";
         IconDepth = 1;
-        ShouldLogBehaviour = true;
 		Flags = ThingFlags.Solid | ThingFlags.Selectable;
 		PathfindMovementCost = 999f;
 		SightBlockAmount = 13;

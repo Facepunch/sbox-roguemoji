@@ -48,7 +48,6 @@ public partial class Thing : Entity
     [Net] public int PlayerNum { get; set; }
 
     [Net] public int IconDepth { get; set; }
-    public bool ShouldLogBehaviour { get; set; }
     [Net] public int StackNum { get; set; }
     [Net] public float PathfindMovementCost { get; set; }
 
@@ -106,7 +105,6 @@ public partial class Thing : Entity
         DisplayName = Name;
         Tooltip = "";
         IconDepth = 0;
-        ShouldLogBehaviour = false;
         IconScale = 1f;
         ThingId = RoguemojiGame.ThingId++;
         IsRemoved = false;
@@ -135,13 +133,15 @@ public partial class Thing : Entity
             //DebugText += component.GetType().Name + "\n";
         }
 
-        //DrawDebugText(Flags.ToString());
-
         if (IsOnCooldown)
             HandleCooldown(dt);
 
         if (HasStat(StatType.Energy) && HasStat(StatType.Stamina))
             HandleStamina(dt);
+
+        // the wielded thing of NPCs has no ContainingGridManager, so must be updated manually (note: currently, if the wielded has ShouldUpdate=false, they will still not be getting updated)
+        if(WieldedThing != null && WieldedThing.ShouldUpdate && WieldedThing.ContainingGridType == GridType.None)
+            WieldedThing.Update(dt);
     }
 
     [Event.Tick.Client]
@@ -364,14 +364,6 @@ public partial class Thing : Entity
             RefreshGridPanelClient();
 
         OnChangedGridPos();
-
-        //if (ShouldLogBehaviour)
-        //      {
-        //	if(HasFlag(ThingFlags.InInventory))
-        //		RoguemojiGame.Instance.LogMessage(DisplayIcon + DisplayName + " moved to (" + gridPos.x + ", " + gridPos.y + ") in " + InventoryPlayer.DisplayName + "'s inventory.", PlayerNum);
-        //	else
-        //		RoguemojiGame.Instance.LogMessage(DisplayIcon + DisplayName + " moved to (" + gridPos.x + ", " + gridPos.y + ").", PlayerNum);
-        //}
     }
 
     public void Remove()

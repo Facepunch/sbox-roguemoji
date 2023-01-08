@@ -17,7 +17,6 @@ public partial class PotionMana : Thing
         Description = "Recover some mana";
         Tooltip = "A mana potion";
         IconDepth = 0;
-        ShouldLogBehaviour = true;
         Flags = ThingFlags.Selectable | ThingFlags.Useable;
 
         SetTattoo(GetStatIcon(StatType.Mana), scale: 0.475f, offset: new Vector2(-0.85f, 6.5f), offsetWielded: new Vector2(-1.5f, 4f), offsetInfo: new Vector2(-4f, 16f), offsetCharWielded: new Vector2(-0.9f, 9.5f), offsetInfoWielded: new Vector2(-4f, 7f));

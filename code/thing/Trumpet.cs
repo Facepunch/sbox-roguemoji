@@ -11,7 +11,6 @@ public partial class Trumpet : Thing
         Description = "Loud and annoying";
         Tooltip = "A trumpet";
         IconDepth = 0;
-        ShouldLogBehaviour = true;
 		Flags = ThingFlags.Selectable;
     }
 }

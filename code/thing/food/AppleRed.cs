@@ -15,7 +15,6 @@ public partial class AppleRed : Thing
         Description = "Keeps the 👨‍⚕️ away";
         Tooltip = "A red apple";
         IconDepth = 0;
-        ShouldLogBehaviour = true;
         Flags = ThingFlags.Selectable | ThingFlags.Useable;
 
         if (Game.IsServer)

@@ -13,7 +13,6 @@ public partial class ProjectileArrow : Thing
         Description = "";
         Tooltip = "";
         IconDepth = 8;
-        ShouldLogBehaviour = true;
 
         if (Game.IsServer)
         {

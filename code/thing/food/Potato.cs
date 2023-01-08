@@ -15,7 +15,6 @@ public partial class Potato : Thing
         Description = "Uncooked and hard as a rock";
         Tooltip = "A potato";
         IconDepth = 0;
-        ShouldLogBehaviour = true;
 
         if (Game.IsServer)
         {

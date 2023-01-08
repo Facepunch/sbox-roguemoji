@@ -17,7 +17,6 @@ public partial class PotionEnergy : Thing
         Description = "Recover some energy";
         Tooltip = "An energy drink";
         IconDepth = 0;
-        ShouldLogBehaviour = true;
         Flags = ThingFlags.Selectable | ThingFlags.Useable;
 
         SetTattoo(GetStatIcon(StatType.Energy), scale: 0.5f, offset: new Vector2(-0.525f, 4f), offsetWielded: new Vector2(-3f, 2f), offsetInfo: new Vector2(-8.75f, 11.5f), offsetCharWielded: new Vector2(-0.9f, 5.5f), offsetInfoWielded: new Vector2(-6.8f, 6f));

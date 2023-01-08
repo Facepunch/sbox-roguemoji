@@ -20,7 +20,6 @@ public partial class BookTeleport : Thing
         Description = "Teleport to a random place on the current floor";
         Tooltip = "A book of Teleport";
         IconDepth = 0;
-        ShouldLogBehaviour = true;
         Flags = ThingFlags.Selectable | ThingFlags.Useable;
 
         SetTattoo(Globals.Icon(IconType.Teleport), scale: 0.5f, offset: new Vector2(0.5f, -2f), offsetWielded: new Vector2(0f, -2f), offsetInfo: new Vector2(1f, -1f), offsetCharWielded: new Vector2(2f, -4f), offsetInfoWielded: new Vector2(-1f, -2f));

@@ -15,7 +15,6 @@ public partial class Cherry : Thing
         Description = "Sweet and juicy";
         Tooltip = "A couple cherries";
         IconDepth = 0;
-        ShouldLogBehaviour = true;
         Flags = ThingFlags.Selectable | ThingFlags.Useable;
 
         if (Game.IsServer)

@@ -9,7 +9,6 @@ public partial class Bone : Thing
 		DisplayIcon = "🦴";
 		DisplayName = "Bone";
         IconDepth = 0;
-        ShouldLogBehaviour = true;
 		Tooltip = "A bone";
 		Flags = ThingFlags.Selectable;
 

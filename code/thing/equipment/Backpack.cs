@@ -10,7 +10,6 @@ public partial class Backpack : Thing
         DisplayName = "Backpack";
         Description = "Increases your inventory size";
         IconDepth = 0;
-        ShouldLogBehaviour = true;
 		Tooltip = "A backpack";
 		Flags = ThingFlags.Selectable | ThingFlags.Equipment;
     }

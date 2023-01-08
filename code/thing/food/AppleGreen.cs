@@ -15,7 +15,6 @@ public partial class AppleGreen : Thing
         Description = "Full of energy";
         Tooltip = "A green apple";
         IconDepth = 0;
-        ShouldLogBehaviour = true;
         Flags = ThingFlags.Selectable | ThingFlags.Useable;
 
         if (Game.IsServer)

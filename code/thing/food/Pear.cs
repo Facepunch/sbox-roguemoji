@@ -15,7 +15,6 @@ public partial class Pear : Thing
         Description = "Pear-shaped and delicious";
         Tooltip = "A pear";
         IconDepth = 0;
-        ShouldLogBehaviour = true;
         Flags = ThingFlags.Selectable | ThingFlags.Useable;
 
         if (Game.IsServer)

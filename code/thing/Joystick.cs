@@ -17,7 +17,6 @@ public partial class Joystick : Thing
         Description = "Lets you move in any direction";
         Tooltip = "A joystick";
         IconDepth = 0;
-        ShouldLogBehaviour = true;
         Flags = ThingFlags.Selectable | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
 
         if (Game.IsServer)

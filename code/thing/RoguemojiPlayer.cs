@@ -37,7 +37,6 @@ public partial class RoguemojiPlayer : Thing
 	{
 		IconDepth = 5;
         ShouldUpdate = true;
-        ShouldLogBehaviour = true;
 		DisplayName = "Player";
 		Tooltip = "";
         PathfindMovementCost = 10f;

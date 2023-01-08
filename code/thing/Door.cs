@@ -9,7 +9,6 @@ public partial class Door : Thing
 		DisplayIcon = "️🚪";
         DisplayName = "Door";
         IconDepth = 1;
-        ShouldLogBehaviour = true;
 		Tooltip = "A door";
         Flags = ThingFlags.Solid | ThingFlags.Selectable;
         PathfindMovementCost = 15f;

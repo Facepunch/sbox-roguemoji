@@ -15,7 +15,6 @@ public partial class Orange : Thing
         Description = "Delicious citrus";
         Tooltip = "An orange";
         IconDepth = 0;
-        ShouldLogBehaviour = true;
         Flags = ThingFlags.Selectable | ThingFlags.Useable;
 
         if (Game.IsServer)

@@ -17,7 +17,6 @@ public partial class Squirrel : Thing
         Description = "A bushy-tailed rodent";
         IconDepth = 1;
         ShouldUpdate = true;
-        ShouldLogBehaviour = true;
 		Tooltip = "A squirrel";
 		Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanUseThings;
         PathfindMovementCost = 5f;

@@ -15,7 +15,6 @@ public partial class Peach : Thing
         Description = "Sweet and juicy";
         Tooltip = "A peach";
         IconDepth = 0;
-        ShouldLogBehaviour = true;
         Flags = ThingFlags.Selectable | ThingFlags.Useable;
 
         if (Game.IsServer)

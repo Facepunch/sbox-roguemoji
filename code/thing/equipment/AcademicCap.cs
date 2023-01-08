@@ -13,7 +13,6 @@ public partial class AcademicCap : Thing
         Description = "Makes you feel smarter";
         Tooltip = "An academic cap";
         IconDepth = 0;
-        ShouldLogBehaviour = true;
 		Flags = ThingFlags.Selectable | ThingFlags.Equipment;
 
         if (Game.IsServer)
