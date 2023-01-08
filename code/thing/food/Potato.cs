@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿using Roguemoji;
+using Sandbox;
 using System;
 
 namespace Roguemoji;
@@ -8,8 +9,8 @@ public partial class Potato : Thing
     public override string AbilityName => "Eat";
 
     public Potato()
-	{
-		DisplayIcon = "🥔";
+    {
+        DisplayIcon = "🥔";
         DisplayName = "Potato";
         Description = "Uncooked and hard as a rock";
         Tooltip = "A potato";
@@ -27,6 +28,9 @@ public partial class Potato : Thing
 
     public override void Use(Thing user)
     {
+        int amountRecovered = Math.Min(EatHealth, user.GetStatMax(StatType.Health) - user.GetStatClamped(StatType.Health));
+        RoguemojiGame.Instance.AddFloater(GetStatIcon(StatType.Health), user.GridPos, 1.2f, user.CurrentLevelId, new Vector2(0f, 1f), new Vector2(0f, -6f), $"+{amountRecovered}", requireSight: true, EasingType.SineOut, 0.25f, parent: user);
+
         user.AdjustStat(StatType.Health, EatHealth);
         Destroy();
 

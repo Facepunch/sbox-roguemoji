@@ -24,18 +24,30 @@ public partial class TreeDeciduous : Thing
             InfoWieldedThingOffset = new Vector2(16f, 19f);
             InfoWieldedThingFontSize = 26;
         }
-
-        //SetTattoo("🍎", scale: 0.4f, offset: new Vector2(0f, 0f), offsetWielded: Vector2.Zero, offsetInfo: new Vector2(0f, 0f), offsetCharWielded: Vector2.Zero, offsetInfoWielded: Vector2.Zero);
     }
 
     public override void OnSpawned()
     {
         base.OnSpawned();
 
-        if(Game.Random.Float(0f, 1f) < 0.5f)
+        if(Game.Random.Float(0f, 1f) < 0.33f)
         {
-            var nut = RoguemojiGame.Instance.SpawnThing<Nut>(CurrentLevelId);
-            WieldAndRemoveFromGrid(nut);
+            int randItemNum = Game.Random.Int(0, 11);
+            Thing item = null;
+
+            switch(randItemNum)
+            {
+                case 0: case 1: case 2: item = RoguemojiGame.Instance.SpawnThing<AppleRed>(CurrentLevelId); break;
+                case 3: case 4: item = RoguemojiGame.Instance.SpawnThing<AppleGreen>(CurrentLevelId); break;
+                case 5: case 6: item = RoguemojiGame.Instance.SpawnThing<Nut>(CurrentLevelId); break;
+                case 7: item = RoguemojiGame.Instance.SpawnThing<Peach>(CurrentLevelId); break;
+                case 8: item = RoguemojiGame.Instance.SpawnThing<Pear>(CurrentLevelId); break;
+                case 9: item = RoguemojiGame.Instance.SpawnThing<Cherry>(CurrentLevelId); break;
+                case 10: item = RoguemojiGame.Instance.SpawnThing<Orange>(CurrentLevelId); break;
+                case 11: item = RoguemojiGame.Instance.SpawnThing<Lemon>(CurrentLevelId); break;
+            }
+
+            WieldAndRemoveFromGrid(item);
         }
     }
 

@@ -332,8 +332,6 @@ public partial class RoguemojiGame : GameManager
 		{
 			var oldLevel = Levels[player.CurrentLevelId];
 			oldLevel.GridManager.RemoveThing(player);
-
-            LogMessage(player.Client.Name + " entered " + levelId, player.PlayerNum);
         }
 
 		SpawnPlayerOnLevel(player, levelId);
@@ -349,6 +347,8 @@ public partial class RoguemojiGame : GameManager
         level.GridManager.GetRandomEmptyGridPos(out var gridPos);
         player.SetGridPos(gridPos);
 		player.RecenterCamera();
+
+        LogMessage(player.Client.Name + " entered " + level.LevelName, player.PlayerNum);
     }
 
 	Level CreateLevel(LevelId levelId)

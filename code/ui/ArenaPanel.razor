@@ -82,7 +82,7 @@
         var level = RoguemojiGame.Instance.GetLevel(player.CurrentLevelId);
     }
 
-    @if (level.GridManager?.Things == null)
+    @if (level?.GridManager?.Things == null)
     {
         return;
     }
