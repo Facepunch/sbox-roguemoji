@@ -412,6 +412,24 @@ public partial class RoguemojiGame : GameManager
         Hud.Instance.RemoveFloater(icon, parent);
     }
 
+    public void RemoveFloaters(LevelId levelId, Thing parent = null)
+    {
+        foreach (var player in Players)
+        {
+            if (player.CurrentLevelId == levelId)
+                RemoveFloatersClient(To.Single(player), (parent != null) ? parent.NetworkIdent : -1);
+        }
+    }
+
+    [ClientRpc]
+    public void RemoveFloatersClient(int parentIdent = -1)
+    {
+        Thing parent = (parentIdent == -1) ? null : Entity.FindByIndex(parentIdent) as Thing;
+
+        if(parent != null)
+            Hud.Instance.RemoveFloaters(parent);
+    }
+
     public void DebugGridLine(IntVector a, IntVector b, Color color, float time, LevelId levelId)
 	{
         foreach (var player in Players)

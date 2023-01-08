@@ -27,6 +27,8 @@
         z-index: 0;
         justify-content: center;
         align-items: center;
+        text-stroke-color: black;
+        text-stroke-width: 2px;
     }
 
     .floater_text
@@ -48,16 +50,16 @@
 
     @foreach(var floater in Hud.Instance.Floaters)
     {
-        @if (!floater.requireSight || player.IsCellVisible(floater.gridPos))
+        var floaterGridPos = floater.parent != null ? floater.parent.GridPos : floater.gridPos;
+        @if (!floater.requireSight || player.IsCellVisible(floaterGridPos))
         {
-            Vector2 pos = (floater.parent != null)
-                ? ((Hud.Instance.GetScreenPosForArenaGridPos(floater.parent.GridPos) + floater.parent.Offset) / ScaleToScreen) + new Vector2(-20f, -20f)
-                : (Hud.Instance.GetScreenPosForArenaGridPos(floater.gridPos) / ScaleToScreen) + new Vector2(-20f, -20f);
+            Vector2 parentOffset = floater.parent?.Offset ?? Vector2.Zero;
+            Vector2 pos = ((Hud.Instance.GetScreenPosForArenaGridPos(floaterGridPos) + parentOffset) / ScaleToScreen) + new Vector2(-20f, -20f);
 
             float fontSize = 29f * floater.scale;
 
-            Vector2 offset = Vector2.Lerp(floater.offsetStart, floater.offsetEnd, Utils.Map(floater.timeSinceStart, 0f, floater.time, 0f, 1f, floater.offsetEasingType));
-            var opacity = floater.timeSinceStart < floater.fadeInTime ? Utils.Map(floater.timeSinceStart, 0f, floater.fadeInTime, 0f, 1f, EasingType.SineIn) : Utils.Map(floater.timeSinceStart, floater.fadeInTime, floater.time, 1f, 0f, floater.offsetEasingType);
+            Vector2 offset = floater.time > 0f ? Vector2.Lerp(floater.offsetStart, floater.offsetEnd, Utils.Map(floater.timeSinceStart, 0f, floater.time, 0f, 1f, floater.offsetEasingType)) : floater.offsetStart;
+            var opacity = floater.time > 0f ? (floater.timeSinceStart < floater.fadeInTime ? Utils.Map(floater.timeSinceStart, 0f, floater.fadeInTime, 0f, 1f, EasingType.SineIn) : Utils.Map(floater.timeSinceStart, floater.fadeInTime, floater.time, 1f, 0f, floater.offsetEasingType)) : 1f;
 
             <div class="floater_draw" style="left: @(pos.x + offset.x); top: @(pos.y + offset.y); opacity: @(opacity); font-size: @(MathX.FloorToInt(fontSize));">
                 @floater.icon 

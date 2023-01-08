@@ -57,7 +57,7 @@ public partial class BowAndArrow : Thing
         arrow.SetTransformClient(degrees: GridManager.GetDegreesForDirection(direction));
         arrow.Direction = direction;
 
-        var projectile = arrow.AddComponent<CompProjectile>();
+        var projectile = arrow.AddComponent<CProjectile>();
         projectile.Direction = direction;
         projectile.MoveDelay = 0.1f;
         projectile.RemainingDistance = 8;

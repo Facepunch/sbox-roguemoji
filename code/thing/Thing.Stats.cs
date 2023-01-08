@@ -115,7 +115,7 @@ public partial class Thing : Entity
     {
         switch (statType)
         {
-            case StatType.Speed: return $"Delay: {CompActing.CalculateActionDelay(thing.GetStatClamped(StatType.Speed)).ToString("N2")}s";
+            case StatType.Speed: return $"Delay: {CActing.CalculateActionDelay(thing.GetStatClamped(StatType.Speed)).ToString("N2")}s";
             case StatType.Intelligence: return $"Increases {GetStatIcon(StatType.Mana)} capacity";
             case StatType.Stamina: return $"Increases {GetStatIcon(StatType.Energy)} capacity";
             case StatType.Stealth: return $"A value below 0 makes you more noticeable";
@@ -257,6 +257,17 @@ public partial class Thing : Entity
             Stats[statType].MaxValue += amount;
             OnChangedStat(statType, changeCurrent: 0, changeMin: 0, changeMax: amount);
         }
+    }
+
+    public virtual bool TrySpendStat(StatType statType, int cost)
+    {
+        int available = GetStatClamped(statType);
+
+        if (available < cost)
+            return false;
+
+        AdjustStat(statType, -cost);
+        return true;
     }
 
     public bool HasStat(StatType statType)

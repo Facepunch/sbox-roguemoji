@@ -4,8 +4,8 @@ using System;
 namespace Roguemoji;
 public partial class Squirrel : Thing
 {
-    public CompTargeting Targeting { get; private set; }
-    public CompActing Acting { get; private set; }
+    public CTargeting Targeting { get; private set; }
+    public CActing Acting { get; private set; }
 
     public float CantSeeTargetElapsedTime { get; private set; }
     public float CantSeeTargetLoseDelay { get; private set; }
@@ -37,8 +37,8 @@ public partial class Squirrel : Thing
     {
         base.Spawn();
 
-        Targeting = AddComponent<CompTargeting>();
-        Acting = AddComponent<CompActing>();
+        Targeting = AddComponent<CTargeting>();
+        Acting = AddComponent<CActing>();
         Acting.ActionDelay = 1f;
         Acting.TimeElapsed = Game.Random.Float(0f, 1f);
     }
@@ -69,11 +69,19 @@ public partial class Squirrel : Thing
 
                 if (Acting.IsActionReady)
                 {
-                    var path = GetPathTo(GridPos, Targeting.Target.GridPos);
-                    if (path != null && path.Count > 0 && !path[0].Equals(GridPos))
+                    if(HasComponent<CFearful>())
                     {
-                        var dir = GridManager.GetDirectionForIntVector(path[0] - GridPos);
+                        var dir = CFearful.GetRetreatDirection(this, Targeting.Target);
                         TryMove(dir);
+                    }
+                    else
+                    {
+                        var path = GetPathTo(GridPos, Targeting.Target.GridPos);
+                        if (path != null && path.Count > 0 && !path[0].Equals(GridPos))
+                        {
+                            var dir = GridManager.GetDirectionForIntVector(path[0] - GridPos);
+                            TryMove(dir);
+                        }
                     }
 
                     Acting.PerformedAction();
@@ -116,6 +124,12 @@ public partial class Squirrel : Thing
     public override void TakeDamage(Thing source)
     {
         base.TakeDamage(source);
+
+        if(GetStatClamped(StatType.Health) == 1 && !HasComponent<CFearful>())
+        {
+            var fearful = AddComponent<CFearful>();
+            fearful.Lifetime = 3f;
+        }
     }
 
     public override void Destroy()

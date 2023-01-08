@@ -4,8 +4,8 @@ using System;
 namespace Roguemoji;
 public partial class Golem : Thing
 {
-    public CompTargeting Targeting { get; private set; }
-    public CompActing Acting { get; private set; }
+    public CTargeting Targeting { get; private set; }
+    public CActing Acting { get; private set; }
 
     public Golem()
 	{
@@ -29,8 +29,8 @@ public partial class Golem : Thing
     {
         base.Spawn();
 
-        Targeting = AddComponent<CompTargeting>();
-        Acting = AddComponent<CompActing>();
+        Targeting = AddComponent<CTargeting>();
+        Acting = AddComponent<CActing>();
         Acting.ActionDelay = 1.5f;
         Acting.TimeElapsed = Game.Random.Float(0f, 1.5f);
     }

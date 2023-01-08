@@ -3,7 +3,7 @@ using System;
 
 namespace Roguemoji;
 
-public class CompProjectile : ThingComponent
+public class CProjectile : ThingComponent
 {
     public Direction Direction { get; set; }
     public float MoveDelay { get; set; }

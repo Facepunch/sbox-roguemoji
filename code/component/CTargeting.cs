@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Roguemoji;
 
-public class CompTargeting : ThingComponent
+public class CTargeting : ThingComponent
 {
     public Thing Target { get; set; }
 

@@ -109,7 +109,7 @@ public partial class Hud : RootPanel
 
             //DebugDrawing.GridLine(IntVector.Zero, floater.gridPos, new Color(0f, 1f, 0f, 0.5f));
 
-            if(floater.timeSinceStart > floater.time)
+            if(floater.time > 0f && floater.timeSinceStart > floater.time)
                 Floaters.RemoveAt(i);
         }
 	}
@@ -346,9 +346,17 @@ public partial class Hud : RootPanel
         {
             var floater = Floaters[i];
             if (floater.parent == parent && (floater.icon == icon || string.IsNullOrEmpty(icon)))
-            {
                 Floaters.RemoveAt(i);
-            }
+        }
+    }
+
+    public void RemoveFloaters(Thing parent)
+    {
+        for (int i = Floaters.Count - 1; i >= 0; i--)
+        {
+            var floater = Floaters[i];
+            if (floater.parent == parent)
+                Floaters.RemoveAt(i);
         }
     }
 

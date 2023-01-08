@@ -3,7 +3,7 @@ using System;
 
 namespace Roguemoji;
 
-public class CompActing : ThingComponent
+public class CActing : ThingComponent
 {
     public float TimeElapsed { get; set; }
     public float ActionDelay { get; set; }

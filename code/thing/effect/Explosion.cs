@@ -20,6 +20,6 @@ public partial class Explosion : Thing
 		base.Update( dt );
 
 		if( _spawnTime > LIFE_TIME )
-			Remove();
+			Destroy();
 	}
 }
