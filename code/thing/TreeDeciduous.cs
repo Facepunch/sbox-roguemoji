@@ -62,7 +62,7 @@ public partial class TreeDeciduous : Thing
 
                 ContainingGridManager.AddThing(droppedThing);
                 droppedThing.SetGridPos(dropGridPos);
-                droppedThing.VfxFly(GridPos, 0.2f);
+                droppedThing.VfxFly(GridPos, lifetime: 0.2f, heightY: 30f, progressEasingType: EasingType.Linear, heightEasingType: EasingType.SineInOut);
 
                 WieldThing(null);
             }
