@@ -33,8 +33,8 @@ public partial class RoguemojiGame : GameManager
 
 	public Hud Hud { get; private set; }
 
-	public const int ArenaWidth = 29;
-	public const int ArenaHeight = 19;
+	public const int ArenaPanelWidth = 29;
+	public const int ArenaPanelHeight = 19;
 
 	// todo: move to player
 	public const int InventoryWidth = 5;
@@ -326,7 +326,7 @@ public partial class RoguemojiGame : GameManager
 		Hud.Restart();
 	}
 
-	public void SetPlayerLevel(RoguemojiPlayer player, LevelId levelId)
+	public void ChangePlayerLevel(RoguemojiPlayer player, LevelId newLevelId, bool shouldAnimateFall = false)
 	{
 		if(player.CurrentLevelId != LevelId.None)
 		{
@@ -334,21 +334,42 @@ public partial class RoguemojiGame : GameManager
 			oldLevel.GridManager.RemoveThing(player);
         }
 
-		SpawnPlayerOnLevel(player, levelId);
+		SpawnPlayerOnLevel(player, newLevelId, shouldAnimateFall);
 
         ResetHudClient();
     }
 
-	void SpawnPlayerOnLevel(RoguemojiPlayer player, LevelId levelId)
+	void SpawnPlayerOnLevel(RoguemojiPlayer player, LevelId levelId, bool shouldAnimateFall = false)
 	{
 		var level = Levels.ContainsKey(levelId) ? Levels[levelId] : CreateLevel(levelId);
-        level.GridManager.AddThing(player);
+        var gridManager = level.GridManager;
+
+        gridManager.AddThing(player);
         player.CurrentLevelId = levelId;
-        level.GridManager.GetRandomEmptyGridPos(out var gridPos);
+
+        gridManager.GetRandomEmptyGridPos(out var gridPos);
+
+        if (levelId == LevelId.Forest0)
+            gridPos = new IntVector(0, 1);
+        //else
+        //    gridPos = new IntVector(4, 20);
+
         player.SetGridPos(gridPos);
 		player.RecenterCamera();
 
-        LogMessage(player.Client.Name + " entered " + level.LevelName, player.PlayerNum);
+        if(shouldAnimateFall)
+        {
+            int halfScreenWidth = MathX.FloorToInt(ArenaPanelWidth / 2f);
+            int halfScreenHeight = MathX.FloorToInt(ArenaPanelHeight / 2f);
+            var middleCell = new IntVector(
+                Math.Clamp(player.GridPos.x, halfScreenWidth, gridManager.GridWidth - 1 - halfScreenWidth),
+                Math.Clamp(player.GridPos.y, halfScreenHeight, gridManager.GridHeight - 1 - halfScreenHeight)
+            );
+
+            player.VfxFly(startingGridPos: new IntVector(player.GridPos.x, middleCell.y - halfScreenHeight - 1), lifetime: 0.5f, progressEasingType: EasingType.QuadIn);
+        }
+
+        //LogMessage(player.Client.Name + " entered " + level.LevelName, player.PlayerNum);
     }
 
 	Level CreateLevel(LevelId levelId)

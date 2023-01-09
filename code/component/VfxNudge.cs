@@ -22,9 +22,9 @@ public class VfxNudge : ThingComponent
         base.Update(dt);
 
         var dir = GridManager.GetVectorForDirection(Direction);
-        Thing.SetOffset(dir * Utils.MapReturn(TimeSinceStart, 0f, Lifetime, 0f, Distance, EasingType.QuadOut));
+        Thing.SetOffset(dir * Utils.MapReturn(TimeElapsed, 0f, Lifetime, 0f, Distance, EasingType.QuadOut));
 
-        if(TimeSinceStart > Lifetime)
+        if(TimeElapsed > Lifetime)
             Remove();
     }
 

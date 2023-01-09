@@ -339,7 +339,7 @@ public partial class GridManager : Entity
 	public float GetPathfindMovementCost(IntVector gridPos)
 	{
 		float movementCost = 0f;
-		var things = GetThingsAt(gridPos).WithAll(ThingFlags.Solid);
+		var things = GetThingsAt(gridPos).WithAny(ThingFlags.Solid | ThingFlags.Exclusive);
 		foreach(var thing in things)
 		{
 			movementCost += thing.PathfindMovementCost;
@@ -369,8 +369,8 @@ public partial class GridManager : Entity
 	public bool GetRandomEmptyGridPos(out IntVector gridPos, bool allowNonSolid = false)
 	{
 		HashSet<int> gridIndexes = new();
-		for (int x = 0; x < GridWidth; x++)
-			for (int y = 0; y < GridHeight; y++)
+		for (int x = 4; x < GridWidth; x++)
+			for (int y = 4; y < GridHeight; y++)
 				gridIndexes.Add(GetIndex(x, y, GridWidth));
 
 		while(gridIndexes.Count > 0)
@@ -378,7 +378,7 @@ public partial class GridManager : Entity
 			int index = Game.Random.Int(0, gridIndexes.Count - 1);
 			var currGridPos = GetGridPos(index);
 
-            var things = allowNonSolid ? GetThingsAt(currGridPos).WithAll(ThingFlags.Solid) : GetThingsAt(currGridPos);
+            var things = allowNonSolid ? GetThingsAt(currGridPos).WithAny(ThingFlags.Solid | ThingFlags.Exclusive) : GetThingsAt(currGridPos);
             if (things.Count() == 0)
             {
                 gridPos = currGridPos;
@@ -408,7 +408,7 @@ public partial class GridManager : Entity
 				if(!IsGridPosInBounds(currGridPos))
 					return false;
 
-                var things = allowNonSolid ? GetThingsAt(currGridPos).WithAll(ThingFlags.Solid) : GetThingsAt(currGridPos);
+                var things = allowNonSolid ? GetThingsAt(currGridPos).WithAny(ThingFlags.Solid | ThingFlags.Exclusive) : GetThingsAt(currGridPos);
 
                 if (things.Count() == 0)
 					gridPositions.Add(currGridPos);

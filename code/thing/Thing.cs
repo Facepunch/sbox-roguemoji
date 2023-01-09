@@ -17,6 +17,8 @@ public enum ThingFlags
     UseRequiresAiming = 16,
     AimTypeTargetCell = 32,
     CanUseThings = 64,
+    CanBePickedUp = 128,
+    Exclusive = 256,
 }
 
 public enum FactionType { Neutral, Player, Enemy }
@@ -93,6 +95,8 @@ public partial class Thing : Entity
     [Net] public float StaminaDelay { get; set; }
 
     [Net] public FactionType Faction { get; set; }
+
+    [Net] public bool DontRender { get; set; } // Client-only
 
     public virtual string AbilityName => "Ability";
 
@@ -345,15 +349,6 @@ public partial class Thing : Entity
         //if ( GridPos.Equals( gridPos ) && !forceRefresh )
         //	return;
 
-        var existingThings = ContainingGridManager.GetThingsAt(gridPos);
-        for(int i = existingThings.Count() - 1; i >= 0; i--)
-        {
-            var thing = existingThings.ElementAt(i);
-
-            OnMovedOntoThing(thing);
-            thing.OnMovedOntoBy(this);
-        }
-
         if (this == null || !IsValid || IsRemoved)
             return;
 
@@ -366,6 +361,15 @@ public partial class Thing : Entity
             RefreshGridPanelClient();
 
         OnChangedGridPos();
+
+        var existingThings = ContainingGridManager.GetThingsAt(gridPos);
+        for (int i = existingThings.Count() - 1; i >= 0; i--)
+        {
+            var thing = existingThings.ElementAt(i);
+
+            OnMovedOntoThing(thing);
+            thing.OnMovedOntoBy(this);
+        }
     }
 
     private void Remove()
@@ -548,6 +552,7 @@ public partial class Thing : Entity
         StaminaTimer = 0f;
         StaminaDelay = 0f;
         StatHash = 0;
+        DontRender = false;
     }
 
     public virtual HashSet<IntVector> GetAimingTargetCellsClient() { return null; }

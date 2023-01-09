@@ -22,9 +22,9 @@ public class VfxScale : ThingComponent
     {
         base.Update(dt);
 
-        Thing.SetScale(Utils.Map(TimeSinceStart, 0f, Lifetime, StartScale, EndScale, EasingType.Linear));
+        Thing.SetScale(Utils.Map(TimeElapsed, 0f, Lifetime, StartScale, EndScale, EasingType.Linear));
 
-        if(TimeSinceStart > Lifetime)
+        if(TimeElapsed > Lifetime)
             Remove();
     }
 

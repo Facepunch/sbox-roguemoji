@@ -136,11 +136,13 @@ public partial class Thing : Entity
     }
 
     [ClientRpc]
-    public void VfxFly(IntVector startingGridPos, float lifetime, float heightY = 0f)
+    public void VfxFly(IntVector startingGridPos, float lifetime, float heightY = 0f, EasingType progressEasingType = EasingType.ExpoOut, EasingType heightEasingType = EasingType.QuadInOut)
     {
         var fly = AddComponent<VfxFly>();
         fly.StartingGridPos = startingGridPos;
         fly.Lifetime = lifetime;
         fly.HeightY = heightY;
+        fly.ProgressEasingType = progressEasingType;
+        fly.HeightEasingType = heightEasingType;
     }
 }

@@ -16,7 +16,7 @@ public partial class ScrollFear : Thing
         Description = "Scare all enemies near you";
         Tooltip = "A scroll of Fear";
         IconDepth = 0;
-        Flags = ThingFlags.Selectable | ThingFlags.Useable;
+        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         SetTattoo(Globals.Icon(IconType.Fear), scale: 0.5f, offset: new Vector2(1f, 0.5f), offsetWielded: new Vector2(0f, 0.3f), offsetInfo: new Vector2(8f, 5f), offsetCharWielded: new Vector2(2f, 0.5f), offsetInfoWielded: new Vector2(3f, 2f));
 
@@ -38,19 +38,24 @@ public partial class ScrollFear : Thing
             if (thing == user || thing.HasComponent<CFearful>())
                 continue;
 
-            if (thing.GetComponent<CActing>(out var acting))
+            if (thing.GetComponent<CActing>(out var component))
             {
                 var fearful = thing.AddComponent<CFearful>();
-                fearful.Lifetime = 5f;
+                fearful.Lifetime = Game.Random.Float(4f, 6f);
                 fearful.FearedThing = user;
 
-                ((CActing)acting).RefreshAction();
+                var acting = (CActing)component;
+                acting.TimeElapsed = acting.ActionDelay - Game.Random.Float(0f, 0.2f);
             }
         }
 
-        var circlePoints = user.ContainingGridManager.GetPointsOnCircle(user.GridPos, radius);
+        var circlePoints = user.ContainingGridManager.GetPointsWithinCircle(user.GridPos, radius);
         foreach (var point in circlePoints)
-            RoguemojiGame.Instance.AddFloater("😱", point, Game.Random.Float(0.75f, 1.05f), user.CurrentLevelId, Vector2.Zero, new Vector2(0f, Game.Random.Float(-1f, -10f)), text: "", requireSight: false, EasingType.QuadOut, Game.Random.Float(0.35f, 0.45f), parent: null);
+        {
+            if(!point.Equals(user.GridPos))
+                RoguemojiGame.Instance.AddFloater("❗️", point, Game.Random.Float(0.65f, 0.85f), user.CurrentLevelId, Vector2.Zero, new Vector2(0f, Game.Random.Float(-1f, -10f)), text: "", requireSight: false, EasingType.QuadOut, Game.Random.Float(0.25f, 0.35f), parent: null);
+        }
+            
 
         base.Use(user);
     }

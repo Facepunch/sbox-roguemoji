@@ -11,6 +11,6 @@ public partial class Bouquet : Thing
         Description = "A lovely bunch of flowers";
         Tooltip = "A bouquet";
         IconDepth = 0;
-		Flags = ThingFlags.Selectable;
+		Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
     }
 }

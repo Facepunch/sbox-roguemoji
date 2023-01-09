@@ -13,7 +13,7 @@ public partial class WhiteCane : Thing
         Description = "Useful when you can't see anything";
         Tooltip = "A white cane";
         IconDepth = 0;
-		Flags = ThingFlags.Selectable;
+		Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
 
         if (Game.IsServer)
         {

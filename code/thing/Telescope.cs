@@ -14,7 +14,7 @@ public partial class Telescope : Thing
         Description = "See farther but move slower";
         Tooltip = "A telescope";
         IconDepth = 0;
-		Flags = ThingFlags.Selectable;
+		Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
 
         if (Game.IsServer)
         {

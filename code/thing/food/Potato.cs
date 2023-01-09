@@ -18,7 +18,7 @@ public partial class Potato : Thing
 
         if (Game.IsServer)
         {
-            Flags = ThingFlags.Selectable | ThingFlags.Useable;
+            Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
             EatHealth = 2;
             InitStat(StatType.Attack, 1);
             AddTrait(AbilityName, "🍽️", $"Consume for +{EatHealth}{GetStatIcon(StatType.Health)}", offset: Vector2.Zero, tattooIcon: GetStatIcon(StatType.Health), tattooScale: 0.7f, tattooOffset: new Vector2(0f, 2f), labelText: $"+{EatHealth}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));

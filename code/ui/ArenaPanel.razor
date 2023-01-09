@@ -89,7 +89,7 @@
 
     @foreach(Thing thing in GetThings())
     {
-        if (player.IsGridPosOnCamera(thing.GridPos) && player.IsCellVisible(thing.GridPos))
+        if (player.IsGridPosOnCamera(thing.GridPos) && player.IsCellVisible(thing.GridPos) && !thing.DontRender)
         {
             var offsetGridPos = thing.GridPos - player.CameraGridOffset;
             var index = GetIndex(offsetGridPos);
@@ -103,9 +103,9 @@
         }
     }
 
-    @for(int x = -1; x <= RoguemojiGame.ArenaWidth; x++)
+    @for(int x = -1; x <= RoguemojiGame.ArenaPanelWidth; x++)
     {
-        for(int y = -1; y <= RoguemojiGame.ArenaHeight; y++)
+        for(int y = -1; y <= RoguemojiGame.ArenaPanelHeight; y++)
         {
             var gridPos = new IntVector(x, y) + player.CameraGridOffset;
             if(!player.IsCellVisible(gridPos))
@@ -148,8 +148,8 @@
     public Panel LevelLabel { get; protected set; }
     public float LevelLabelOpacity { get; set; }
 
-    public override int GridWidth => RoguemojiGame.ArenaWidth;
-    public override int GridHeight => RoguemojiGame.ArenaHeight;
+    public override int GridWidth => RoguemojiGame.ArenaPanelWidth;
+    public override int GridHeight => RoguemojiGame.ArenaPanelHeight;
     string GetArrowIcon(Direction direction)
     {
         if (direction != Direction.None)

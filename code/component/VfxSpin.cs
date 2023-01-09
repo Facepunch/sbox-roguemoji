@@ -22,9 +22,9 @@ public class VfxSpin : ThingComponent
     {
         base.Update(dt);
 
-        Thing.SetRotation(Utils.Map(TimeSinceStart, 0f, Lifetime, StartAngle, EndAngle, EasingType.QuadOut));
+        Thing.SetRotation(Utils.Map(TimeElapsed, 0f, Lifetime, StartAngle, EndAngle, EasingType.QuadOut));
 
-        if (TimeSinceStart > Lifetime)
+        if (TimeElapsed > Lifetime)
             Remove();
     }
 

@@ -57,7 +57,7 @@
 
     IEnumerable<Thing> GetThings(RoguemojiPlayer player)
     {
-        return player.ContainingGridManager.GetThingsAtClient(player.GridPos).WithNone(ThingFlags.Solid).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos());
+        return player.ContainingGridManager.GetThingsAtClient(player.GridPos).WithAll(ThingFlags.CanBePickedUp).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos());
     }
 
     public override void Tick()

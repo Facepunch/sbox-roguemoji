@@ -14,7 +14,7 @@ public partial class Mushroom : Thing
         Description = "There's a good chance it's poisonous";
         Tooltip = "A mushroom";
         IconDepth = 0;
-        Flags = ThingFlags.Selectable | ThingFlags.Useable;
+        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         if (Game.IsServer)
         {

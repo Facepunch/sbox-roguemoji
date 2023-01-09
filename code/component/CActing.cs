@@ -43,9 +43,4 @@ public class CActing : ThingComponent
     {
         return Utils.Map(speed, 0, 10, 1.0f, 0.1f);
     }
-
-    public void RefreshAction()
-    {
-        TimeElapsed = ActionDelay;
-    }
 }

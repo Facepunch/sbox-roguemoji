@@ -102,10 +102,12 @@ public partial class Level : Entity
             GridManager.SpawnThing<Leaf>(new IntVector(9, 10));
             GridManager.SpawnThing<Leaf>(new IntVector(21, 19));
 
-            {
-                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
-                    GridManager.SpawnThing<Hole>(gridPos);
-            }
+            GridManager.SpawnThing<Hole>(new IntVector(2, 2));
+
+            //{
+            //    if (GridManager.GetRandomEmptyGridPos(out var gridPos))
+            //        GridManager.SpawnThing<Hole>(gridPos);
+            //}
 
             for (int i = 0; i < 50; i++)
             {

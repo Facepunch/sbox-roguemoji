@@ -15,7 +15,7 @@ public partial class Lemon : Thing
         Description = "So sour!";
         Tooltip = "A lemon";
         IconDepth = 0;
-        Flags = ThingFlags.Selectable | ThingFlags.Useable;
+        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         if (Game.IsServer)
         {

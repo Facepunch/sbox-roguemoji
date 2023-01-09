@@ -22,9 +22,9 @@ public class VfxSlide : ThingComponent
         base.Update(dt);
 
         var dir = GridManager.GetVectorForDirection(Direction);
-        Thing.SetOffset(dir * Utils.Map(TimeSinceStart, 0f, Lifetime, -Distance, 0f, EasingType.ExpoOut));
+        Thing.SetOffset(dir * Utils.Map(TimeElapsed, 0f, Lifetime, -Distance, 0f, EasingType.ExpoOut));
 
-        if(TimeSinceStart > Lifetime)
+        if(TimeElapsed > Lifetime)
             Remove();
     }
 

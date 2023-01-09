@@ -15,7 +15,7 @@ public partial class SafetyVest : Thing
         Description = "Highly visible";
         Tooltip = "A safety vest";
         IconDepth = 0;
-		Flags = ThingFlags.Selectable | ThingFlags.Equipment;
+		Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Equipment;
 
         if (Game.IsServer)
         {

@@ -313,6 +313,8 @@ public partial class RoguemojiPlayer : Thing
             return false;
         }
 
+        var oldLevelId = CurrentLevelId;
+
         var success = base.TryMove( direction, shouldAnimate: false );
 		if (success)
 		{
@@ -321,9 +323,10 @@ public partial class RoguemojiPlayer : Thing
             else
                 SetIcon("😀");
 
-            var movedCamera = RecenterCamera(shouldAnimate: true);
+            var switchedLevel = oldLevelId != CurrentLevelId;
+            var movedCamera = RecenterCamera(shouldAnimate: !switchedLevel);
 
-            if(shouldAnimate)
+            if(shouldAnimate && !switchedLevel)
                 VfxSlide(direction, movedCamera ? 0.1f : 0.2f, 40f);
         }
 		else 
@@ -339,19 +342,19 @@ public partial class RoguemojiPlayer : Thing
     {
         base.BumpInto(other, direction);
 
-        if(other is Hole)
-        {
-            if(CurrentLevelId == LevelId.Forest0)
-                RoguemojiGame.Instance.SetPlayerLevel(this, LevelId.Forest1);
-            else if (CurrentLevelId == LevelId.Forest1)
-                RoguemojiGame.Instance.SetPlayerLevel(this, LevelId.Forest2);
-        }
-        else if(other is Door)
+        //if(other is Hole)
+        //{
+        //    if(CurrentLevelId == LevelId.Forest0)
+        //        RoguemojiGame.Instance.SetPlayerLevel(this, LevelId.Forest1);
+        //    else if (CurrentLevelId == LevelId.Forest1)
+        //        RoguemojiGame.Instance.SetPlayerLevel(this, LevelId.Forest2);
+        //}
+        if(other is Door)
         {
             if (CurrentLevelId == LevelId.Forest1)
-                RoguemojiGame.Instance.SetPlayerLevel(this, LevelId.Forest0);
+                RoguemojiGame.Instance.ChangePlayerLevel(this, LevelId.Forest0);
             else if (CurrentLevelId == LevelId.Forest2)
-                RoguemojiGame.Instance.SetPlayerLevel(this, LevelId.Forest1);
+                RoguemojiGame.Instance.ChangePlayerLevel(this, LevelId.Forest1);
         }
     }
 
@@ -376,7 +379,7 @@ public partial class RoguemojiPlayer : Thing
     /// <summary>Returns true if offset changed.</summary>
     public bool RecenterCamera(bool shouldAnimate = false)
     {
-        var middleCell = new IntVector(MathX.FloorToInt((float)RoguemojiGame.ArenaWidth / 2f), MathX.FloorToInt((float)RoguemojiGame.ArenaHeight / 2f));
+        var middleCell = new IntVector(MathX.FloorToInt((float)RoguemojiGame.ArenaPanelWidth / 2f), MathX.FloorToInt((float)RoguemojiGame.ArenaPanelHeight / 2f));
         var oldCamGridOffset = CameraGridOffset;
         var movedCamera = SetCameraGridOffset(GridPos - middleCell);
 
@@ -396,8 +399,8 @@ public partial class RoguemojiPlayer : Thing
         var currOffset = CameraGridOffset;
 
         CameraGridOffset = new IntVector(
-            Math.Clamp(offset.x, 0, ContainingGridManager.GridWidth - RoguemojiGame.ArenaWidth),
-            Math.Clamp(offset.y, 0, ContainingGridManager.GridHeight - RoguemojiGame.ArenaHeight)
+            Math.Clamp(offset.x, 0, ContainingGridManager.GridWidth - RoguemojiGame.ArenaPanelWidth),
+            Math.Clamp(offset.y, 0, ContainingGridManager.GridHeight - RoguemojiGame.ArenaPanelHeight)
         );
 
         return !CameraGridOffset.Equals(currOffset);
@@ -412,9 +415,9 @@ public partial class RoguemojiPlayer : Thing
     {
         return
             (gridPos.x >= CameraGridOffset.x - 1) &&
-            (gridPos.x < CameraGridOffset.x + RoguemojiGame.ArenaWidth + 1) &&
+            (gridPos.x < CameraGridOffset.x + RoguemojiGame.ArenaPanelWidth + 1) &&
             (gridPos.y >= CameraGridOffset.y - 1) &&
-            (gridPos.y < CameraGridOffset.y + RoguemojiGame.ArenaHeight + 1);
+            (gridPos.y < CameraGridOffset.y + RoguemojiGame.ArenaPanelHeight + 1);
     }
 
     public PlayerComponent AddPlayerComponent(TypeDescription type)
@@ -434,6 +437,11 @@ public partial class RoguemojiPlayer : Thing
         }
     }
 
+    public T AddPlayerComponent<T>() where T : PlayerComponent
+    {
+        return AddPlayerComponent(TypeLibrary.GetType(typeof(T))) as T;
+    }
+
     public void RemovePlayerComponent(TypeDescription type)
     {
         if (PlayerComponents.ContainsKey(type))
@@ -442,6 +450,11 @@ public partial class RoguemojiPlayer : Thing
             component.OnRemove();
             PlayerComponents.Remove(type);
         }
+    }
+
+    public void RemovePlayerComponent<T>() where T : PlayerComponent
+    {
+        RemovePlayerComponent(TypeLibrary.GetType(typeof(T)));
     }
 
     public void ForEachPlayerComponent(Action<PlayerComponent> action)
@@ -489,7 +502,7 @@ public partial class RoguemojiPlayer : Thing
 
     public void PickUpTopItem()
     {
-        var thing = ContainingGridManager.GetThingsAt(GridPos).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+        var thing = ContainingGridManager.GetThingsAt(GridPos).WithAll(ThingFlags.CanBePickedUp).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 
         if (thing == null)
             return;
@@ -1085,17 +1098,6 @@ public partial class RoguemojiPlayer : Thing
 
         if(IsAiming)
             RefreshWieldedThingTargetAiming();
-
-        //InventoryGridManager.SetWidth(InventoryGridManager.GridWidth - 1);
-        //var nearbyThings = ContainingGridManager.GetThingsWithinRange(GridPos, 2, allFlags: ThingFlags.Solid);
-        //foreach(var thing in nearbyThings)
-        //{
-        //    if (thing == this)
-        //        continue;
-
-        //    RoguemojiGame.Instance.DebugGridLine(GridPos, thing.GridPos, Color.Red, 0.1f, ContainingGridManager.LevelId);
-        //    RoguemojiGame.Instance.DebugGridCell(thing.GridPos, Color.Red, 1f, ContainingGridManager.LevelId);
-        //}
     }
 
     public bool IsInInventory(Thing thing)

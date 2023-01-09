@@ -15,7 +15,7 @@ public partial class Nut : Thing
         Description = "Some sort of nut";
         Tooltip = "A nut";
         IconDepth = 0;
-        Flags = ThingFlags.Selectable | ThingFlags.Useable;
+        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         if (Game.IsServer)
         {

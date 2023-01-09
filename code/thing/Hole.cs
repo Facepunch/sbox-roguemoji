@@ -11,12 +11,25 @@ public partial class Hole : Thing
         Description = "A deep hole leading to another area";
         Tooltip = "A hole";
         IconDepth = 1;
-        Flags = ThingFlags.Solid | ThingFlags.Selectable;
+        Flags = ThingFlags.Exclusive | ThingFlags.Selectable;
         PathfindMovementCost = 15f;
 
         if (Game.IsClient)
         {
             CharSkip = 1;
+        }
+    }
+
+    public override void OnMovedOntoBy(Thing thing)
+    {
+        base.OnMovedOntoBy(thing);
+
+        if (thing is RoguemojiPlayer player)
+        {
+            player.RemoveComponent<VfxSlide>();
+
+            var nextLevelId = CurrentLevelId == LevelId.Forest0 ? LevelId.Forest1 : LevelId.Forest2;
+            RoguemojiGame.Instance.ChangePlayerLevel(player, nextLevelId, shouldAnimateFall: true);
         }
     }
 }
