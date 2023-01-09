@@ -15,6 +15,9 @@ public class VfxNudge : ThingComponent
 
         ShouldUpdate = true;
         IsClientComponent = true;
+
+        var dir = GridManager.GetVectorForDirection(Direction);
+        Thing.SetOffset(dir * 0f);
     }
 
     public override void Update(float dt)

@@ -345,18 +345,6 @@ public partial class RoguemojiGame : GameManager
         {
             player.RecenterCamera();
             ResetHudClient(To.Single(player));
-
-            if (shouldAnimateFall)
-            {
-                int halfScreenWidth = MathX.FloorToInt(ArenaPanelWidth / 2f);
-                int halfScreenHeight = MathX.FloorToInt(ArenaPanelHeight / 2f);
-                var middleCell = new IntVector(
-                    Math.Clamp(player.GridPos.x, halfScreenWidth, gridManager.GridWidth - 1 - halfScreenWidth),
-                    Math.Clamp(player.GridPos.y, halfScreenHeight, gridManager.GridHeight - 1 - halfScreenHeight)
-                );
-
-                player.VfxFly(startingGridPos: new IntVector(player.GridPos.x, middleCell.y - halfScreenHeight - 1), lifetime: 0.5f, progressEasingType: EasingType.QuadIn);
-            }
         }
     }
 

@@ -54,7 +54,6 @@ public partial class Thing : Entity
     [Net] public float PathfindMovementCost { get; set; }
 
     public Vector2 Offset { get; set; }
-    public Vector2 TargetOffset { get; set; }
     public float RotationDegrees { get; set; }
     public float IconScale { get; set; }
     public int CharSkip { get; set; } // Client-only
@@ -166,8 +165,6 @@ public partial class Thing : Entity
 
         if (!string.IsNullOrEmpty(DebugText))
             DrawDebugText(DebugText);
-
-        Offset = Utils.DynamicEaseTo(Offset, TargetOffset, 0.6f, dt);
 
         //DrawDebugText(ContainingGridManager?.Name.ToString() ?? "null");
         //DrawDebugText(Flags.ToString());
@@ -409,14 +406,14 @@ public partial class Thing : Entity
     [ClientRpc]
     public void SetTransformClient(float offsetX = 0f, float offsetY = 0f, float degrees = 0f, float scale = 1f)
     {
-        TargetOffset = new Vector2(offsetX, offsetY);
+        Offset = new Vector2(offsetX, offsetY);
         RotationDegrees = degrees;
         IconScale = scale;
     }
 
     public void SetOffset(Vector2 offset)
     {
-        TargetOffset = offset;
+        Offset = offset;
     }
 
     public void SetRotation(float rotationDegrees)

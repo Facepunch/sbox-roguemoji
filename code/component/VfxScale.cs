@@ -15,6 +15,7 @@ public class VfxScale : ThingComponent
 
         ShouldUpdate = true;
         IsClientComponent = true;
+
         Thing.SetScale(StartScale);
     }
 

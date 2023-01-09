@@ -15,6 +15,7 @@ public class VfxSpin : ThingComponent
 
         ShouldUpdate = true;
         IsClientComponent = true;
+
         Thing.SetRotation(StartAngle);
     }
 

@@ -332,7 +332,8 @@ public partial class RoguemojiPlayer : Thing
             var movedCamera = RecenterCamera(shouldAnimate: !switchedLevel);
 
             if(shouldAnimate && !switchedLevel)
-                VfxSlide(direction, movedCamera ? 0.1f : 0.2f, 40f);
+                VfxSlide(direction, 0.1f, 40f);
+                //VfxSlide(direction, movedCamera ? 0.1f : 0.2f, 40f);
         }
 		else 
 		{

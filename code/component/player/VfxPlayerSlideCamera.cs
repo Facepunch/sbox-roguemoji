@@ -15,6 +15,9 @@ public class VfxPlayerSlideCamera : PlayerComponent
 
         ShouldUpdate = true;
         IsClientComponent = true;
+
+        var dir = GridManager.GetVectorForDirection(Direction);
+        Player.SetCameraPixelOffset(dir * Distance);
     }
 
     public override void Update(float dt)
