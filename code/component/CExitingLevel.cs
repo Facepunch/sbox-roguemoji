@@ -31,7 +31,7 @@ public class CExitingLevel : ThingComponent
         if(TimeElapsed > Lifetime)
         {
             if (Thing is RoguemojiPlayer player)
-                RoguemojiGame.Instance.ChangePlayerLevel(player, TargetLevelId, shouldAnimateFall: true);
+                RoguemojiGame.Instance.ChangeThingLevel(player, TargetLevelId, shouldAnimateFall: true);
 
             Thing.AddComponent<CEnteringLevel>();
 

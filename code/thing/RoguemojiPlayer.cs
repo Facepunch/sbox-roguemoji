@@ -357,9 +357,9 @@ public partial class RoguemojiPlayer : Thing
         if(other is Door)
         {
             if (CurrentLevelId == LevelId.Forest1)
-                RoguemojiGame.Instance.ChangePlayerLevel(this, LevelId.Forest0);
+                RoguemojiGame.Instance.ChangeThingLevel(this, LevelId.Forest0);
             else if (CurrentLevelId == LevelId.Forest2)
-                RoguemojiGame.Instance.ChangePlayerLevel(this, LevelId.Forest1);
+                RoguemojiGame.Instance.ChangeThingLevel(this, LevelId.Forest1);
         }
     }
 
