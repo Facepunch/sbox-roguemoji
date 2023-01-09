@@ -372,6 +372,8 @@ public partial class Thing : Entity
         for (int i = existingThings.Count() - 1; i >= 0; i--)
         {
             var thing = existingThings.ElementAt(i);
+            if (thing == this)
+                continue;
 
             OnMovedOntoThing(thing);
             thing.OnMovedOntoBy(this);

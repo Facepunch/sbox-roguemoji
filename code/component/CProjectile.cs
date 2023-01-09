@@ -59,4 +59,11 @@ public class CProjectile : ThingComponent
     {
         Remove();
     }
+
+    public override void OnRemove()
+    {
+        base.OnRemove();
+
+        Log.Info("remov epojrectile;");
+    }
 }
