@@ -406,7 +406,7 @@ public partial class GridManager : Entity
 
 				var currGridPos = startGridPos + new IntVector(x, y);
 				if(!IsGridPosInBounds(currGridPos))
-					return false;
+					continue;
 
                 var things = allowNonSolid ? GetThingsAt(currGridPos).WithAny(ThingFlags.Solid | ThingFlags.Exclusive) : GetThingsAt(currGridPos);
 

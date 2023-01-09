@@ -50,7 +50,7 @@ public class CTargeting : ThingComponent
 
     public bool EvaluateTarget(Thing other)
     {
-        if (other == null || other.Faction != TargetFaction || other.IsRemoved || other == Target)
+        if (other == null || other.Faction != TargetFaction || other.IsRemoved || other == Target || other.IsInTransit)
             return false;
 
         int adjustedSight = Math.Max(Thing.GetStatClamped(StatType.Sight) - other.GetStatClamped(StatType.Stealth), 1);
@@ -75,7 +75,7 @@ public class CTargeting : ThingComponent
             var things = pair.Value;
             foreach(var other in things)
             {
-                if (other == null || other == Thing || other.IsRemoved)
+                if (other == null || other == Thing || other.IsRemoved || other.IsInTransit)
                     continue;
 
                 if(other.Faction == TargetFaction)

@@ -7,7 +7,6 @@ namespace Roguemoji;
 public class CFearful : ThingComponent
 {
     public Thing FearedThing { get; set; }
-    public float TimeElapsed { get; set; }
     public float Lifetime { get; set; }
 
     public override void Init(Thing thing)
@@ -15,7 +14,6 @@ public class CFearful : ThingComponent
         base.Init(thing);
 
         ShouldUpdate = true;
-        TimeElapsed = 0f;
 
         RoguemojiGame.Instance.AddFloater("💧", Thing.GridPos, time: 0f, Thing.CurrentLevelId, new Vector2(10f, -10f), Vector2.Zero, text: "", requireSight: true, EasingType.Linear, fadeInTime: 0.025f, scale: 0.75f, parent: Thing);
     }

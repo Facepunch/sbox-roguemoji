@@ -29,7 +29,12 @@ public partial class Hole : Thing
             player.RemoveComponent<VfxSlide>();
 
             var nextLevelId = CurrentLevelId == LevelId.Forest0 ? LevelId.Forest1 : LevelId.Forest2;
-            RoguemojiGame.Instance.ChangePlayerLevel(player, nextLevelId, shouldAnimateFall: true);
+            //RoguemojiGame.Instance.ChangePlayerLevel(player, nextLevelId, shouldAnimateFall: true);
+
+            var exitingLevel = player.AddComponent<CExitingLevel>();
+            exitingLevel.TargetLevelId = nextLevelId;
+
+            //player.VfxFadeCamera(lifetime: 0.5f, shouldFadeOut: false);
         }
     }
 }

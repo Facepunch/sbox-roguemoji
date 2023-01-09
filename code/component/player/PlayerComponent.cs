@@ -9,19 +9,21 @@ public abstract class PlayerComponent
 
     public bool ShouldUpdate { get; protected set; }
 
-    public TimeSince TimeSinceStart { get; protected set; }
+    public float TimeElapsed { get; protected set; }
     public bool IsClientComponent { get; protected set; }
 
     public virtual void Init(RoguemojiPlayer player)
     {
         Player = player;
         ShouldUpdate = false;
-        TimeSinceStart = 0f;
+        TimeElapsed = 0f;
     }
 
     public virtual void Update(float dt)
     {
-        if(IsClientComponent == Game.IsServer)
+        TimeElapsed += dt;
+
+        if (IsClientComponent == Game.IsServer)
         {
             Log.Error(GetType().Name + " IsClientComponent: " + IsClientComponent + " IsServer: " + Game.IsServer + "!");
         }
@@ -30,7 +32,7 @@ public abstract class PlayerComponent
     // component was added when already existing
     public virtual void ReInitialize()
     {
-        TimeSinceStart = 0f;
+        TimeElapsed = 0f;
     }
 
     public void Remove()

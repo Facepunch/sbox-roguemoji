@@ -98,6 +98,9 @@ public partial class Thing : Entity
 
     [Net] public bool DontRender { get; set; } // Client-only
 
+    // thing is entering/exiting a level and should not be able to act or be interacted with
+    public bool IsInTransit { get; set; }
+
     public virtual string AbilityName => "Ability";
 
     public Thing()
@@ -111,6 +114,7 @@ public partial class Thing : Entity
         ThingId = RoguemojiGame.ThingId++;
         IsRemoved = false;
         IsOnCooldown = false;
+        IsInTransit = false;
     }
 
     // Server only
@@ -126,8 +130,10 @@ public partial class Thing : Entity
         //DebugText = $"{GetStatClamped(StatType.Health)}";
 
         //DebugText = "Server Components (" + Components.Count + "):\n";
-        foreach (KeyValuePair<TypeDescription, ThingComponent> pair in ThingComponents)
+        for (int i = ThingComponents.Count - 1; i >= 0; i--)
         {
+            KeyValuePair<TypeDescription, ThingComponent> pair = ThingComponents.ElementAt(i);
+
             var component = pair.Value;
             if (component.ShouldUpdate)
                 component.Update(dt);
@@ -187,7 +193,7 @@ public partial class Thing : Entity
             return false;
         }
 
-        Thing other = ContainingGridManager.GetThingsAt(newGridPos).WithAll(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+        Thing other = ContainingGridManager.GetThingsAt(newGridPos).WithAll(ThingFlags.Solid).Where(x => !x.IsInTransit).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
         if (other != null)
         {
             BumpInto(other, direction);

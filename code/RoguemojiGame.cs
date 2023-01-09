@@ -349,15 +349,15 @@ public partial class RoguemojiGame : GameManager
 
         gridManager.GetRandomEmptyGridPos(out var gridPos);
 
-        if (levelId == LevelId.Forest0)
-            gridPos = new IntVector(0, 1);
+        //if (levelId == LevelId.Forest0)
+        //    gridPos = new IntVector(0, 1);
         //else
         //    gridPos = new IntVector(4, 20);
 
         player.SetGridPos(gridPos);
 		player.RecenterCamera();
 
-        if(shouldAnimateFall)
+        if (shouldAnimateFall)
         {
             int halfScreenWidth = MathX.FloorToInt(ArenaPanelWidth / 2f);
             int halfScreenHeight = MathX.FloorToInt(ArenaPanelHeight / 2f);

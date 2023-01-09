@@ -15,6 +15,7 @@ public partial class RoguemojiPlayer : Thing
 
     [Net] public IntVector CameraGridOffset { get; set; }
     public Vector2 CameraPixelOffset { get; set; } // Client-only
+    public float CameraFade { get; set; } // Client-only
 
     [Net] public GridManager InventoryGridManager { get; private set; }
     [Net] public GridManager EquipmentGridManager { get; private set; }
@@ -88,6 +89,8 @@ public partial class RoguemojiPlayer : Thing
         IsAiming = false;
         SelectedThing = null;
         Faction = FactionType.Player;
+        CameraFade = 0f;
+        IsInTransit = false;
 
         ClearStats();
         InitStat(StatType.Health, 10, 0, 10);
@@ -172,32 +175,16 @@ public partial class RoguemojiPlayer : Thing
 		Tooltip = Client.Name;
 	}
 
-	[Event.Tick.Client]
-	public override void ClientTick()
-	{
-		base.ClientTick();
-
-        float dt = Time.Delta;
-        foreach (KeyValuePair<TypeDescription, PlayerComponent> pair in PlayerComponents)
-        {
-            var component = pair.Value;
-            if (component.ShouldUpdate)
-                component.Update(dt);
-        }
-
-        //DrawDebugText("" + CameraGridOffset + ", " + CameraPixelOffset);
-        //DrawDebugText("# Things: " + InventoryGridManager.Things.Count);
-        //Log.Info("Player:Client - Sight: " + GetStat(StatType.Sight));
-    }
-
     public override void Update(float dt)
 	{
-		base.Update( dt );
+		base.Update(dt);
 
         InventoryGridManager.Update(dt);
 
-        foreach (KeyValuePair<TypeDescription, PlayerComponent> pair in PlayerComponents)
+        for(int i = PlayerComponents.Count - 1; i >= 0; i--)
         {
+            KeyValuePair<TypeDescription, PlayerComponent> pair = PlayerComponents.ElementAt(i);
+
             var component = pair.Value;
             if (component.ShouldUpdate)
                 component.Update(dt);
@@ -207,7 +194,7 @@ public partial class RoguemojiPlayer : Thing
         //if (QueuedAction != null)
         //    DebugText = QueuedActionName;
 
-        //DebugText = $"{StaminaTimer} -- {StaminaDelay}";
+        //DebugText = $"{IsInTransit}";
     }
 
 	public override void Simulate(IClient cl )
@@ -217,7 +204,7 @@ public partial class RoguemojiPlayer : Thing
             if (Input.Pressed(InputButton.View)) 
                 CharacterHotkeyPressed();
 
-            if (!IsDead)
+            if (!IsDead && !IsInTransit)
             {
                 if (!IsAiming)
                 {
@@ -262,7 +249,25 @@ public partial class RoguemojiPlayer : Thing
             }
         }
 	}
-    
+
+    [Event.Tick.Client]
+    public override void ClientTick()
+    {
+        base.ClientTick();
+
+        float dt = Time.Delta;
+        foreach (KeyValuePair<TypeDescription, PlayerComponent> pair in PlayerComponents)
+        {
+            var component = pair.Value;
+            if (component.ShouldUpdate)
+                component.Update(dt);
+        }
+
+        //DrawDebugText("" + CameraGridOffset + ", " + CameraPixelOffset);
+        //DrawDebugText("# Things: " + InventoryGridManager.Things.Count);
+        //Log.Info("Player:Client - Sight: " + GetStat(StatType.Sight));
+    }
+
     public override void OnActionRecharged()
     {
         if(QueuedAction != null)
@@ -468,7 +473,7 @@ public partial class RoguemojiPlayer : Thing
     [ClientRpc]
     public void VfxSlideCamera(Direction direction, float lifetime, float distance)
     {
-        var slide = AddPlayerComponent(TypeLibrary.GetType(typeof(VfxPlayerSlideCamera))) as VfxPlayerSlideCamera;
+        var slide = AddPlayerComponent<VfxPlayerSlideCamera>();
         slide.Direction = direction;
         slide.Lifetime = lifetime;
         slide.Distance = distance;
@@ -477,9 +482,17 @@ public partial class RoguemojiPlayer : Thing
     [ClientRpc]
     public void VfxShakeCamera(float lifetime, float distance)
     {
-        var shake = AddPlayerComponent(TypeLibrary.GetType(typeof(VfxPlayerShakeCamera))) as VfxPlayerShakeCamera;
+        var shake = AddPlayerComponent<VfxPlayerShakeCamera>(); ;
         shake.Lifetime = lifetime;
         shake.Distance = distance;
+    }
+
+    [ClientRpc]
+    public void VfxFadeCamera(float lifetime, bool shouldFadeOut)
+    {
+        var fade = AddPlayerComponent<VfxPlayerFadeCamera>();
+        fade.Lifetime = lifetime;
+        fade.ShouldFadeOut = shouldFadeOut;
     }
 
     public override void TakeDamage(Thing source)

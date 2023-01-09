@@ -22,7 +22,7 @@ public partial class Squirrel : Thing
         PathfindMovementCost = 5f;
         SightBlockAmount = 5;
         Faction = FactionType.Enemy;
-        CantSeeTargetLoseDelay = 4f;
+        CantSeeTargetLoseDelay = 5f;
 
         InitStat(StatType.Health, 5, 0, 5);
         InitStat(StatType.Attack, 1);
@@ -47,7 +47,7 @@ public partial class Squirrel : Thing
     {
         base.Update(dt);
 
-        if (Targeting == null)
+        if (Targeting == null || IsInTransit)
             return;
 
         if (!Targeting.HasTarget)
