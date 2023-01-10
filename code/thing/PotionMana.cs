@@ -7,7 +7,7 @@ namespace Roguemoji;
 public partial class PotionMana : Thing
 {
     public override string ChatDisplayIcons => $"🧉{GetStatIcon(StatType.Mana)}";
-    public override string AbilityName => "Drink Potion";
+    public override string AbilityName => "Quaff Potion";
     public int ManaAmount { get; private set; }
 
     public PotionMana()

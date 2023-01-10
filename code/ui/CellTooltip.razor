@@ -50,8 +50,12 @@
     }
 </style>
 
+@{
+    var player = RoguemojiGame.Instance.LocalPlayer;
+}
+
 <root class="cell_tooltip @GetEquipmentClass()">
-    @Text
+    @(Thing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? Scroll.UnidentifiedTooltip : Thing.Tooltip)
 
     @if (Thing != null && ShowPickUpKey)
     {
@@ -65,7 +69,6 @@
 
 @code
 {
-    public string Text { get; set; }
     public Thing Thing { get; set; }
     public bool ShowPickUpKey { get; set; }
 

@@ -34,6 +34,8 @@ public partial class RoguemojiPlayer : Thing
     [Net] public AimingType AimingType { get; set; }
     public HashSet<IntVector> AimingCells { get; set; } // Client-only
 
+    [Net] public IList<ScrollType> IdentifiedScrollTypes { get; private set; }
+
     public RoguemojiPlayer()
 	{
 		IconDepth = 5;
@@ -54,6 +56,7 @@ public partial class RoguemojiPlayer : Thing
             EquipmentGridManager.GridType = GridType.Equipment;
             EquipmentGridManager.OwningPlayer = this;
 
+            IdentifiedScrollTypes = new List<ScrollType>();
             SetStartingValues();
         }
         else
@@ -91,6 +94,7 @@ public partial class RoguemojiPlayer : Thing
         Faction = FactionType.Player;
         CameraFade = 0f;
         IsInTransit = false;
+        IdentifiedScrollTypes.Clear();
 
         ClearStats();
         InitStat(StatType.Health, 10, 0, 10);
@@ -1121,6 +1125,21 @@ public partial class RoguemojiPlayer : Thing
     public bool IsInInventory(Thing thing)
     {
         return thing.ContainingGridManager.GridType == GridType.Inventory && thing.ContainingGridManager.OwningPlayer == this;
+    }
+
+    public void IdentifyScroll(Scroll scroll)
+    {
+        if (!IdentifiedScrollTypes.Contains(scroll.ScrollType))
+        {
+            IdentifiedScrollTypes.Add(scroll.ScrollType);
+            RoguemojiGame.Instance.AddFloater("💡", GridPos, 1f, CurrentLevelId, new Vector2(0f, -10f), new Vector2(0f, -30f), text: "", requireSight: false, EasingType.QuadOut, 0.5f, parent: this);
+            RoguemojiGame.Instance.LogMessageClient(To.Single(this), $"💡 You identified {scroll.DisplayName} {scroll.ChatDisplayIcons}", playerNum: 0);
+        }
+    }
+
+    public bool IsScrollTypeIdentified(ScrollType scrollType)
+    {
+        return IdentifiedScrollTypes.Contains(scrollType);
     }
 }
 

@@ -19,14 +19,21 @@
     }
 </style>
 
+@{
+    var player = RoguemojiGame.Instance.LocalPlayer;
+}
+
 <root class="traits">
     @if(Thing == null)
     {
         return;
     }
-
+    
     @foreach(var trait in Thing.Traits)
     {
+        if (Thing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) && string.IsNullOrEmpty(trait.TraitName))
+            continue;
+
         <TraitContainer Trait=@trait></TraitContainer>    
     }
 </root>

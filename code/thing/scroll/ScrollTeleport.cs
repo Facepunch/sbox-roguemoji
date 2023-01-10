@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Roguemoji;
-public partial class ScrollTeleport : Thing
+public partial class ScrollTeleport : Scroll
 {
     [Net] public int ReqInt { get; private set; }
 
@@ -13,12 +13,12 @@ public partial class ScrollTeleport : Thing
 
     public ScrollTeleport()
 	{
-		DisplayIcon = "📜";
+        ScrollType = ScrollType.Teleport;
+        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
+
         DisplayName = "Scroll of Teleport";
         Description = "Teleport to a random place on the current floor";
         Tooltip = "A scroll of Teleport";
-        IconDepth = 0;
-        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         SetTattoo(Globals.Icon(IconType.Teleport), scale: 0.5f, offset: new Vector2(1f, 0.5f), offsetWielded: new Vector2(0f, 0.3f), offsetInfo: new Vector2(8f, 5f), offsetCharWielded: new Vector2(2f, 0.5f), offsetInfoWielded: new Vector2(3f, 2f));
 
@@ -46,7 +46,9 @@ public partial class ScrollTeleport : Thing
 
     public override void Use(Thing user)
     {
-        if(user.ContainingGridManager.GetRandomEmptyGridPos(out var targetGridPos, allowNonSolid: true))
+        base.Use(user);
+
+        if (user.ContainingGridManager.GetRandomEmptyGridPos(out var targetGridPos, allowNonSolid: true))
         {
             RoguemojiGame.Instance.AddFloater("✨", user.GridPos, 0.8f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), "", requireSight: true, EasingType.SineOut, fadeInTime: 0.2f);
             RoguemojiGame.Instance.AddFloater("✨", targetGridPos, 0.5f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), "", requireSight: true, EasingType.SineOut, fadeInTime: 0.1f);
@@ -55,10 +57,12 @@ public partial class ScrollTeleport : Thing
 
             if (user is RoguemojiPlayer player)
                 player.RecenterCamera();
-
-            Destroy();
-
-            base.Use(user);
         }
+        else
+        {
+            RoguemojiGame.Instance.AddFloater("✨", user.GridPos, 0.8f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), "", requireSight: true, EasingType.SineOut, fadeInTime: 0.2f);
+        }
+
+        Destroy();
     }
 }

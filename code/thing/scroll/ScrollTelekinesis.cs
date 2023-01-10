@@ -4,19 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Roguemoji;
-public partial class ScrollTelekinesis : Thing
+public partial class ScrollTelekinesis : Scroll
 {
     public override string ChatDisplayIcons => $"📜{Globals.Icon(IconType.Telekinesis)}";
     public override string AbilityName => "Read Scroll";
 
     public ScrollTelekinesis()
-	{
-		DisplayIcon = "📜";
+    {
+        ScrollType = ScrollType.Telekinesis;
+        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
+
         DisplayName = "Scroll of Telekinesis";
         Description = "Pull target with your mind";
         Tooltip = "A scroll of Telekinesis";
-        IconDepth = 0;
-        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
 
         SetTattoo(Globals.Icon(IconType.Telekinesis), scale: 0.5f, offset: new Vector2(1f, 0), offsetWielded: new Vector2(0f, 0f), offsetInfo: new Vector2(8f, 5f), offsetCharWielded: new Vector2(2f, 0f), offsetInfoWielded: new Vector2(3f, 2f));
 
@@ -29,15 +29,21 @@ public partial class ScrollTelekinesis : Thing
 
     public override void Use(Thing user, IntVector targetGridPos)
     {
-        var targetThing = user.ContainingGridManager.GetThingsAt(targetGridPos).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
-        if (targetThing == null)
-            return;
+        base.Use(user, targetGridPos);
 
-        if(targetThing.HasFlag(ThingFlags.Solid))
+        var targetThing = user.ContainingGridManager.GetThingsAt(targetGridPos).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+        if (targetThing == null || targetThing == user)
+        {
+            RoguemojiGame.Instance.AddFloater($"{Globals.Icon(IconType.Telekinesis)}", targetGridPos, 0.5f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), "", requireSight: true, EasingType.SineOut, fadeInTime: 0.1f);
+            Destroy();
+            return;
+        }
+
+        if (targetThing.HasFlag(ThingFlags.Solid))
         {
             Direction pullDirection = GridManager.GetDirectionForIntVector(GridManager.GetIntVectorForSlope(targetGridPos, user.GridPos));
             targetThing.TryMove(pullDirection);
-            
+
             if (targetThing.GetComponent<CActing>(out var c))
                 ((CActing)c).PerformedAction();
 
@@ -54,11 +60,9 @@ public partial class ScrollTelekinesis : Thing
         RoguemojiGame.Instance.AddFloater($"{Globals.Icon(IconType.Telekinesis)}", user.GridPos, 0.5f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -8f), "", requireSight: true, EasingType.SineOut, fadeInTime: 0.1f);
 
         Destroy();
-
-        base.Use(user, targetGridPos);
     }
 
-    public override HashSet<IntVector> GetAimingTargetCellsClient() 
+    public override HashSet<IntVector> GetAimingTargetCellsClient()
     {
         Game.AssertClient();
 
@@ -66,7 +70,7 @@ public partial class ScrollTelekinesis : Thing
             return null;
 
         int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 3, 12);
-        return ScrollTelekinesis.TelekinesisGetAimingCells(radius, ThingWieldingThis);
+        return TelekinesisGetAimingCells(radius, ThingWieldingThis);
     }
 
     public override bool IsPotentialAimingTargetCell(IntVector gridPos)
@@ -75,7 +79,7 @@ public partial class ScrollTelekinesis : Thing
             return false;
 
         int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 3, 12);
-        return ScrollTelekinesis.TelekinesisIsPotentialAimingCell(gridPos, radius, ThingWieldingThis);
+        return TelekinesisIsPotentialAimingCell(gridPos, radius, ThingWieldingThis);
     }
 
     public static HashSet<IntVector> TelekinesisGetAimingCells(int radius, Thing thingWieldingThis)
@@ -86,9 +90,6 @@ public partial class ScrollTelekinesis : Thing
         {
             for (int y = -radius; y <= radius; y++)
             {
-                if (x == 0 && y == 0)
-                    continue;
-
                 int distance = Utils.GetDistance(x, y);
                 if (distance > radius)
                     continue;
@@ -107,9 +108,6 @@ public partial class ScrollTelekinesis : Thing
         {
             for (int y = -radius; y <= radius; y++)
             {
-                if (x == 0 && y == 0)
-                    continue;
-
                 int distance = Utils.GetDistance(x, y);
                 if (distance > radius)
                     continue;

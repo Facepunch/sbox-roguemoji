@@ -33,6 +33,10 @@
     }
 </style>
 
+@{
+    var player = RoguemojiGame.Instance.LocalPlayer;
+}
+
 <root class="drag_icon @GetPlayerClass()">
     @Text
 
@@ -41,7 +45,7 @@
         int fontSize = MathX.FloorToInt(29f * Thing.TattooData.Scale);
         var offset = Thing.TattooData.Offset;
         <div class="drag_icon_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-            @Thing.TattooData.Icon
+            @(Thing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? RoguemojiGame.Instance.GetUnidentifiedScrollIcon(scroll.ScrollType) : Thing.TattooData.Icon)
         </div>
     }
 </root>

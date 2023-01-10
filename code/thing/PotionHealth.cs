@@ -7,7 +7,7 @@ namespace Roguemoji;
 public partial class PotionHealth : Thing
 {
     public override string ChatDisplayIcons => $"🧉{GetStatIcon(StatType.Health)}";
-    public override string AbilityName => "Drink Potion";
+    public override string AbilityName => "Quaff Potion";
     public int HealthAmount { get; private set; }
 
     public PotionHealth()

@@ -121,6 +121,10 @@
     }
 </style>
 
+@{
+    var player = RoguemojiGame.Instance.LocalPlayer;
+}
+
 <root class="icon @GetWieldedClass() @GetSolidClass()" )>
     <div class="@GetPlayerClass() @GetDraggingClass() @GetCooldownClass(Thing) @Hud.Instance.GetUnusableClass(Thing) @GetInventoryClass() @Hud.Instance.GetEquipmentHighlightClass(Thing)" @ref=IconPanel>
         @Thing.DisplayIcon.Substring(Thing.CharSkip) 
@@ -130,7 +134,7 @@
             int fontSize = MathX.FloorToInt(29f * Thing.TattooData.Scale);
             var offset = Thing.TattooData.Offset;
             <div class="grid_cell_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                @Thing.TattooData.Icon
+                @(Thing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? RoguemojiGame.Instance.GetUnidentifiedScrollIcon(scroll.ScrollType) : Thing.TattooData.Icon)
             </div>
         }
 
@@ -175,7 +179,7 @@
                 int fontSize = MathX.FloorToInt(18f * wieldedThing.TattooData.Scale);
                 var offset = wieldedThing.TattooData.OffsetWielded;
                 <div class="grid_cell_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                    @wieldedThing.TattooData.Icon
+                    @(wieldedThing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? RoguemojiGame.Instance.GetUnidentifiedScrollIcon(scroll.ScrollType) : wieldedThing.TattooData.Icon)
                 </div>
             }
         </div>
@@ -209,7 +213,6 @@
     protected override Panel CreateTooltipPanel()
     {
         var panel = Hud.Instance.AddChild<CellTooltip>();
-        panel.Text = Tooltip;
         panel.Thing = Thing;
         panel.AddClass($"player-{Thing.PlayerNum}");
         return panel;
@@ -226,7 +229,8 @@
         var wieldedCooldownHash = wieldedThing != null && wieldedThing.IsOnCooldown ? wieldedThing.CooldownProgressPercent : 0f;
         var equipmentHighlightHash = Hud.Instance.GetContainingPanelType(Hud.Instance.MousePosition) == PanelType.EquipmentGrid ? 1 : 0;
         var statHash = HashCode.Combine(player.StatHash, Thing.StatHash);
-        return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, cooldownHash, wieldedCooldownHash, equipmentHighlightHash, statHash);
+        var scrollHash = Thing is Scroll scroll && player.IsScrollTypeIdentified(scroll.ScrollType) ? 1 : 0;
+        return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, HashCode.Combine(cooldownHash, wieldedCooldownHash, equipmentHighlightHash, statHash, scrollHash));
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

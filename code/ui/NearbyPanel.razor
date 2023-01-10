@@ -98,23 +98,4 @@
         _scrollOffset = ScrollOffset;
         FlickerFrames = 0;
     }
-
-    protected override void OnAfterTreeRender(bool firstTime)
-    {
-        if (firstTime)
-        {
-            //Tooltip = "Items within reach";
-        }
-
-        base.OnAfterTreeRender(firstTime);
-    }
-
-    protected override Panel CreateTooltipPanel()
-    {
-        var panel = Hud.Instance.AddChild<CellTooltip>();
-        panel.Text = Tooltip;
-        panel.Thing = null;
-        panel.Style.Opacity = 0.5f;
-        return panel;
-    }
 }

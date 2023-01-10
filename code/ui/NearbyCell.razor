@@ -47,6 +47,10 @@
     }
 </style>
 
+@{
+    var player = RoguemojiGame.Instance.LocalPlayer;
+}
+
 <root class="nearby_icon @GetSelectedClass() @GetUnusableClass(Thing, RoguemojiGame.Instance.LocalPlayer)">
     <div class="@GetPlayerClass() @GetDraggingClass()" @ref=IconPanel>
         @Thing.DisplayIcon
@@ -56,7 +60,7 @@
             int fontSize = MathX.FloorToInt(29f * Thing.TattooData.Scale);
             var offset = Thing.TattooData.Offset;
             <div class="nearby_cell_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                @Thing.TattooData.Icon
+                @(Thing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? RoguemojiGame.Instance.GetUnidentifiedScrollIcon(scroll.ScrollType) : Thing.TattooData.Icon)
             </div>
         }
     </div>
@@ -101,7 +105,6 @@
     protected override Panel CreateTooltipPanel()
     {
         var panel = Hud.Instance.AddChild<CellTooltip>();
-        panel.Text = Tooltip;
         panel.Thing = Thing;
 
         var player = RoguemojiGame.Instance.LocalPlayer;

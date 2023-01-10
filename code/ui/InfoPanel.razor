@@ -45,7 +45,7 @@
     .name_label {
         margin: 0 0 -3px 0;
         font-size: 20px;
-        color: #ffffffaa;
+        color: #888888;
         text-align: center;
     }
 
@@ -87,6 +87,10 @@
     }
 </style>
 
+@{
+    var player = RoguemojiGame.Instance.LocalPlayer;
+}
+
 <root class="info @GetSelectedClass()">
     @if(SelectedThing == null)
     {
@@ -95,7 +99,7 @@
 
      <div class="selected_info">
         <div class="name_label"> 
-            @SelectedThing.DisplayName 
+            @(SelectedThing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? Scroll.UnidentifiedDisplayName : SelectedThing.DisplayName)
         </div>
 
         @if (SelectedThing.HasFlag(ThingFlags.Equipment))
@@ -113,7 +117,7 @@
                 int fontSize = MathX.FloorToInt(55f * SelectedThing.TattooData.Scale);
                 var offset = SelectedThing.TattooData.OffsetInfo;
                 <div class="info_panel_tattoo" style="width: 64px; height: 64px; font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                    @SelectedThing.TattooData.Icon
+                    @(SelectedThing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? RoguemojiGame.Instance.GetUnidentifiedScrollIcon(scroll.ScrollType) : SelectedThing.TattooData.Icon)
                 </div>
             }
 
@@ -128,14 +132,19 @@
                         int fontSize = MathX.FloorToInt(32f * wieldedThing.TattooData.Scale);
                         var offset = wieldedThing.TattooData.OffsetInfoWielded;
                         <div class="info_panel_tattoo" style="width: 40px; height: 40px; font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                            @wieldedThing.TattooData.Icon
+                            @(wieldedThing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? RoguemojiGame.Instance.GetUnidentifiedScrollIcon(scroll.ScrollType) : wieldedThing.TattooData.Icon)
                         </div>
                     }
                 </div> 
             }
         </div>
 
-        @if (!string.IsNullOrEmpty(SelectedThing.Description)) { <div class="info_description_label"> @SelectedThing.Description </div> }
+        @if (!string.IsNullOrEmpty(SelectedThing.Description)) 
+        { 
+            <div class="info_description_label">
+                @(SelectedThing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? Scroll.UnidentifiedDescription : SelectedThing.Description)
+            </div>
+        }
     </div>
 
     @if (SelectedThing.HasStats) { <StatsDisplay Thing=@SelectedThing></StatsDisplay>     }

@@ -1,5 +1,4 @@
-﻿using Roguemoji;
-using Sandbox;
+﻿using Sandbox;
 using System;
 
 namespace Roguemoji;

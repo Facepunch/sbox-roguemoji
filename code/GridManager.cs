@@ -458,7 +458,7 @@ public partial class GridManager : Entity
     public bool GetRandomEmptyAdjacentGridPos(IntVector startGridPos, out IntVector gridPos, bool allowNonSolid = false, bool cardinalOnly = false)
 	{
         List<IntVector> gridPositions = new();
-        gridPos = IntVector.Zero;
+        gridPos = startGridPos;
 
         for (int x = -1; x <= 1; x++)
 		{

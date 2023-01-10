@@ -37,7 +37,7 @@ public partial class RoguemojiGame : GameManager
 	public const int ArenaPanelHeight = 19;
 
 	// todo: move to player
-	public const int InventoryWidth = 5;
+	public const int InventoryWidth = 15;
 	public const int InventoryHeight = 6;
     public const int EquipmentWidth = 4;
     public const int EquipmentHeight = 2;
@@ -56,6 +56,8 @@ public partial class RoguemojiGame : GameManager
 
     [Net] public IDictionary<LevelId, Level> Levels { get; private set; }
 
+    [Net] public IList<string> UnidentifiedScrollSymbols { get; private set; }
+
     public RoguemojiGame()
 	{
 		Instance = this;
@@ -63,16 +65,22 @@ public partial class RoguemojiGame : GameManager
 		if (Game.IsServer)
 		{
             Levels = new Dictionary<LevelId, Level>();
-
-			CreateLevel(LevelId.Forest0);
-		}
+            CreateLevel(LevelId.Forest0);
+            UnidentifiedScrollSymbols = new List<string>() { "🈁", "🈂️", "🈷️", "🈶", "🈯️", "🈹", "🈚️", "🈲", "🈸", "🈴", "🈳", "🈺", "🈵" };
+            UnidentifiedScrollSymbols.Shuffle();
+        }
 
 		if (Game.IsClient)
 		{
 			Hud = new Hud();
 			_panelsToFlicker = new List<PanelFlickerData>();
-		}
+        }
 	}
+
+    public string GetUnidentifiedScrollIcon(ScrollType scrollType)
+    {
+        return UnidentifiedScrollSymbols[(int)scrollType];
+    }
 
     [Event.Tick.Server]
 	public void ServerTick()
@@ -307,10 +315,12 @@ public partial class RoguemojiGame : GameManager
 
 	public void Restart()
 	{
-		foreach(var pair in Levels)
+        UnidentifiedScrollSymbols.Shuffle();
+
+        foreach (var pair in Levels)
 			pair.Value.Restart();
 
-		foreach (RoguemojiPlayer player in Players)
+        foreach (RoguemojiPlayer player in Players)
 		{
 			player.Restart();
 
@@ -318,7 +328,7 @@ public partial class RoguemojiGame : GameManager
 		}
     }
 
-	[ClientRpc]
+    [ClientRpc]
 	public void ResetHudClient()
 	{
 		Hud.Restart();

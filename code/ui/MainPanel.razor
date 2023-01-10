@@ -87,9 +87,9 @@
         </div>
     </div>
 
-    <div class="lower_row">
+    <div class="lower_row" style="height: @(40 * player.InventoryGridManager.GridHeight + 3)px;">
         <CharacterPanel class="character" @ref=CharacterPanel></CharacterPanel>
-        <InventoryPanel class="inventory" style="width: @(40 * player.InventoryGridManager.GridWidth + 4)px; height: @(40 * player.InventoryGridManager.GridHeight + 3)px;" @ref=InventoryPanel></InventoryPanel>
+        <InventoryPanel class="inventory" style="width: @(40 * player.InventoryGridManager.GridWidth + 4)px;" @ref=InventoryPanel></InventoryPanel>
         <NearbyPanel class="nearby" @ref=NearbyPanel></NearbyPanel>
 
         @{
