@@ -349,7 +349,25 @@ public partial class GridManager : Entity
 		return things;
 	}
 
-	public float GetPathfindMovementCost(IntVector gridPos)
+    public IEnumerable<Thing> GetAllThings(ThingFlags allFlags = ThingFlags.None, ThingFlags anyFlags = ThingFlags.None, ThingFlags noneFlags = ThingFlags.None)
+    {
+        var things = new List<Thing>();
+
+        foreach ((IntVector cellPos, List<Thing> cellThings) in GridThings)
+        {
+            foreach (var cellThing in cellThings)
+            {
+                if ((allFlags == ThingFlags.None || (cellThing.Flags & allFlags) == allFlags) &&
+                    (anyFlags == ThingFlags.None || (cellThing.Flags & anyFlags) != 0) &&
+                    (noneFlags == ThingFlags.None || (cellThing.Flags & noneFlags) == 0))
+                    things.Add(cellThing);
+            }
+        }
+
+        return things;
+    }
+
+    public float GetPathfindMovementCost(IntVector gridPos)
 	{
 		float movementCost = 0f;
 		var things = GetThingsAt(gridPos).WithAny(ThingFlags.Solid | ThingFlags.Exclusive);
