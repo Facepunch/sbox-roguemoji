@@ -292,6 +292,38 @@ public partial class GridManager : Entity
         return Direction.None;
     }
 
+    public static IntVector GetIntVectorForSlope(IntVector a, IntVector b)
+    {
+        int outX = 0;
+        int outY = 0;
+
+        int dx = b.x - a.x;
+        int dy = b.y - a.y;
+
+        int sx = dx > 0 ? 1 : -1;
+        int sy = dy > 0 ? 1 : -1;
+
+        dx = Math.Abs(dx);
+        dy = Math.Abs(dy);
+
+        int err = (dx > dy ? dx : -dy) / 2;
+
+        int e2 = err;
+        if(e2 > -dx)
+        {
+            err -= dy;
+            outX += sx;
+        }
+
+        if(e2 < dy)
+        {
+            err += dx;
+            outY += sy;
+        }
+
+        return new IntVector(outX, outY);
+    }
+
     public List<Direction> GetDirectionsInBounds(IntVector startPos, bool cardinalOnly = true)
     {
         List<Direction> directions = new List<Direction>();
