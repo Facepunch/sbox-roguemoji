@@ -133,8 +133,7 @@ public partial class GridManager : Entity
 
     public void SetGridPos(Thing thing, IntVector gridPos)
     {
-        if (!IsGridPosInBounds(gridPos))
-            return;
+        Sandbox.Diagnostics.Assert.True(IsGridPosInBounds(gridPos));
 
         IntVector currGridPos = thing.GridPos;
         DeregisterGridPos(thing, currGridPos);
@@ -262,10 +261,10 @@ public partial class GridManager : Entity
             case Direction.Right: return -90f;
             case Direction.Down: return 0f;
             case Direction.Up: return 180f;
-            case Direction.LeftDown: return 135f;
-            case Direction.RightDown: return -135f;
-            case Direction.LeftUp: return 45f;
-            case Direction.RightUp: return -45f;
+            case Direction.LeftDown: return 45f;
+            case Direction.RightDown: return -45f;
+            case Direction.LeftUp: return 135f;
+            case Direction.RightUp: return -135f;
         }
 
         return 0f;
@@ -293,7 +292,21 @@ public partial class GridManager : Entity
         return Direction.None;
     }
 
-	public static List<Direction> GetCardinalDirections()
+    public List<Direction> GetDirectionsInBounds(IntVector startPos, bool cardinalOnly = true)
+    {
+        List<Direction> directions = new List<Direction>();
+		var potentialDirections = cardinalOnly ? GetCardinalDirections() : GetAllDirections();
+
+		foreach(var dir in potentialDirections)
+		{
+			if(IsGridPosInBounds(startPos + GetIntVectorForDirection(dir)))
+				directions.Add(dir);
+		}
+
+		return directions;
+    }
+
+    public static List<Direction> GetCardinalDirections()
 	{
 		return new List<Direction>() { Direction.Left, Direction.Right, Direction.Down, Direction.Up };
 	}

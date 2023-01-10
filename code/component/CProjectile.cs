@@ -10,6 +10,7 @@ public class CProjectile : ThingComponent
     public TimeSince TimeSinceMove { get; set; }
     public int RemainingDistance { get; set; }
     public Thing Thrower { get; set; }
+    public bool ShouldHit { get; set; }
 
     public override void Init(Thing thing)
     {
@@ -17,6 +18,7 @@ public class CProjectile : ThingComponent
 
         ShouldUpdate = true;
         TimeSinceMove = 0f;
+        ShouldHit = true;
     }
 
     public override void Update(float dt)
@@ -51,7 +53,9 @@ public class CProjectile : ThingComponent
 
     public override void OnMovedOntoBy(Thing thing)
     {
-        Thing.DamageOther(thing, Direction);
+        if(ShouldHit)
+            Thing.HitOther(thing, Direction);
+
         Remove();
     }
 
@@ -63,7 +67,5 @@ public class CProjectile : ThingComponent
     public override void OnRemove()
     {
         base.OnRemove();
-
-        Log.Info("remov epojrectile;");
     }
 }

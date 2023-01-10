@@ -64,6 +64,26 @@
         font-family: RobotoMono;
     }
 
+    .wielding_stat_bar {
+        width: 90%;
+        height: 4px;
+        background-color: #000000bb;
+        align-self: center;
+        position: absolute;
+        bottom: 1px;
+        border-radius: 1px;
+    }
+
+    .wielding_stat_bar_overlay {
+        height: 100%;
+        bottom: 0px;
+        border-radius: 1px;
+        position: absolute;
+        align-self: center;
+        transform-origin: left;
+        justify-content: left;
+    }
+
     .wielding_frame {
         width: 70px;
         height: 70px;
@@ -96,6 +116,21 @@
             <div class="wielding_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
                 @(wieldedThing.TattooData.Icon)
             </div>
+        }
+
+        if (wieldedThing.HasStat(StatType.Durability))
+        {
+            int durability = wieldedThing.GetStatClamped(StatType.Durability);
+            int durabilityMax = wieldedThing.GetStatMax(StatType.Durability);
+
+            if (durability < durabilityMax && durability > 0)
+            {
+                var durabilityPercent = Math.Clamp((float)durability / (float)durabilityMax, 0f, 1f);
+
+                <div class="wielding_stat_bar">
+                    <div class="wielding_stat_bar_overlay" style="width: @(durabilityPercent * 100f)%; background-color: @(Thing.GetStatColor(StatType.Durability));"></div>
+                </div>
+            }
         }
 
         @if (wieldedThing.IsOnCooldown)

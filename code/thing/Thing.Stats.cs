@@ -7,7 +7,7 @@ namespace Roguemoji;
 
 public enum StatType { 
     Health, Energy, Mana, Attack, Strength, Speed, Intelligence, Stamina, Stealth, Charisma, Sight, Hearing, Smell,
-    MaxHealth,
+    Durability, MaxHealth, 
 }
 
 public partial class Stat : Entity
@@ -51,12 +51,13 @@ public partial class Thing : Entity
             case StatType.Speed: return "🕓️";
             case StatType.Intelligence: return "🧠";
             case StatType.Stamina: return "🏃";
-            case StatType.Stealth: return "🕵️";
+            case StatType.Stealth: return "👤";
             case StatType.Charisma: return "💋";
             case StatType.Sight: return "👁";
             case StatType.Hearing: return "👂️";
             case StatType.Smell: return "👃";
 
+            case StatType.Durability: return "🔧";
             case StatType.MaxHealth: return "💕";
         }
 
@@ -81,6 +82,7 @@ public partial class Thing : Entity
             case StatType.Hearing: return "Hearing";
             case StatType.Smell: return "Smell";
 
+            case StatType.Durability: return "Durability";
             case StatType.MaxHealth: return "Max Health";
         }
 
@@ -105,6 +107,7 @@ public partial class Thing : Entity
             case StatType.Hearing: return $"The ability to notice sounds from a distance";
             case StatType.Smell: return $"The ability to detect odors left by things";
 
+            case StatType.Durability: return $"Remaining physical integrity";
             case StatType.MaxHealth: return "Maximum amount of life available";
         }
 
@@ -143,6 +146,7 @@ public partial class Thing : Entity
             case StatType.Hearing: return "#aa5500";
             case StatType.Smell: return "#5b3e31";
 
+            case StatType.Durability: return "#aaaacc";
             case StatType.MaxHealth: return "#ff1111";
         }
 
@@ -168,6 +172,8 @@ public partial class Thing : Entity
             case StatType.Health: return true;
             case StatType.Energy: return true;
             case StatType.Mana: return true;
+
+            case StatType.Durability: return true;
         }
 
         return false;
@@ -180,6 +186,8 @@ public partial class Thing : Entity
             case StatType.Health: return true;
             case StatType.Energy: return true;
             case StatType.Mana: return true;
+
+            case StatType.Durability: return true;
         }
 
         return false;

@@ -22,6 +22,7 @@ public class CEnteringLevel : ThingComponent
             player.VfxFadeCamera(lifetime: fallTime, shouldFadeOut: false);
 
         thing.VfxFly(startingGridPos: new IntVector(thing.GridPos.x, -3), lifetime: fallTime, progressEasingType: EasingType.SineIn);
+        thing.VfxScale(0f, 1f, 1f);
     }
 
     public override void Update(float dt)

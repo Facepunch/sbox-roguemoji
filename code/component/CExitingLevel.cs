@@ -19,6 +19,8 @@ public class CExitingLevel : ThingComponent
         if(thing is RoguemojiPlayer player)
             player.VfxFadeCamera(lifetime: 0.45f, shouldFadeOut: true);
 
+        thing.VfxScale(0.45f, 1f, 0.5f);
+
         Thing.IsInTransit = true;
     }
 

@@ -2,17 +2,18 @@
 using System;
 
 namespace Roguemoji;
-public partial class ProjectileArrow : Thing
+public partial class ProjectileCigaretteSmoke : Thing
 {
     public Direction Direction { get; set; }
 
-	public ProjectileArrow()
+	public ProjectileCigaretteSmoke()
 	{
-		DisplayIcon = "🔰";
-        DisplayName = "Arrow";
+		DisplayIcon = "💨";
+        DisplayName = "Cigarette Smoke";
         Description = "";
         Tooltip = "";
         IconDepth = 8;
+        Flags = ThingFlags.DoesntBumpThings;
 
         if (Game.IsServer)
         {
@@ -20,17 +21,18 @@ public partial class ProjectileArrow : Thing
         }
     }
 
-    public override void OnBumpedIntoThing(Thing thing)
+    public override void OnMovedOntoThing(Thing thing)
     {
-        base.OnBumpedIntoThing(thing);
-        Destroy();
+        base.OnMovedOntoThing(thing);
+
+        thing.TakeDamage(this);
     }
 
     public override void OnMovedOntoBy(Thing thing)
     {
         base.OnMovedOntoBy(thing);
-        HitOther(thing, Direction);
-        Destroy();
+
+        thing.TakeDamage(this);
     }
 
     public override void OnRemoveComponent(TypeDescription type)

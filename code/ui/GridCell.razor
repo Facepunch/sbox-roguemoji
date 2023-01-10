@@ -80,7 +80,7 @@
         text-stroke-width: 2px;
     }
 
-    .grid_cell_hpbar {
+    .grid_cell_stat_bar {
         width: 100%;
         height: 2px;
         background-color: #000000bb;
@@ -90,7 +90,7 @@
         border-radius: 1px;
     }
 
-    .grid_cell_hpbar_overlay {
+    .grid_cell_stat_bar_overlay {
         height: 2px;
         bottom: 0px;
         border-radius: 1px;
@@ -144,8 +144,21 @@
                 var hpPercent = Math.Clamp((float)hp / (float)hpMax, 0f, 1f);
                 //var hpBarColor = Lerp3(new Color(0f, 0.9f, 0f), new Color(0.75f, 0.25f, 0f), new Color(1f, 0f, 0f), 1f - hpPercent);
 
-                <div class="grid_cell_hpbar"></div>
-                <div class="grid_cell_hpbar_overlay" style="width: @(hpPercent * 100f)%; background-color: @(Thing.GetStatColor(StatType.Health));"></div>
+                <div class="grid_cell_stat_bar"></div>
+                <div class="grid_cell_stat_bar_overlay" style="width: @(hpPercent * 100f)%; background-color: @(Thing.GetStatColor(StatType.Health));"></div>
+            }
+        }
+        else if (Thing.HasStat(StatType.Durability) && Thing.ContainingGridType != GridType.Arena)
+        {
+            int durability = Thing.GetStatClamped(StatType.Durability);
+            int durabilityMax = Thing.GetStatMax(StatType.Durability);
+
+            if (durability < durabilityMax && durability > 0)
+            {
+                var durabilityPercent = Math.Clamp((float)durability / (float)durabilityMax, 0f, 1f);
+
+                <div class="grid_cell_stat_bar"></div>
+                <div class="grid_cell_stat_bar_overlay" style="width: @(durabilityPercent * 100f)%; background-color: @(Thing.GetStatColor(StatType.Durability));"></div>
             }
         }
     </div>

@@ -19,6 +19,7 @@ public enum ThingFlags
     CanUseThings = 64,
     CanBePickedUp = 128,
     Exclusive = 256,
+    DoesntBumpThings = 512,
 }
 
 public enum FactionType { Neutral, Player, Enemy }
@@ -190,13 +191,16 @@ public partial class Thing : Entity
             return false;
         }
 
-        Thing other = ContainingGridManager.GetThingsAt(newGridPos).WithAll(ThingFlags.Solid).Where(x => !x.IsInTransit).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
-        if (other != null)
+        if(!HasFlag(ThingFlags.DoesntBumpThings))
         {
-            BumpInto(other, direction);
-            //RoguemojiGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") bumped into " + other.DisplayIcon + "(" + other.DisplayName + ")", PlayerNum);
+            Thing other = ContainingGridManager.GetThingsAt(newGridPos).WithAll(ThingFlags.Solid).Where(x => !x.IsInTransit).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+            if (other != null)
+            {
+                BumpInto(other, direction);
+                //RoguemojiGame.Instance.LogMessage(DisplayIcon + "(" + DisplayName + ") bumped into " + other.DisplayIcon + "(" + other.DisplayName + ")", PlayerNum);
 
-            return false;
+                return false;
+            }
         }
 
         SetGridPos(newGridPos);
@@ -213,24 +217,15 @@ public partial class Thing : Entity
 
         if(WieldedThing != null)
         {
-            WieldedThing.HitOther(target, direction, shouldUse: true);
+            WieldedThing.HitOther(target, direction);
         }
         else
         {
-            HitOther(target, direction, shouldUse: false);
+            HitOther(target, direction);
         }
 
         OnBumpedIntoThing(target);
         target.OnBumpedIntoBy(this);
-    }
-
-    public virtual void HitOther(Thing target, Direction direction, bool shouldUse)
-    {
-        // todo: a way to force-feed food to other units
-        //if (shouldUse && HasFlag(ThingFlags.Useable) && target.CanUseThing(this))
-        //    Use(target);
-        
-        DamageOther(target, direction);
     }
 
     public virtual bool InteractWith(Thing target)
@@ -243,17 +238,16 @@ public partial class Thing : Entity
         return false;
     }
 
-    public virtual void DamageOther(Thing target, Direction direction)
+    public virtual void HitOther(Thing target, Direction direction)
     {
+        // todo: a way to force-feed food to other units
+        //if (shouldUse && HasFlag(ThingFlags.Useable) && target.CanUseThing(this))
+        //    Use(target);
+
         target.VfxShake(0.2f, 4f);
 
         if (target.HasStat(StatType.Health))
         {
-            var levelId = ThingWieldingThis?.CurrentLevelId ?? CurrentLevelId;
-            var startOffset = new Vector2(Game.Random.Float(-5f, 4f), Game.Random.Float(-5f, 4f));
-            var endOffset = new Vector2(Game.Random.Float(-5f, 4f), Game.Random.Float(-5f, 4f));
-            RoguemojiGame.Instance.AddFloater("💥", target.GridPos, 0.45f, levelId, startOffset, endOffset, "", requireSight: true, EasingType.SineIn, 0.025f, parent: target);
-
             var damagingThing = ThingWieldingThis != null ? ThingWieldingThis : this;
             target.TakeDamage(damagingThing);
 
@@ -271,6 +265,10 @@ public partial class Thing : Entity
         if(amount > 0)
         {
             AdjustStat(StatType.Health, -amount);
+
+            var startOffset = new Vector2(Game.Random.Float(-5f, 4f), Game.Random.Float(-5f, 4f));
+            var endOffset = new Vector2(Game.Random.Float(-5f, 4f), Game.Random.Float(-5f, 4f));
+            RoguemojiGame.Instance.AddFloater("💥", GridPos, 0.45f, CurrentLevelId, startOffset, endOffset, "", requireSight: true, EasingType.SineIn, 0.025f, parent: this);
 
             RoguemojiGame.Instance.AddFloater("💔", GridPos, 1.2f, CurrentLevelId, new Vector2(0f, 1f), new Vector2(0f, -6f), $"-{amount}", requireSight: true, EasingType.SineOut, 0.25f, parent: this);
 
@@ -349,6 +347,8 @@ public partial class Thing : Entity
 
     public virtual void SetGridPos(IntVector gridPos)
     {
+        Sandbox.Diagnostics.Assert.True(ContainingGridManager.IsGridPosInBounds(gridPos));
+
         //if ( GridPos.Equals( gridPos ) && !forceRefresh )
         //	return;
 
