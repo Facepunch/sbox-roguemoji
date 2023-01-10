@@ -156,7 +156,8 @@ public partial class RoguemojiPlayer : Thing
             case 11: InventoryGridManager.SpawnThing<Cigarette>(gridPos); break;
             case 12: InventoryGridManager.SpawnThing<ScrollBlink>(gridPos); break;
             case 13: InventoryGridManager.SpawnThing<BowAndArrow>(gridPos); break;
-            case 14: InventoryGridManager.SpawnThing<Backpack>(gridPos); break;
+            //case 14: InventoryGridManager.SpawnThing<Backpack>(gridPos); break;
+            case 14: InventoryGridManager.SpawnThing<Juicebox>(gridPos); break;
             case 15: InventoryGridManager.SpawnThing<BookBlink>(gridPos); break;
             case 16: InventoryGridManager.SpawnThing<PotionMana>(gridPos); break;
             case 17: InventoryGridManager.SpawnThing<PotionHealth>(gridPos); break;

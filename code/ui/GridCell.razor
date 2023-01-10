@@ -225,7 +225,8 @@
         var wieldedThing = Thing.WieldedThing;
         var wieldedCooldownHash = wieldedThing != null && wieldedThing.IsOnCooldown ? wieldedThing.CooldownProgressPercent : 0f;
         var equipmentHighlightHash = Hud.Instance.GetContainingPanelType(Hud.Instance.MousePosition) == PanelType.EquipmentGrid ? 1 : 0;
-        return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, Thing.GetStatClamped(StatType.Health), cooldownHash, wieldedCooldownHash, equipmentHighlightHash, player.StatHash);
+        var statHash = HashCode.Combine(player.StatHash, Thing.StatHash);
+        return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, cooldownHash, wieldedCooldownHash, equipmentHighlightHash, statHash);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

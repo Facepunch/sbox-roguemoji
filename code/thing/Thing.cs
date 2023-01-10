@@ -470,7 +470,7 @@ public partial class Thing : Entity
     public int GetInfoDisplayHash()
     {
         // todo: check all stats
-        return HashCode.Combine(NetworkIdent, DisplayIcon, WieldedThing?.DisplayIcon ?? "", GetStatClamped(StatType.Health), GetStatMax(StatType.Health), Flags);
+        return HashCode.Combine(NetworkIdent, DisplayIcon, WieldedThing?.DisplayIcon ?? "", Flags);
     }
 
     public int GetNearbyCellHash()
