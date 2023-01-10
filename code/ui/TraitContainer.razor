@@ -55,6 +55,25 @@
         text-stroke-color: #000000;
         text-stroke-width: 5px;
     }
+
+    .trait_bar {
+        width: 100%;
+        height: 3px;
+        background-color: #000000bb;
+        align-self: center;
+        position: absolute;
+        bottom: 0px;
+        border-radius: 1px;
+    }
+
+    .trait_bar_overlay {
+        height: 100%;
+        bottom: 0px;
+        border-radius: 1px;
+        position: absolute;
+        align-self: center;
+        transform-origin: left;
+    }
 </style>
 
 <root class="trait_container" style="border-color: @(string.IsNullOrEmpty(Trait.TraitName) ? "#151515" : "#777777");">
@@ -82,6 +101,13 @@
                 @Trait.LabelText
             </div>
         }
+
+        @if (Trait.BarPercent > 0f && Trait.BarPercent < 1f)
+        {
+            <div class="trait_bar">
+                <div class="trait_bar_overlay" style="width: @(Trait.BarPercent * 100f)%; background-color: #888888;"></div>
+            </div>
+        }
     </div>
 </root>
 
@@ -91,8 +117,7 @@
 
     protected override int BuildHash()
     {
-        // todo
-        return HashCode.Combine(Trait?.Icon);
+        return Trait.Hash;
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

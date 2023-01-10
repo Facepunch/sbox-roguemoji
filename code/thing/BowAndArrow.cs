@@ -25,7 +25,7 @@ public partial class BowAndArrow : Thing
             EnergyCost = 4;
             CooldownTime = 2f;
 
-            AddTrait(AbilityName, "🔰", "Shoot an arrow in a cardinal direction", offset: new Vector2(0f, -1f));
+            AddTrait(AbilityName, "🔰", $"Shoot an arrow in a cardinal direction", offset: new Vector2(0f, -1f));
             AddTrait("", GetStatIcon(StatType.Energy), $"Ability requires {EnergyCost}{GetStatIcon(StatType.Energy)}", offset: new Vector2(0f, -3f), labelText: $"{EnergyCost}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
         }

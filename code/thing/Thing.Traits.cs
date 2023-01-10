@@ -11,7 +11,7 @@ public partial class Trait : Entity
     [Net] public string Icon { get; set; }
     [Net] public string Description { get; set; }
     [Net] public Color BackgroundColor { get; set; }
-    [Net] public float Progress { get; set; }
+    [Net] public float BarPercent { get; set; }
     [Net] public string Source { get; set; }
     [Net] public Vector2 Offset { get; set; }
 
@@ -26,7 +26,7 @@ public partial class Trait : Entity
     [Net] public Vector2 LabelOffset { get; set; }
     [Net] public Color LabelColor { get; set; }
 
-    public int Hash => HashCode.Combine(Icon, HasTattoo ? TattooIcon : "", HasLabel ? LabelText : "");
+    public int Hash => HashCode.Combine(Icon, HasTattoo ? TattooIcon : "", HasLabel ? LabelText : "", BarPercent);
 
     public Trait()
     {

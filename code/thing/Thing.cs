@@ -250,9 +250,6 @@ public partial class Thing : Entity
         {
             var damagingThing = ThingWieldingThis != null ? ThingWieldingThis : this;
             target.TakeDamage(damagingThing);
-
-            //int amount = damagingThing.GetStatClamped(StatType.Attack);
-            //RoguemojiGame.Instance.LogMessage($"{damagingThing.DisplayIcon}{damagingThing.DisplayName} attacked {target.DisplayIcon}{target.DisplayName} for {amount}{GetStatIcon(StatType.Attack)}!", damagingThing.PlayerNum);
         }
     }
 
@@ -262,7 +259,15 @@ public partial class Thing : Entity
             return;
 
         int amount = source.GetStatClamped(StatType.Attack);
-        if(amount > 0)
+        TakeDamage(amount);
+    }
+
+    public virtual void TakeDamage(int amount)
+    {
+        if (!HasStat(StatType.Health))
+            return;
+
+        if (amount > 0)
         {
             AdjustStat(StatType.Health, -amount);
 
