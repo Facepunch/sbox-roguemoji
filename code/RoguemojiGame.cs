@@ -75,9 +75,10 @@ public partial class RoguemojiGame : GameManager
             UnidentifiedScrollNames = new List<string>() { "WYZ'LOK", "MYR'KLYN", "PHYZGRYF", "XORPHYX", "GRYFAD", "RYXORK", "ORAXUM", "ZORKOZAL", "KLYNX", "QYN", "ARPHYNY", "LUZ'ROKLUM", "YNDRYNY", "PYG'JYG", "BRAX'PHY", "FEN'XOR", "CIRXYX" };
             UnidentifiedScrollNames.Shuffle();
 
-            UnidentifiedPotionSymbols = new List<string>() { "🉑", "🉐", "Ⓜ️", "⚪️", "🟤", "🔘", "⭕️", "🧿", "🌐", "🌓" }; // ㊗️ ㊙️
+            UnidentifiedPotionSymbols = new List<string>() { "🉑", "🉐", "⚪️", "🟤", "🔘", "🧿", "🌐", "🌓" }; // ㊗️ ㊙️
             UnidentifiedPotionSymbols.Shuffle();
-            UnidentifiedPotionNames = new List<string>() { "cloudy", "misty", "murky", "sparkling", "fizzy", "bubbly", "smoky", "congealed", "chalky", "radiant", "milky", "thick", "pasty", "glossy", "dull", "dusty", "syrupy", "foul-smelling", "pungent", "viscous", "sludgy", "pale", "filmy" };
+            UnidentifiedPotionNames = new List<string>() { "cloudy", "misty", "murky", "sparkling", "fizzy", "bubbly", "smoky", "congealed", "chalky", "radiant", "milky", "thick", "pasty", "glossy", "dull", "dusty", "syrupy", "pungent", 
+                "viscous", "sludgy", "pale", "filmy", "rusty", "chunky", "creamy", "hazy", "silky" };
             UnidentifiedPotionNames.Shuffle();
         }
 
