@@ -12,7 +12,7 @@ public partial class PotionMana : Thing
 
     public PotionMana()
 	{
-		DisplayIcon = "\U0001f9c9";
+		DisplayIcon = "🧉";
         DisplayName = "Mana Potion";
         Description = "Recover some mana";
         Tooltip = "A mana potion";
@@ -41,7 +41,6 @@ public partial class PotionMana : Thing
     {
         int amountRecovered = Math.Min(ManaAmount, user.GetStatMax(StatType.Mana) - user.GetStatClamped(StatType.Mana));
         RoguemojiGame.Instance.AddFloater(GetStatIcon(StatType.Mana), user.GridPos, 1.2f, user.CurrentLevelId, new Vector2(0f, 1f), new Vector2(0f, -6f), $"+{amountRecovered}", requireSight: true, EasingType.SineOut, 0.25f, parent: user);
-
         user.AdjustStat(StatType.Mana, ManaAmount);
 
         Destroy();
