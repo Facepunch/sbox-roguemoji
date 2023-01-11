@@ -65,7 +65,7 @@ public partial class Cigarette : Thing
 
         // gain energy
         int amountRecovered = Math.Min(EnergyGained, user.GetStatMax(StatType.Energy) - user.GetStatClamped(StatType.Energy));
-        RoguemojiGame.Instance.AddFloater(GetStatIcon(StatType.Energy), GridPos, 1.33f, CurrentLevelId, new Vector2(Game.Random.Float(-7f, 7f), Game.Random.Float(-1f, 10f)), new Vector2(Game.Random.Float(-10f, 10f), Game.Random.Float(0f, -10f)), height: Game.Random.Float(10f, 35f), text: $"+{amountRecovered}", requireSight: true, EasingType.Linear, fadeInTime: 0.1f, scale: 0.75f, parent: user);
+        RoguemojiGame.Instance.AddFloater(GetStatIcon(StatType.Energy), user.GridPos, 1.33f, user.CurrentLevelId, new Vector2(Game.Random.Float(-7f, 7f), Game.Random.Float(-1f, 10f)), new Vector2(Game.Random.Float(-10f, 10f), Game.Random.Float(0f, -10f)), height: Game.Random.Float(10f, 35f), text: $"+{amountRecovered}", requireSight: true, EasingType.Linear, fadeInTime: 0.1f, scale: 0.75f, parent: user);
         user.AdjustStat(StatType.Energy, EnergyGained);
 
         // blow smoke

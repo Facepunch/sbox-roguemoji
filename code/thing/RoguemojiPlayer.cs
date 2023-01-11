@@ -575,13 +575,13 @@ public partial class RoguemojiPlayer : Thing
     {
         if (WieldedThing == null)
         {
-            if (SelectedThing != null && IsInInventory(SelectedThing))
-            {
-                if (SelectedThing.HasFlag(ThingFlags.Equipment))
-                    TryEquipThing(SelectedThing);
-                else
-                    WieldThing(SelectedThing);
-            }
+            //if (SelectedThing != null && IsInInventory(SelectedThing))
+            //{
+            //    if (SelectedThing.HasFlag(ThingFlags.Equipment))
+            //        TryEquipThing(SelectedThing);
+            //    else
+            //        WieldThing(SelectedThing);
+            //}
 
             return;
         }

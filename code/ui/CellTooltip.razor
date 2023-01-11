@@ -28,36 +28,62 @@
     .player-8 { background-color: #ff8800aa; }
 
     .equipment_tooltip {
-        background-color: #111111ee;
+        background-color: #111111fa;
         color: #ccbbffcc;
         border: 1px solid #ee99ff77;
     }
 
     .cell_tooltip_line 
     {
+        font-size: 13px;
         flex-direction: row;
     }
 
     .cell_tooltip_action 
     {
-        color: #444444;
+        color: #555555;
         padding-right: 6px;
     }
 
     .cell_tooltip_bind 
     {
-        color: #888888;
+        color: #777777;
+        padding-right: 4px;
     }
 </style>
 
 <root class="cell_tooltip @GetEquipmentClass()">
     @(GetTooltip(Thing))
 
-    @if (Thing != null && ShowPickUpKey)
+    @if(Thing.ContainingGridType == GridType.Inventory)
+    {
+        if(Thing.HasFlag(ThingFlags.Equipment))
+        {
+            <div class="cell_tooltip_line">
+                <span class="cell_tooltip_action">Wear</span>
+                <span class="cell_tooltip_bind">[RMB]</span>
+            </div>
+        }
+        else
+        {
+            <div class="cell_tooltip_line">
+                <span class="cell_tooltip_action">Equip</span>
+                <span class="cell_tooltip_bind">[RMB]</span>
+            </div>
+        }
+    }
+
+    @if (IsNearby)
     {
         <div class="cell_tooltip_line">
             <span class="cell_tooltip_action">Pick Up</span>
-            <span class="cell_tooltip_bind">[E]</span>
+            <span class="cell_tooltip_bind">[RMB]</span>
+
+            @if(ShowPickUpKey)
+            {
+                <span class="cell_tooltip_bind">[E]</span>
+            }
+            
         </div>
     }
 
@@ -66,6 +92,7 @@
 @code
 {
     public Thing Thing { get; set; }
+    public bool IsNearby { get; set; }
     public bool ShowPickUpKey { get; set; }
 
     string GetEquipmentClass() { return Thing != null && Thing.HasFlag(ThingFlags.Equipment) ? "equipment_tooltip" : ""; }

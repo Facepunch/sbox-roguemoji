@@ -105,6 +105,7 @@
 
         var player = RoguemojiGame.Instance.LocalPlayer;
         var topItem = player.ContainingGridManager.GetThingsAtClient(player.GridPos).WithAll(ThingFlags.CanBePickedUp).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+        panel.IsNearby = true;
         panel.ShowPickUpKey = (Thing == topItem);
 
         panel.AddClass($"player-{Thing.PlayerNum}");
