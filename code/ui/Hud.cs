@@ -20,12 +20,13 @@ public struct FloaterData
     public bool requireSight;
     public Vector2 offsetStart;
     public Vector2 offsetEnd;
+    public float height;
     public EasingType offsetEasingType;
     public float fadeInTime;
     public float scale;
     public Thing parent;
 
-    public FloaterData(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, string text, bool requireSight, EasingType offsetEasingType, float fadeInTime, float scale, Thing parent)
+    public FloaterData(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height, string text, bool requireSight, EasingType offsetEasingType, float fadeInTime, float scale, Thing parent)
     {
         this.icon = icon;
         this.gridPos = gridPos;
@@ -33,6 +34,7 @@ public struct FloaterData
         this.timeSinceStart = 0f;
         this.offsetStart = offsetStart;
         this.offsetEnd = offsetEnd;
+        this.height = height;
         this.text = text;
         this.requireSight = requireSight;
         this.offsetEasingType = offsetEasingType;
@@ -353,9 +355,9 @@ public partial class Hud : RootPanel
         return thing.TattooData.Icon;
     }
 
-    public void AddFloater(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, string text = "", bool requireSight = true, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, Thing parent = null)
+    public void AddFloater(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height, string text = "", bool requireSight = true, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, Thing parent = null)
     {
-        Floaters.Add(new FloaterData(icon, gridPos, time, offsetStart, offsetEnd, text, requireSight, offsetEasingType, fadeInTime, scale, parent));
+        Floaters.Add(new FloaterData(icon, gridPos, time, offsetStart, offsetEnd, height, text, requireSight, offsetEasingType, fadeInTime, scale, parent));
     }
 
     public void RemoveFloater(string icon, Thing parent = null)

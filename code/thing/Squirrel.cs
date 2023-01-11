@@ -106,7 +106,7 @@ public partial class Squirrel : Thing
         base.OnFindTarget(target);
 
         RoguemojiGame.Instance.RemoveFloater("❔", CurrentLevelId, parent: this);
-        RoguemojiGame.Instance.AddFloater("❕", GridPos, 1.55f, CurrentLevelId, new Vector2(0f, -10f), new Vector2(0f, -35f), text: "", requireSight: true, EasingType.QuadOut, 0.05f, parent: this);
+        RoguemojiGame.Instance.AddFloater("❕", GridPos, 1.55f, CurrentLevelId, new Vector2(0f, -10f), new Vector2(0f, -35f), height: 0f, text: "", requireSight: true, EasingType.QuadOut, 0.05f, parent: this);
         Acting.PerformedAction();
         Acting.TimeElapsed = Game.Random.Float(0f, 0.1f);
     }
@@ -116,7 +116,7 @@ public partial class Squirrel : Thing
         base.OnLoseTarget();
 
         RoguemojiGame.Instance.RemoveFloater("❕", CurrentLevelId, parent: this);
-        RoguemojiGame.Instance.AddFloater("❔", GridPos, Game.Random.Float(0.95f, 1.1f), CurrentLevelId, new Vector2(0f, -10f), new Vector2(0f, -30f), text: "", requireSight: false, EasingType.QuadOut, 0.1f, parent: this);
+        RoguemojiGame.Instance.AddFloater("❔", GridPos, Game.Random.Float(0.95f, 1.1f), CurrentLevelId, new Vector2(0f, -10f), new Vector2(0f, -30f), height: 0f, text: "", requireSight: false, EasingType.QuadOut, 0.1f, parent: this);
         Acting.PerformedAction();
         Acting.TimeElapsed = Game.Random.Float(0f, 0.1f);
     }

@@ -34,7 +34,7 @@ public partial class ScrollTelekinesis : Scroll
         var targetThing = user.ContainingGridManager.GetThingsAt(targetGridPos).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
         if (targetThing == null || targetThing == user)
         {
-            RoguemojiGame.Instance.AddFloater($"{Globals.Icon(IconType.Telekinesis)}", targetGridPos, 0.5f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), "", requireSight: true, EasingType.SineOut, fadeInTime: 0.1f);
+            RoguemojiGame.Instance.AddFloater($"{Globals.Icon(IconType.Telekinesis)}", targetGridPos, 0.5f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, EasingType.SineOut, fadeInTime: 0.1f);
             Destroy();
             return;
         }
@@ -47,17 +47,17 @@ public partial class ScrollTelekinesis : Scroll
             if (targetThing.GetComponent<CActing>(out var c))
                 ((CActing)c).PerformedAction();
 
-            RoguemojiGame.Instance.AddFloater($"{Globals.Icon(IconType.Telekinesis)}", targetGridPos, 0.5f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), "", requireSight: true, EasingType.SineOut, fadeInTime: 0.1f, parent: targetThing);
+            RoguemojiGame.Instance.AddFloater($"{Globals.Icon(IconType.Telekinesis)}", targetGridPos, 0.5f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, EasingType.SineOut, fadeInTime: 0.1f, parent: targetThing);
         }
         else
         {
             var startingPos = targetThing.GridPos;
             targetThing.SetGridPos(user.GridPos);
             targetThing.VfxFly(startingPos, lifetime: 0.2f, heightY: 30f, progressEasingType: EasingType.Linear, heightEasingType: EasingType.SineInOut);
-            RoguemojiGame.Instance.AddFloater($"{Globals.Icon(IconType.Telekinesis)}", targetGridPos, 0.5f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), "", requireSight: true, EasingType.SineOut, fadeInTime: 0.1f);
+            RoguemojiGame.Instance.AddFloater($"{Globals.Icon(IconType.Telekinesis)}", targetGridPos, 0.5f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, EasingType.SineOut, fadeInTime: 0.1f);
         }
 
-        RoguemojiGame.Instance.AddFloater($"{Globals.Icon(IconType.Telekinesis)}", user.GridPos, 0.5f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -8f), "", requireSight: true, EasingType.SineOut, fadeInTime: 0.1f);
+        RoguemojiGame.Instance.AddFloater($"{Globals.Icon(IconType.Telekinesis)}", user.GridPos, 0.5f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -8f), height: 0f, text: "", requireSight: true, EasingType.SineOut, fadeInTime: 0.1f);
 
         Destroy();
     }

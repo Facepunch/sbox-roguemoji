@@ -56,17 +56,19 @@
             Vector2 parentOffset = floater.parent?.Offset ?? Vector2.Zero;
             Vector2 pos = ((Hud.Instance.GetScreenPosForArenaGridPos(floaterGridPos) + parentOffset) / ScaleToScreen) + new Vector2(-20f, -20f);
 
-            float fontSize = 29f * floater.scale;
+            float scale = floater.height > 0f ? floater.scale * Utils.MapReturn(floater.timeSinceStart, 0f, floater.time, 1f, 1.2f, EasingType.SineInOut) : floater.scale;
+            float fontSize = 29f * scale;
 
             Vector2 offset = floater.time > 0f ? Vector2.Lerp(floater.offsetStart, floater.offsetEnd, Utils.Map(floater.timeSinceStart, 0f, floater.time, 0f, 1f, floater.offsetEasingType)) : floater.offsetStart;
+            float height = floater.height > 0f ? Utils.MapReturn(floater.timeSinceStart, 0f, floater.time, 0f, floater.height, EasingType.SineInOut) : 0f;
             var opacity = floater.time > 0f ? (floater.timeSinceStart < floater.fadeInTime ? Utils.Map(floater.timeSinceStart, 0f, floater.fadeInTime, 0f, 1f, EasingType.SineIn) : Utils.Map(floater.timeSinceStart, floater.fadeInTime, floater.time, 1f, 0f, floater.offsetEasingType)) : 1f;
 
-            <div class="floater_draw" style="left: @(pos.x + offset.x); top: @(pos.y + offset.y); opacity: @(opacity); font-size: @(MathX.FloorToInt(fontSize));">
+            <div class="floater_draw" style="left: @(pos.x + offset.x); top: @(pos.y + offset.y - height); opacity: @(opacity); font-size: @(fontSize);">
                 @floater.icon 
 
                 @if(!string.IsNullOrEmpty(floater.text))
                 {
-                    <div class="floater_text" style="top: @(13f + offset.y * 1.25f * floater.scale); font-size: @(MathX.FloorToInt(fontSize * 0.69f));"> @(floater.text) </div>
+                    <div class="floater_text" style="top: @((13f + offset.y * 1.075f) * scale)px; font-size: @(fontSize * 0.72f);"> @(floater.text) </div>
                 }
             </div>
         }

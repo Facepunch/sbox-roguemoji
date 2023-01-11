@@ -273,13 +273,13 @@ public partial class Thing : Entity
 
             var startOffset = new Vector2(Game.Random.Float(-5f, 4f), Game.Random.Float(-5f, 4f));
             var endOffset = new Vector2(Game.Random.Float(-5f, 4f), Game.Random.Float(-5f, 4f));
-            RoguemojiGame.Instance.AddFloater("💥", GridPos, 0.45f, CurrentLevelId, startOffset, endOffset, "", requireSight: true, EasingType.SineIn, 0.025f, parent: this);
+            RoguemojiGame.Instance.AddFloater("💥", GridPos, 0.45f, CurrentLevelId, startOffset, endOffset, height: 0f, text: "", requireSight: true, EasingType.SineIn, 0.025f, parent: this);
 
-            RoguemojiGame.Instance.AddFloater("💔", GridPos, 1.2f, CurrentLevelId, new Vector2(0f, 1f), new Vector2(0f, -6f), $"-{amount}", requireSight: true, EasingType.SineOut, 0.25f, parent: this);
+            RoguemojiGame.Instance.AddFloater("💔", GridPos, 1.33f, CurrentLevelId, new Vector2(Game.Random.Float(-7f, 7f), Game.Random.Float(-1f, 10f)), new Vector2(Game.Random.Float(-10f, 10f), Game.Random.Float(0f, -10f)), height: Game.Random.Float(10f, 35f), text: $"-{amount}", requireSight: true, EasingType.Linear, fadeInTime: 0.1f, scale: 0.75f, parent: this);
 
             if (GetStatClamped(StatType.Health) <= 0)
             {
-                RoguemojiGame.Instance.AddFloater("☠️", GridPos, 1.5f, CurrentLevelId, new Vector2(0f, 4f), new Vector2(0f, -7f), "", requireSight: true, EasingType.SineOut, 1f, parent: this);
+                RoguemojiGame.Instance.AddFloater("☠️", GridPos, 1.5f, CurrentLevelId, new Vector2(0f, 4f), new Vector2(0f, -7f), height: 0f, text: "", requireSight: true, EasingType.SineOut, 1f, parent: this);
                 Destroy();
             }
         }
@@ -518,7 +518,7 @@ public partial class Thing : Entity
         if (EquippedThings == null)
             EquippedThings = new List<Thing>();
 
-        RoguemojiGame.Instance.AddFloater(thing.DisplayIcon, GridPos, 0.6f, CurrentLevelId, new Vector2(0f, 0f), new Vector2(0f, -7f), "", requireSight: true, EasingType.SineOut, 0.05f, parent: this);
+        RoguemojiGame.Instance.AddFloater(thing.DisplayIcon, GridPos, 0.6f, CurrentLevelId, new Vector2(0f, 0f), new Vector2(0f, -7f), height: 0f, text: "", requireSight: true, EasingType.SineOut, 0.05f, parent: this);
 
         EquippedThings.Add(thing);
 
@@ -529,7 +529,7 @@ public partial class Thing : Entity
     /// <summary> For players, use MoveThingTo to unequip things, and this will be called automatically. </summary>
     public void UnequipThing(Thing thing)
     {
-        RoguemojiGame.Instance.AddFloater(thing.DisplayIcon, GridPos, 0.6f, CurrentLevelId, new Vector2(0f, -8f), new Vector2(0f, 0f), "", requireSight: true, EasingType.SineOut, 0.05f, parent: this);
+        RoguemojiGame.Instance.AddFloater(thing.DisplayIcon, GridPos, 0.6f, CurrentLevelId, new Vector2(0f, -8f), new Vector2(0f, 0f), height: 0f, text: "", requireSight: true, EasingType.SineOut, 0.05f, parent: this);
 
         EquippedThings.Remove(thing);
 

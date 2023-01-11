@@ -402,20 +402,20 @@ public partial class RoguemojiGame : GameManager
         return thing;
     }
 
-    public void AddFloater(string icon, IntVector gridPos, float time, LevelId levelId, Vector2 offsetStart, Vector2 offsetEnd, string text = "", bool requireSight = true, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, Thing parent = null)
+    public void AddFloater(string icon, IntVector gridPos, float time, LevelId levelId, Vector2 offsetStart, Vector2 offsetEnd, float height = 0f, string text = "", bool requireSight = true, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, Thing parent = null)
     {
 		foreach(var player in Players)
 		{
 			if (player.CurrentLevelId == levelId)
-                AddFloaterClient(To.Single(player), icon, gridPos.x, gridPos.y, time, offsetStart, offsetEnd, text, requireSight, offsetEasingType, fadeInTime, scale, (parent != null) ? parent.NetworkIdent : -1);
+                AddFloaterClient(To.Single(player), icon, gridPos.x, gridPos.y, time, offsetStart, offsetEnd, height, text, requireSight, offsetEasingType, fadeInTime, scale, (parent != null) ? parent.NetworkIdent : -1);
 		}
     }
 
     [ClientRpc]
-    public void AddFloaterClient(string icon, int x, int y, float time, Vector2 offsetStart, Vector2 offsetEnd, string text = "", bool requireSight = true, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, int parentIdent = -1)
+    public void AddFloaterClient(string icon, int x, int y, float time, Vector2 offsetStart, Vector2 offsetEnd, float height = 0f, string text = "", bool requireSight = true, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, int parentIdent = -1)
     {
         Thing parent = (parentIdent == -1) ? null : Entity.FindByIndex(parentIdent) as Thing;
-        Hud.Instance.AddFloater(icon, new IntVector(x, y), time, offsetStart, offsetEnd, text, requireSight, offsetEasingType, fadeInTime, scale, parent);
+        Hud.Instance.AddFloater(icon, new IntVector(x, y), time, offsetStart, offsetEnd, height, text, requireSight, offsetEasingType, fadeInTime, scale, parent);
     }
 
     public void RemoveFloater(string icon, LevelId levelId, Thing parent = null)

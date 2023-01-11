@@ -26,8 +26,7 @@ public partial class Peach : Thing
     public override void Use(Thing user)
     {
         int amountGained = Math.Min(EatCharisma, user.GetStatMax(StatType.Charisma) - user.GetStatClamped(StatType.Charisma));
-        RoguemojiGame.Instance.AddFloater(GetStatIcon(StatType.Charisma), user.GridPos, 1.2f, user.CurrentLevelId, new Vector2(0f, 1f), new Vector2(0f, -6f), $"+{amountGained}", requireSight: true, EasingType.SineOut, 0.25f, parent: user);
-
+        RoguemojiGame.Instance.AddFloater(GetStatIcon(StatType.Charisma), GridPos, 1.33f, CurrentLevelId, new Vector2(Game.Random.Float(-7f, 7f), Game.Random.Float(-1f, 10f)), new Vector2(Game.Random.Float(-10f, 10f), Game.Random.Float(0f, -10f)), height: Game.Random.Float(10f, 35f), text: $"+{amountGained}", requireSight: true, EasingType.Linear, fadeInTime: 0.1f, scale: 0.85f, parent: user);
         user.AdjustStat(StatType.Charisma, EatCharisma);
         Destroy();
 
