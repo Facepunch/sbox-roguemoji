@@ -22,7 +22,7 @@ public partial class BookBlink : Thing
         IconDepth = 0;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
 
-        SetTattoo(Globals.Icon(IconType.Blink), scale: 0.5f, offset: new Vector2(0.5f, -2f), offsetWielded: new Vector2(0f, -2f), offsetInfo: new Vector2(1f, -1f), offsetCharWielded: new Vector2(2f, -4f), offsetInfoWielded: new Vector2(-1f, -2f));
+        SetTattoo(Globals.Icon(IconType.Blink), scale: 0.5f, offset: new Vector2(0.5f, -6f), offsetWielded: new Vector2(0f, -2f), offsetInfo: new Vector2(1f, -1f), offsetCharWielded: new Vector2(0.5f, -8f), offsetInfoWielded: new Vector2(-1f, -2f));
 
         if (Game.IsServer)
         {

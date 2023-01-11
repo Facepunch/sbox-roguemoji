@@ -11,15 +11,15 @@ public partial class PotionMana : Thing
     public int ManaAmount { get; private set; }
 
     public PotionMana()
-	{
-		DisplayIcon = "🧉";
+    {
+        DisplayIcon = "🧉";
         DisplayName = "Mana Potion";
         Description = "Recover some mana";
         Tooltip = "A mana potion";
         IconDepth = 0;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
-        SetTattoo(GetStatIcon(StatType.Mana), scale: 0.475f, offset: new Vector2(-0.85f, 6.5f), offsetWielded: new Vector2(-1.5f, 4f), offsetInfo: new Vector2(-4f, 16f), offsetCharWielded: new Vector2(-0.9f, 9.5f), offsetInfoWielded: new Vector2(-4f, 7f));
+        SetTattoo(GetStatIcon(StatType.Mana), scale: 0.475f, offset: new Vector2(-0.8585f, 4f), offsetWielded: new Vector2(-1.5f, 4f), offsetInfo: new Vector2(-4f, 16f), offsetCharWielded: new Vector2(-2f, 6f), offsetInfoWielded: new Vector2(-4f, 7f));
 
         if (Game.IsServer)
         {
