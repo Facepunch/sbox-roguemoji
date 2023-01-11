@@ -57,6 +57,7 @@ public partial class RoguemojiGame : GameManager
     [Net] public IDictionary<LevelId, Level> Levels { get; private set; }
 
     [Net] public IList<string> UnidentifiedScrollSymbols { get; private set; }
+    [Net] public IList<string> UnidentifiedScrollNames { get; private set; }
 
     public RoguemojiGame()
 	{
@@ -68,6 +69,8 @@ public partial class RoguemojiGame : GameManager
             CreateLevel(LevelId.Forest0);
             UnidentifiedScrollSymbols = new List<string>() { "🈁", "🈂️", "🈷️", "🈶", "🈯️", "🈹", "🈚️", "🈲", "🈸", "🈴", "🈳", "🈺", "🈵" };
             UnidentifiedScrollSymbols.Shuffle();
+            UnidentifiedScrollNames = new List<string>() { "WYZ'LOK", "MYR'KLYN", "PHYZGRYF", "XORPHYX", "GRYFAD", "RYXORK", "ORAXUM", "ZORKOZAL", "KLYNX", "QYN", "ARPHYNY", "LUZ'ROKLUM", "YNDRYNY", "PYG'JYG", "BRAX'PHY", "FEN'XOR", "CIRXYX" };
+            UnidentifiedScrollNames.Shuffle();
         }
 
 		if (Game.IsClient)
@@ -80,6 +83,11 @@ public partial class RoguemojiGame : GameManager
     public string GetUnidentifiedScrollIcon(ScrollType scrollType)
     {
         return UnidentifiedScrollSymbols[(int)scrollType];
+    }
+
+    public string GetUnidentifiedScrollName(ScrollType scrollType)
+    {
+        return UnidentifiedScrollNames[(int)scrollType];
     }
 
     [Event.Tick.Server]
@@ -316,6 +324,7 @@ public partial class RoguemojiGame : GameManager
 	public void Restart()
 	{
         UnidentifiedScrollSymbols.Shuffle();
+        UnidentifiedScrollNames.Shuffle();
 
         foreach (var pair in Levels)
 			pair.Value.Restart();

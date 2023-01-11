@@ -55,7 +55,7 @@
 }
 
 <root class="cell_tooltip @GetEquipmentClass()">
-    @(Thing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? Scroll.UnidentifiedTooltip : Thing.Tooltip)
+    @(Thing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? $"A scroll of {RoguemojiGame.Instance.GetUnidentifiedScrollName(scroll.ScrollType)}" : Thing.Tooltip)
 
     @if (Thing != null && ShowPickUpKey)
     {

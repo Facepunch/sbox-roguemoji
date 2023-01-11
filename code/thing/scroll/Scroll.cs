@@ -10,10 +10,6 @@ public partial class Scroll : Thing
 {
     [Net] public ScrollType ScrollType { get; protected set; }
 
-    public static string UnidentifiedDisplayName => "Scroll of ???";
-    public static string UnidentifiedDescription => "An unknown scroll";
-    public static string UnidentifiedTooltip => "A scroll of ???";
-
     public Scroll()
     {
         DisplayIcon = "📜";

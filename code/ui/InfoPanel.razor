@@ -99,7 +99,7 @@
 
      <div class="selected_info">
         <div class="name_label"> 
-            @(SelectedThing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? Scroll.UnidentifiedDisplayName : SelectedThing.DisplayName)
+            @(SelectedThing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? $"Scroll of {RoguemojiGame.Instance.GetUnidentifiedScrollName(scroll.ScrollType)}" : SelectedThing.DisplayName)
         </div>
 
         @if (SelectedThing.HasFlag(ThingFlags.Equipment))
@@ -142,7 +142,7 @@
         @if (!string.IsNullOrEmpty(SelectedThing.Description)) 
         { 
             <div class="info_description_label">
-                @(SelectedThing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? Scroll.UnidentifiedDescription : SelectedThing.Description)
+                @(SelectedThing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? $"An unidentified scroll" : SelectedThing.Description)
             </div>
         }
     </div>
