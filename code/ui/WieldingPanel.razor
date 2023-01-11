@@ -94,8 +94,7 @@
 </style>
 
 @{
-    var player = RoguemojiGame.Instance.LocalPlayer;
-    var wieldedThing = player.WieldedThing;
+    var wieldedThing = RoguemojiGame.Instance.LocalPlayer.WieldedThing;
 }
 
 <root class="wielding @GetWieldingClass(wieldedThing)" style="border-color: @(wieldedThing == null || !wieldedThing.HasFlag(ThingFlags.Useable) ? "#303030" : "#777777");">
@@ -114,7 +113,7 @@
             int fontSize = MathX.FloorToInt(48f * wieldedThing.TattooData.Scale);
             var offset = wieldedThing.TattooData.OffsetCharWielded;
             <div class="wielding_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                @(wieldedThing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? RoguemojiGame.Instance.GetUnidentifiedScrollIcon(scroll.ScrollType) : wieldedThing.TattooData.Icon)
+                @(Hud.GetTattooIcon(wieldedThing))
             </div>
         }
 

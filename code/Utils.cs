@@ -386,6 +386,14 @@ public static class Utils
         }
     }
 
+    public static string FirstCharToUpper(this string input) =>
+        input switch
+        {
+            null => throw new ArgumentNullException(nameof(input)),
+            "" => throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input)),
+            _ => string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1))
+        };
+
     private class NodeInfo<T>
     {
         private const int MaxPoolSize = 8192;

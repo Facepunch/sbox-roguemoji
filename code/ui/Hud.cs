@@ -335,6 +335,24 @@ public partial class Hud : RootPanel
         return "";
     }
 
+    public static string GetTattooIcon(Thing thing)
+    {
+        var player = RoguemojiGame.Instance.LocalPlayer;
+
+        if (thing is Scroll scroll)
+        {
+            if (!player.IsScrollTypeIdentified(scroll.ScrollType))
+                return RoguemojiGame.Instance.GetUnidentifiedScrollIcon(scroll.ScrollType);
+        }
+        else if (thing is Potion potion)
+        {
+            if (!player.IsPotionTypeIdentified(potion.PotionType))
+                return RoguemojiGame.Instance.GetUnidentifiedPotionIcon(potion.PotionType);
+        }
+
+        return thing.TattooData.Icon;
+    }
+
     public void AddFloater(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, string text = "", bool requireSight = true, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, Thing parent = null)
     {
         Floaters.Add(new FloaterData(icon, gridPos, time, offsetStart, offsetEnd, text, requireSight, offsetEasingType, fadeInTime, scale, parent));

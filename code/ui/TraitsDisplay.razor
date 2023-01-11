@@ -19,10 +19,6 @@
     }
 </style>
 
-@{
-    var player = RoguemojiGame.Instance.LocalPlayer;
-}
-
 <root class="traits">
     @if(Thing == null)
     {
@@ -31,7 +27,7 @@
     
     @foreach(var trait in Thing.Traits)
     {
-        if (Thing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) && string.IsNullOrEmpty(trait.TraitName))
+        if(ShouldSkipTrait(Thing, trait))
             continue;
 
         <TraitContainer Trait=@trait></TraitContainer>    
@@ -48,5 +44,12 @@
             return 0;
 
         return HashCode.Combine( Thing.TraitHash );
+    }
+
+    bool ShouldSkipTrait(Thing thing, Trait trait)
+    {
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        bool isUnid = (Thing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType)) || (Thing is Potion potion && !player.IsPotionTypeIdentified(potion.PotionType));
+        return (isUnid && string.IsNullOrEmpty(trait.TraitName));
     }
 }

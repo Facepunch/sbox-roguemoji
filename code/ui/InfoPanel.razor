@@ -87,10 +87,6 @@
     }
 </style>
 
-@{
-    var player = RoguemojiGame.Instance.LocalPlayer;
-}
-
 <root class="info @GetSelectedClass()">
     @if(SelectedThing == null)
     {
@@ -99,7 +95,7 @@
 
      <div class="selected_info">
         <div class="name_label"> 
-            @(SelectedThing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? $"Scroll of {RoguemojiGame.Instance.GetUnidentifiedScrollName(scroll.ScrollType)}" : SelectedThing.DisplayName)
+            @(GetName(SelectedThing))
         </div>
 
         @if (SelectedThing.HasFlag(ThingFlags.Equipment))
@@ -117,7 +113,7 @@
                 int fontSize = MathX.FloorToInt(55f * SelectedThing.TattooData.Scale);
                 var offset = SelectedThing.TattooData.OffsetInfo;
                 <div class="info_panel_tattoo" style="width: 64px; height: 64px; font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                    @(SelectedThing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? RoguemojiGame.Instance.GetUnidentifiedScrollIcon(scroll.ScrollType) : SelectedThing.TattooData.Icon)
+                    @(Hud.GetTattooIcon(SelectedThing))
                 </div>
             }
 
@@ -132,7 +128,7 @@
                         int fontSize = MathX.FloorToInt(32f * wieldedThing.TattooData.Scale);
                         var offset = wieldedThing.TattooData.OffsetInfoWielded;
                         <div class="info_panel_tattoo" style="width: 40px; height: 40px; font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                            @(wieldedThing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? RoguemojiGame.Instance.GetUnidentifiedScrollIcon(scroll.ScrollType) : wieldedThing.TattooData.Icon)
+                            @(Hud.GetTattooIcon(wieldedThing))
                         </div>
                     }
                 </div> 
@@ -142,13 +138,20 @@
         @if (!string.IsNullOrEmpty(SelectedThing.Description)) 
         { 
             <div class="info_description_label">
-                @(SelectedThing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? $"An unidentified scroll" : SelectedThing.Description)
+                @(GetDescription(SelectedThing))
             </div>
         }
     </div>
 
-    @if (SelectedThing.HasStats) { <StatsDisplay Thing=@SelectedThing></StatsDisplay>     }
-    @if (SelectedThing.Traits != null && SelectedThing.Traits.Count > 0) { <TraitsDisplay Thing=@SelectedThing></TraitsDisplay>     }
+    @if (SelectedThing.HasStats) 
+    { 
+        <StatsDisplay Thing=@SelectedThing></StatsDisplay>     
+    }
+
+    @if (SelectedThing.Traits != null && SelectedThing.Traits.Count > 0) 
+    { 
+        <TraitsDisplay Thing=@SelectedThing></TraitsDisplay> 
+    }
 </root>
 
 @code
@@ -163,6 +166,42 @@
     string GetPlayerClass()
     {
         return SelectedThing.PlayerNum > 0 ? $"icon-player-{SelectedThing.PlayerNum}" : "";
+    }
+
+    string GetName(Thing thing)
+    {
+        var player = RoguemojiGame.Instance.LocalPlayer;
+
+        if (thing is Scroll scroll)
+        {
+            if (!player.IsScrollTypeIdentified(scroll.ScrollType))
+                return $"Scroll of {RoguemojiGame.Instance.GetUnidentifiedScrollName(scroll.ScrollType)}";
+        }
+        else if (thing is Potion potion)
+        {
+            if (!player.IsPotionTypeIdentified(potion.PotionType))
+                return $"{RoguemojiGame.Instance.GetUnidentifiedPotionName(potion.PotionType).FirstCharToUpper()} Potion";
+        }
+
+        return thing.DisplayName;
+    }
+
+    string GetDescription(Thing thing)
+    {
+        var player = RoguemojiGame.Instance.LocalPlayer;
+
+        if (thing is Scroll scroll)
+        {
+            if (!player.IsScrollTypeIdentified(scroll.ScrollType))
+                return $"An unidentified scroll";
+        }
+        else if (thing is Potion potion)
+        {
+            if (!player.IsPotionTypeIdentified(potion.PotionType))
+                return $"An unidentified potion";
+        }
+
+        return thing.Description;
     }
 
     protected override int BuildHash()

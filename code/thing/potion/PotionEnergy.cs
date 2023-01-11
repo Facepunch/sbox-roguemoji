@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Roguemoji;
-public partial class PotionEnergy : Thing
+public partial class PotionEnergy : Potion
 {
     public override string ChatDisplayIcons => $"🧉{GetStatIcon(StatType.Energy)}";
     public override string AbilityName => "Quaff Potion";
@@ -12,12 +12,12 @@ public partial class PotionEnergy : Thing
 
     public PotionEnergy()
     {
-        DisplayIcon = "🧉";
+        PotionType = PotionType.Energy;
+        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
+
         DisplayName = "Energy Potion";
         Description = "Recover some energy";
         Tooltip = "An energy potion";
-        IconDepth = 0;
-        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         SetTattoo(GetStatIcon(StatType.Energy), scale: 0.475f, offset: new Vector2(-0.8585f, 4f), offsetWielded: new Vector2(-1.5f, 4f), offsetInfo: new Vector2(-4f, 16f), offsetCharWielded: new Vector2(-2f, 6f), offsetInfoWielded: new Vector2(-4f, 7f));
 

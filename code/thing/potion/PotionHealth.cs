@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Roguemoji;
-public partial class PotionHealth : Thing
+public partial class PotionHealth : Potion
 {
     public override string ChatDisplayIcons => $"🧉{GetStatIcon(StatType.Health)}";
     public override string AbilityName => "Quaff Potion";
@@ -12,13 +12,13 @@ public partial class PotionHealth : Thing
 
     public PotionHealth()
     {
-        DisplayIcon = "🧉";
+        PotionType = PotionType.Health;
+        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
+
         DisplayName = "Health Potion";
         Description = "Recover some health";
         Tooltip = "A health potion";
-        IconDepth = 0;
-        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
-
+        
         SetTattoo(GetStatIcon(StatType.Health), scale: 0.475f, offset: new Vector2(-0.8585f, 4f), offsetWielded: new Vector2(-1.5f, 4f), offsetInfo: new Vector2(-4f, 16f), offsetCharWielded: new Vector2(-2f, 6f), offsetInfoWielded: new Vector2(-4f, 7f));
 
         if (Game.IsServer)

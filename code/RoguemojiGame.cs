@@ -58,6 +58,8 @@ public partial class RoguemojiGame : GameManager
 
     [Net] public IList<string> UnidentifiedScrollSymbols { get; private set; }
     [Net] public IList<string> UnidentifiedScrollNames { get; private set; }
+    [Net] public IList<string> UnidentifiedPotionSymbols{ get; private set; }
+    [Net] public IList<string> UnidentifiedPotionNames { get; private set; }
 
     public RoguemojiGame()
 	{
@@ -67,10 +69,16 @@ public partial class RoguemojiGame : GameManager
 		{
             Levels = new Dictionary<LevelId, Level>();
             CreateLevel(LevelId.Forest0);
-            UnidentifiedScrollSymbols = new List<string>() { "🈁", "🈂️", "🈷️", "🈶", "🈯️", "🈹", "🈚️", "🈲", "🈸", "🈴", "🈳", "🈺", "🈵" };
+
+            UnidentifiedScrollSymbols = new List<string>() { "🈁", "🈂️", "🈷️", "🈯️", "🈹", "🈳", "🈚️", "🈸", "🈴", }; // 🈶 🈺 🈵
             UnidentifiedScrollSymbols.Shuffle();
             UnidentifiedScrollNames = new List<string>() { "WYZ'LOK", "MYR'KLYN", "PHYZGRYF", "XORPHYX", "GRYFAD", "RYXORK", "ORAXUM", "ZORKOZAL", "KLYNX", "QYN", "ARPHYNY", "LUZ'ROKLUM", "YNDRYNY", "PYG'JYG", "BRAX'PHY", "FEN'XOR", "CIRXYX" };
             UnidentifiedScrollNames.Shuffle();
+
+            UnidentifiedPotionSymbols = new List<string>() { "🉑", "🉐", "Ⓜ️", "⚪️", "🟤", "🔘", "⭕️", "🧿", "🌐", "🌓" }; // ㊗️ ㊙️
+            UnidentifiedPotionSymbols.Shuffle();
+            UnidentifiedPotionNames = new List<string>() { "cloudy", "misty", "murky", "sparkling", "fizzy", "bubbly", "smoky", "congealed", "chalky", "radiant", "milky", "thick", "pasty", "glossy", "dull", "dusty", "syrupy", "foul-smelling", "pungent", "viscous", "sludgy", "pale", "filmy" };
+            UnidentifiedPotionNames.Shuffle();
         }
 
 		if (Game.IsClient)
@@ -80,15 +88,10 @@ public partial class RoguemojiGame : GameManager
         }
 	}
 
-    public string GetUnidentifiedScrollIcon(ScrollType scrollType)
-    {
-        return UnidentifiedScrollSymbols[(int)scrollType];
-    }
-
-    public string GetUnidentifiedScrollName(ScrollType scrollType)
-    {
-        return UnidentifiedScrollNames[(int)scrollType];
-    }
+    public string GetUnidentifiedScrollIcon(ScrollType scrollType) { return UnidentifiedScrollSymbols[(int)scrollType]; }
+    public string GetUnidentifiedScrollName(ScrollType scrollType) { return UnidentifiedScrollNames[(int)scrollType]; }
+    public string GetUnidentifiedPotionIcon(PotionType potionType) { return UnidentifiedPotionSymbols[(int)potionType]; }
+    public string GetUnidentifiedPotionName(PotionType potionType) { return UnidentifiedPotionNames[(int)potionType]; }
 
     [Event.Tick.Server]
 	public void ServerTick()
@@ -325,6 +328,8 @@ public partial class RoguemojiGame : GameManager
 	{
         UnidentifiedScrollSymbols.Shuffle();
         UnidentifiedScrollNames.Shuffle();
+        UnidentifiedPotionSymbols.Shuffle();
+        UnidentifiedPotionNames.Shuffle();
 
         foreach (var pair in Levels)
 			pair.Value.Restart();

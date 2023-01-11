@@ -35,6 +35,7 @@ public partial class RoguemojiPlayer : Thing
     public HashSet<IntVector> AimingCells { get; set; } // Client-only
 
     [Net] public IList<ScrollType> IdentifiedScrollTypes { get; private set; }
+    [Net] public IList<PotionType> IdentifiedPotionTypes { get; private set; }
 
     public RoguemojiPlayer()
 	{
@@ -57,6 +58,7 @@ public partial class RoguemojiPlayer : Thing
             EquipmentGridManager.OwningPlayer = this;
 
             IdentifiedScrollTypes = new List<ScrollType>();
+            IdentifiedPotionTypes = new List<PotionType>();
             SetStartingValues();
         }
         else
@@ -95,6 +97,7 @@ public partial class RoguemojiPlayer : Thing
         CameraFade = 0f;
         IsInTransit = false;
         IdentifiedScrollTypes.Clear();
+        IdentifiedPotionTypes.Clear();
 
         ClearStats();
         InitStat(StatType.Health, 10, 0, 10);
@@ -1140,6 +1143,21 @@ public partial class RoguemojiPlayer : Thing
     public bool IsScrollTypeIdentified(ScrollType scrollType)
     {
         return IdentifiedScrollTypes.Contains(scrollType);
+    }
+
+    public void IdentifyPotion(Potion potion)
+    {
+        if (!IdentifiedPotionTypes.Contains(potion.PotionType))
+        {
+            IdentifiedPotionTypes.Add(potion.PotionType);
+            RoguemojiGame.Instance.AddFloater("💡", GridPos, 1f, CurrentLevelId, new Vector2(0f, -10f), new Vector2(0f, -30f), text: "", requireSight: false, EasingType.QuadOut, 0.5f, parent: this);
+            RoguemojiGame.Instance.LogMessageClient(To.Single(this), $"💡 You identified {potion.DisplayName} {potion.ChatDisplayIcons}", playerNum: 0);
+        }
+    }
+
+    public bool IsPotionTypeIdentified(PotionType potionType)
+    {
+        return IdentifiedPotionTypes.Contains(potionType);
     }
 }
 

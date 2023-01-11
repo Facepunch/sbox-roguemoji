@@ -50,12 +50,8 @@
     }
 </style>
 
-@{
-    var player = RoguemojiGame.Instance.LocalPlayer;
-}
-
 <root class="cell_tooltip @GetEquipmentClass()">
-    @(Thing is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType) ? $"A scroll of {RoguemojiGame.Instance.GetUnidentifiedScrollName(scroll.ScrollType)}" : Thing.Tooltip)
+    @(GetTooltip(Thing))
 
     @if (Thing != null && ShowPickUpKey)
     {
@@ -73,4 +69,22 @@
     public bool ShowPickUpKey { get; set; }
 
     string GetEquipmentClass() { return Thing != null && Thing.HasFlag(ThingFlags.Equipment) ? "equipment_tooltip" : ""; }
+
+    string GetTooltip(Thing thing)
+    {
+        var player = RoguemojiGame.Instance.LocalPlayer;
+
+        if(thing is Scroll scroll)
+        {
+            if (!player.IsScrollTypeIdentified(scroll.ScrollType))
+                return $"A scroll of {RoguemojiGame.Instance.GetUnidentifiedScrollName(scroll.ScrollType)}";
+        }
+        else if(thing is Potion potion)
+        {
+            if (!player.IsPotionTypeIdentified(potion.PotionType))
+                return $"A {RoguemojiGame.Instance.GetUnidentifiedPotionName(potion.PotionType)} potion";
+        }
+
+        return thing.Tooltip;
+    }
 }
