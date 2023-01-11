@@ -65,4 +65,5 @@ public abstract class ThingComponent
     public virtual void OnPlayerChangedGridPos(RoguemojiPlayer player) { }
     public virtual void OnRemove() { }
     public virtual void OnThingDestroyed() { }
+    public virtual void OnThingDied() { }
 }

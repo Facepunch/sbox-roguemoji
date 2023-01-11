@@ -138,6 +138,8 @@ public partial class RoguemojiPlayer : Thing
         base.Restart();
 
         SetStartingValues();
+        ThingComponents.Clear();
+        Acting = AddComponent<CActing>();
         Acting.ActionDelay = _startingActionDelay;
         Acting.IsActionReady = false;
     }
@@ -152,7 +154,8 @@ public partial class RoguemojiPlayer : Thing
             case 2: InventoryGridManager.SpawnThing<Nut>(gridPos); break;
             case 3: InventoryGridManager.SpawnThing<Mushroom>(gridPos); break;
             case 4: InventoryGridManager.SpawnThing<Trumpet>(gridPos); break;
-            case 5: InventoryGridManager.SpawnThing<Bouquet>(gridPos); break;
+            //case 5: InventoryGridManager.SpawnThing<Bouquet>(gridPos); break;
+            case 5: InventoryGridManager.SpawnThing<PotionPoison>(gridPos); break;
             case 6: InventoryGridManager.SpawnThing<Cheese>(gridPos); break;
             //case 7: InventoryGridManager.SpawnThing<Coat>(gridPos); break;
             case 7: InventoryGridManager.SpawnThing<ScrollTelekinesis>(gridPos); break;
@@ -523,6 +526,8 @@ public partial class RoguemojiPlayer : Thing
         IsDead = true;
         StopAiming();
         SetIcon("😑");
+
+        OnDied();
     }
 
     public void PickUpTopItem()

@@ -43,7 +43,7 @@ public partial class Trait : Entity
 
     public void SetLabel(string text, int fontSize, Vector2 offset, Color color)
     {
-        HasLabel = true;
+        HasLabel = !string.IsNullOrEmpty(text);
         LabelText = text;
         LabelFontSize = fontSize;
         LabelOffset = offset;

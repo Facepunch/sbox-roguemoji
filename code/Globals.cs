@@ -6,7 +6,7 @@ using Sandbox;
 
 namespace Roguemoji;
 
-public enum IconType { Blink, Teleport, Fear, Telekinesis }
+public enum IconType { Blink, Teleport, Fear, Telekinesis, Poison }
 public enum VerbType { Use, Read }
 
 public static class Globals
@@ -19,6 +19,7 @@ public static class Globals
             case IconType.Teleport: return "➰";
             case IconType.Fear: return "😱";
             case IconType.Telekinesis: return "🙌";
+            case IconType.Poison: return "☠️";
         }
 
         return "❓";

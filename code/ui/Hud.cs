@@ -24,9 +24,10 @@ public struct FloaterData
     public EasingType offsetEasingType;
     public float fadeInTime;
     public float scale;
+    public float opacity;
     public Thing parent;
 
-    public FloaterData(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height, string text, bool requireSight, EasingType offsetEasingType, float fadeInTime, float scale, Thing parent)
+    public FloaterData(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height, string text, bool requireSight, EasingType offsetEasingType, float fadeInTime, float scale, float opacity, Thing parent)
     {
         this.icon = icon;
         this.gridPos = gridPos;
@@ -40,6 +41,7 @@ public struct FloaterData
         this.offsetEasingType = offsetEasingType;
         this.fadeInTime = fadeInTime;
         this.scale = scale;
+        this.opacity = opacity;
         this.parent = parent;
     }
 }
@@ -355,9 +357,9 @@ public partial class Hud : RootPanel
         return thing.TattooData.Icon;
     }
 
-    public void AddFloater(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height, string text = "", bool requireSight = true, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, Thing parent = null)
+    public void AddFloater(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height, string text = "", bool requireSight = true, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, Thing parent = null)
     {
-        Floaters.Add(new FloaterData(icon, gridPos, time, offsetStart, offsetEnd, height, text, requireSight, offsetEasingType, fadeInTime, scale, parent));
+        Floaters.Add(new FloaterData(icon, gridPos, time, offsetStart, offsetEnd, height, text, requireSight, offsetEasingType, fadeInTime, scale, opacity, parent));
     }
 
     public void RemoveFloater(string icon, Thing parent = null)

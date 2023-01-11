@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public enum PotionType { Health, Mana, Energy }
+public enum PotionType { Health, Mana, Energy, Poison }
 public partial class Potion : Thing
 {
     [Net] public PotionType PotionType { get; protected set; }
