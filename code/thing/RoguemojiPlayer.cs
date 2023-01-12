@@ -64,6 +64,8 @@ public partial class RoguemojiPlayer : Thing
         else
         {
             VisibleCells = new HashSet<IntVector>();
+            SeenCells = new Dictionary<LevelId, HashSet<IntVector>>();
+            SeenThings = new Dictionary<LevelId, Dictionary<IntVector, List<SeenThingData>>>();
             AimingCells = new HashSet<IntVector>();
 
             WieldedThingOffset = new Vector2(20f, 17f);
@@ -137,11 +139,20 @@ public partial class RoguemojiPlayer : Thing
     {
         base.Restart();
 
+        RestartClient();
+
         SetStartingValues();
         ThingComponents.Clear();
         Acting = AddComponent<CActing>();
         Acting.ActionDelay = _startingActionDelay;
         Acting.IsActionReady = false;
+    }
+
+    [ClientRpc]
+    public void RestartClient()
+    {
+        SeenCells.Clear();
+        SeenThings.Clear();
     }
 
     void SpawnRandomInventoryThing(IntVector gridPos)

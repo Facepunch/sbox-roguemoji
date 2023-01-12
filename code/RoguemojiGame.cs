@@ -94,20 +94,21 @@ public partial class RoguemojiGame : GameManager
     public string GetUnidentifiedPotionIcon(PotionType potionType) { return UnidentifiedPotionSymbols[(int)potionType]; }
     public string GetUnidentifiedPotionName(PotionType potionType) { return UnidentifiedPotionNames[(int)potionType]; }
 
+    HashSet<LevelId> _occupiedLevelIds = new HashSet<LevelId>();
+
     [Event.Tick.Server]
 	public void ServerTick()
 	{
 		float dt = Time.Delta;
 
-		HashSet<LevelId> occupiedLevelIds = new();
-
-		foreach(RoguemojiPlayer player in Players)
+        _occupiedLevelIds.Clear();
+        foreach (RoguemojiPlayer player in Players)
 		{
 			if(player != null && player.IsValid)
-				occupiedLevelIds.Add(player.CurrentLevelId);
+                _occupiedLevelIds.Add(player.CurrentLevelId);
 		}
 
-		foreach(var levelId in occupiedLevelIds)
+		foreach(var levelId in _occupiedLevelIds)
 		{
 			Level level = Levels[levelId];
 			level.Update(dt);

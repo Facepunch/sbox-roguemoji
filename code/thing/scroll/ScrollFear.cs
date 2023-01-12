@@ -18,7 +18,7 @@ public partial class ScrollFear : Scroll
         Description = "Scare all enemies near you";
         Tooltip = "A scroll of Fear";
 
-        SetTattoo(Globals.Icon(IconType.Fear), scale: 0.5f, offset: new Vector2(1f, -2f), offsetWielded: new Vector2(0f, 0.3f), offsetInfo: new Vector2(8f, 5f), offsetCharWielded: new Vector2(0.5f, -2.5f), offsetInfoWielded: new Vector2(3f, 2f));
+        SetTattoo(Globals.Icon(IconType.Fear));
 
         if (Game.IsServer)
         {

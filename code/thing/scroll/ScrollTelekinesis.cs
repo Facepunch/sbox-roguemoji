@@ -18,7 +18,7 @@ public partial class ScrollTelekinesis : Scroll
         Description = "Pull target with your mind";
         Tooltip = "A scroll of Telekinesis";
 
-        SetTattoo(Globals.Icon(IconType.Telekinesis), scale: 0.5f, offset: new Vector2(1f, -2f), offsetWielded: new Vector2(0f, 0.3f), offsetInfo: new Vector2(8f, 5f), offsetCharWielded: new Vector2(0.5f, -2.5f), offsetInfoWielded: new Vector2(3f, 2f));
+        SetTattoo(Globals.Icon(IconType.Telekinesis));
 
         if (Game.IsServer)
         {

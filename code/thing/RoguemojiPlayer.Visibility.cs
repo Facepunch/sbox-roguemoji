@@ -2,22 +2,130 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 namespace Roguemoji;
+
+public class SeenThingData
+{
+    public string icon;
+    public TattooData tattooData;
+    public bool hasWieldedThing;
+    public string wieldedThingIcon;
+    public Vector2 wieldedThingOffset;
+    public int wieldedThingFontSize;
+    public TattooData wieldedThingTattooData;
+    public int zIndex;
+    public bool isSolid;
+    public int playerNum;
+}
 
 public partial class RoguemojiPlayer : Thing
 {
     public HashSet<IntVector> VisibleCells { get; set; } // Client-only
+    public Dictionary<LevelId, HashSet<IntVector>> SeenCells { get; set; } // Client-only
+    public Dictionary<LevelId, Dictionary<IntVector, List<SeenThingData>>> SeenThings { get; set; } // Client-only
+
+    private HashSet<IntVector> _wasVisible = new HashSet<IntVector>();
 
     [ClientRpc]
     public void RefreshVisibility()
     {
+        if (!SeenCells.ContainsKey(CurrentLevelId))
+            SeenCells.Add(CurrentLevelId, new HashSet<IntVector>());
+
+        if (!SeenThings.ContainsKey(CurrentLevelId))
+            SeenThings.Add(CurrentLevelId, new Dictionary<IntVector, List<SeenThingData>>());
+
+        _wasVisible.Clear();
+
+        // add the visible cells before updating visibility
+        foreach (var gridPos in VisibleCells)
+            _wasVisible.Add(gridPos);
+
         ComputeVisibility(GridPos, rangeLimit: GetStatClamped(StatType.Sight));
+
+        //// add the visible cells again afterwards to include the new ones
+        //foreach (var gridPos in VisibleCells)
+        //    _seenCells.Add(gridPos);
+
+        foreach (var gridPos in _wasVisible.Except(VisibleCells))
+            SaveSeenData(gridPos);
+    }
+
+    void SaveSeenData(IntVector gridPos)
+    {
+        SeenCells[CurrentLevelId].Add(gridPos);
+
+        if (!SeenThings[CurrentLevelId].ContainsKey(gridPos))
+            SeenThings[CurrentLevelId][gridPos] = new List<SeenThingData>();
+
+        SeenThings[CurrentLevelId][gridPos].Clear();
+
+        var things = ContainingGridManager.GetThingsAtClient(gridPos).OrderBy(x => x.GetZPos());
+        foreach (var thing in things)
+        {
+            var seenData = new SeenThingData()
+            {
+                icon = thing.DisplayIcon,
+                zIndex = thing.GetZPos(),
+                hasWieldedThing = thing.WieldedThing != null,
+                isSolid = thing.HasFlag(ThingFlags.Solid),
+                playerNum = thing.PlayerNum,
+            };
+
+            if (thing.HasTattoo)
+            {
+                var existingTattoo = thing.TattooData;
+                var copiedTattoo = new TattooData()
+                {
+                    Icon = Hud.GetTattooIcon(thing),
+                    Scale = existingTattoo.Scale,
+                    Offset = existingTattoo.Offset,
+                };
+
+                seenData.tattooData = copiedTattoo;
+            }
+
+            if (thing.WieldedThing != null)
+            {
+                seenData.wieldedThingIcon = thing.WieldedThing.DisplayIcon;
+
+                if (thing.WieldedThing.HasTattoo)
+                {
+                    var existingWieldedTattoo = thing.WieldedThing.TattooData;
+                    var copiedWieldedTattoo = new TattooData()
+                    {
+                        Icon = Hud.GetTattooIcon(thing.WieldedThing),
+                        Scale = existingWieldedTattoo.Scale,
+                        OffsetWielded = existingWieldedTattoo.OffsetWielded,
+                    };
+
+                    seenData.wieldedThingTattooData = copiedWieldedTattoo;
+                }
+
+                seenData.wieldedThingOffset = thing.WieldedThingOffset;
+                seenData.wieldedThingFontSize = thing.WieldedThingFontSize;
+            }
+
+            SeenThings[CurrentLevelId][gridPos].Add(seenData);
+        }
     }
 
     public bool IsCellVisible(IntVector gridPos)
     {
         return VisibleCells.Contains(gridPos);
+    }
+
+    public bool IsCellSeen(IntVector gridPos)
+    {
+        return SeenCells.ContainsKey(CurrentLevelId) && SeenCells[CurrentLevelId].Contains(gridPos);
+    }
+
+    public List<SeenThingData> GetSeenThings(IntVector gridPos)
+    {
+        if(SeenThings[CurrentLevelId].ContainsKey(gridPos))
+            return SeenThings[CurrentLevelId][gridPos];
+
+        return null;
     }
 
     public void SetCellVisible(int x, int y)

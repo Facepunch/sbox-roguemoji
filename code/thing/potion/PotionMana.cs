@@ -19,7 +19,7 @@ public partial class PotionMana : Potion
         Description = "Recover some mana";
         Tooltip = "A mana potion";
 
-        SetTattoo(GetStatIcon(StatType.Mana), scale: 0.475f, offset: new Vector2(-0.8585f, 4f), offsetWielded: new Vector2(-1.5f, 4f), offsetInfo: new Vector2(-4f, 16f), offsetCharWielded: new Vector2(-2f, 6f), offsetInfoWielded: new Vector2(-4f, 7f));
+        SetTattoo(GetStatIcon(StatType.Mana));
 
         if (Game.IsServer)
         {

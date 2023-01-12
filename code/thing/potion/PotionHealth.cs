@@ -19,7 +19,7 @@ public partial class PotionHealth : Potion
         Description = "Recover some health";
         Tooltip = "A health potion";
         
-        SetTattoo(GetStatIcon(StatType.Health), scale: 0.475f, offset: new Vector2(-0.8585f, 4f), offsetWielded: new Vector2(-1.5f, 4f), offsetInfo: new Vector2(-4f, 16f), offsetCharWielded: new Vector2(-2f, 6f), offsetInfoWielded: new Vector2(-4f, 7f));
+        SetTattoo(GetStatIcon(StatType.Health));
 
         if (Game.IsServer)
         {
