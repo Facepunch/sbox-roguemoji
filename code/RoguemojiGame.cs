@@ -33,8 +33,8 @@ public partial class RoguemojiGame : GameManager
 
 	public Hud Hud { get; private set; }
 
-	public const int ArenaPanelWidth = 29;
-	public const int ArenaPanelHeight = 19;
+	public const int ArenaPanelWidth = 27;
+	public const int ArenaPanelHeight = 17;
 
 	// todo: move to player
 	public const int InventoryWidth = 15;
