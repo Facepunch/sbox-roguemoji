@@ -90,7 +90,7 @@
         if (player == null)
             return;
 
-        RoguemojiGame.Instance.LogMessage(player.DisplayIcon + "(" + player.DisplayName + ") says: \"" + msg + "\"", player.PlayerNum);
+        RoguemojiGame.Instance.ChatMessage(player.DisplayIcon + "(" + player.DisplayName + ") says: \"" + msg + "\"", player.PlayerNum);
     }
 
     public void Unfocus()

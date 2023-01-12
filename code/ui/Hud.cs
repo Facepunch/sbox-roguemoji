@@ -7,7 +7,7 @@ using static Roguemoji.DebugDrawing;
 
 namespace Roguemoji;
 
-public enum PanelType { None, ArenaGrid, InventoryGrid, EquipmentGrid, Wielding, PlayerIcon, Log, Nearby, Info, Character, Stats, Chatbox, LevelLabel };
+public enum PanelType { None, ArenaGrid, InventoryGrid, EquipmentGrid, Wielding, PlayerIcon, Log, Nearby, Info, Character, Stats, ChatPanel, Chatbox, LevelLabel };
 public enum CursorMode { Point, Pinch, Invalid, Write, PointDown, ThumbsUp, Ok, Check, MiddleFinger, Point2, PointLeft, PointRight }
 
 public struct FloaterData
@@ -162,7 +162,7 @@ public partial class Hud : RootPanel
                 }
 			}
 
-            if(destinationPanelType == PanelType.Chatbox || destinationPanelType == PanelType.Log)
+            if(destinationPanelType == PanelType.Chatbox || destinationPanelType == PanelType.ChatPanel)
             {
                 MainPanel.Chatbox.AddIcon(DraggedThing.ChatDisplayIcons);
                 StopDragging();
@@ -237,6 +237,7 @@ public partial class Hud : RootPanel
         else if (Contains(GetRect(PanelType.PlayerIcon), pos))      return PanelType.PlayerIcon;
         else if (Contains(GetRect(PanelType.Character), pos))       return PanelType.Character;
         else if (Contains(GetRect(PanelType.Info), pos))            return PanelType.Info;
+        else if (Contains(GetRect(PanelType.ChatPanel), pos))       return PanelType.ChatPanel;
         else if (Contains(GetRect(PanelType.Chatbox), pos))         return PanelType.Chatbox;
 
         return PanelType.None;
@@ -260,6 +261,7 @@ public partial class Hud : RootPanel
             case PanelType.Wielding:        return MainPanel.CharacterPanel.WieldingPanel;
             case PanelType.PlayerIcon:      return MainPanel.CharacterPanel.PlayerIcon;
             case PanelType.Info:            return MainPanel.InfoPanel;
+            case PanelType.ChatPanel:       return MainPanel.ChatPanel;
             case PanelType.Chatbox:         return MainPanel.Chatbox;
             case PanelType.LevelLabel:      return MainPanel.ArenaPanel.LevelLabel;
         }
@@ -303,13 +305,14 @@ public partial class Hud : RootPanel
         var player = RoguemojiGame.Instance.LocalPlayer;
         var arenaPanel = GetGridPanel(GridType.Arena);
         var rect = GetRect(PanelType.ArenaGrid);
+        var logRect = GetRect(PanelType.Log);
 
         if (arenaPanel == null)
             return Vector2.Zero;
 
         //Log.Info($"GetScreenPosForArenaGridPos: {gridPos} - {(rect.TopLeft + arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset)}");
 
-        return rect.TopLeft + arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset;
+        return rect.TopLeft + arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset + new Vector2(-logRect.Width + 14, 20);
     }
 
     public string GetUnusableClass(Thing thing)

@@ -9,6 +9,8 @@
 
 <style>
     .inventory_bg {
+        width:100%;
+        height:100%;
         opacity: 0.005;
         //background-color: transparent;
         //box-shadow: 0px 0px 0px #0000ff;
@@ -16,10 +18,8 @@
         pointer-events:all;
         background-repeat: repeat;
         background-position: 0 0;
-        background-size: 80px;
+        background-size: 84px;
         border-radius:3px;
-        width:100%;
-        height:100%;
     }
 
     .number_label {
@@ -44,7 +44,7 @@
         background-color: #ffffff;
         opacity: 0.01;
         pointer-events: none;
-        height: 40px;
+        height: 42px;
         border-radius: 3px;
     }
 </style>
@@ -61,16 +61,16 @@
         return;
     }
 
-    <div class="top_row_bg" style="width: @(40 * Math.Min(GridWidth, 10) + (GridWidth > 10 ? -0.5f : 1f))px;"></div>
+    <div class="top_row_bg" style="width: @(RoguemojiGame.CellSize * Math.Min(GridWidth, 10) + (GridWidth > 10 ? -0.5f : 1f))px;"></div>
 
     @foreach(var thing in GetThings())
     {
         var index = GetIndex(thing.GridPos);
-        <GridCell style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40);" Thing=@thing GridIndex=@index />
+        <GridCell style="left: @(thing.GridPos.x * RoguemojiGame.CellSize); top: @(thing.GridPos.y * RoguemojiGame.CellSize);" Thing=@thing GridIndex=@index />
 
         if (thing == player.SelectedThing)
         {
-            <div class="selected" style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40);"></div>
+            <div class="selected" style="left: @(thing.GridPos.x * RoguemojiGame.CellSize); top: @(thing.GridPos.y * RoguemojiGame.CellSize);"></div>
         }
     }
 
@@ -78,7 +78,7 @@
     {
         var gridPos = Hud.Instance.GetGridPanel(GridType.Inventory).GetGridPos(index);
         var things = player.InventoryGridManager.GetThingsAtClient(gridPos);
-        <div class="number_label @(things.Count() == 0 ? "dimmed" : "")" style="left: @(gridPos.x * 40); top: @(gridPos.y * 40); z-index:9999;"> 
+        <div class="number_label @(things.Count() == 0 ? "dimmed" : "")" style="left: @(gridPos.x * RoguemojiGame.CellSize); top: @(gridPos.y * RoguemojiGame.CellSize); z-index:9999;"> 
             @((index + 1 == 10) ? 0 : index + 1) 
         </div>
     }

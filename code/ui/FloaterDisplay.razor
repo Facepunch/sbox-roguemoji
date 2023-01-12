@@ -19,8 +19,8 @@
 
     .floater_draw
     {
-        width: 40px;
-        height: 40px;
+        width: 42px;
+        height: 42px;
         position: absolute;
         font-size: 29px;
         color: white;
@@ -54,7 +54,7 @@
         @if (!floater.requireSight || player.IsCellVisible(floaterGridPos))
         {
             Vector2 parentOffset = floater.parent?.Offset ?? Vector2.Zero;
-            Vector2 pos = ((Hud.Instance.GetScreenPosForArenaGridPos(floaterGridPos) + parentOffset) / ScaleToScreen) + new Vector2(-20f, -20f);
+            Vector2 pos = ((Hud.Instance.GetScreenPosForArenaGridPos(floaterGridPos) + parentOffset) / ScaleToScreen) + new Vector2(-RoguemojiGame.CellSize / 2, -RoguemojiGame.CellSize / 2);
 
             float scale = floater.height > 0f ? floater.scale * Utils.MapReturn(floater.timeSinceStart, 0f, floater.time, 1f, 1.2f, EasingType.SineInOut) : floater.scale;
             float fontSize = 29f * scale;
@@ -68,7 +68,7 @@
 
                 @if(!string.IsNullOrEmpty(floater.text))
                 {
-                    <div class="floater_text" style="top: @((13f + offset.y * 1.05f) * scale)px; font-size: @(fontSize * 0.72f);"> @(floater.text) </div>
+                    <div class="floater_text" style="top: @(13f * scale)px; font-size: @(fontSize * 0.72f);"> @(floater.text) </div>
                 }
             </div>
         }

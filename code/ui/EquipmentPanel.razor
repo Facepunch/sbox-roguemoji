@@ -16,7 +16,7 @@
         pointer-events:all;
         background-repeat: repeat;
         background-position: 0 0;
-        background-size: 80px;
+        background-size: 84px;
         border-radius:3px;
         width:100%;
         height:100%;
@@ -56,7 +56,7 @@
             {
                 var index = gridManager.GetIndex(gridPos);
                 var offset = GetNothingEquippedOffset(index);
-                <div class="nothing_equipped" style="left: @(gridPos.x * 40 + offset.x); top: @(gridPos.y * 40 + offset.y);">
+                <div class="nothing_equipped" style="left: @(gridPos.x * RoguemojiGame.CellSize + offset.x); top: @(gridPos.y * RoguemojiGame.CellSize + offset.y);">
                     @(GetNothingEquippedIcon(gridManager.GetIndex(gridPos)))
                 </div>
             }
@@ -66,11 +66,11 @@
     @foreach(var thing in GetThings())
     {
         var index = GetIndex(thing.GridPos);
-        <GridCell style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40);" Thing=@thing GridIndex=@index />
+        <GridCell style="left: @(thing.GridPos.x * RoguemojiGame.CellSize); top: @(thing.GridPos.y * RoguemojiGame.CellSize);" Thing=@thing GridIndex=@index />
 
         if (thing == player.SelectedThing)
         {
-            <div class="selected" style="left: @(thing.GridPos.x * 40); top: @(thing.GridPos.y * 40);"></div>
+            <div class="selected" style="left: @(thing.GridPos.x * RoguemojiGame.CellSize); top: @(thing.GridPos.y * RoguemojiGame.CellSize);"></div>
         }
     }
 </root>

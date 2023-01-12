@@ -19,8 +19,8 @@
 
     .cursor_draw
     {
-        width: 40px;
-        height: 40px;
+        width: 42px;
+        height: 42px;
         position: absolute;
         font-size: 29px;
         color: white;
@@ -54,7 +54,7 @@
         {
             var draggingEquipment = Hud.Instance.DraggedThing.HasFlag(ThingFlags.Equipment);
 
-            if (targetPanelType == PanelType.Chatbox || targetPanelType == PanelType.Log)
+            if (targetPanelType == PanelType.Chatbox || targetPanelType == PanelType.ChatPanel)
                 return CursorMode.Write;
             else if (draggingEquipment && targetPanelType == PanelType.Wielding || !draggingEquipment && targetPanelType == PanelType.EquipmentGrid)
                 return CursorMode.Invalid;

@@ -29,12 +29,12 @@ public abstract class GridPanel : Panel
 
     public Vector2 GetCellPos(IntVector gridPos)
     {
-        return PanelPositionToScreenPosition(new Vector2(gridPos.x, gridPos.y) * 40f / ScaleFromScreen);
+        return PanelPositionToScreenPosition(new Vector2(gridPos.x, gridPos.y) * RoguemojiGame.CellSize / ScaleFromScreen);
     }
 
     public IntVector GetGridPos(Vector2 screenPos)
     {
-        float cellSize = 40f / ScaleFromScreen;
+        float cellSize = RoguemojiGame.CellSize / ScaleFromScreen;
         return new IntVector(MathX.FloorToInt(screenPos.x / cellSize), MathX.FloorToInt(screenPos.y / cellSize));
     }
 

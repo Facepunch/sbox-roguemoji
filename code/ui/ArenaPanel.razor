@@ -11,11 +11,14 @@
     .arena_panel {
         overflow: hidden;
         //justify-content: center;
+        //border: 1px solid #202020;
+        border-radius: 3px;
+        margin: 5px 5px 0 5px;
+        height: 100%;
     }
 
     .level_label {
         position: absolute;
-        //height: 40px;
         left: 2px;
         top: 2px;
         transition: opacity 0.4s ease-out;
@@ -37,7 +40,7 @@
         position:absolute;
         pointer-events:all;
         background-repeat: repeat;
-        background-size: 80px;
+        background-size: 84px;
         border-radius:3px;
         width:100%;
         height:100%;
@@ -45,16 +48,16 @@
 
     .unseen {
         position: absolute;
-        width: 40px;
-        height: 40px;
+        width: 42px;
+        height: 42px;
         background-color: #050505;
         z-index: 9999;
     }
 
     .greyed_out {
         position: absolute;
-        width: 40px;
-        height: 40px;
+        width: 42px;
+        height: 42px;
         z-index: 9999;
         filter: brightness(30%);
     }
@@ -62,8 +65,8 @@
     .seen_icon
     {
         position: absolute;
-        width: 40px;
-        height: 40px;
+        width: 42px;
+        height: 42px;
         filter: brightness(30%);
         justify-content: center;
         align-items: center;
@@ -86,8 +89,8 @@
     }
 
     .seen_wielded {
-        width: 20px;
-        height: 20px;
+        width: 21px;
+        height: 21px;
         position: absolute;
         pointer-events: none;
         text-stroke-color: #000000;
@@ -97,8 +100,8 @@
 
     .aiming {
         position: absolute;
-        width: 38px;
-        height: 38px;
+        width: 40px;
+        height: 40px;
         z-index: 9998;
         pointer-events: none;
         border: 1px solid #ffff3311;
@@ -148,10 +151,10 @@
 
             if (thing == player.SelectedThing)
             {
-                <div class="selected" style="left: @((offsetGridPos.x * 40) + player.CameraPixelOffset.x + thing.Offset.x * ScaleToScreen); top: @((offsetGridPos.y * 40) + player.CameraPixelOffset.y + thing.Offset.y * ScaleToScreen);"></div>
+                <div class="selected" style="left: @((offsetGridPos.x * RoguemojiGame.CellSize) + player.CameraPixelOffset.x + thing.Offset.x * ScaleToScreen); top: @((offsetGridPos.y * RoguemojiGame.CellSize) + player.CameraPixelOffset.y + thing.Offset.y * ScaleToScreen);"></div>
             }
 
-            <GridCell style="left: @((offsetGridPos.x * 40) + player.CameraPixelOffset.x + thing.Offset.x * ScaleToScreen); top: @((offsetGridPos.y * 40) + player.CameraPixelOffset.y + thing.Offset.y * ScaleToScreen);" Thing=@thing GridIndex=@index />
+            <GridCell style="left: @((offsetGridPos.x * RoguemojiGame.CellSize) + player.CameraPixelOffset.x + thing.Offset.x * ScaleToScreen); top: @((offsetGridPos.y * RoguemojiGame.CellSize) + player.CameraPixelOffset.y + thing.Offset.y * ScaleToScreen);" Thing=@thing GridIndex=@index />
         }
     }
 
@@ -164,11 +167,11 @@
             {
                 if(player.IsCellSeen(gridPos))
                 {
-                    <div class="greyed_out" style="left: @(x * 40 + player.CameraPixelOffset.x); top: @(y * 40 + player.CameraPixelOffset.y); background-color:@(player.ContainingGridManager.GetNearbyBgColor(gridPos));"></div>
+                    <div class="greyed_out" style="left: @(x * RoguemojiGame.CellSize + player.CameraPixelOffset.x); top: @(y * RoguemojiGame.CellSize + player.CameraPixelOffset.y); background-color:@(player.ContainingGridManager.GetNearbyBgColor(gridPos));"></div>
 
                     @foreach(var seenData in player.GetSeenThings(gridPos))
                     {
-                        <div class="seen_icon @(seenData.isSolid ? "solid" : "") @(seenData.playerNum > 0 ? $"icon-player-{seenData.playerNum}" : "")" style="left: @(x * 40 + player.CameraPixelOffset.x); top: @(y * 40 + player.CameraPixelOffset.y); z-index:@(9999 + level.GridManager.GetIndex(gridPos) + seenData.zIndex);">
+                        <div class="seen_icon @(seenData.isSolid ? "solid" : "") @(seenData.playerNum > 0 ? $"icon-player-{seenData.playerNum}" : "")" style="left: @(x * RoguemojiGame.CellSize + player.CameraPixelOffset.x); top: @(y * RoguemojiGame.CellSize + player.CameraPixelOffset.y); z-index:@(9999 + level.GridManager.GetIndex(gridPos) + seenData.zIndex);">
                             @(seenData.icon)
 
                             @if (seenData.tattooData != null)
@@ -201,14 +204,14 @@
                 }
                 else
                 {
-                    <div class="unseen" style="left: @(x * 40 + player.CameraPixelOffset.x); top: @(y * 40 + player.CameraPixelOffset.y);"></div>
+                    <div class="unseen" style="left: @(x * RoguemojiGame.CellSize + player.CameraPixelOffset.x); top: @(y * RoguemojiGame.CellSize + player.CameraPixelOffset.y);"></div>
                 }
             }
             else if(player.IsAiming && player.AimingCells.Contains(gridPos))
             {
                 var aimOpacity = 0.4f + MathF.Sin(Time.Now * 16f) * 0.3f;
                 var dir = GridManager.GetDirectionForIntVector(gridPos - player.GridPos);
-                <div class="aiming" style="left: @(x * 40 + player.CameraPixelOffset.x + 1); top: @(y * 40 + player.CameraPixelOffset.y + 1); opacity: @(aimOpacity); transform: rotate(@(GetAimingAngle(dir)));">
+                <div class="aiming" style="left: @(x * RoguemojiGame.CellSize + player.CameraPixelOffset.x + 1); top: @(y * RoguemojiGame.CellSize + player.CameraPixelOffset.y + 1); opacity: @(aimOpacity); transform: rotate(@(GetAimingAngle(dir)));">
                     @if(player.AimingType == AimingType.Direction)
                         @(GetArrowIcon(dir))
                 </div>
@@ -220,7 +223,7 @@
 
                     if(gridPos.Equals(mouseGridPos))
                     {
-                        <div class="aiming_pin" style="left: @(x * 40 + player.CameraPixelOffset.x + 8); top: @(y * 40 + player.CameraPixelOffset.y - 14);">
+                        <div class="aiming_pin" style="left: @(x * RoguemojiGame.CellSize + player.CameraPixelOffset.x + 8); top: @(y * RoguemojiGame.CellSize + player.CameraPixelOffset.y - 14);">
                             📍
                         </div>
                     }
@@ -308,6 +311,6 @@
         base.OnAfterTreeRender(firstTime);
 
         var player = RoguemojiGame.Instance.LocalPlayer;
-        GridBg.Style.Set($"background-position: {((player.CameraGridOffset.x % 2 == 0 ? -40f : -80f) + player.CameraPixelOffset.x * 0.9f) * ScaleToScreen}px {((player.CameraGridOffset.y % 2 == 0 ? -40f : -80f) + player.CameraPixelOffset.y * 0.9f) * ScaleToScreen}px;");
+        GridBg.Style.Set($"background-position: {((player.CameraGridOffset.x % 2 == 0 ? -RoguemojiGame.CellSize : -RoguemojiGame.CellSize * 2) + player.CameraPixelOffset.x * 0.9f) * ScaleToScreen}px {((player.CameraGridOffset.y % 2 == 0 ? -RoguemojiGame.CellSize : -RoguemojiGame.CellSize * 2) + player.CameraPixelOffset.y * 0.9f) * ScaleToScreen}px;");
     }
 }

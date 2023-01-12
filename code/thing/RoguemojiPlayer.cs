@@ -91,7 +91,7 @@ public partial class RoguemojiPlayer : Thing
         //IsActionReady = true;
         QueuedAction = null;
         QueuedActionName = "";
-        RefreshVisibility();
+        RefreshVisibility(firstRefresh: true);
         SightBlockAmount = 10;
         IsAiming = false;
         SelectedThing = null;
@@ -178,8 +178,8 @@ public partial class RoguemojiPlayer : Thing
             case 11: InventoryGridManager.SpawnThing<Cigarette>(gridPos); break;
             case 12: InventoryGridManager.SpawnThing<ScrollBlink>(gridPos); break;
             case 13: InventoryGridManager.SpawnThing<BowAndArrow>(gridPos); break;
-            //case 14: InventoryGridManager.SpawnThing<Backpack>(gridPos); break;
-            case 14: InventoryGridManager.SpawnThing<Juicebox>(gridPos); break;
+            case 14: InventoryGridManager.SpawnThing<Backpack>(gridPos); break;
+            //case 14: InventoryGridManager.SpawnThing<Juicebox>(gridPos); break;
             case 15: InventoryGridManager.SpawnThing<BookBlink>(gridPos); break;
             case 16: InventoryGridManager.SpawnThing<PotionMana>(gridPos); break;
             case 17: InventoryGridManager.SpawnThing<PotionHealth>(gridPos); break;
@@ -357,10 +357,10 @@ public partial class RoguemojiPlayer : Thing
             var movedCamera = RecenterCamera(shouldAnimate: !switchedLevel);
 
             if(shouldAnimate && !switchedLevel)
-                VfxSlide(direction, 0.1f, 40f);
-                //VfxSlide(direction, movedCamera ? 0.1f : 0.2f, 40f);
+                VfxSlide(direction, 0.1f, RoguemojiGame.CellSize);
+                //VfxSlide(direction, movedCamera ? 0.1f : 0.2f, RoguemojiGame.CellSize);
         }
-		else 
+        else 
 		{
 			SetIcon("🤨");
         }
@@ -418,7 +418,7 @@ public partial class RoguemojiPlayer : Thing
         {
             // todo: make an option to turn this off
             var dir = GridManager.GetDirectionForIntVector(CameraGridOffset - oldCamGridOffset);
-            VfxSlideCamera(dir, 0.25f, 40f);
+            VfxSlideCamera(dir, 0.25f, RoguemojiGame.CellSize);
         }
 
         return movedCamera;
@@ -661,7 +661,7 @@ public partial class RoguemojiPlayer : Thing
         if (IsAiming)
             StopAiming();
 
-        if(!Acting.IsActionReady && !dontRequireAction)
+        if (!Acting.IsActionReady && !dontRequireAction)
         {
             QueuedAction = new MoveThingAction(thing, targetGridType, targetGridPos, thing.ContainingGridType, thing.GridPos, wieldIfPossible);
             QueuedActionName = QueuedAction.ToString();

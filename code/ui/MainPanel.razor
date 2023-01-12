@@ -20,30 +20,44 @@
         width: 100%;
         //height: 100%;
         //background-color: #002200;
-        margin:20px;
-        padding-right: 40px;
-    }
-
-    .upper_right_column {
-        margin-left: 20px;
-        flex-grow: 1;
-        flex-direction: column;
-        //align-items: stretch;
-        flex-wrap: nowrap;
+        margin-bottom: 10px;
     }
 
     .lower_row {
         flex-direction:row;
-        padding: 0 35px 35px 35px;
+        margin: 10px 5px 5px 5px;
         //background-color: #333300;
         flex-grow: 1;
         //border: 1px solid #ff88ff05;
     }
 
     .log {
-        width: 100%;
+        //width: 100%;
+        max-width: 25%;
         height: 100%;
         flex-grow: 1;
+        flex-shrink: 1;
+        min-height: 10px;
+        margin: 5px 0 0 5px;
+    }
+
+    .upper_right_column {
+        height: 100%;
+        //min-width: 400px;
+        margin-right: 5px;
+        flex-grow: 1;
+        //flex-shrink: 0;
+        flex-direction: column;
+        //align-items: stretch;
+        flex-wrap: nowrap;
+        margin: 5px 5px 0 0;
+    }
+
+    .chat_panel {
+        width: 100%;
+        height: 100%;
+        //flex-grow: 0;
+        //flex-shrink: 1;
         min-height: 10px;
         margin-bottom:5px;
     }
@@ -57,7 +71,7 @@
 
     .nearby {
         width: 45px;
-        margin: 0 20px 0 20px;
+        margin: 0 10px 0 10px;
         border: 1px solid #424242;
         border-radius: 3px;
     }
@@ -65,12 +79,12 @@
     .inventory {
         border: 1px solid #303030;
         border-radius: 3px;
-        margin: 0 0 0 20px;
+        margin: 0 0 0 10px;
     }
 
     .info {
         border-radius: 3px;
-        margin-right: 20px;
+        margin-right: 10px;
     }
 </style>
 
@@ -79,18 +93,20 @@
 }
 
 <root class="root">
-    <div class="upper_row" style="height: @(40 * RoguemojiGame.ArenaPanelHeight)px;">
-        <ArenaPanel style="width: @(40 * RoguemojiGame.ArenaPanelWidth)px;" @ref=ArenaPanel></ArenaPanel>
+    <div class="upper_row" style="height: @(RoguemojiGame.CellSize * RoguemojiGame.ArenaPanelHeight)px;">
+        <LogPanel class="log" @ref=LogPanel></LogPanel>
+
+        <ArenaPanel style="width: @(RoguemojiGame.CellSize * RoguemojiGame.ArenaPanelWidth + 4)px; flex-shrink: 0;" @ref=ArenaPanel></ArenaPanel>
 
         <div class="upper_right_column">
-            <LogPanel class="log" @ref=LogPanel></LogPanel>
+            <ChatPanel class="chat_panel" @ref=ChatPanel></ChatPanel>
             <Chatbox @ref=Chatbox></Chatbox>
         </div>
     </div>
 
-    <div class="lower_row" style="height: @(40 * player.InventoryGridManager.GridHeight + 3)px;">
+    <div class="lower_row" style="height: @(RoguemojiGame.CellSize * player.InventoryGridManager.GridHeight)px;">
         <CharacterPanel class="character" @ref=CharacterPanel></CharacterPanel>
-        <InventoryPanel class="inventory" style="width: @(40 * player.InventoryGridManager.GridWidth + 4)px;" @ref=InventoryPanel></InventoryPanel>
+        <InventoryPanel class="inventory" style="width: @(RoguemojiGame.CellSize * player.InventoryGridManager.GridWidth + 3)px;" @ref=InventoryPanel></InventoryPanel>
         <NearbyPanel class="nearby" @ref=NearbyPanel></NearbyPanel>
 
         @{
@@ -108,6 +124,7 @@
 {
     public ArenaPanel ArenaPanel { get; set; }
     public LogPanel LogPanel { get; set; }
+    public ChatPanel ChatPanel { get; set; }
     public Chatbox Chatbox { get; set; }
     public CharacterPanel CharacterPanel { get; set; }
     public NearbyPanel NearbyPanel { get; set; }

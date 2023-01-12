@@ -33,11 +33,13 @@ public partial class RoguemojiGame : GameManager
 
 	public Hud Hud { get; private set; }
 
-	public const int ArenaPanelWidth = 27;
-	public const int ArenaPanelHeight = 17;
+    public const int CellSize = 42;
+
+	public const int ArenaPanelWidth = 25;
+	public const int ArenaPanelHeight = 19;
 
 	// todo: move to player
-	public const int InventoryWidth = 15;
+	public const int InventoryWidth = 5;
 	public const int InventoryHeight = 6;
     public const int EquipmentWidth = 4;
     public const int EquipmentHeight = 2;
@@ -47,8 +49,9 @@ public partial class RoguemojiGame : GameManager
 
 	public record struct LogData(string text, int playerNum);
 	public Queue<LogData> LogMessageQueue = new Queue<LogData>();
+    public Queue<LogData> ChatMessageQueue = new Queue<LogData>();
 
-	public List<RoguemojiPlayer> Players = new List<RoguemojiPlayer>();
+    public List<RoguemojiPlayer> Players = new List<RoguemojiPlayer>();
 
 	public RoguemojiPlayer LocalPlayer => Game.LocalPawn as RoguemojiPlayer; // Client-only
 
@@ -75,7 +78,7 @@ public partial class RoguemojiGame : GameManager
             UnidentifiedScrollNames = new List<string>() { "WYZ'LOK", "MYR'KLYN", "PHYZGRYF", "XORPHYX", "GRYFAD", "RYXORK", "ORAXUM", "ZORKOZAL", "KLYNX", "QYN", "ARPHYNY", "LUZ'ROKLUM", "YNDRYNY", "PYG'JYG", "BRAX'PHY", "FEN'XOR", "CIRXYX" };
             UnidentifiedScrollNames.Shuffle();
 
-            UnidentifiedPotionSymbols = new List<string>() { "🉑", "🉐", "⚫️", "🟤", "🔘", "🧿", "🌐", "🌓", "🌑", "🌕️", "🌙",  }; // ㊗️ ㊙️
+            UnidentifiedPotionSymbols = new List<string>() { "🉑", "🉐", "🔘", "🧿", "🌐", "🌓", "🌑", "🌕️", "🌙",  }; // ㊗️ ㊙️ ⚫️ 🟤
             UnidentifiedPotionSymbols.Shuffle();
             UnidentifiedPotionNames = new List<string>() { "cloudy", "misty", "murky", "sparkling", "fizzy", "bubbly", "smoky", "congealed", "chalky", "radiant", "milky", "thick", "pasty", "glossy", "dull", "dusty", "syrupy", "pungent", 
                 "viscous", "sludgy", "pale", "filmy", "rusty", "chunky", "creamy", "hazy", "silky" };
@@ -126,6 +129,15 @@ public partial class RoguemojiGame : GameManager
 				Hud.MainPanel.LogPanel.WriteMessage(data.text, data.playerNum);
 			}
 		}
+
+        if (Hud.MainPanel.ChatPanel != null)
+        {
+            while (ChatMessageQueue.Count > 0)
+            {
+                var data = ChatMessageQueue.Dequeue();
+                Hud.MainPanel.ChatPanel.WriteMessage(data.text, data.playerNum);
+            }
+        }
 
         for (int i = _panelsToFlicker.Count - 1; i >= 0; i--)
         {
@@ -195,7 +207,24 @@ public partial class RoguemojiGame : GameManager
 		Hud.MainPanel.LogPanel.WriteMessage(text, playerNum);
 	}
 
-	[ConCmd.Server]
+    public void ChatMessage(string text, int playerNum)
+    {
+        ChatMessageClient(text, playerNum);
+    }
+
+    [ClientRpc]
+    public void ChatMessageClient(string text, int playerNum)
+    {
+        if (Hud.MainPanel.ChatPanel == null)
+        {
+            ChatMessageQueue.Enqueue(new LogData(text, playerNum));
+            return;
+        }
+
+        Hud.MainPanel.ChatPanel.WriteMessage(text, playerNum);
+    }
+
+    [ConCmd.Server]
 	public static void GridCellClickedCmd(int x, int y, GridType gridType, bool rightClick, bool shift, bool doubleClick, bool visible = true)
 	{
 		var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;

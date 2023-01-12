@@ -27,7 +27,7 @@ public partial class RoguemojiPlayer : Thing
     private HashSet<IntVector> _wasVisible = new HashSet<IntVector>();
 
     [ClientRpc]
-    public void RefreshVisibility()
+    public void RefreshVisibility(bool firstRefresh = false)
     {
         if (!SeenCells.ContainsKey(CurrentLevelId))
             SeenCells.Add(CurrentLevelId, new HashSet<IntVector>());
@@ -47,8 +47,11 @@ public partial class RoguemojiPlayer : Thing
         //foreach (var gridPos in VisibleCells)
         //    _seenCells.Add(gridPos);
 
-        foreach (var gridPos in _wasVisible.Except(VisibleCells))
-            SaveSeenData(gridPos);
+        if(!firstRefresh)
+        {
+            foreach (var gridPos in _wasVisible.Except(VisibleCells))
+                SaveSeenData(gridPos);
+        }
     }
 
     void SaveSeenData(IntVector gridPos)

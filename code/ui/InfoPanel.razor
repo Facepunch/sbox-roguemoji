@@ -34,8 +34,8 @@
     }
 
     .info_wielded {
-        width: 40px;
-        height: 40px;
+        width: 42px;
+        height: 42px;
         position: absolute;
         pointer-events: none;
         text-stroke-color: #000000;
@@ -62,7 +62,7 @@
         flex-wrap: wrap;
         text-align: left;
         max-width: 180px;
-        max-height: 80px;
+        max-height: 84px;
         overflow: hidden;
         background-color: #030303;
         border-radius: 3px;
@@ -128,7 +128,7 @@
                     {
                         int fontSize = MathX.FloorToInt(32f * wieldedThing.TattooData.Scale);
                         var offset = wieldedThing.TattooData.OffsetInfoWielded;
-                        <div class="info_panel_tattoo" style="width: 40px; height: 40px; font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
+                        <div class="info_panel_tattoo" style="width: @(RoguemojiGame.CellSize)px; height: @(RoguemojiGame.CellSize)px; font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
                             @(Hud.GetTattooIcon(wieldedThing))
                         </div>
                     }

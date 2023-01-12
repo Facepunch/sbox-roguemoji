@@ -206,7 +206,7 @@ public partial class Thing : Entity
         SetGridPos(newGridPos);
 
         if (shouldAnimate)
-            VfxSlide(direction, 0.2f, 40f);
+            VfxSlide(direction, 0.2f, RoguemojiGame.CellSize);
 
         return true;
     }

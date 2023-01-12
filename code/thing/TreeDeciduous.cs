@@ -18,7 +18,7 @@ public partial class TreeDeciduous : Thing
 
         if (Game.IsClient)
         {
-            WieldedThingOffset = new Vector2(8.6f, 6.2f);
+            WieldedThingOffset = new Vector2(9.6f, 7.2f);
             WieldedThingFontSize = 14;
             InfoWieldedThingOffset = new Vector2(16f, 19f);
             InfoWieldedThingFontSize = 26;
