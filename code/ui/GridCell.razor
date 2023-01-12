@@ -25,6 +25,7 @@
         //filter: contrast(100);
         //filter: blur(5px);
         //transform-origin: 0% 50%;
+        font-family: 'Segoe UI Emoji';
     }
 
     .is_in_inventory {
@@ -123,7 +124,7 @@
 
 <root class="icon @GetWieldedClass() @GetSolidClass()" )>
     <div class="@GetPlayerClass() @GetDraggingClass() @GetCooldownClass(Thing) @Hud.Instance.GetUnusableClass(Thing) @GetInventoryClass() @Hud.Instance.GetEquipmentHighlightClass(Thing)" @ref=IconPanel>
-        @Thing.DisplayIcon.Substring(Thing.CharSkip) 
+        @Thing.DisplayIcon.Substring(Thing.CharSkip)
 
         @if(Thing.HasTattoo)
         {
