@@ -101,6 +101,8 @@ public partial class Thing : Entity
     // thing is entering/exiting a level and should not be able to act or be interacted with
     public bool IsInTransit { get; set; }
 
+    public int FloaterNum { get; set; }
+
     public virtual string AbilityName => "Ability";
 
     public Thing()
@@ -271,13 +273,12 @@ public partial class Thing : Entity
         {
             AdjustStat(StatType.Health, -amount);
 
-            if(showImpactFloater)
-            {
-                var offset = new Vector2(Game.Random.Float(-5f, 4f), Game.Random.Float(-5f, 4f));
-                RoguemojiGame.Instance.AddFloater("💥", GridPos, 0.45f, CurrentLevelId, offset, offset, height: 0f, text: "", requireSight: true, EasingType.SineIn, 0.025f, parent: this);
-            }
+            var floaterOffset = new Vector2(Game.Random.Float(3f, 10f) * (FloaterNum % 2 == 0 ? -1 : 1), Game.Random.Float(-3f, 8f));
 
-            RoguemojiGame.Instance.AddFloater("💔", GridPos, 1.33f, CurrentLevelId, new Vector2(Game.Random.Float(-7f, 7f), Game.Random.Float(-1f, 10f)), new Vector2(Game.Random.Float(-10f, 10f), Game.Random.Float(0f, -10f)), height: Game.Random.Float(10f, 35f), text: $"-{amount}", requireSight: true, EasingType.Linear, fadeInTime: 0.1f, scale: 0.75f, parent: this);
+            if (showImpactFloater)
+                RoguemojiGame.Instance.AddFloater("💥", GridPos, 0.45f, CurrentLevelId, floaterOffset, floaterOffset, height: 0f, text: "", requireSight: true, EasingType.SineIn, 0.025f, parent: this);
+
+            RoguemojiGame.Instance.AddFloater("💔", GridPos, 1.2f, CurrentLevelId, floaterOffset, new Vector2(Game.Random.Float(10f, 20f) * (FloaterNum++ % 2 == 0 ? -1 : 1), Game.Random.Float(-13f, 3f)), height: Game.Random.Float(10f, 25f), text: $"-{amount}", requireSight: true, EasingType.Linear, fadeInTime: 0.1f, scale: 0.75f, parent: this);
 
             if (GetStatClamped(StatType.Health) <= 0)
             {
