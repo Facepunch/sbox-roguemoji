@@ -61,7 +61,7 @@
 
             Vector2 offset = floater.time > 0f ? Vector2.Lerp(floater.offsetStart, floater.offsetEnd, Utils.Map(floater.timeSinceStart, 0f, floater.time, 0f, 1f, floater.offsetEasingType)) : floater.offsetStart;
             float height = floater.height > 0f ? Utils.MapReturn(floater.timeSinceStart, 0f, floater.time, 0f, floater.height, EasingType.SineInOut) : 0f;
-            var opacity = floater.time > 0f ? (floater.timeSinceStart < floater.fadeInTime ? Utils.Map(floater.timeSinceStart, 0f, floater.fadeInTime, 0f, floater.opacity, EasingType.SineIn) : Utils.Map(floater.timeSinceStart, floater.fadeInTime, floater.time, 1f, 0f, floater.offsetEasingType)) : floater.opacity;
+            var opacity = floater.time > 0f ? (floater.timeSinceStart < floater.fadeInTime ? Utils.Map(floater.timeSinceStart, 0f, floater.fadeInTime, 0f, floater.opacity, EasingType.SineIn) : Utils.Map(floater.timeSinceStart, floater.fadeInTime, floater.time, floater.opacity, 0f, floater.offsetEasingType)) : floater.opacity;
 
             <div class="floater_draw" style="left: @(pos.x + offset.x); top: @(pos.y + offset.y - height); opacity: @(opacity); font-size: @(fontSize);">
                 @floater.icon 

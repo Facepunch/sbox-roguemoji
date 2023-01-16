@@ -711,9 +711,14 @@ public partial class RoguemojiPlayer : Thing
         if (sourceGridType == GridType.Equipment && owningPlayer != null)
             owningPlayer.UnequipThing(thing);
 
-        if (targetGridType == GridType.Arena && thing == WieldedThing)
-            WieldThing(null, dontRequireAction: true);
+        if (targetGridType == GridType.Arena)
+        {
+            if(thing == WieldedThing)
+                WieldThing(null, dontRequireAction: true);
 
+            thing.CurrentLevelId = CurrentLevelId;
+        }
+            
         if (targetGridType == GridType.Inventory && wieldIfPossible && WieldedThing == null && !thing.HasFlag(ThingFlags.Equipment))
             WieldThing(thing, dontRequireAction: true);
 
@@ -1148,13 +1153,13 @@ public partial class RoguemojiPlayer : Thing
         return thing.ContainingGridManager.GridType == GridType.Inventory && thing.ContainingGridManager.OwningPlayer == this;
     }
 
-    public void IdentifyScroll(Scroll scroll)
+    public void IdentifyScroll(ScrollType scrollType)
     {
-        if (!IdentifiedScrollTypes.Contains(scroll.ScrollType))
+        if (!IdentifiedScrollTypes.Contains(scrollType))
         {
-            IdentifiedScrollTypes.Add(scroll.ScrollType);
-            RoguemojiGame.Instance.AddFloater("💡", GridPos, 1f, CurrentLevelId, new Vector2(0f, -10f), new Vector2(0f, -30f), height: 0f, text: "", requireSight: false, EasingType.QuadOut, 0.5f, opacity: 0.75f, parent: this);
-            RoguemojiGame.Instance.LogMessageClient(To.Single(this), $"💡 You identified {scroll.DisplayName} {scroll.ChatDisplayIcons}", playerNum: 0);
+            IdentifiedScrollTypes.Add(scrollType);
+            RoguemojiGame.Instance.AddFloater("💡", GridPos, 1f, CurrentLevelId, new Vector2(-1f, -10f), new Vector2(-1f, -30f), height: 0f, text: "", requireSight: true, EasingType.QuadOut, fadeInTime: 0.5f, scale: 0.8f, opacity: 0.66f, parent: this);
+            RoguemojiGame.Instance.LogMessageClient(To.Single(this), $"💡 You identified {Scroll.GetDisplayName(scrollType)} {Scroll.GetChatDisplayIcons(scrollType)}", playerNum: 0);
         }
     }
 
@@ -1163,13 +1168,13 @@ public partial class RoguemojiPlayer : Thing
         return IdentifiedScrollTypes.Contains(scrollType);
     }
 
-    public void IdentifyPotion(Potion potion)
+    public void IdentifyPotion(PotionType potionType)
     {
-        if (!IdentifiedPotionTypes.Contains(potion.PotionType))
+        if (!IdentifiedPotionTypes.Contains(potionType))
         {
-            IdentifiedPotionTypes.Add(potion.PotionType);
-            RoguemojiGame.Instance.AddFloater("💡", GridPos, 1f, CurrentLevelId, new Vector2(0f, -10f), new Vector2(0f, -30f), height: 0f, text: "", requireSight: false, EasingType.QuadOut, 0.5f, opacity: 0.75f, parent: this);
-            RoguemojiGame.Instance.LogMessageClient(To.Single(this), $"💡 You identified {potion.DisplayName} {potion.ChatDisplayIcons}", playerNum: 0);
+            IdentifiedPotionTypes.Add(potionType);
+            RoguemojiGame.Instance.AddFloater("💡", GridPos, 1f, CurrentLevelId, new Vector2(-1f, -10f), new Vector2(-1f, -30f), height: 0f, text: "", requireSight: true, EasingType.QuadOut, fadeInTime: 0.5f, scale: 0.8f, opacity: 0.66f, parent: this);
+            RoguemojiGame.Instance.LogMessageClient(To.Single(this), $"💡 You identified {Potion.GetDisplayName(potionType)} {Potion.GetChatDisplayIcons(potionType)}", playerNum: 0);
         }
     }
 

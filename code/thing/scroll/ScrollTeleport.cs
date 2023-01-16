@@ -8,7 +8,6 @@ public partial class ScrollTeleport : Scroll
 {
     [Net] public int ReqInt { get; private set; }
 
-    public override string ChatDisplayIcons => $"📜{Globals.Icon(IconType.Teleport)}";
     public override string AbilityName => "Read Scroll";
 
     public ScrollTeleport()
@@ -16,7 +15,7 @@ public partial class ScrollTeleport : Scroll
         ScrollType = ScrollType.Teleport;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
-        DisplayName = "Scroll of Teleport";
+        DisplayName = GetDisplayName(ScrollType);
         Description = "Teleport to a random place on the current floor";
         Tooltip = "A scroll of Teleport";
 

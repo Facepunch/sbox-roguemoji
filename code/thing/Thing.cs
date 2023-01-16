@@ -636,4 +636,9 @@ public partial class Thing : Entity
             }
         }
     }
+
+    public bool CanSee(IntVector gridPos, int sight)
+    {
+        return Utils.GetDistance(GridPos, gridPos) <= sight && ContainingGridManager.HasLineOfSight(GridPos, gridPos, sight, out IntVector collisionCell);
+    }
 }

@@ -482,6 +482,58 @@ public partial class RoguemojiGame : GameManager
             Hud.Instance.RemoveFloaters(parent);
     }
 
+    public void RevealScroll(ScrollType scrollType, IntVector gridPos, LevelId levelId)
+    {
+        foreach (var player in Players)
+        {
+            if (player.CurrentLevelId == levelId)
+                RevealScrollClient(To.Single(player), scrollType, gridPos);
+        }
+    }
+
+    [ClientRpc]
+    public void RevealScrollClient(ScrollType scrollType, IntVector gridPos)
+    {
+        var player = LocalPlayer;
+        if (player.IsCellVisible(gridPos) && !player.IsScrollTypeIdentified(scrollType))
+        {
+            RevealScrollCmd(scrollType);
+        }
+    }
+
+    [ConCmd.Server]
+    public static void RevealScrollCmd(ScrollType scrollType)
+    {
+        var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
+        player.IdentifyScroll(scrollType);
+    }
+
+    public void RevealPotion(PotionType potionType, IntVector gridPos, LevelId levelId)
+    {
+        foreach (var player in Players)
+        {
+            if (player.CurrentLevelId == levelId)
+                RevealPotionClient(To.Single(player), potionType, gridPos);
+        }
+    }
+
+    [ClientRpc]
+    public void RevealPotionClient(PotionType potionType, IntVector gridPos)
+    {
+        var player = LocalPlayer;
+        if(player.IsCellVisible(gridPos) && !player.IsPotionTypeIdentified(potionType))
+        {
+            RevealPotionCmd(potionType);
+        }
+    }
+
+    [ConCmd.Server]
+    public static void RevealPotionCmd(PotionType potionType)
+    {
+        var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
+        player.IdentifyPotion(potionType);
+    }
+
     public void DebugGridLine(IntVector a, IntVector b, Color color, float time, LevelId levelId)
 	{
         foreach (var player in Players)

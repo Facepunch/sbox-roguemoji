@@ -9,6 +9,7 @@ public enum ScrollType { Blink, Teleport, Fear, Telekinesis }
 public partial class Scroll : Thing
 {
     [Net] public ScrollType ScrollType { get; protected set; }
+    public override string ChatDisplayIcons => GetChatDisplayIcons(ScrollType);
 
     public Scroll()
     {
@@ -16,12 +17,38 @@ public partial class Scroll : Thing
         IconDepth = 0;
     }
 
+    public static string GetDisplayName(ScrollType scrollType)
+    {
+        switch (scrollType)
+        {
+            case ScrollType.Blink: return "Scroll of Blink";
+            case ScrollType.Fear: return "Scroll of Fear";
+            case ScrollType.Telekinesis: return "Scroll of Telekinesis";
+            case ScrollType.Teleport: return "Scroll of Teleport";
+        }
+
+        return "";
+    }
+
+    public static string GetChatDisplayIcons(ScrollType scrollType)
+    {
+        switch (scrollType)
+        {
+            case ScrollType.Blink: return $"📜{Globals.Icon(IconType.Blink)}";
+            case ScrollType.Fear: return $"📜{Globals.Icon(IconType.Fear)}";
+            case ScrollType.Telekinesis: return $"📜{Globals.Icon(IconType.Telekinesis)}";
+            case ScrollType.Teleport: return $"📜{Globals.Icon(IconType.Teleport)}";
+        }
+
+        return "🧉";
+    }
+
     public override void Use(Thing user)
     {
         base.Use(user);
 
         if (user is RoguemojiPlayer player)
-            player.IdentifyScroll(this);
+            player.IdentifyScroll(ScrollType);
     }
 
     public override void Use(Thing user, Direction direction)
@@ -29,7 +56,7 @@ public partial class Scroll : Thing
         base.Use(user, direction);
 
         if (user is RoguemojiPlayer player)
-            player.IdentifyScroll(this);
+            player.IdentifyScroll(ScrollType);
     }
 
     public override void Use(Thing user, IntVector targetGridPos)
@@ -37,7 +64,7 @@ public partial class Scroll : Thing
         base.Use(user, targetGridPos);
 
         if (user is RoguemojiPlayer player)
-            player.IdentifyScroll(this);
+            player.IdentifyScroll(ScrollType);
     }
 
     public void SetTattoo(string icon)

@@ -29,7 +29,6 @@ public partial class ProjectileArrow : Thing
     public override void OnMovedOntoBy(Thing thing)
     {
         base.OnMovedOntoBy(thing);
-        HitOther(thing, Direction);
         Destroy();
     }
 

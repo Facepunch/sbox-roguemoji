@@ -47,7 +47,7 @@ public partial class Squirrel : Thing
     {
         base.Update(dt);
 
-        if (Targeting == null || IsInTransit)
+        if (Targeting == null || IsInTransit || IsRemoved)
             return;
 
         if (!Targeting.HasTarget)
@@ -63,7 +63,7 @@ public partial class Squirrel : Thing
             else
             {
                 int adjustedSight = Math.Max(GetStatClamped(StatType.Sight) - Targeting.Target.GetStatClamped(StatType.Stealth), 1);
-                bool cantSeeTarget = Utils.GetDistance(GridPos, Targeting.Target.GridPos) > adjustedSight || !ContainingGridManager.HasLineOfSight(GridPos, Targeting.Target.GridPos, adjustedSight, out IntVector collisionCell);
+                bool canSeeTarget = CanSee(Targeting.Target.GridPos, adjustedSight);
                 bool isFearful = GetComponent<CFearful>(out var fearful);
 
                 if (Acting.IsActionReady)
@@ -72,7 +72,7 @@ public partial class Squirrel : Thing
                         ? CFearful.GetTargetRetreatPoint(GridPos, ((CFearful)fearful).FearedThing.GridPos, ContainingGridManager)
                         : Targeting.Target.GridPos;
 
-                    //RoguemojiGame.Instance.DebugGridLine(GridPos, targetPos, cantSeeTarget ? new Color(1f, 0f, 0f, 0.2f) : new Color(0f, 0f, 1f, 0.2f), 0.5f, CurrentLevelId);
+                    //RoguemojiGame.Instance.DebugGridLine(GridPos, targetPos, canSeeTarget ? new Color(0f, 0f, 1f, 0.2f) : new Color(1f, 0f, 0f, 0.2f), 0.5f, CurrentLevelId);
 
                     var path = GetPathTo(GridPos, targetPos);
                     if (path != null && path.Count > 0 && !path[0].Equals(GridPos))
@@ -86,15 +86,15 @@ public partial class Squirrel : Thing
 
                 if(!isFearful)
                 {
-                    if (cantSeeTarget)
+                    if (canSeeTarget)
+                    {
+                        CantSeeTargetElapsedTime = 0f;
+                    }
+                    else
                     {
                         CantSeeTargetElapsedTime += dt;
                         if (CantSeeTargetElapsedTime > CantSeeTargetLoseDelay)
                             Targeting.LoseTarget();
-                    }
-                    else
-                    {
-                        CantSeeTargetElapsedTime = 0f;
                     }
                 }
             }

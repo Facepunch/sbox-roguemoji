@@ -6,7 +6,6 @@ using System.Linq;
 namespace Roguemoji;
 public partial class ScrollBlink : Scroll
 {
-    public override string ChatDisplayIcons => $"📜{Globals.Icon(IconType.Blink)}";
     public override string AbilityName => "Read Scroll";
 
     public ScrollBlink()
@@ -14,7 +13,7 @@ public partial class ScrollBlink : Scroll
         ScrollType = ScrollType.Blink;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
 
-        DisplayName = "Scroll of Blink";
+        DisplayName = GetDisplayName(ScrollType);
         Description = "Teleport to a target place nearby";
         Tooltip = "A scroll of Blink";
 

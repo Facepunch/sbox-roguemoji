@@ -6,7 +6,6 @@ using System.Linq;
 namespace Roguemoji;
 public partial class ScrollFear : Scroll
 {
-    public override string ChatDisplayIcons => $"📜{Globals.Icon(IconType.Fear)}";
     public override string AbilityName => "Read Scroll";
 
     public ScrollFear()
@@ -14,7 +13,7 @@ public partial class ScrollFear : Scroll
         ScrollType = ScrollType.Fear;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
-        DisplayName = "Scroll of Fear";
+        DisplayName = GetDisplayName(ScrollType);
         Description = "Scare all enemies near you";
         Tooltip = "A scroll of Fear";
 

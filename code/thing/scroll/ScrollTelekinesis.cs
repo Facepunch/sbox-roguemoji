@@ -6,7 +6,6 @@ using System.Linq;
 namespace Roguemoji;
 public partial class ScrollTelekinesis : Scroll
 {
-    public override string ChatDisplayIcons => $"📜{Globals.Icon(IconType.Telekinesis)}";
     public override string AbilityName => "Read Scroll";
 
     public ScrollTelekinesis()
@@ -14,7 +13,7 @@ public partial class ScrollTelekinesis : Scroll
         ScrollType = ScrollType.Telekinesis;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
 
-        DisplayName = "Scroll of Telekinesis";
+        DisplayName = GetDisplayName(ScrollType);
         Description = "Pull target with your mind";
         Tooltip = "A scroll of Telekinesis";
 
