@@ -143,7 +143,9 @@
 
     @foreach(Thing thing in GetThings())
     {
-        if (player.IsGridPosOnCamera(thing.GridPos) && player.IsCellVisible(thing.GridPos) && !thing.DontRender)
+        var canSeeThing = player.IsGridPosOnCamera(thing.GridPos) && player.IsCellVisible(thing.GridPos);
+
+        if ((canSeeThing || thing.TimeSinceLocalPlayerSaw < 0.2f) && !thing.DontRender)
         {
             var offsetGridPos = thing.GridPos - player.CameraGridOffset;
             var index = GetIndex(offsetGridPos);
@@ -155,6 +157,9 @@
 
             <GridCell style="left: @((offsetGridPos.x * RoguemojiGame.CellSize) + player.CameraPixelOffset.x + thing.TotalOffset.x * ScaleToScreen); top: @((offsetGridPos.y * RoguemojiGame.CellSize) + player.CameraPixelOffset.y + thing.TotalOffset.y * ScaleToScreen);" Thing=@thing GridIndex=@index />
         }
+
+        if (canSeeThing)
+            thing.TimeSinceLocalPlayerSaw = 0f;
     }
 
     @for(int x = -1; x <= RoguemojiGame.ArenaPanelWidth; x++)

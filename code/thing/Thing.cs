@@ -98,7 +98,8 @@ public partial class Thing : Entity
 
     [Net] public FactionType Faction { get; set; }
 
-    [Net] public bool DontRender { get; set; } // Client-only
+    [Net] public bool DontRender { get; set; }
+    public TimeSince TimeSinceLocalPlayerSaw { get; set; } // Client-only
 
     // thing is entering/exiting a level and should not be able to act or be interacted with
     public bool IsInTransit { get; set; }
@@ -119,6 +120,7 @@ public partial class Thing : Entity
         IsRemoved = false;
         IsOnCooldown = false;
         IsInTransit = false;
+        TimeSinceLocalPlayerSaw = 999f;
     }
 
     // Server only

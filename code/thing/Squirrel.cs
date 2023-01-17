@@ -43,6 +43,13 @@ public partial class Squirrel : Thing
         Acting.TimeElapsed = Game.Random.Float(0f, 1f);
     }
 
+    //public override void ClientTick()
+    //{
+    //    base.ClientTick();
+
+    //    DrawDebugText($"{TimeSinceLocalPlayerSaw}");
+    //}
+
     public override void Update(float dt)
     {
         base.Update(dt);
