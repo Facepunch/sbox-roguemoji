@@ -10,6 +10,7 @@
         width: 100%;
         height: 100%;
         flex-direction:column;
+        justify-content: space-between;
         background-color: #050505;
         font-family: RobotoMono;
         //font-family: NotoEmoji;
@@ -20,28 +21,52 @@
         width: 100%;
         //height: 100%;
         //background-color: #002200;
-        margin-bottom: 10px;
+        //margin-bottom: 5px;
     }
 
     .lower_row {
         flex-direction:row;
-        margin: 10px 5px 5px 5px;
+        margin: 0 10px 10px 10px;
         //background-color: #333300;
         flex-grow: 1;
         //border: 1px solid #ff88ff05;
     }
 
     .log {
-        //width: 100%;
-        max-width: 25%;
+        width: 100%;
         height: 100%;
-        flex-grow: 1;
-        flex-shrink: 1;
-        min-height: 10px;
-        margin: 5px 0 0 5px;
+        //max-width: 25%;
+        //flex-grow: 1;
+        //flex-shrink: 1;
+        //min-height: 10px;
+    }
+
+    .upper_left_column {
+        height: 100%;
+        width: 400px;
+        flex-grow: 0;
+        flex-shrink: 0;
+        flex-direction: column;
+        margin: 10px 0 0 10px;
+    }
+
+    .upper_middle_column {
+        height: 100%;
+        flex-grow: 0;
+        flex-shrink: 0;
+        flex-direction: column;
+        margin: 10px 10px 0 10px;
     }
 
     .upper_right_column {
+        height: 100%;
+        flex-grow: 1;
+        flex-shrink: 2;
+        flex-direction: column;
+        margin: 10px 10px 0 0;
+    }
+
+    <!-- .upper_right_column {
         height: 100%;
         //min-width: 400px;
         margin-right: 5px;
@@ -51,7 +76,7 @@
         //align-items: stretch;
         flex-wrap: nowrap;
         margin: 5px 5px 0 0;
-    }
+    } -->
 
     .chat_panel {
         width: 100%;
@@ -59,7 +84,7 @@
         //flex-grow: 0;
         //flex-shrink: 1;
         min-height: 10px;
-        margin-bottom:5px;
+        margin-bottom: 10px;
     }
 
     .character {
@@ -94,9 +119,13 @@
 
 <root class="root">
     <div class="upper_row" style="height: @(RoguemojiGame.CellSize * RoguemojiGame.ArenaPanelHeight)px;">
-        <LogPanel class="log" @ref=LogPanel></LogPanel>
-
-        <ArenaPanel style="width: @(RoguemojiGame.CellSize * RoguemojiGame.ArenaPanelWidth + 4)px; flex-shrink: 0;" @ref=ArenaPanel></ArenaPanel>
+        <div class="upper_left_column">
+            <LogPanel class="log" @ref=LogPanel></LogPanel>
+        </div>
+        
+        <div class="upper_middle_column">
+            <ArenaPanel style="width: @(RoguemojiGame.CellSize * RoguemojiGame.ArenaPanelWidth)px; flex-shrink: 0;" @ref=ArenaPanel></ArenaPanel>
+        </div>
 
         <div class="upper_right_column">
             <ChatPanel class="chat_panel" @ref=ChatPanel></ChatPanel>
@@ -104,7 +133,7 @@
         </div>
     </div>
 
-    <div class="lower_row" style="height: @(RoguemojiGame.CellSize * player.InventoryGridManager.GridHeight)px;">
+    <div class="lower_row" style="height: @(RoguemojiGame.CellSize * player.InventoryGridManager.GridHeight)px; max-height: @(RoguemojiGame.CellSize * player.InventoryGridManager.GridHeight)px;">
         <CharacterPanel class="character" @ref=CharacterPanel></CharacterPanel>
         <InventoryPanel class="inventory" style="width: @(RoguemojiGame.CellSize * player.InventoryGridManager.GridWidth + 3)px;" @ref=InventoryPanel></InventoryPanel>
         <NearbyPanel class="nearby" @ref=NearbyPanel></NearbyPanel>
