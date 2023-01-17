@@ -52,7 +52,6 @@ public partial class PotionPoison : Potion
 
         var poison = thing.AddComponent<CPoisoned>();
         poison.Lifetime = 60f;
-
-        RoguemojiGame.Instance.AddFloater(Globals.Icon(IconType.Poison), thing.GridPos, 1.33f, thing.CurrentLevelId, new Vector2(Game.Random.Float(8f, 12f) * (thing.FloaterNum % 2 == 0 ? -1 : 1), Game.Random.Float(-3f, 8f)), new Vector2(Game.Random.Float(12f, 15f) * (thing.FloaterNum++ % 2 == 0 ? -1 : 1), Game.Random.Float(-13f, 3f)), height: Game.Random.Float(10f, 35f), text: "", requireSight: true, EasingType.Linear, fadeInTime: 0.1f, scale: 0.75f, parent: thing);
+        thing.AddSideFloater(Globals.Icon(IconType.Poison));
     }
 }

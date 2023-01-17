@@ -292,6 +292,16 @@ public partial class Thing : Entity
         }
     }
 
+    public void AddSideFloater(string icon, string text = "", float time = 1.33f, bool requireSight = true, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0.1f, float scale = 0.75f, float opacity = 1f)
+    {
+        AddSideFloater(icon, offsetStart: new Vector2(Game.Random.Float(8f, 12f) * (FloaterNum % 2 == 0 ? -1 : 1), Game.Random.Float(-3f, 8f)), offsetEnd: new Vector2(Game.Random.Float(12f, 15f) * (FloaterNum++ % 2 == 0 ? -1 : 1)), text, time, requireSight, offsetEasingType, fadeInTime, scale, opacity);
+    }
+
+    public void AddSideFloater(string icon, Vector2 offsetStart, Vector2 offsetEnd, string text = "", float time = 1.33f, bool requireSight = true, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0.1f, float scale = 0.75f, float opacity = 1f)
+    {
+        RoguemojiGame.Instance.AddFloater(icon, GridPos, time, CurrentLevelId, new Vector2(Game.Random.Float(8f, 12f) * (FloaterNum % 2 == 0 ? -1 : 1), Game.Random.Float(-3f, 8f)), new Vector2(Game.Random.Float(12f, 15f) * (FloaterNum++ % 2 == 0 ? -1 : 1), Game.Random.Float(-13f, 3f)), height: Game.Random.Float(10f, 35f), text, requireSight, offsetEasingType, fadeInTime, scale, parent: this);
+    }
+
     public virtual void UseWieldedThing()
     {
         if (WieldedThing == null)

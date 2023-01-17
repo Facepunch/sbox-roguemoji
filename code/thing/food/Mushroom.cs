@@ -17,7 +17,30 @@ public partial class Mushroom : Thing
 
         if (Game.IsServer)
         {
-            AddTrait(AbilityName, "🍽️", $"Consume for a random positive or negative effect", offset: Vector2.Zero, tattooIcon: "🍄", tattooScale: 0.425f, tattooOffset: new Vector2(-0.3f, 0.1f));
+            AddTrait(AbilityName, "🍽️", $"Consume for a random positive or negative effect", offset: Vector2.Zero, tattooIcon: "🍄", tattooScale: 0.75f, tattooOffset: new Vector2(-0.3f, 0.1f), labelText: "❓️", labelOffset: new Vector2(0f, -16f), labelFontSize: 9, labelColor: Color.White);
         }
+    }
+
+    public override void Use(Thing user)
+    {
+        int rand = Game.Random.Int(0, 1);
+        switch (rand)
+        {
+            case 0:
+                int amount = 8;
+                int amountRecovered = Math.Min(amount, user.GetStatMax(StatType.Health) - user.GetStatClamped(StatType.Health));
+                user.AddSideFloater(GetStatIcon(StatType.Health), text: $"+{amountRecovered}");
+                user.AdjustStat(StatType.Health, amount);
+                break;
+            case 1:
+                var poison = user.AddComponent<CPoisoned>();
+                poison.Lifetime = 60f;
+                user.AddSideFloater(Globals.Icon(IconType.Poison));
+                break;
+        }
+
+        Destroy();
+
+        base.Use(user);
     }
 }
