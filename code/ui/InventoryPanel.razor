@@ -109,7 +109,9 @@
 
     protected override int BuildHash()
     {
-        var gridWidthHash = RoguemojiGame.Instance.LocalPlayer.InventoryGridManager.GridWidth;
-        return HashCode.Combine(GetThings().Count, gridWidthHash);
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        var gridWidthHash = player.InventoryGridManager.GridWidth;
+        var selectedThingHash = player.SelectedThing?.NetworkIdent ?? 0;
+        return HashCode.Combine(GetThings().Count, gridWidthHash, selectedThingHash);
     }
 }

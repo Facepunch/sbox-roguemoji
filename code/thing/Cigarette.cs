@@ -11,7 +11,9 @@ public partial class Cigarette : Thing
     public int DurabilityAmount { get; private set; }
     public int HealthCost { get; private set; }
     public int DurabilityCost { get; private set; }
-    
+    public int CharismaAmount { get; private set; }
+    public float CharismaTime { get; private set; }
+
 
     public override string AbilityName => "Take A Drag";
 
@@ -28,15 +30,19 @@ public partial class Cigarette : Thing
         {
             EnergyGained = 10;
             CooldownTime = 1f;
-            DurabilityAmount = 5;
+            DurabilityAmount = 105;
             HealthCost = 1;
             DurabilityCost = 1;
+            CharismaAmount = 2;
+            CharismaTime = 30f;
 
             InitStat(StatType.Durability, current: DurabilityAmount, max: DurabilityAmount);
 
             AddTrait(AbilityName, "💨", $"Puff the cigarette, gaining {GetStatIcon(StatType.Energy)} and exhaling a cloud of smoke nearby", offset: new Vector2(0f, -1f));
-            AddTrait("", GetStatIcon(StatType.Health), $"Smoking removes {HealthCost}{GetStatIcon(StatType.Health)} from the smoker", offset: new Vector2(0f, 0f), labelText: $"-{HealthCost}", labelFontSize: 18, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
-            AddTrait("", GetStatIcon(StatType.Durability), $"Smoking costs {DurabilityCost}{GetStatIcon(StatType.Durability)}", offset: new Vector2(0f, -3f), labelText: $"-{DurabilityCost}", labelFontSize: 18, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
+            AddTrait("", GetStatIcon(StatType.Health), $"Smoking removes {HealthCost}{GetStatIcon(StatType.Health)}", offset: new Vector2(0f, 0f), labelText: $"-{HealthCost}", labelFontSize: 18, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
+            AddTrait("", GetStatIcon(StatType.Energy), $"You gain {EnergyGained}{GetStatIcon(StatType.Energy)} for taking a drag", offset: new Vector2(0f, 0f), labelText: $"+{EnergyGained}", labelFontSize: 18, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
+            AddTrait("", GetStatIcon(StatType.Charisma), $"You gain {CharismaAmount}{GetStatIcon(StatType.Charisma)} for {CharismaTime}s after taking a drag", offset: new Vector2(0f, 0f), labelText: $"+{CharismaAmount}", labelFontSize: 18, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
+            AddTrait("", GetStatIcon(StatType.Durability), $"Ability costs {DurabilityCost}{GetStatIcon(StatType.Durability)}", offset: new Vector2(0f, -3f), labelText: $"-{DurabilityCost}", labelFontSize: 18, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 18, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
         }
     }
@@ -59,14 +65,13 @@ public partial class Cigarette : Thing
         else
         {
             CCigaretteCharismaBuff buff = user.AddComponent<CCigaretteCharismaBuff>();
-            buff.Lifetime = 30f;
-            buff.Change(StatType.Charisma, 3);
+            buff.Lifetime = CharismaTime;
+            buff.Change(StatType.Charisma, CharismaAmount);
         }
 
         // gain energy
         int amountRecovered = Math.Min(EnergyGained, user.GetStatMax(StatType.Energy) - user.GetStatClamped(StatType.Energy));
         RoguemojiGame.Instance.AddFloater(GetStatIcon(StatType.Energy), user.GridPos, 1.33f, user.CurrentLevelId, new Vector2(Game.Random.Float(-7f, 7f), Game.Random.Float(-1f, 10f)), new Vector2(Game.Random.Float(10f, 20f) * (user.FloaterNum++ % 2 == 0 ? -1 : 1), Game.Random.Float(-13f, 3f)), height: Game.Random.Float(10f, 35f), text: $"+{amountRecovered}", requireSight: true, EasingType.Linear, fadeInTime: 0.1f, scale: 0.75f, parent: user);
-
         user.AdjustStat(StatType.Energy, EnergyGained);
 
         // blow smoke
@@ -116,6 +121,8 @@ public class CCigaretteCharismaBuff : ThingComponent
         string changeSign = Math.Sign(ChangeAmount) > 0 ? "+" : "-";
         Trait = Thing.AddTrait("", Thing.GetStatIcon(StatType), $"Smoking gave you {changeSign}{ChangeAmount}{Thing.GetStatIcon(StatType)} temporarily", offset: new Vector2(0f, 0f), 
             tattooIcon: "🚬", tattooScale: 0.65f, tattooOffset: new Vector2(8f, 1f));
+
+        RoguemojiGame.Instance.AddFloater(Thing.GetStatIcon(StatType), Thing.GridPos, 1.5f, Thing.CurrentLevelId, new Vector2(Game.Random.Float(-7f, 7f), Game.Random.Float(-1f, 10f)), new Vector2(Game.Random.Float(10f, 20f) * (Thing.FloaterNum++ % 2 == 0 ? -1 : 1), Game.Random.Float(-13f, 3f)), height: Game.Random.Float(10f, 35f), text: $"+{ChangeAmount}", requireSight: true, EasingType.Linear, fadeInTime: 0.75f, scale: 0.75f, parent: Thing);
     }
 
     public override void Update(float dt)
@@ -134,5 +141,6 @@ public class CCigaretteCharismaBuff : ThingComponent
     {
         Thing.AdjustStat(StatType, -ChangeAmount);
         Thing.RemoveTrait(Trait);
+        RoguemojiGame.Instance.AddFloater(Thing.GetStatIcon(StatType), Thing.GridPos, 1.5f, Thing.CurrentLevelId, new Vector2(Game.Random.Float(-7f, 7f), Game.Random.Float(-1f, 10f)), new Vector2(Game.Random.Float(10f, 20f) * (Thing.FloaterNum++ % 2 == 0 ? -1 : 1), Game.Random.Float(-13f, 3f)), height: Game.Random.Float(10f, 35f), text: $"-{ChangeAmount}", requireSight: true, EasingType.Linear, fadeInTime: 0.75f, scale: 0.75f, parent: Thing);
     }
 }

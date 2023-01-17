@@ -8,12 +8,13 @@
 <style>
     .stat_container {
         height: 32px;
-        border: 1px solid #151515;
+        //border: 1px solid #151515;
         border-radius: 3px;
-        margin: 2px;
-        background-color: #050505;
+        margin: 1px;
+        background-color: #101010;
         //padding: 2px;
         justify-content: space-between;
+        overflow: hidden;
     }
 
     .stat_icon {
@@ -38,23 +39,25 @@
 
     .stat_bar {
         width: 100%;
-        //left: 2px;
+        //left: -1px;
         height: 3px;
         background-color: #222222;
         align-self: center;
         position: absolute;
         bottom: 0px;
         border-radius: 1px;
+        //border: 1px solid #222222;
     }
 
     .stat_bar_overlay {
         height: 3px;
-        //left: 2px;
+        //left: -1px;
         bottom: 0px;
         border-radius: 1px;
         position: absolute;
         align-self: center;
-        transform-origin: left;
+        //transform-origin: left;
+        //border: 1px solid #000000;
     }
 </style>
 

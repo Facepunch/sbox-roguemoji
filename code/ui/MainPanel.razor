@@ -21,12 +21,12 @@
         width: 100%;
         //height: 100%;
         //background-color: #002200;
-        //margin-bottom: 5px;
+        //margin-bottom: 8px;
     }
 
     .lower_row {
         flex-direction:row;
-        margin: 0 10px 10px 10px;
+        margin: 0 8px 8px 8px;
         //background-color: #333300;
         flex-grow: 1;
         //border: 1px solid #ff88ff05;
@@ -47,7 +47,7 @@
         flex-grow: 0;
         flex-shrink: 0;
         flex-direction: column;
-        margin: 10px 0 0 10px;
+        margin: 8px 0 0 8px;
     }
 
     .upper_middle_column {
@@ -55,7 +55,7 @@
         flex-grow: 0;
         flex-shrink: 0;
         flex-direction: column;
-        margin: 10px 10px 0 10px;
+        margin: 8px 8px 0 8px;
     }
 
     .upper_right_column {
@@ -63,7 +63,7 @@
         flex-grow: 1;
         flex-shrink: 2;
         flex-direction: column;
-        margin: 10px 10px 0 0;
+        margin: 8px 8px 0 0;
     }
 
     <!-- .upper_right_column {
@@ -84,7 +84,7 @@
         //flex-grow: 0;
         //flex-shrink: 1;
         min-height: 10px;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
     }
 
     .character {
@@ -96,7 +96,7 @@
 
     .nearby {
         width: 45px;
-        margin: 0 10px 0 10px;
+        margin: 0 8px 0 8px;
         border: 1px solid #424242;
         border-radius: 3px;
     }
@@ -104,12 +104,12 @@
     .inventory {
         border: 1px solid #303030;
         border-radius: 3px;
-        margin: 0 0 0 10px;
+        margin: 0 0 0 8px;
     }
 
     .info {
         border-radius: 3px;
-        margin-right: 10px;
+        margin-right: 8px;
     }
 </style>
 
@@ -133,7 +133,7 @@
         </div>
     </div>
 
-    <div class="lower_row" style="height: @(RoguemojiGame.CellSize * player.InventoryGridManager.GridHeight)px; max-height: @(RoguemojiGame.CellSize * player.InventoryGridManager.GridHeight)px;">
+    <div class="lower_row" style="height: @(RoguemojiGame.CellSize * player.InventoryGridManager.GridHeight + 3)px; max-height: @(RoguemojiGame.CellSize * player.InventoryGridManager.GridHeight + 3)px;">
         <CharacterPanel class="character" @ref=CharacterPanel></CharacterPanel>
         <InventoryPanel class="inventory" style="width: @(RoguemojiGame.CellSize * player.InventoryGridManager.GridWidth + 3)px;" @ref=InventoryPanel></InventoryPanel>
         <NearbyPanel class="nearby" @ref=NearbyPanel></NearbyPanel>
