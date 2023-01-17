@@ -46,25 +46,19 @@ public partial class Scroll : Thing
     public override void Use(Thing user)
     {
         base.Use(user);
-
-        if (user is RoguemojiPlayer player)
-            player.IdentifyScroll(ScrollType);
+        RoguemojiGame.Instance.RevealScroll(ScrollType, user.GridPos, user.CurrentLevelId);
     }
 
     public override void Use(Thing user, Direction direction)
     {
         base.Use(user, direction);
-
-        if (user is RoguemojiPlayer player)
-            player.IdentifyScroll(ScrollType);
+        RoguemojiGame.Instance.RevealScroll(ScrollType, user.GridPos, user.CurrentLevelId);
     }
 
     public override void Use(Thing user, IntVector targetGridPos)
     {
         base.Use(user, targetGridPos);
-
-        if (user is RoguemojiPlayer player)
-            player.IdentifyScroll(ScrollType);
+        RoguemojiGame.Instance.RevealScroll(ScrollType, user.GridPos, user.CurrentLevelId);
     }
 
     public void SetTattoo(string icon)

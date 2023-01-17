@@ -13,4 +13,6 @@ public partial class Leaf : Thing
         IconDepth = 0;
 		Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
     }
+
+    // todo: make crunching noise when you move onto it
 }

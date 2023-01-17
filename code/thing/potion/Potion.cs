@@ -47,7 +47,6 @@ public partial class Potion : Thing
     public override void Use(Thing user)
     {
         base.Use(user);
-
         RoguemojiGame.Instance.RevealPotion(PotionType, user.GridPos, user.CurrentLevelId);
     }
 
