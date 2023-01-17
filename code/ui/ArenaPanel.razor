@@ -150,10 +150,10 @@
 
             if (thing == player.SelectedThing)
             {
-                <div class="selected" style="left: @((offsetGridPos.x * RoguemojiGame.CellSize) + player.CameraPixelOffset.x + thing.Offset.x * ScaleToScreen); top: @((offsetGridPos.y * RoguemojiGame.CellSize) + player.CameraPixelOffset.y + thing.Offset.y * ScaleToScreen);"></div>
+                <div class="selected" style="left: @((offsetGridPos.x * RoguemojiGame.CellSize) + player.CameraPixelOffset.x + thing.TotalOffset.x * ScaleToScreen); top: @((offsetGridPos.y * RoguemojiGame.CellSize) + player.CameraPixelOffset.y + thing.TotalOffset.y * ScaleToScreen);"></div>
             }
 
-            <GridCell style="left: @((offsetGridPos.x * RoguemojiGame.CellSize) + player.CameraPixelOffset.x + thing.Offset.x * ScaleToScreen); top: @((offsetGridPos.y * RoguemojiGame.CellSize) + player.CameraPixelOffset.y + thing.Offset.y * ScaleToScreen);" Thing=@thing GridIndex=@index />
+            <GridCell style="left: @((offsetGridPos.x * RoguemojiGame.CellSize) + player.CameraPixelOffset.x + thing.TotalOffset.x * ScaleToScreen); top: @((offsetGridPos.y * RoguemojiGame.CellSize) + player.CameraPixelOffset.y + thing.TotalOffset.y * ScaleToScreen);" Thing=@thing GridIndex=@index />
         }
     }
 

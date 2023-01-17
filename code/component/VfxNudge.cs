@@ -17,7 +17,7 @@ public class VfxNudge : ThingComponent
         IsClientComponent = true;
 
         var dir = GridManager.GetVectorForDirection(Direction);
-        Thing.SetOffset(dir * 0f);
+        Thing.SetMoveOffset(dir * 0f);
     }
 
     public override void Update(float dt)
@@ -25,7 +25,7 @@ public class VfxNudge : ThingComponent
         base.Update(dt);
 
         var dir = GridManager.GetVectorForDirection(Direction);
-        Thing.SetOffset(dir * Utils.MapReturn(TimeElapsed, 0f, Lifetime, 0f, Distance, EasingType.QuadOut));
+        Thing.SetMoveOffset(dir * Utils.MapReturn(TimeElapsed, 0f, Lifetime, 0f, Distance, EasingType.QuadOut));
 
         if(TimeElapsed > Lifetime)
             Remove();
@@ -38,6 +38,6 @@ public class VfxNudge : ThingComponent
 
     public override void OnRemove()
     {
-        Thing.SetOffset(Vector2.Zero);
+        Thing.SetMoveOffset(Vector2.Zero);
     }
 }

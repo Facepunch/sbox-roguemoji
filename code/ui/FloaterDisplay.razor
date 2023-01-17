@@ -53,7 +53,7 @@
         var floaterGridPos = floater.parent != null ? floater.parent.GridPos : floater.gridPos;
         @if (!floater.requireSight || player.IsCellVisible(floaterGridPos))
         {
-            Vector2 parentOffset = floater.parent?.Offset ?? Vector2.Zero;
+            Vector2 parentOffset = floater.parent?.TotalOffset ?? Vector2.Zero;
             Vector2 pos = ((Hud.Instance.GetScreenPosForArenaGridPos(floaterGridPos) + parentOffset) / ScaleToScreen) + new Vector2(-RoguemojiGame.CellSize / 2, -RoguemojiGame.CellSize / 2);
 
             float scale = floater.height > 0f ? floater.scale * Utils.MapReturn(floater.timeSinceStart, 0f, floater.time, 1f, 1.2f, EasingType.SineInOut) : floater.scale;

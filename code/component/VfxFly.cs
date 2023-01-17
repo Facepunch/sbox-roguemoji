@@ -38,11 +38,11 @@ public class VfxFly : ThingComponent
     {
         IntVector deltaGrid = StartingGridPos - Thing.GridPos;
         float yOffset = Utils.MapReturn(progress, 0f, 1f, 0f, -HeightY, HeightEasingType);
-        Thing.SetOffset(deltaGrid * RoguemojiGame.CellSize * (1f - progress) + new Vector2(0f, yOffset));
+        Thing.SetMoveOffset(deltaGrid * RoguemojiGame.CellSize * (1f - progress) + new Vector2(0f, yOffset));
     }
 
     public override void OnRemove()
     {
-        Thing.SetOffset(Vector2.Zero);
+        Thing.SetMoveOffset(Vector2.Zero);
     }
 }

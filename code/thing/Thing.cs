@@ -54,7 +54,9 @@ public partial class Thing : Entity
     [Net] public int StackNum { get; set; }
     [Net] public float PathfindMovementCost { get; set; }
 
-    public Vector2 Offset { get; set; }
+    public Vector2 MoveOffset { get; set; }
+    public Vector2 ShakeOffset { get; set; }
+    public Vector2 TotalOffset => MoveOffset + ShakeOffset;
     public float RotationDegrees { get; set; }
     public float IconScale { get; set; }
     public int CharSkip { get; set; } // Client-only
@@ -412,16 +414,22 @@ public partial class Thing : Entity
     }
 
     [ClientRpc]
-    public void SetTransformClient(float offsetX = 0f, float offsetY = 0f, float degrees = 0f, float scale = 1f)
+    public void SetTransformClient(float moveOffsetX = 0f, float moveOffsetY = 0f, float shakeOffsetX = 0f, float shakeOffsetY = 0f, float degrees = 0f, float scale = 1f)
     {
-        Offset = new Vector2(offsetX, offsetY);
+        MoveOffset = new Vector2(moveOffsetX, moveOffsetY);
+        ShakeOffset = new Vector2(shakeOffsetX, shakeOffsetY);
         RotationDegrees = degrees;
         IconScale = scale;
     }
 
-    public void SetOffset(Vector2 offset)
+    public void SetMoveOffset(Vector2 moveOffset)
     {
-        Offset = offset;
+        MoveOffset = moveOffset;
+    }
+
+    public void SetShakeOffset(Vector2 shakeOffset)
+    {
+        ShakeOffset = shakeOffset;
     }
 
     public void SetRotation(float rotationDegrees)

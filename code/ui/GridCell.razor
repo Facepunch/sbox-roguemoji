@@ -232,7 +232,8 @@
             return;
 
         Tooltip = Thing.Tooltip;
-        SetTransform(Thing.Offset * ScaleToScreen, Thing.RotationDegrees, Thing.IconScale);
+        //SetTransform(Thing.Offset * ScaleToScreen, Thing.RotationDegrees, Thing.IconScale);
+        SetTransform(Vector2.Zero, Thing.RotationDegrees, Thing.IconScale);
         Style.ZIndex = GridIndex + Thing.GetZPos();
     }
 

@@ -94,6 +94,8 @@ public partial class Thing : Entity
     [ClientRpc]
     public void VfxNudge(Direction direction, float lifetime, float distance)
     {
+        RemoveMoveVfx();
+
         var nudge = AddComponent<VfxNudge>();
         nudge.Direction = direction;
         nudge.Lifetime = lifetime;
@@ -103,6 +105,8 @@ public partial class Thing : Entity
     [ClientRpc]
     public void VfxSlide(Direction direction, float lifetime, float distance)
     {
+        RemoveMoveVfx();
+
         var slide = AddComponent<VfxSlide>();
         slide.Direction = direction;
         slide.Lifetime = lifetime;
@@ -138,11 +142,20 @@ public partial class Thing : Entity
     [ClientRpc]
     public void VfxFly(IntVector startingGridPos, float lifetime, float heightY = 0f, EasingType progressEasingType = EasingType.ExpoOut, EasingType heightEasingType = EasingType.QuadInOut)
     {
+        RemoveMoveVfx();
+
         var fly = AddComponent<VfxFly>();
         fly.StartingGridPos = startingGridPos;
         fly.Lifetime = lifetime;
         fly.HeightY = heightY;
         fly.ProgressEasingType = progressEasingType;
         fly.HeightEasingType = heightEasingType;
+    }
+
+    void RemoveMoveVfx()
+    {
+        RemoveComponent<VfxSlide>();
+        RemoveComponent<VfxNudge>();
+        RemoveComponent<VfxFly>();
     }
 }

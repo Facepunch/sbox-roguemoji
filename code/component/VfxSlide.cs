@@ -17,7 +17,7 @@ public class VfxSlide : ThingComponent
         IsClientComponent = true;
 
         var dir = GridManager.GetVectorForDirection(Direction);
-        Thing.SetOffset(dir * -Distance);
+        Thing.SetMoveOffset(dir * -Distance);
     }
 
     public override void Update(float dt)
@@ -25,7 +25,7 @@ public class VfxSlide : ThingComponent
         base.Update(dt);
 
         var dir = GridManager.GetVectorForDirection(Direction);
-        Thing.SetOffset(dir * Utils.Map(TimeElapsed, 0f, Lifetime, -Distance, 0f, EasingType.QuadOut));
+        Thing.SetMoveOffset(dir * Utils.Map(TimeElapsed, 0f, Lifetime, -Distance, 0f, EasingType.QuadOut));
 
         if(TimeElapsed > Lifetime)
             Remove();
@@ -33,6 +33,6 @@ public class VfxSlide : ThingComponent
 
     public override void OnRemove()
     {
-        Thing.SetOffset(Vector2.Zero);
+        Thing.SetMoveOffset(Vector2.Zero);
     }
 }
