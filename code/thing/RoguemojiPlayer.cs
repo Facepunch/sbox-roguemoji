@@ -1173,7 +1173,7 @@ public partial class RoguemojiPlayer : Thing
         if (!IdentifiedPotionTypes.Contains(potionType))
         {
             IdentifiedPotionTypes.Add(potionType);
-            RoguemojiGame.Instance.AddFloater("💡", GridPos, 1f, CurrentLevelId, new Vector2(-1f, -10f), new Vector2(-1f, -30f), height: 0f, text: "", requireSight: true, EasingType.QuadOut, fadeInTime: 0.5f, scale: 0.8f, opacity: 0.66f, parent: this);
+            RoguemojiGame.Instance.AddFloater("💡", GridPos, 1f, CurrentLevelId, new Vector2(0f, -10f), new Vector2(0, -30f), height: 0f, text: "", requireSight: true, EasingType.QuadOut, fadeInTime: 0.5f, scale: 0.8f, opacity: 0.66f, parent: this);
             RoguemojiGame.Instance.LogMessageClient(To.Single(this), $"💡 You identified {Potion.GetDisplayName(potionType)} {Potion.GetChatDisplayIcons(potionType)}", playerNum: 0);
         }
     }

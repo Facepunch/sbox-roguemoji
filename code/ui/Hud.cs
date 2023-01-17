@@ -98,16 +98,16 @@ public partial class Hud : RootPanel
 				StopDragging();
 		}
 
-        //      var player = RoguemojiGame.Instance.LocalPlayer;
+        //var player = RoguemojiGame.Instance.LocalPlayer;
         //foreach (var gridPos in player.VisibleCells)
         //{
-        //	//DebugDrawing.GridCell(gridPos, new Color(0f, 0f, 1f, 0.1f));
+        //    DebugDrawing.GridCell(gridPos, new Color(0f, 0f, 1f, 1f), 0.02f);
         //}
         //DebugDrawing.Line(GetScreenPosForArenaGridPos(new IntVector(18, 19)), GetScreenPosForArenaGridPos(new IntVector(21, 22)), new Color(0f, 1f, 1f, 0.9f));
         //DebugDrawing.GridLine(new IntVector(19, 19), new IntVector(22, 22), Color.Blue);
         //DebugDrawing.GridCell(new IntVector(20, 20), Color.Red);
 
-        for(int i = Floaters.Count - 1; i >= 0; i--)
+        for (int i = Floaters.Count - 1; i >= 0; i--)
         {
             var floater = Floaters[i];
 
@@ -312,7 +312,7 @@ public partial class Hud : RootPanel
 
         //Log.Info($"GetScreenPosForArenaGridPos: {gridPos} - {(rect.TopLeft + arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset)}");
 
-        return rect.TopLeft + arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset + new Vector2(-logRect.Width + 14, 20);
+        return rect.TopLeft + arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset + new Vector2(-logRect.Width + 0, 12);
     }
 
     public string GetUnusableClass(Thing thing)
