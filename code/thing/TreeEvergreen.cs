@@ -7,9 +7,9 @@ public partial class TreeEvergreen : Thing
 	public TreeEvergreen()
 	{
 		DisplayIcon = "🌲";
-        DisplayName = "Evergreen Tree";
-        Description = "A tall tree";
-        Tooltip = "An evergreen tree";
+        DisplayName = "Tree";
+        Description = "A tall evergreen tree";
+        Tooltip = "A tree";
         IconDepth = 1;
 		Flags = ThingFlags.Solid | ThingFlags.Selectable;
 		PathfindMovementCost = 999f;

@@ -43,7 +43,7 @@ public partial class ScrollFear : Scroll
                 fearful.FearedThing = user;
 
                 var acting = (CActing)component;
-                acting.TimeElapsed = acting.ActionDelay - Game.Random.Float(0f, 0.2f);
+                acting.ActionTimer = acting.ActionDelay - Game.Random.Float(0f, 0.2f);
             }
         }
 

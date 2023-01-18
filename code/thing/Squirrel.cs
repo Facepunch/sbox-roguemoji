@@ -41,7 +41,7 @@ public partial class Squirrel : Thing
         Targeting = AddComponent<CTargeting>();
         Acting = AddComponent<CActing>();
         Acting.ActionDelay = 1f;
-        Acting.TimeElapsed = Game.Random.Float(0f, 1f);
+        Acting.ActionTimer = Game.Random.Float(0f, 1f);
     }
 
     //public override void ClientTick()
@@ -121,7 +121,7 @@ public partial class Squirrel : Thing
         RoguemojiGame.Instance.RemoveFloater("❔", CurrentLevelId, parent: this);
         RoguemojiGame.Instance.AddFloater("❕", GridPos, 1.55f, CurrentLevelId, new Vector2(0f, -10f), new Vector2(0f, -35f), height: 0f, text: "", requireSight: true, EasingType.QuadOut, 0.05f, parent: this);
         Acting.PerformedAction();
-        Acting.TimeElapsed = Game.Random.Float(0f, 0.1f);
+        Acting.ActionTimer = Game.Random.Float(0f, 0.1f);
         TargetLastSeenPos = target.GridPos;
     }
 
@@ -132,7 +132,7 @@ public partial class Squirrel : Thing
         RoguemojiGame.Instance.RemoveFloater("❕", CurrentLevelId, parent: this);
         RoguemojiGame.Instance.AddFloater("❔", GridPos, Game.Random.Float(0.95f, 1.1f), CurrentLevelId, new Vector2(0f, -10f), new Vector2(0f, -30f), height: 0f, text: "", requireSight: false, EasingType.QuadOut, 0.1f, parent: this);
         Acting.PerformedAction();
-        Acting.TimeElapsed = Game.Random.Float(0f, 0.1f);
+        Acting.ActionTimer = Game.Random.Float(0f, 0.1f);
     }
 
     public override void TakeDamage(Thing source)

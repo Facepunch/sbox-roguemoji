@@ -176,7 +176,8 @@ public partial class RoguemojiPlayer : Thing
             case 8: InventoryGridManager.SpawnThing<SafetyVest>(gridPos); break;
             case 9: InventoryGridManager.SpawnThing<Sunglasses>(gridPos); break;
             //case 10: InventoryGridManager.SpawnThing<Telescope>(gridPos); break;
-            case 10: InventoryGridManager.SpawnThing<Refreshment>(gridPos); break;
+            //case 10: InventoryGridManager.SpawnThing<Refreshment>(gridPos); break;
+            case 10: InventoryGridManager.SpawnThing<PotionSleeping>(gridPos); break;
             case 11: InventoryGridManager.SpawnThing<WhiteCane>(gridPos); break;
             //case 11: InventoryGridManager.SpawnThing<Cigarette>(gridPos); break;
             case 12: InventoryGridManager.SpawnThing<ScrollBlink>(gridPos); break;
@@ -304,6 +305,11 @@ public partial class RoguemojiPlayer : Thing
             QueuedAction = null;
             QueuedActionName = "";
         }
+    }
+
+    public void ClearQueuedAction()
+    {
+        QueuedAction = null;
     }
 
     void WieldHotbarSlot(int index)

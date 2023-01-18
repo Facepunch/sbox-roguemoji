@@ -32,6 +32,6 @@ public partial class Golem : Thing
         Targeting = AddComponent<CTargeting>();
         Acting = AddComponent<CActing>();
         Acting.ActionDelay = 1.5f;
-        Acting.TimeElapsed = Game.Random.Float(0f, 1.5f);
+        Acting.ActionTimer = Game.Random.Float(0f, 1.5f);
     }
 }

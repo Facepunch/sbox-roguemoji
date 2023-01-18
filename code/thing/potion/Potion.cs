@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public enum PotionType { Health, Mana, Energy, Poison, Blindness }
+public enum PotionType { Health, Mana, Energy, Poison, Blindness, Sleeping }
 public partial class Potion : Thing
 {
     [Net] public PotionType PotionType { get; protected set; }
@@ -27,6 +27,7 @@ public partial class Potion : Thing
             case PotionType.Mana: return "Mana Potion";
             case PotionType.Poison: return "Poison Potion";
             case PotionType.Blindness: return "Blindness Potion";
+            case PotionType.Sleeping: return "Sleeping Potion";
         }
 
         return "";
@@ -41,6 +42,7 @@ public partial class Potion : Thing
             case PotionType.Mana: return $"🧉{GetStatIcon(StatType.Mana)}";
             case PotionType.Poison: return $"🧉{Globals.Icon(IconType.Poison)}";
             case PotionType.Blindness: return $"🧉{Globals.Icon(IconType.Blindness)}";
+            case PotionType.Sleeping: return $"🧉{Globals.Icon(IconType.Sleeping)}";
         }
 
         return "🧉";
@@ -59,8 +61,10 @@ public partial class Potion : Thing
 
     public override void HitOther(Thing target, Direction direction)
     {
-        target.VfxShake(0.2f, 4f);
-        Break();
+        base.HitOther(target, direction);
+
+        if(HasComponent<CProjectile>())
+            Break();
     }
 
     public void Break()

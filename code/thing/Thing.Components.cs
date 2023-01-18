@@ -78,6 +78,7 @@ public partial class Thing : Entity
         return ThingComponents.ContainsKey(type);
     }
 
+    /// <summary> Server-only. </summary>
     public bool HasComponent<T>() where T : ThingComponent
     {
         return HasComponent(TypeLibrary.GetType(typeof(T)));
