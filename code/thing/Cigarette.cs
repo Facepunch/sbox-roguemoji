@@ -30,7 +30,7 @@ public partial class Cigarette : Thing
         {
             EnergyGained = 10;
             CooldownTime = 1f;
-            DurabilityAmount = 105;
+            DurabilityAmount = 5;
             HealthCost = 1;
             DurabilityCost = 1;
             CharismaAmount = 2;

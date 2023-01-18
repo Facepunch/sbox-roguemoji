@@ -9,6 +9,7 @@ public partial class Squirrel : Thing
 
     public float CantSeeTargetElapsedTime { get; private set; }
     public float CantSeeTargetLoseDelay { get; private set; }
+    public IntVector TargetLastSeenPos { get; set; }
 
     public Squirrel()
 	{
@@ -73,11 +74,16 @@ public partial class Squirrel : Thing
                 bool canSeeTarget = CanSee(Targeting.Target.GridPos, adjustedSight);
                 bool isFearful = GetComponent<CFearful>(out var fearful);
 
+                //RoguemojiGame.Instance.DebugGridLine(GridPos, Targeting.Target.GridPos, canSeeTarget ? new Color(0f, 0f, 1f, 0.2f) : new Color(1f, 0f, 0f, 0.2f), 0f, CurrentLevelId);
+
                 if (Acting.IsActionReady)
                 {
+                    if (canSeeTarget)
+                        TargetLastSeenPos = Targeting.Target.GridPos;
+
                     var targetPos = isFearful
                         ? CFearful.GetTargetRetreatPoint(GridPos, ((CFearful)fearful).FearedThing.GridPos, ContainingGridManager)
-                        : Targeting.Target.GridPos;
+                        : TargetLastSeenPos;
 
                     //RoguemojiGame.Instance.DebugGridLine(GridPos, targetPos, canSeeTarget ? new Color(0f, 0f, 1f, 0.2f) : new Color(1f, 0f, 0f, 0.2f), 0.5f, CurrentLevelId);
 
@@ -116,6 +122,7 @@ public partial class Squirrel : Thing
         RoguemojiGame.Instance.AddFloater("❕", GridPos, 1.55f, CurrentLevelId, new Vector2(0f, -10f), new Vector2(0f, -35f), height: 0f, text: "", requireSight: true, EasingType.QuadOut, 0.05f, parent: this);
         Acting.PerformedAction();
         Acting.TimeElapsed = Game.Random.Float(0f, 0.1f);
+        TargetLastSeenPos = target.GridPos;
     }
 
     public override void OnLoseTarget()

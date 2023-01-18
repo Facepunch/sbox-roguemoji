@@ -169,15 +169,16 @@ public partial class RoguemojiPlayer : Thing
             case 4: InventoryGridManager.SpawnThing<Trumpet>(gridPos); break;
             //case 5: InventoryGridManager.SpawnThing<Bouquet>(gridPos); break;
             case 5: InventoryGridManager.SpawnThing<PotionPoison>(gridPos); break;
-            case 6: InventoryGridManager.SpawnThing<Cheese>(gridPos); break;
+            //case 6: InventoryGridManager.SpawnThing<Cheese>(gridPos); break;
+            case 6: InventoryGridManager.SpawnThing<PotionBlindness>(gridPos); break;
             //case 7: InventoryGridManager.SpawnThing<Coat>(gridPos); break;
             case 7: InventoryGridManager.SpawnThing<ScrollTelekinesis>(gridPos); break;
             case 8: InventoryGridManager.SpawnThing<SafetyVest>(gridPos); break;
             case 9: InventoryGridManager.SpawnThing<Sunglasses>(gridPos); break;
             //case 10: InventoryGridManager.SpawnThing<Telescope>(gridPos); break;
             case 10: InventoryGridManager.SpawnThing<Refreshment>(gridPos); break;
-            //case 11: InventoryGridManager.SpawnThing<WhiteCane>(gridPos); break;
-            case 11: InventoryGridManager.SpawnThing<Cigarette>(gridPos); break;
+            case 11: InventoryGridManager.SpawnThing<WhiteCane>(gridPos); break;
+            //case 11: InventoryGridManager.SpawnThing<Cigarette>(gridPos); break;
             case 12: InventoryGridManager.SpawnThing<ScrollBlink>(gridPos); break;
             case 13: InventoryGridManager.SpawnThing<BowAndArrow>(gridPos); break;
             case 14: InventoryGridManager.SpawnThing<Backpack>(gridPos); break;
@@ -1159,7 +1160,7 @@ public partial class RoguemojiPlayer : Thing
         {
             IdentifiedScrollTypes.Add(scrollType);
             RoguemojiGame.Instance.AddFloater("💡", GridPos, 1f, CurrentLevelId, new Vector2(-1f, -10f), new Vector2(-1f, -30f), height: 0f, text: "", requireSight: true, EasingType.QuadOut, fadeInTime: 0.5f, scale: 0.8f, opacity: 0.66f, parent: this);
-            RoguemojiGame.Instance.LogMessageClient(To.Single(this), $"💡 You identified {Scroll.GetDisplayName(scrollType)} {Scroll.GetChatDisplayIcons(scrollType)}", playerNum: 0);
+            RoguemojiGame.Instance.LogMessageClient(To.Single(this), $"💡 You identified 📜{RoguemojiGame.Instance.GetUnidentifiedScrollIcon(scrollType)} as {Scroll.GetDisplayName(scrollType)}{Scroll.GetChatDisplayIcons(scrollType)}", playerNum: 0);
         }
     }
 
@@ -1174,7 +1175,7 @@ public partial class RoguemojiPlayer : Thing
         {
             IdentifiedPotionTypes.Add(potionType);
             RoguemojiGame.Instance.AddFloater("💡", GridPos, 1f, CurrentLevelId, new Vector2(0f, -10f), new Vector2(0, -30f), height: 0f, text: "", requireSight: true, EasingType.QuadOut, fadeInTime: 0.5f, scale: 0.8f, opacity: 0.66f, parent: this);
-            RoguemojiGame.Instance.LogMessageClient(To.Single(this), $"💡 You identified {Potion.GetDisplayName(potionType)} {Potion.GetChatDisplayIcons(potionType)}", playerNum: 0);
+            RoguemojiGame.Instance.LogMessageClient(To.Single(this), $"💡 You identified 🧉{RoguemojiGame.Instance.GetUnidentifiedPotionIcon(potionType)} as {Potion.GetDisplayName(potionType)}{Potion.GetChatDisplayIcons(potionType)}", playerNum: 0);
         }
     }
 
