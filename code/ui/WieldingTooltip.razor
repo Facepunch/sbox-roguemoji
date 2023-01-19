@@ -59,28 +59,42 @@
 
 <root class="wielding_tooltip">
     
-    <!-- <div class="wielding_title">@Thing.Tooltip</div> -->
+    <div class="wielding_title">
+        @(Hud.GetTooltip(Thing))
+    </div>
 
     @if(Thing.HasFlag(ThingFlags.Useable))
     {
         <div class="wielding_line">
-            <span class="wielding_action" style="color: #666666;">@(Thing.AbilityName)</span>
+            <span class="wielding_action" style="color: #666666;">
+                @(Hud.GetText(Thing.AbilityName))
+            </span>
+
             <span class="wielding_bind">[Space]</span>
         </div>
     }
 
     <div class="wielding_line">
-        <span class="wielding_action">Throw</span>
+        <span class="wielding_action">
+            @(Hud.GetText("Throw"))
+        </span>
+
         <span class="wielding_bind">[F]</span>
     </div>
 
     <div class="wielding_line">
-        <span class="wielding_action">Drop</span>
+        <span class="wielding_action">
+            @(Hud.GetText("Drop"))
+        </span>
+
         <span class="wielding_bind">[G]</span>
     </div>
 
     <div class="wielding_line">
-        <span class="wielding_action">Unequip</span>
+        <span class="wielding_action">
+            @(Hud.GetText("Unequip"))
+        </span>
+
         <span class="wielding_bind">[Q]</span>
     </div>
 </root>

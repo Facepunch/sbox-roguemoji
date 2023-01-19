@@ -53,21 +53,26 @@
 </style>
 
 <root class="cell_tooltip @GetEquipmentClass()">
-    @(GetTooltip(Thing))
+    @(Hud.GetTooltip(Thing))
 
     @if(Thing.ContainingGridType == GridType.Inventory)
     {
         if(Thing.HasFlag(ThingFlags.Equipment))
         {
             <div class="cell_tooltip_line">
-                <span class="cell_tooltip_action">Wear</span>
+                <span class="cell_tooltip_action">
+                    @(Hud.GetText("Wear"))
+                </span>
                 <span class="cell_tooltip_bind">[RMB]</span>
             </div>
         }
         else
         {
             <div class="cell_tooltip_line">
-                <span class="cell_tooltip_action">Equip</span>
+                <span class="cell_tooltip_action">
+                    @(Hud.GetText("Equip"))
+                </span>
+
                 <span class="cell_tooltip_bind">[RMB]</span>
             </div>
         }
@@ -76,14 +81,16 @@
     @if (IsNearby)
     {
         <div class="cell_tooltip_line">
-            <span class="cell_tooltip_action">Pick Up</span>
+            <span class="cell_tooltip_action">
+                @(Hud.GetText("Pick Up"))
+            </span>
+
             <span class="cell_tooltip_bind">[RMB]</span>
 
             @if(ShowPickUpKey)
             {
                 <span class="cell_tooltip_bind">[E]</span>
             }
-            
         </div>
     }
 
@@ -96,22 +103,4 @@
     public bool ShowPickUpKey { get; set; }
 
     string GetEquipmentClass() { return Thing != null && Thing.HasFlag(ThingFlags.Equipment) ? "equipment_tooltip" : ""; }
-
-    string GetTooltip(Thing thing)
-    {
-        var player = RoguemojiGame.Instance.LocalPlayer;
-
-        if(thing is Scroll scroll)
-        {
-            if (!player.IsScrollTypeIdentified(scroll.ScrollType))
-                return $"A scroll of {RoguemojiGame.Instance.GetUnidentifiedScrollName(scroll.ScrollType)}";
-        }
-        else if(thing is Potion potion)
-        {
-            if (!player.IsPotionTypeIdentified(potion.PotionType))
-                return $"A {RoguemojiGame.Instance.GetUnidentifiedPotionName(potion.PotionType)} potion";
-        }
-
-        return thing.Tooltip;
-    }
 }

@@ -141,7 +141,10 @@
     }
 
     <div class="column">
-        <div class="name_label"> @player.DisplayName </div>
+        <div class="name_label">
+            @(Hud.GetText(player.DisplayName))
+        </div>
+
         <div class="char_icon @GetPlayerClass()" @ref=PlayerIcon @onmousedown=@((PanelEvent e) => OnMouseDownPlayerIcon(e as MousePanelEvent) )> @player.DisplayIcon </div>
         <div class="input_recharge_bar">
             <div class="input_recharge_bar_overlay" style="width: @Utils.Map(player.ActionRechargePercent, 0f, 1f, 0f, 100f, EasingType.SineInOut)%; opacity: @Utils.Map(player.ActionRechargePercent, 0f, 1f, 0.25f, 1f, EasingType.ExpoIn);"></div>
@@ -187,7 +190,7 @@
     protected override int BuildHash()
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
-        return HashCode.Combine(player.GetInfoDisplayHash(), player.ActionRechargePercent, player.StatHash);
+        return HashCode.Combine(player.GetInfoDisplayHash(), player.ActionRechargePercent, player.StatHash, player.ConfusionSeed);
     }
 
     public void OnMouseDownPlayerIcon(MousePanelEvent e)

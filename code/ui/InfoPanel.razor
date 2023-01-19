@@ -106,7 +106,7 @@
             </div> 
         }
 
-        <div class="icon @GetPlayerClass() @Hud.Instance.GetUnusableClass(SelectedThing)">
+        <div class="icon @GetPlayerClass() @Hud.GetUnusableClass(SelectedThing)">
             @SelectedThing.DisplayIcon
 
             @if (SelectedThing.HasTattoo)
@@ -173,41 +173,51 @@
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
 
+        var str = thing.DisplayName;
+
         if (thing is Scroll scroll)
         {
             if (!player.IsScrollTypeIdentified(scroll.ScrollType))
-                return $"Scroll of {RoguemojiGame.Instance.GetUnidentifiedScrollName(scroll.ScrollType)}";
+                str = $"Scroll of {RoguemojiGame.Instance.GetUnidentifiedScrollName(scroll.ScrollType)}";
         }
         else if (thing is Potion potion)
         {
             if (!player.IsPotionTypeIdentified(potion.PotionType))
-                return $"{RoguemojiGame.Instance.GetUnidentifiedPotionName(potion.PotionType).FirstCharToUpper()} Potion";
+                str = $"{RoguemojiGame.Instance.GetUnidentifiedPotionName(potion.PotionType).FirstCharToUpper()} Potion";
         }
 
-        return thing.DisplayName;
+        if (player.ConfusionSeed > 0)
+            str = Utils.MakeConfused(str, player.ConfusionSeed);
+
+        return str;
     }
 
     string GetDescription(Thing thing)
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
 
+        var str = thing.Description;
+
         if (thing is Scroll scroll)
         {
             if (!player.IsScrollTypeIdentified(scroll.ScrollType))
-                return $"An unidentified scroll";
+                str = $"An unidentified scroll";
         }
         else if (thing is Potion potion)
         {
             if (!player.IsPotionTypeIdentified(potion.PotionType))
-                return $"An unidentified potion";
+                str = $"An unidentified potion";
         }
 
-        return thing.Description;
+        if (player.ConfusionSeed > 0)
+            str = Utils.MakeConfused(str, player.ConfusionSeed);
+
+        return str;
     }
 
     protected override int BuildHash()
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
-        return HashCode.Combine(SelectedThing?.GetInfoDisplayHash() ?? 0, player.StatHash);
+        return HashCode.Combine(SelectedThing?.GetInfoDisplayHash() ?? 0, player.StatHash, player.ConfusionSeed);
     }
 }

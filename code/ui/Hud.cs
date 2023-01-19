@@ -1,10 +1,10 @@
 ﻿using Sandbox;
 using Sandbox.UI;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.SymbolStore;
 using static Roguemoji.DebugDrawing;
-
 namespace Roguemoji;
 
 public enum PanelType { None, ArenaGrid, InventoryGrid, EquipmentGrid, Wielding, PlayerIcon, Log, Nearby, Info, Character, Stats, ChatPanel, Chatbox, LevelLabel };
@@ -315,15 +315,15 @@ public partial class Hud : RootPanel
         return rect.TopLeft + arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset + new Vector2(-logRect.Width + 0, 12);
     }
 
-    public string GetUnusableClass(Thing thing)
+    public static string GetUnusableClass(Thing thing)
     {
         var gridManager = thing.ContainingGridManager;
-        if (thing.HasFlag(ThingFlags.Useable) && gridManager.GridType == GridType.Inventory)
-        {
+        //if (thing.HasFlag(ThingFlags.Useable) && gridManager.GridType == GridType.Inventory)
+        //{
             var owningPlayer = gridManager.OwningPlayer;
             if (owningPlayer != null && !thing.CanBeUsedBy(owningPlayer, ignoreResources: true))
                 return "unusable_item";
-        }
+        //}
 
         return "";
     }
@@ -358,6 +358,48 @@ public partial class Hud : RootPanel
         }
 
         return thing.TattooData.Icon;
+    }
+
+    public static string GetTooltip(Thing thing)
+    {
+        var player = RoguemojiGame.Instance.LocalPlayer;
+
+        var str = thing.Tooltip;
+
+        if (thing is Scroll scroll)
+        {
+            if (!player.IsScrollTypeIdentified(scroll.ScrollType))
+                str = $"A scroll of {RoguemojiGame.Instance.GetUnidentifiedScrollName(scroll.ScrollType)}";
+        }
+        else if (thing is Potion potion)
+        {
+            if (!player.IsPotionTypeIdentified(potion.PotionType))
+            {
+                var potionName = RoguemojiGame.Instance.GetUnidentifiedPotionName(potion.PotionType);
+                str = $"{(StartsWithVowel(potionName) ? "An" : "A")} {potionName} potion";
+            }   
+        }
+
+        if (player.ConfusionSeed > 0)
+            str = Utils.MakeConfused(str, player.ConfusionSeed);
+
+        return str;
+    }
+
+    public static string GetText(string text)
+    {
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        var str = text;
+
+        if (player.ConfusionSeed > 0)
+            str = Utils.MakeConfused(str, player.ConfusionSeed);
+
+        return str;
+    }
+
+    public static bool StartsWithVowel(string name)
+    {
+        return "aeiou".IndexOf(name[0].ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0;
     }
 
     public void AddFloater(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height, string text = "", bool requireSight = true, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, Thing parent = null)

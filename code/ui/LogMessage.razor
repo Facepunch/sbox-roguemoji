@@ -25,7 +25,9 @@
     .player-8 { color: #ff8800; }
 </style>
 
-<root class="log_message @playerClass()">@Text</root>
+<root class="log_message @playerClass()">
+    @(Hud.GetText(Text))
+</root>
 
 @code
 {
@@ -39,6 +41,7 @@
 
     protected override int BuildHash()
     {
-        return HashCode.Combine( Text );
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        return HashCode.Combine(Text, player.ConfusionSeed);
     }
 }

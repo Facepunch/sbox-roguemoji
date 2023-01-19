@@ -6,8 +6,6 @@ using System.Linq;
 namespace Roguemoji;
 public partial class ScrollTeleport : Scroll
 {
-    [Net] public int ReqInt { get; private set; }
-
     public override string AbilityName => "Read Scroll";
 
     public ScrollTeleport()
@@ -23,24 +21,8 @@ public partial class ScrollTeleport : Scroll
 
         if (Game.IsServer)
         {
-            ReqInt = 1;
             AddTrait(AbilityName, "🔥", $"Sacrifice to cast the inscribed spell", offset: new Vector2(0f, -2f), tattooIcon: "📜", tattooScale: 0.45f, tattooOffset: new Vector2(0f, 4f));
-            AddTrait("", GetStatIcon(StatType.Intelligence), Globals.GetStatReqString(StatType.Intelligence, ReqInt, VerbType.Read), offset: new Vector2(0f, -1f), labelText: $"≥{ReqInt}", labelFontSize: 16, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
         }
-    }
-
-    public override bool CanBeUsedBy(Thing user, bool ignoreResources = false, bool shouldLogMessage = false)
-    {
-        var intelligence = user.GetStatClamped(StatType.Intelligence);
-        if (intelligence < ReqInt)
-        {
-            if (shouldLogMessage && user is RoguemojiPlayer player)
-                RoguemojiGame.Instance.LogPersonalMessage(player, $"You need {ReqInt}{GetStatIcon(StatType.Intelligence)}  to use {ChatDisplayIcons} but you only have {intelligence}{GetStatIcon(StatType.Intelligence)}");
-
-            return false;
-        }
-
-        return true;
     }
 
     public override void Use(Thing user)

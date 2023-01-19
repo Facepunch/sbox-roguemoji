@@ -394,6 +394,28 @@ public static class Utils
             _ => string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1))
         };
 
+    public static string MakeConfused(string input, int seed)
+    {
+        char[] characters = input.ToCharArray();
+
+        int mixedCounter = 1;
+
+        Random rng = new Random(seed);
+        for (int i = 0; i < characters.Length - 1; i++)
+        {
+            if (rng.Next(0, mixedCounter) != 0)
+                continue;
+
+            int randomIndex = rng.Next(i, characters.Length);
+            char temp = characters[i];
+            characters[i] = characters[randomIndex];
+            characters[randomIndex] = temp;
+            mixedCounter += mixedCounter;
+        }
+
+        return new string(characters);
+    }
+
     private class NodeInfo<T>
     {
         private const int MaxPoolSize = 8192;

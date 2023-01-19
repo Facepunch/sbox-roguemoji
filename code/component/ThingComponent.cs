@@ -9,7 +9,7 @@ public abstract class ThingComponent
 
     public bool ShouldUpdate { get; protected set; }
 
-    public float TimeElapsed{ get; protected set; }
+    public float TimeElapsed { get; protected set; }
     public bool IsClientComponent { get; protected set; }
 
     public virtual void Init(Thing thing)

@@ -40,22 +40,26 @@
 
 <root class="stat_tooltip">
     <div class="stat_tooltip_name" style="color: @(Thing.GetStatColor(StatType));">
-        <span>@StatName</span>
+        <span>
+            @(Hud.GetText(StatName))
+        </span>
 
         @if(Thing.ShouldShowMaxOnTooltip(StatType))
         {
-            <span class="stat_tooltip_max">@($"{Stat.CurrentValue}/{Stat.MaxValue}")</span>
+            <span class="stat_tooltip_max">
+                @(Hud.GetText($"{Stat.CurrentValue}/{Stat.MaxValue}"))
+            </span>
         }
     </div>
 
     <div class="stat_tooltip_desc">
-        @(Thing.GetStatDescription(StatType))
+        @(Hud.GetText(Thing.GetStatDescription(StatType)))
     </div>
 
     @if (!Stat.IsModifier)
     {
         <div class="stat_tooltip_info_desc">
-            @(Thing.GetStatInfoDescription(StatType, Thing))
+            @(Hud.GetText(Thing.GetStatInfoDescription(StatType, Thing)))
         </div>
     }
 </root>

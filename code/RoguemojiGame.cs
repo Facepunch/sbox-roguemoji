@@ -81,7 +81,7 @@ public partial class RoguemojiGame : GameManager
             UnidentifiedPotionSymbols = new List<string>() { "🉑", "🉐", "🔘", "🧿", "🌐", "🌓", "🌑", "🌕️", "🌙", "©️", "®️" }; // ㊗️ ㊙️ ⚫️ 🟤
             UnidentifiedPotionSymbols.Shuffle();
             UnidentifiedPotionNames = new List<string>() { "cloudy", "misty", "murky", "sparkling", "fizzy", "bubbly", "smoky", "congealed", "chalky", "radiant", "milky", "thick", "pasty", "glossy", "dull", "dusty", "syrupy", "pungent", 
-                "viscous", "sludgy", "pale", "filmy", "rusty", "chunky", "creamy", "hazy", "silky" };
+                "viscous", "sludgy", "pale", "filmy", "rusty", "chunky", "creamy", "hazy", "silky", "foggy", "pulpy", "dark", "oily", "opaque", "shiny", "frothy", "wavy" };
             UnidentifiedPotionNames.Shuffle();
         }
 
