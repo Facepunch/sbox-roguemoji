@@ -87,14 +87,14 @@
     }
 
     <div class="trait_icon" style="left: @(Trait.Offset.x)px; top: @(Trait.Offset.y)px;">
-        @($"{Trait.Icon}") 
+        @(Hud.GetHallucinationTextStr(Trait.Icon, HallucinationTextType.Icon))
 
         @if (Trait.HasTattoo)
         {
             int fontSize = MathX.FloorToInt(28f * Trait.TattooScale);
             var offset = Trait.TattooOffset;
             <div class="trait_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                @Trait.TattooIcon
+                @(Hud.GetHallucinationTextStr(Trait.TattooIcon, HallucinationTextType.Icon))
             </div>
         }
 
@@ -121,7 +121,8 @@
 
     protected override int BuildHash()
     {
-        return Trait.Hash;
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        return HashCode.Combine(Trait.Hash, player.HallucinatingSeed);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

@@ -498,8 +498,9 @@ public partial class GridManager : Entity
         foreach (var thing in Things)
         {
             if (thing is not RoguemojiPlayer)
-                thing.Delete();
+                thing.CleanUpAndDelete();
         }
+
 		Things.Clear();
 
 		GridThings.Clear();

@@ -144,7 +144,8 @@ public partial class Hud : RootPanel
 
 		if(IsDraggingThing)
 		{
-			PanelType destinationPanelType = GetContainingPanelType(MousePosition);
+            var player = RoguemojiGame.Instance.LocalPlayer;
+            PanelType destinationPanelType = GetContainingPanelType(MousePosition);
 
 			IntVector targetGridPos = IntVector.Zero;
 			var gridType = GetGridType(destinationPanelType);
@@ -153,7 +154,7 @@ public partial class Hud : RootPanel
 				GridPanel gridPanel = GetGridPanel(gridType);
 				targetGridPos = gridPanel.GetGridPos(gridPanel.MousePosition);
 
-                var player = RoguemojiGame.Instance.LocalPlayer;
+                
 				var gridManager = player.GetGridManager(gridType);
 				if (!gridManager.IsGridPosInBounds(targetGridPos)) 
 				{
@@ -164,7 +165,17 @@ public partial class Hud : RootPanel
 
             if(destinationPanelType == PanelType.Chatbox || destinationPanelType == PanelType.ChatPanel)
             {
-                MainPanel.Chatbox.AddIcon(DraggedThing.ChatDisplayIcons);
+                string displayIcon = DraggedThing.ChatDisplayIcons;
+
+                if(player.IsHallucinating)
+                {
+                    displayIcon = GetHallucinationTextThing(DraggedThing, DraggedThing.DisplayIcon.Substring(DraggedThing.CharSkip), HallucinationTextType.Icon);
+
+                    if(DraggedThing.HasTattoo)
+                        displayIcon += GetHallucinationTextThing(DraggedThing, DraggedThing.TattooData.Icon, HallucinationTextType.Icon, tattoo: true);
+                }
+
+                MainPanel.Chatbox.AddIcon(displayIcon);
                 StopDragging();
                 return;
             }
@@ -213,7 +224,6 @@ public partial class Hud : RootPanel
 		RemoveDragIcon();
         DragIcon = AddChild<DragIcon>();
 		DragIcon.Thing = thing;
-		DragIcon.Text = thing.DisplayIcon;
     }
 
 	void RemoveDragIcon()
@@ -342,6 +352,41 @@ public partial class Hud : RootPanel
         return "";
     }
 
+    public static string GetHallucinationTextThing(Thing thing, string input, HallucinationTextType textType, bool tattoo = false)
+    {
+        var keyString = tattoo ? thing.TattooData.Icon : thing.DisplayIcon.Substring(thing.CharSkip);
+
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        if (player.IsHallucinating)
+        {
+            return Globals.GetHallucinationText(keyString, player.HallucinatingSeed, textType);
+        } 
+
+        return input;
+    }
+
+    public static string GetHallucinationTextStr(string str, HallucinationTextType textType)
+    {
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        if (player.IsHallucinating)
+        {
+            return Globals.GetHallucinationText(str, player.HallucinatingSeed, textType);
+        }
+
+        return str;
+    }
+
+    public static string GetHallucinationTextKeyStr(string keyString, string str, HallucinationTextType textType)
+    {
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        if (player.IsHallucinating)
+        {
+            return Globals.GetHallucinationText(keyString, player.HallucinatingSeed, textType);
+        }
+
+        return str;
+    }
+
     public static string GetTattooIcon(Thing thing)
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
@@ -380,13 +425,10 @@ public partial class Hud : RootPanel
             }   
         }
 
-        if (player.ConfusionSeed > 0)
-            str = Utils.MakeConfused(str, player.ConfusionSeed);
-
         return str;
     }
 
-    public static string GetText(string text)
+    public static string GetConfusedText(string text)
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
         var str = text;

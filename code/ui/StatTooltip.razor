@@ -41,25 +41,29 @@
 <root class="stat_tooltip">
     <div class="stat_tooltip_name" style="color: @(Thing.GetStatColor(StatType));">
         <span>
-            @(Hud.GetText(StatName))
+            @(Hud.GetConfusedText(Hud.GetHallucinationTextKeyStr(Thing.GetStatIcon(Stat.StatType), StatName, HallucinationTextType.Name)))
         </span>
 
         @if(Thing.ShouldShowMaxOnTooltip(StatType))
         {
             <span class="stat_tooltip_max">
-                @(Hud.GetText($"{Stat.CurrentValue}/{Stat.MaxValue}"))
+                @(Hud.GetConfusedText($"{Stat.CurrentValue}/{Stat.MaxValue}"))
             </span>
         }
     </div>
 
     <div class="stat_tooltip_desc">
-        @(Hud.GetText(Thing.GetStatDescription(StatType)))
+        @(Hud.GetConfusedText(Hud.GetHallucinationTextKeyStr(Thing.GetStatIcon(Stat.StatType), Thing.GetStatDescription(StatType), HallucinationTextType.Description)))
     </div>
 
-    @if (!Stat.IsModifier)
+    @{
+        var player = RoguemojiGame.Instance.LocalPlayer;
+    }
+
+    @if (!Stat.IsModifier && !player.IsHallucinating)
     {
         <div class="stat_tooltip_info_desc">
-            @(Hud.GetText(Thing.GetStatInfoDescription(StatType, Thing)))
+            @(Hud.GetConfusedText(Thing.GetStatInfoDescription(StatType, Thing)))
         </div>
     }
 </root>

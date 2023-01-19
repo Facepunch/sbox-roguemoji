@@ -39,14 +39,14 @@
 }
 
 <root class="drag_icon @GetPlayerClass()">
-    @Text
+    @(Hud.GetHallucinationTextThing(Thing, Thing.DisplayIcon, HallucinationTextType.Icon))
 
     @if (Thing.HasTattoo)
     {
         int fontSize = MathX.FloorToInt(29f * Thing.TattooData.Scale);
         var offset = Thing.TattooData.Offset;
         <div class="drag_icon_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-            @(Hud.GetTattooIcon(Thing))
+            @(Hud.GetHallucinationTextThing(Thing, Hud.GetTattooIcon(Thing), HallucinationTextType.Icon, tattoo:true))
         </div>
     }
 </root>
@@ -54,7 +54,6 @@
 @code
 {
     public Thing Thing { get; set; }
-    public string Text { get; set; }
     public int UpdateCount { get; set; }
 
     protected override void OnAfterTreeRender(bool firstTime)

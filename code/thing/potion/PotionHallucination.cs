@@ -4,26 +4,26 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Roguemoji;
-public partial class PotionConfusion : Potion
+public partial class PotionHallucination : Potion
 {
     public override string AbilityName => "Quaff Potion";
-    public override string SplashIcon => Globals.Icon(IconType.Confusion);
+    public override string SplashIcon => Globals.Icon(IconType.Hallucination);
 
-    public PotionConfusion()
+    public PotionHallucination()
     {
-        PotionType = PotionType.Confusion;
+        PotionType = PotionType.Hallucination;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         DisplayName = Potion.GetDisplayName(PotionType);
-        Description = "Makes drinker confused";
-        Tooltip = "A confusion potion";
+        Description = "Makes drinker hallucinate";
+        Tooltip = "A hallucination potion";
         
-        SetTattoo(Globals.Icon(IconType.Confusion));
+        SetTattoo(Globals.Icon(IconType.Hallucination));
 
         if (Game.IsServer)
         {
             AddTrait(AbilityName, "😋", $"Consume potion to cause an effect", offset: new Vector2(0f, -1f), tattooIcon: "🧉", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f));
-            AddTrait("", Globals.Icon(IconType.Confusion), $"Makes you confused", offset: new Vector2(0f, 0f));
+            AddTrait("", "😵", $"Makes you hallucinate", offset: new Vector2(0f, 0f));
         }
     }
 
@@ -45,8 +45,8 @@ public partial class PotionConfusion : Potion
         if (!thing.HasComponent<CActing>())
             return;
 
-        var confused = thing.AddComponent<CConfused>();
-        confused.Lifetime = 60f;
-        thing.AddSideFloater(Globals.Icon(IconType.Confusion));
+        var hallucinating = thing.AddComponent<CHallucinating>();
+        hallucinating.Lifetime = 60f;
+        thing.AddSideFloater(Globals.Icon(IconType.Hallucination));
     }
 }

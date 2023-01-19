@@ -371,6 +371,8 @@ public partial class RoguemojiGame : GameManager
 
 			ChangeThingLevel(player, LevelId.Forest0);
 		}
+
+        Log.Info($"# Entities: {Entity.All.Count()}");
     }
 
     [ClientRpc]

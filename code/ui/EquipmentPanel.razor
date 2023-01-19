@@ -55,9 +55,10 @@
             if (gridManager.GetThingsAtClient(gridPos).Count() == 0)
             {
                 var index = gridManager.GetIndex(gridPos);
-                var offset = GetNothingEquippedOffset(index);
+                //var offset = GetNothingEquippedOffset(index);
+                var offset = new Vector2(2f, 2f);
                 <div class="nothing_equipped" style="left: @(gridPos.x * RoguemojiGame.CellSize + offset.x); top: @(gridPos.y * RoguemojiGame.CellSize + offset.y);">
-                    @(GetNothingEquippedIcon(gridManager.GetIndex(gridPos)))
+                    @(@Hud.GetHallucinationTextStr(GetNothingEquippedIcon(gridManager.GetIndex(gridPos)), HallucinationTextType.Icon))
                 </div>
             }
         }
@@ -100,7 +101,8 @@
 
     protected override int BuildHash()
     {
-        return HashCode.Combine(GetThings().Count);
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        return HashCode.Combine(GetThings().Count, player.HallucinatingSeed);
     }
 
     string GetNothingEquippedIcon(int index)
@@ -108,32 +110,15 @@
         switch(index)
         {
             case 0: return "👕";
-            case 1: return "👗";
-            case 2: return "🧣";
-            case 3: return "🎀";
-            case 4: return "🎒";
-            case 5: return "🩰";
+            case 1: return "🎧️";
+            case 2: return "👓️";
+            case 3: return "🎒";
+            case 4: return "🧦";
+            case 5: return "👠";
             case 6: return "🧤";
-            case 7: return "💍";
+            case 7: return "🧣";
         }
 
         return "";
-    }
-
-    Vector2 GetNothingEquippedOffset(int index)
-    {
-        switch (index)
-        {
-            case 0: return new Vector2(3f, 2f);
-            case 1: return new Vector2(6f, 2f);
-            case 2: return new Vector2(3f, 2f);
-            case 3: return new Vector2(4f, 2f);
-            case 4: return new Vector2(2f, 2f);
-            case 5: return new Vector2(3f, 2f);
-            case 6: return new Vector2(2f, 2f);
-            case 7: return new Vector2(7f, 2f);
-        }
-
-        return Vector2.Zero;
     }
 }

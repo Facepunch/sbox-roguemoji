@@ -101,12 +101,14 @@
 <root class="wielding @GetWieldingClass(wieldedThing)" style="border-color: @(wieldedThing == null || !wieldedThing.HasFlag(ThingFlags.Useable) ? "#303030" : "#777777");">
     @if(wieldedThing == null)
     {
-        <div>🖐️</div>
+        <div>
+            @Hud.GetHallucinationTextStr("🖐", HallucinationTextType.Icon)
+        </div>
     }
     else
     {
         <div class="@GetCooldownClass(wieldedThing) @Hud.GetUnusableClass(wieldedThing)">
-            @(wieldedThing.DisplayIcon.Substring(wieldedThing.CharSkip))
+            @(Hud.GetHallucinationTextThing(wieldedThing, wieldedThing.DisplayIcon.Substring(wieldedThing.CharSkip), HallucinationTextType.Icon))
         </div>
 
         @if(wieldedThing.HasTattoo)
@@ -114,7 +116,7 @@
             int fontSize = MathX.FloorToInt(48f * wieldedThing.TattooData.Scale);
             var offset = wieldedThing.TattooData.OffsetCharWielded;
             <div class="wielding_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                @(Hud.GetTattooIcon(wieldedThing))
+                @(Hud.GetHallucinationTextThing(wieldedThing, wieldedThing.TattooData.Icon, HallucinationTextType.Icon, tattoo: true))
             </div>
         }
 
@@ -163,7 +165,7 @@
         var wieldedThing = player.WieldedThing;
         var cooldownHash = wieldedThing != null && wieldedThing.IsOnCooldown ? wieldedThing.CooldownProgressPercent : 0f;
         var statHash = HashCode.Combine(player.StatHash, wieldedThing?.StatHash ?? 0);
-        return HashCode.Combine(wieldedThing?.NetworkIdent ?? 0, cooldownHash, statHash);
+        return HashCode.Combine(wieldedThing?.NetworkIdent ?? 0, cooldownHash, statHash, player.HallucinatingSeed);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

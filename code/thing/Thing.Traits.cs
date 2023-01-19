@@ -103,6 +103,7 @@ public partial class Thing : Entity
     {
         if (Traits.Contains(trait))
         {
+            trait.Delete();
             Traits.Remove(trait);
             RefreshTraitHash();
         }
@@ -117,6 +118,9 @@ public partial class Thing : Entity
 
     public void ClearTraits()
     {
+        foreach (var trait in Traits)
+            trait.Delete();
+
         Traits.Clear();
     }
 }

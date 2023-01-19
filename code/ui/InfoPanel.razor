@@ -96,25 +96,25 @@
 
      <div class="selected_info">
         <div class="name_label"> 
-            @(GetName(SelectedThing))
+            @(Hud.GetHallucinationTextThing(SelectedThing, Hud.GetConfusedText(GetName(SelectedThing)), HallucinationTextType.Name))
         </div>
 
         @if (SelectedThing.HasFlag(ThingFlags.Equipment))
         { 
             <div class="equipment_label">
-                Accessory 
+                @(Hud.GetConfusedText("Accessory"))
             </div> 
         }
 
         <div class="icon @GetPlayerClass() @Hud.GetUnusableClass(SelectedThing)">
-            @SelectedThing.DisplayIcon
+            @(Hud.GetHallucinationTextThing(SelectedThing, SelectedThing.DisplayIcon.Substring(SelectedThing.CharSkip), HallucinationTextType.Icon))
 
             @if (SelectedThing.HasTattoo)
             {
                 int fontSize = MathX.FloorToInt(55f * SelectedThing.TattooData.Scale);
                 var offset = SelectedThing.TattooData.OffsetInfo;
                 <div class="info_panel_tattoo" style="width: 64px; height: 64px; font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                    @(Hud.GetTattooIcon(SelectedThing))
+                    @(Hud.GetHallucinationTextThing(SelectedThing, SelectedThing.TattooData.Icon, HallucinationTextType.Icon, tattoo: true))
                 </div>
             }
 
@@ -122,14 +122,14 @@
                 var wieldedThing = SelectedThing.WieldedThing;
                 var wieldedOffset = SelectedThing.InfoWieldedThingOffset;
                 <div class="info_wielded" style="left:@(wieldedOffset.x)px; top:@(wieldedOffset.y)px; font-size:@(SelectedThing.InfoWieldedThingFontSize);">
-                    @wieldedThing.DisplayIcon.Substring(wieldedThing.CharSkip)
+                    @(Hud.GetHallucinationTextThing(wieldedThing, wieldedThing.DisplayIcon.Substring(wieldedThing.CharSkip), HallucinationTextType.Icon))
 
                     @if (wieldedThing.HasTattoo)
                     {
                         int fontSize = MathX.FloorToInt(32f * wieldedThing.TattooData.Scale);
                         var offset = wieldedThing.TattooData.OffsetInfoWielded;
                         <div class="info_panel_tattoo" style="width: @(RoguemojiGame.CellSize)px; height: @(RoguemojiGame.CellSize)px; font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                            @(Hud.GetTattooIcon(wieldedThing))
+                            @(Hud.GetHallucinationTextThing(wieldedThing, wieldedThing.TattooData.Icon, HallucinationTextType.Icon, tattoo: true))
                         </div>
                     }
                 </div> 
@@ -139,7 +139,7 @@
         @if (!string.IsNullOrEmpty(SelectedThing.Description)) 
         { 
             <div class="info_description_label">
-                @(GetDescription(SelectedThing))
+                @(Hud.GetHallucinationTextThing(SelectedThing, Hud.GetConfusedText(GetDescription(SelectedThing)), HallucinationTextType.Description))
             </div>
         }
     </div>
@@ -186,9 +186,6 @@
                 str = $"{RoguemojiGame.Instance.GetUnidentifiedPotionName(potion.PotionType).FirstCharToUpper()} Potion";
         }
 
-        if (player.ConfusionSeed > 0)
-            str = Utils.MakeConfused(str, player.ConfusionSeed);
-
         return str;
     }
 
@@ -209,15 +206,12 @@
                 str = $"An unidentified potion";
         }
 
-        if (player.ConfusionSeed > 0)
-            str = Utils.MakeConfused(str, player.ConfusionSeed);
-
         return str;
     }
 
     protected override int BuildHash()
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
-        return HashCode.Combine(SelectedThing?.GetInfoDisplayHash() ?? 0, player.StatHash, player.ConfusionSeed);
+        return HashCode.Combine(SelectedThing?.GetInfoDisplayHash() ?? 0, player.StatHash, player.ConfusionSeed, player.HallucinatingSeed);
     }
 }

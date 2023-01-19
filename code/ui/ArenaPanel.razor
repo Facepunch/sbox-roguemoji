@@ -176,7 +176,7 @@
                     @foreach(var seenData in player.GetSeenThings(gridPos))
                     {
                         <div class="seen_icon @(seenData.isSolid ? "solid" : "") @(seenData.playerNum > 0 ? $"icon-player-{seenData.playerNum}" : "")" style="left: @(x * RoguemojiGame.CellSize + player.CameraPixelOffset.x); top: @(y * RoguemojiGame.CellSize + player.CameraPixelOffset.y); z-index:@(9999 + level.GridManager.GetIndex(gridPos) + seenData.zIndex);">
-                            @(seenData.icon)
+                            @(Hud.GetHallucinationTextStr(seenData.icon, HallucinationTextType.Icon))
 
                             @if (seenData.tattooData != null)
                             {
@@ -191,7 +191,7 @@
                             {
                                 var wieldedOffset = seenData.wieldedThingOffset;
                                 <div class="seen_wielded" style="left:@(wieldedOffset.x)px; top:@(wieldedOffset.y)px; font-size:@(seenData.wieldedThingFontSize);">
-                                    @(seenData.wieldedThingIcon)
+                                    @(Hud.GetHallucinationTextStr(seenData.wieldedThingIcon, HallucinationTextType.Icon))
 
                                     @if (seenData.wieldedThingTattooData != null)
                                     {
@@ -242,7 +242,7 @@
     }
 
     <div class="level_label" style="opacity:@(LevelLabelOpacity);" @ref=LevelLabel>
-        @(Hud.GetText(level.LevelName))
+        @(Hud.GetConfusedText(level.LevelName))
     </div>
 </root>
 

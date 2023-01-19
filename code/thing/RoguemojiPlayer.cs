@@ -37,8 +37,11 @@ public partial class RoguemojiPlayer : Thing
     [Net] public IList<ScrollType> IdentifiedScrollTypes { get; private set; }
     [Net] public IList<PotionType> IdentifiedPotionTypes { get; private set; }
 
-    [Net] public int ConfusionSeed { get; set; } // When non-zero, player is confused
+    [Net] public int ConfusionSeed { get; set; }
     public bool IsConfused => ConfusionSeed > 0;
+
+    [Net] public int HallucinatingSeed { get; set; }
+    public bool IsHallucinating => HallucinatingSeed > 0;
 
     public RoguemojiPlayer()
 	{
@@ -103,6 +106,7 @@ public partial class RoguemojiPlayer : Thing
         IsInTransit = false;
         FloaterNum = 0;
         ConfusionSeed = 0;
+        HallucinatingSeed = 0;
 
         IdentifiedScrollTypes.Clear();
         IdentifiedPotionTypes.Clear();
@@ -168,7 +172,8 @@ public partial class RoguemojiPlayer : Thing
         {
             case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
             case 1: InventoryGridManager.SpawnThing<Potato>(gridPos); break;
-            case 2: InventoryGridManager.SpawnThing<Nut>(gridPos); break;
+            //case 2: InventoryGridManager.SpawnThing<Nut>(gridPos); break;
+            case 2: InventoryGridManager.SpawnThing<PotionHallucination>(gridPos); break;
             case 3: InventoryGridManager.SpawnThing<Mushroom>(gridPos); break;
             //case 4: InventoryGridManager.SpawnThing<Trumpet>(gridPos); break;
             case 4: InventoryGridManager.SpawnThing<PotionConfusion>(gridPos); break;
@@ -1200,7 +1205,7 @@ public partial class RoguemojiPlayer : Thing
 
     public bool IsPotionTypeIdentified(PotionType potionType)
     {
-        return true;
+        //return true;
         return IdentifiedPotionTypes.Contains(potionType);
     }
 }

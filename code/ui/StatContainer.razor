@@ -72,7 +72,9 @@
         var clampedValue = Stat.ClampedValue;
     }
 
-    <span class="stat_icon" style="padding-top: @(showBar ? 0 : 2)px;"> @($"{Thing.GetStatIcon(Stat.StatType)}") </span>
+    <span class="stat_icon" style="padding-top: @(showBar ? 0 : 2)px;"> 
+        @(Hud.GetHallucinationTextStr(Thing.GetStatIcon(Stat.StatType), HallucinationTextType.Icon))
+    </span>
     <span class="stat_label" style="padding-top: @(showBar ? 0 : 2)px; color: @(clampedValue < 0 ? "#ff000055" : ( Stat.IsModifier && clampedValue > 0 ? "#99ff9999" : "#ffffff88" ) );"> @($"{(Stat.IsModifier && clampedValue > 0 ? "+" : "")}{Stat.ClampedValue}") </span>
 
     @if (showBar)
@@ -95,7 +97,8 @@
         if (Stat == null)
             return 0;
 
-        return HashCode.Combine(Stat.ClampedValue, Stat.MaxValue);
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        return HashCode.Combine(Stat.ClampedValue, Stat.MaxValue, player.HallucinatingSeed);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

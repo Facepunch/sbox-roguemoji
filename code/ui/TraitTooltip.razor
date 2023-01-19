@@ -52,15 +52,15 @@
 </style>
 
 <root class="trait_tooltip">
-    @if (!string.IsNullOrEmpty(Trait.TraitName)) 
+    @if (!string.IsNullOrEmpty(Trait.TraitName) || RoguemojiGame.Instance.LocalPlayer.IsHallucinating) 
     {
         <div class="trait_tooltip_name_container">
-            <span class="trait_tooltip_ability_label"> 
-                @(Hud.GetText("Ability:"))
+            <span class="trait_tooltip_ability_label">
+                @(Hud.GetConfusedText("Ability:"))
             </span>
 
-            <span class="trait_tooltip_name"> 
-                @(Hud.GetText(Trait.TraitName))
+            <span class="trait_tooltip_name">
+                @(Hud.GetConfusedText(Hud.GetHallucinationTextKeyStr(Trait.Icon, Trait.TraitName, HallucinationTextType.Name)))
             </span>
 
             <span class="trait_tooltip_ability_bind"> 
@@ -70,16 +70,20 @@
     }
     
     <div class="trait_tooltip_desc"> 
-        @(Hud.GetText(Trait.Description))
+        @(Hud.GetConfusedText(Hud.GetHallucinationTextKeyStr(Trait.Icon, Trait.Description, HallucinationTextType.Description)))
     </div>
 
-    @if (!string.IsNullOrEmpty(Trait.Source)) 
+    @{
+        var player = RoguemojiGame.Instance.LocalPlayer;
+    }
+
+    @if (!string.IsNullOrEmpty(Trait.Source) && !player.IsHallucinating)
     { 
-        <span class="trait_tooltip_source"> 
-            @(Hud.GetText("From:"))
+        <span class="trait_tooltip_source">
+            @(Hud.GetConfusedText("From:"))
 
             <span style="font-weight: bold; padding-left: 5px;">
-                @(Hud.GetText(Trait.Source))
+                @(Hud.GetConfusedText(Trait.Source))
             </span>
         </span> 
     }

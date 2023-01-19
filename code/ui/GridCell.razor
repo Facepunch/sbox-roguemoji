@@ -118,14 +118,14 @@
 
 <root class="icon @GetWieldedClass() @GetSolidClass()" )>
     <div class="@GetPlayerClass() @GetDraggingClass() @GetCooldownClass(Thing) @Hud.GetUnusableClass(Thing) @GetInventoryClass() @Hud.Instance.GetEquipmentHighlightClass(Thing)" @ref=IconPanel>
-        @Thing.DisplayIcon.Substring(Thing.CharSkip)
+        @(Hud.GetHallucinationTextThing(Thing, Thing.DisplayIcon.Substring(Thing.CharSkip), HallucinationTextType.Icon))
 
         @if(Thing.HasTattoo)
         {
             int fontSize = MathX.FloorToInt(29f * Thing.TattooData.Scale);
             var offset = Thing.TattooData.Offset;
             <div class="grid_cell_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                @(Hud.GetTattooIcon(Thing))
+                @(Hud.GetHallucinationTextThing(Thing, Hud.GetTattooIcon(Thing), HallucinationTextType.Icon, tattoo: true))
             </div>
         }
 
@@ -163,14 +163,14 @@
         var wieldedThing = Thing.WieldedThing;
         var wieldedOffset = Thing.WieldedThingOffset;
         <div class="wielded_thing @GetCooldownClass(wieldedThing)" style="left:@(wieldedOffset.x)px; top:@(wieldedOffset.y)px; font-size:@(Thing.WieldedThingFontSize);">
-            @wieldedThing.DisplayIcon.Substring(wieldedThing.CharSkip)
+            @(Hud.GetHallucinationTextThing(wieldedThing, wieldedThing.DisplayIcon.Substring(wieldedThing.CharSkip), HallucinationTextType.Icon))
 
             @if (wieldedThing.HasTattoo)
             {
                 int fontSize = MathX.FloorToInt(18f * wieldedThing.TattooData.Scale);
                 var offset = wieldedThing.TattooData.OffsetWielded;
                 <div class="grid_cell_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                    @(Hud.GetTattooIcon(wieldedThing))
+                    @(Hud.GetHallucinationTextThing(wieldedThing, Hud.GetTattooIcon(wieldedThing), HallucinationTextType.Icon, tattoo: true))
                 </div>
             }
         </div>
@@ -221,7 +221,7 @@
         var equipmentHighlightHash = Hud.Instance.GetContainingPanelType(Hud.Instance.MousePosition) == PanelType.EquipmentGrid ? 1 : 0;
         var statHash = HashCode.Combine(player.StatHash, Thing.StatHash);
         var identifiedHash = HashCode.Combine(Thing is Scroll scroll && player.IsScrollTypeIdentified(scroll.ScrollType) ? 1 : 0, Thing is Potion potion && player.IsPotionTypeIdentified(potion.PotionType) ? 1 : 0);
-        return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, HashCode.Combine(cooldownHash, wieldedCooldownHash, equipmentHighlightHash, statHash, identifiedHash), player.ConfusionSeed);
+        return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, HashCode.Combine(cooldownHash, wieldedCooldownHash, equipmentHighlightHash, statHash, identifiedHash), player.ConfusionSeed, player.HallucinatingSeed);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

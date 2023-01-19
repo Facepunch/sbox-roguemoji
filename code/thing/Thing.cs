@@ -138,6 +138,7 @@ public partial class Thing : Entity
         //DebugText = "Server Components (" + Components.Count + "):\n";
         for (int i = ThingComponents.Count - 1; i >= 0; i--)
         {
+            // todo: ArgumentOutOfRangeException
             KeyValuePair<TypeDescription, ThingComponent> pair = ThingComponents.ElementAt(i);
 
             var component = pair.Value;
@@ -409,6 +410,16 @@ public partial class Thing : Entity
         if (ContainingGridType != GridType.None)
             ContainingGridManager.RemoveThing(this);
 
+        CleanUpAndDelete();
+    }
+
+    public void CleanUpAndDelete()
+    {
+        if (WieldedThing != null)
+            WieldedThing.CleanUpAndDelete();
+
+        ClearStats();
+        ClearTraits();
         Delete();
     }
 

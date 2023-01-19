@@ -61,7 +61,7 @@ public partial class Thing : Entity
             case StatType.MaxHealth: return "💕";
         }
 
-        return "❓️";
+        return "";
     }
 
     public static string GetStatName(StatType statType)
@@ -86,7 +86,7 @@ public partial class Thing : Entity
             case StatType.MaxHealth: return "Max Health";
         }
 
-        return "???";
+        return "";
     }
 
     public static string GetStatDescription(StatType statType)
@@ -320,6 +320,9 @@ public partial class Thing : Entity
 
     public void ClearStats()
     {
+        foreach (var pair in Stats)
+            pair.Value.Delete();
+
         Stats.Clear();
         HasStats = false;
     }

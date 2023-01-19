@@ -49,14 +49,14 @@
 
 <root class="nearby_icon @GetSelectedClass() @GetUnusableClass(Thing, RoguemojiGame.Instance.LocalPlayer)">
     <div class="@GetPlayerClass() @GetDraggingClass()" @ref=IconPanel>
-        @Thing.DisplayIcon
+        @(Hud.GetHallucinationTextThing(Thing, Thing.DisplayIcon, HallucinationTextType.Icon))
 
         @if(Thing.HasTattoo)
         {
             int fontSize = MathX.FloorToInt(29f * Thing.TattooData.Scale);
             var offset = Thing.TattooData.Offset;
             <div class="nearby_cell_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                @(Hud.GetTattooIcon(Thing))
+                @(Hud.GetHallucinationTextThing(Thing, Hud.GetTattooIcon(Thing), HallucinationTextType.Icon, tattoo: true))
             </div>
         }
     </div>
@@ -118,7 +118,7 @@
             return base.BuildHash();
 
         var player = RoguemojiGame.Instance.LocalPlayer;
-        return HashCode.Combine(Thing.GetNearbyCellHash(), IsSelected(), player.StatHash);
+        return HashCode.Combine(Thing.GetNearbyCellHash(), IsSelected(), player.StatHash, player.HallucinatingSeed);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

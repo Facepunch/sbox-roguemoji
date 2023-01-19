@@ -60,14 +60,14 @@
 <root class="wielding_tooltip">
     
     <div class="wielding_title">
-        @(Hud.GetTooltip(Thing))
+        @(Hud.GetConfusedText(Hud.GetTooltip(Thing)))
     </div>
 
     @if(Thing.HasFlag(ThingFlags.Useable))
     {
         <div class="wielding_line">
             <span class="wielding_action" style="color: #666666;">
-                @(Hud.GetText(Thing.AbilityName))
+                @(Hud.GetConfusedText(Thing.AbilityName))
             </span>
 
             <span class="wielding_bind">[Space]</span>
@@ -76,7 +76,7 @@
 
     <div class="wielding_line">
         <span class="wielding_action">
-            @(Hud.GetText("Throw"))
+            @(Hud.GetConfusedText("Throw"))
         </span>
 
         <span class="wielding_bind">[F]</span>
@@ -84,7 +84,7 @@
 
     <div class="wielding_line">
         <span class="wielding_action">
-            @(Hud.GetText("Drop"))
+            @(Hud.GetConfusedText("Drop"))
         </span>
 
         <span class="wielding_bind">[G]</span>
@@ -92,7 +92,7 @@
 
     <div class="wielding_line">
         <span class="wielding_action">
-            @(Hud.GetText("Unequip"))
+            @(Hud.GetConfusedText("Unequip"))
         </span>
 
         <span class="wielding_bind">[Q]</span>
