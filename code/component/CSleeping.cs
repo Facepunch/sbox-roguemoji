@@ -16,7 +16,7 @@ public class CSleeping : ThingComponent
 
         ShouldUpdate = true;
 
-        Trait = thing.AddTrait("Sleeping", "😴", $"Napping until rested or until something disturbs", offset: Vector2.Zero);
+        Trait = thing.AddTrait("Sleeping", "😴", $"Napping until rested or bumped into", offset: Vector2.Zero);
 
         if (thing.GetComponent<CActing>(out var component))
             ((CActing)component).PreventAction();
@@ -59,5 +59,13 @@ public class CSleeping : ThingComponent
     public override void OnThingDied()
     {
         Remove();
+    }
+
+    public override void OnBumpedIntoBy(Thing thing)
+    {
+        base.OnBumpedIntoBy(thing);
+
+        if(TimeElapsed > 0f)
+            Remove();
     }
 }
