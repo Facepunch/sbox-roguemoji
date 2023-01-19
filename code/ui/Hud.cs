@@ -318,12 +318,12 @@ public partial class Hud : RootPanel
     public static string GetUnusableClass(Thing thing)
     {
         var gridManager = thing.ContainingGridManager;
-        //if (thing.HasFlag(ThingFlags.Useable) && gridManager.GridType == GridType.Inventory)
-        //{
+        if (thing.HasFlag(ThingFlags.Useable) && gridManager.GridType == GridType.Inventory)
+        {
             var owningPlayer = gridManager.OwningPlayer;
             if (owningPlayer != null && !thing.CanBeUsedBy(owningPlayer, ignoreResources: true))
                 return "unusable_item";
-        //}
+        }
 
         return "";
     }

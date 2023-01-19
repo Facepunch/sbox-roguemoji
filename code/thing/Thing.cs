@@ -187,9 +187,6 @@ public partial class Thing : Entity
         if(direction == Direction.None)
             return true;
 
-        if (HasComponent<CConfused>() && Game.Random.Int(0, 1) == 0)
-            direction = GridManager.GetRandomDirection(cardinalOnly: false);
-
         IntVector vec = GridManager.GetIntVectorForDirection(direction);
         IntVector newGridPos = GridPos + vec;
 

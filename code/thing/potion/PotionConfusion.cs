@@ -11,7 +11,7 @@ public partial class PotionConfusion : Potion
 
     public PotionConfusion()
     {
-        PotionType = PotionType.Sleeping;
+        PotionType = PotionType.Confusion;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         DisplayName = Potion.GetDisplayName(PotionType);

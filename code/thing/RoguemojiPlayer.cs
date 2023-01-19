@@ -346,7 +346,7 @@ public partial class RoguemojiPlayer : Thing
         RoguemojiGame.Instance.FlickerWieldingPanel();
     }
 
-    public bool TryMove( Direction direction, bool shouldQueueAction = false, bool shouldAnimate = true )
+    public bool TryMove(Direction direction, bool shouldQueueAction = false, bool shouldAnimate = true)
 	{
         if (!Acting.IsActionReady)
         {
@@ -364,7 +364,7 @@ public partial class RoguemojiPlayer : Thing
 
         var oldLevelId = CurrentLevelId;
 
-        var success = base.TryMove( direction, shouldAnimate: false );
+        var success = base.TryMove(direction, shouldAnimate: false);
 		if (success)
 		{
             if(HasEquipmentType(TypeLibrary.GetType(typeof(Sunglasses))))
@@ -1125,6 +1125,9 @@ public partial class RoguemojiPlayer : Thing
             return;
 
         StopAiming();
+
+        if (IsConfused && Game.Random.Int(0, 2) == 0)
+            direction = GridManager.GetRandomDirection(cardinalOnly: false);
 
         if (AimingSource == AimingSource.Throwing)
             ThrowWieldedThing(direction);

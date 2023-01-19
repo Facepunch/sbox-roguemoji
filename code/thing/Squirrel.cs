@@ -91,6 +91,10 @@ public partial class Squirrel : Thing
                     if (path != null && path.Count > 0 && !path[0].Equals(GridPos))
                     {
                         var dir = GridManager.GetDirectionForIntVector(path[0] - GridPos);
+
+                        if(HasComponent<CConfused>() && Game.Random.Int(0, 1) == 0)
+                            dir = GridManager.GetRandomDirection(cardinalOnly: false);
+
                         TryMove(dir);
                     }
 
