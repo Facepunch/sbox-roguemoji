@@ -337,6 +337,12 @@ public partial class GridManager : Entity
 		return directions;
     }
 
+    public static Direction GetRandomDirection(bool cardinalOnly = true)
+    {
+        var directions = cardinalOnly ? GetCardinalDirections() : GetAllDirections();
+        return directions[Game.Random.Int(0, directions.Count - 1)];
+    }
+
     public static List<Direction> GetCardinalDirections()
 	{
 		return new List<Direction>() { Direction.Left, Direction.Right, Direction.Down, Direction.Up };

@@ -38,6 +38,7 @@ public partial class RoguemojiPlayer : Thing
     [Net] public IList<PotionType> IdentifiedPotionTypes { get; private set; }
 
     [Net] public int ConfusionSeed { get; set; } // When non-zero, player is confused
+    public bool IsConfused => ConfusionSeed > 0;
 
     public RoguemojiPlayer()
 	{
@@ -357,6 +358,9 @@ public partial class RoguemojiPlayer : Thing
             
             return false;
         }
+
+        if(IsConfused && Game.Random.Int(0, 2) == 0)
+            direction = GridManager.GetRandomDirection(cardinalOnly: false);
 
         var oldLevelId = CurrentLevelId;
 

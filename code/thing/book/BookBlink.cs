@@ -40,7 +40,7 @@ public partial class BookBlink : Thing
 
     public override bool CanBeUsedBy(Thing user, bool ignoreResources = false, bool shouldLogMessage = false)
     {
-        if (user is RoguemojiPlayer p && p.ConfusionSeed > 0)
+        if (user is RoguemojiPlayer p && p.IsConfused)
         {
             if (shouldLogMessage)
                 RoguemojiGame.Instance.LogPersonalMessage(p, $"{Globals.Icon(IconType.Confusion)}Too confused to read books!");

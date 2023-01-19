@@ -46,7 +46,7 @@ public partial class PotionConfusion : Potion
             return;
 
         var confused = thing.AddComponent<CConfused>();
-        confused.Lifetime = 40f;
+        confused.Lifetime = 60f;
         thing.AddSideFloater(Globals.Icon(IconType.Confusion));
     }
 }

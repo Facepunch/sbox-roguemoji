@@ -45,7 +45,7 @@ public partial class Scroll : Thing
 
     public override bool CanBeUsedBy(Thing user, bool ignoreResources = false, bool shouldLogMessage = false)
     {
-        if (user is RoguemojiPlayer player && player.ConfusionSeed > 0)
+        if (user is RoguemojiPlayer player && player.IsConfused)
         {
             if (shouldLogMessage)
                 RoguemojiGame.Instance.LogPersonalMessage(player, $"{Globals.Icon(IconType.Confusion)}Too confused to read scrolls!");
