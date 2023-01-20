@@ -39,20 +39,23 @@
     }
 
     .wielding_nothing_equipped {
-        color: #333333;
-        padding-right: 6px;
-        font-style: italic;
+        color: #444444;
+        font-size: 14px;
+        background-color: #00000033;
     }
 </style>
 
-@if(Thing == null)
-{
-    <!-- <div class="wielding_nothing_equipped">No item equipped.</div> -->
-    return;
-}
-
-<root class="wielding_tooltip">
+<root class="wielding_tooltip" style="border-color:@(Thing == null ? "#ffffff05" : "#ffffff33");">
     
+    @if (Thing == null)
+    {
+        <div class="wielding_nothing_equipped">
+            @(Hud.GetConfusedText("Nothing equipped"))
+        </div>
+
+        return;
+    }
+
     <div class="wielding_title">
         @(Hud.GetConfusedText(Hud.GetTooltip(Thing)))
     </div>
