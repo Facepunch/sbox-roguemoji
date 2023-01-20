@@ -227,8 +227,8 @@
 
                     if(gridPos.Equals(mouseGridPos))
                     {
-                        <div class="aiming_pin" style="left: @(x * RoguemojiGame.CellSize + player.CameraPixelOffset.x + 8); top: @(y * RoguemojiGame.CellSize + player.CameraPixelOffset.y - 14);">
-                            📍
+                        <div class="aiming_pin" style="left: @((x * RoguemojiGame.CellSize) + player.CameraPixelOffset.x + 9); top: @((y * RoguemojiGame.CellSize) + player.CameraPixelOffset.y - 13);">
+                            @(Hud.GetHallucinationTextStr("📍", HallucinationTextType.Icon))
                         </div>
                     }
                 }

@@ -24,7 +24,7 @@ public partial class Joystick : Thing
             EnergyCost = 3;
             CooldownTime = 30f;
 
-            AddTrait(AbilityName, "🕹️", $"Move in any direction", offset: new Vector2(0f, -1f));
+            AddTrait(AbilityName, "🕹️", $"Move in any direction", offset: new Vector2(0f, -1f), isAbility: true);
             AddTrait("", GetStatIcon(StatType.Energy), $"Ability costs {EnergyCost}{GetStatIcon(StatType.Energy)}", offset: new Vector2(0f, -3f), labelText: $"{EnergyCost}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
         }

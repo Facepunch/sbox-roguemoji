@@ -80,7 +80,7 @@
     }
 </style>
 
-<root class="trait_container" style="border-color: @(string.IsNullOrEmpty(Trait.TraitName) ? "#000000" : "#777777");">
+<root class="trait_container" style="border-color: @(Trait.IsAbility ? "#777777" : "#000000");">
     @if(Trait == null)
     {
         return;

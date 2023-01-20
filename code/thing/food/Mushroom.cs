@@ -17,7 +17,7 @@ public partial class Mushroom : Thing
 
         if (Game.IsServer)
         {
-            AddTrait(AbilityName, "🍽️", $"Consume for a random positive or negative effect", offset: Vector2.Zero, tattooIcon: "🍄", tattooScale: 0.75f, tattooOffset: new Vector2(-0.3f, 0.1f), labelText: "❓️", labelOffset: new Vector2(0f, -16f), labelFontSize: 9, labelColor: Color.White);
+            AddTrait(AbilityName, "🍽️", $"Consume for a random positive or negative effect", offset: Vector2.Zero, tattooIcon: "🍄", tattooScale: 0.75f, tattooOffset: new Vector2(-0.3f, 0.1f), labelText: "❓️", labelOffset: new Vector2(0f, -16f), labelFontSize: 9, labelColor: Color.White, isAbility: true);
         }
     }
 

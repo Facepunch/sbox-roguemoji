@@ -28,7 +28,7 @@ public partial class Juicebox : Thing
 
             InitStat(StatType.Durability, current: DurabilityAmount, max: DurabilityAmount);
 
-            AddTrait(AbilityName, "😋", $"Take a sip to heal {HealthAmount}{GetStatIcon(StatType.Health)}", offset: new Vector2(0f, -1f), tattooIcon: "🥤", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f));
+            AddTrait(AbilityName, "😋", $"Take a sip to heal {HealthAmount}{GetStatIcon(StatType.Health)}", offset: new Vector2(0f, -1f), tattooIcon: "🥤", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f), isAbility: true);
             AddTrait("", GetStatIcon(StatType.Health), $"Sipping heals {HealthAmount}{GetStatIcon(StatType.Health)}", offset: new Vector2(0f, 0f), labelText: $"+{HealthAmount}", labelFontSize: 18, labelOffset: new Vector2(0f, -1f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", GetStatIcon(StatType.Durability), $"Ability costs {DurabilityCost}{GetStatIcon(StatType.Durability)}", offset: new Vector2(0f, -3f), labelText: $"-{DurabilityCost}", labelFontSize: 18, labelOffset: new Vector2(0f, -1f), labelColor: new Color(1f, 1f, 1f));
         }

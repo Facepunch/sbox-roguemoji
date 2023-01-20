@@ -25,7 +25,7 @@ public partial class Trait : Entity
     [Net] public int LabelFontSize { get; set; }
     [Net] public Vector2 LabelOffset { get; set; }
     [Net] public Color LabelColor { get; set; }
-
+    [Net] public bool IsAbility { get; set; }
     public int Hash => HashCode.Combine(Icon, HasTattoo ? TattooIcon : "", HasLabel ? LabelText : "", BarPercent);
 
     public Trait()
@@ -56,7 +56,7 @@ public partial class Thing : Entity
     [Net] public IList<Trait> Traits { get; private set; }
     [Net] public int TraitHash { get; private set; }
 
-    public Trait AddTrait(string name, string icon, string description, Vector2 offset, string source = "")
+    public Trait AddTrait(string name, string icon, string description, Vector2 offset, bool isAbility = false, string source = "")
     {
         var trait = new Trait()
         {
@@ -65,6 +65,7 @@ public partial class Thing : Entity
             Description = description,
             Offset = offset,
             Source = source,
+            IsAbility = isAbility,
         };
 
         if (Traits == null)
@@ -74,26 +75,26 @@ public partial class Thing : Entity
         return trait;
     }
 
-    public Trait AddTrait(string name, string icon, string description, Vector2 offset, string tattooIcon, float tattooScale, Vector2 tattooOffset, string source = "")
+    public Trait AddTrait(string name, string icon, string description, Vector2 offset, string tattooIcon, float tattooScale, Vector2 tattooOffset, bool isAbility = false, string source = "")
     {
-        Trait trait = AddTrait(name, icon, description, offset, source);
+        Trait trait = AddTrait(name, icon, description, offset, isAbility, source);
         trait.SetTattoo(tattooIcon, tattooScale, tattooOffset);
         RefreshTraitHash();
         return trait;
     }
 
-    public Trait AddTrait(string name, string icon, string description, Vector2 offset, string tattooIcon, float tattooScale, Vector2 tattooOffset, string labelText, int labelFontSize, Vector2 labelOffset, Color labelColor, string source = "")
+    public Trait AddTrait(string name, string icon, string description, Vector2 offset, string tattooIcon, float tattooScale, Vector2 tattooOffset, string labelText, int labelFontSize, Vector2 labelOffset, Color labelColor, bool isAbility = false, string source = "")
     {
-        Trait trait = AddTrait(name, icon, description, offset, source);
+        Trait trait = AddTrait(name, icon, description, offset, isAbility, source);
         trait.SetTattoo(tattooIcon, tattooScale, tattooOffset);
         trait.SetLabel(labelText, labelFontSize, labelOffset, labelColor);
         RefreshTraitHash();
         return trait;
     }
 
-    public Trait AddTrait(string name, string icon, string description, Vector2 offset, string labelText, int labelFontSize, Vector2 labelOffset, Color labelColor, string source = "")
+    public Trait AddTrait(string name, string icon, string description, Vector2 offset, string labelText, int labelFontSize, Vector2 labelOffset, Color labelColor, bool isAbility = false, string source = "")
     {
-        Trait trait = AddTrait(name, icon, description, offset, source);
+        Trait trait = AddTrait(name, icon, description, offset, isAbility, source);
         trait.SetLabel(labelText, labelFontSize, labelOffset, labelColor);
         RefreshTraitHash();
         return trait;

@@ -19,7 +19,7 @@ public partial class Refreshment : Thing
 
         if (Game.IsServer)
         {   
-            AddTrait(AbilityName, "😋", $"Consume refreshment to refresh all item cooldowns", offset: new Vector2(0f, -1f), tattooIcon: "🥤", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f));
+            AddTrait(AbilityName, "😋", $"Consume refreshment to refresh all item cooldowns", offset: new Vector2(0f, -1f), tattooIcon: "🥤", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f), isAbility: true);
         }
     }
 

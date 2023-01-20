@@ -19,7 +19,7 @@ public partial class Peach : Thing
         if (Game.IsServer)
         {
             EatCharisma = 1;
-            AddTrait(AbilityName, "🍽️", $"Consume for +{EatCharisma}{GetStatIcon(StatType.Charisma)}", offset: Vector2.Zero, tattooIcon: GetStatIcon(StatType.Charisma), tattooScale: 0.8f, tattooOffset: new Vector2(0f, 1f), labelText: $"+{EatCharisma}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
+            AddTrait(AbilityName, "🍽️", $"Consume for +{EatCharisma}{GetStatIcon(StatType.Charisma)}", offset: Vector2.Zero, tattooIcon: GetStatIcon(StatType.Charisma), tattooScale: 0.8f, tattooOffset: new Vector2(0f, 1f), labelText: $"+{EatCharisma}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f), isAbility: true);
         }
     }
 

@@ -22,7 +22,7 @@ public partial class PotionConfusion : Potion
 
         if (Game.IsServer)
         {
-            AddTrait(AbilityName, "😋", $"Consume potion to cause an effect", offset: new Vector2(0f, -1f), tattooIcon: "🧉", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f));
+            AddTrait(AbilityName, "😋", $"Consume potion to cause an effect", offset: new Vector2(0f, -1f), tattooIcon: "🧉", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f), isAbility: true);
             AddTrait("", Globals.Icon(IconType.Confusion), $"Makes you confused", offset: new Vector2(0f, 0f));
         }
     }

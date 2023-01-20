@@ -107,14 +107,14 @@
         }
 
         <div class="icon @GetPlayerClass() @Hud.GetUnusableClass(SelectedThing)">
-            @(Hud.GetHallucinationTextThing(SelectedThing, SelectedThing.DisplayIcon.Substring(SelectedThing.CharSkip), HallucinationTextType.Icon))
+            @(Hud.GetHallucinationTextThing(SelectedThing, SelectedThing.DisplayIcon, HallucinationTextType.Icon))
 
             @if (SelectedThing.HasTattoo)
             {
                 int fontSize = MathX.FloorToInt(55f * SelectedThing.TattooData.Scale);
                 var offset = SelectedThing.TattooData.OffsetInfo;
                 <div class="info_panel_tattoo" style="width: 64px; height: 64px; font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                    @(Hud.GetHallucinationTextThing(SelectedThing, SelectedThing.TattooData.Icon, HallucinationTextType.Icon, tattoo: true))
+                    @(Hud.GetHallucinationTextThing(SelectedThing, Hud.GetTattooIcon(SelectedThing), HallucinationTextType.Icon, tattoo: true))
                 </div>
             }
 
@@ -129,7 +129,7 @@
                         int fontSize = MathX.FloorToInt(32f * wieldedThing.TattooData.Scale);
                         var offset = wieldedThing.TattooData.OffsetInfoWielded;
                         <div class="info_panel_tattoo" style="width: @(RoguemojiGame.CellSize)px; height: @(RoguemojiGame.CellSize)px; font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                            @(Hud.GetHallucinationTextThing(wieldedThing, wieldedThing.TattooData.Icon, HallucinationTextType.Icon, tattoo: true))
+                            @(Hud.GetHallucinationTextThing(wieldedThing, Hud.GetTattooIcon(wieldedThing), HallucinationTextType.Icon, tattoo: true))
                         </div>
                     }
                 </div> 

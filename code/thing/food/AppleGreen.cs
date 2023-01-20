@@ -19,7 +19,7 @@ public partial class AppleGreen : Thing
         if (Game.IsServer)
         {
             EatEnergy = 5;
-            AddTrait(AbilityName, "🍽️", $"Consume for +{EatEnergy}{GetStatIcon(StatType.Energy)}", offset: Vector2.Zero, tattooIcon: GetStatIcon(StatType.Energy), tattooScale: 0.8f, tattooOffset: new Vector2(0f, 0f), labelText: $"+{EatEnergy}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
+            AddTrait(AbilityName, "🍽️", $"Consume for +{EatEnergy}{GetStatIcon(StatType.Energy)}", offset: Vector2.Zero, tattooIcon: GetStatIcon(StatType.Energy), tattooScale: 0.8f, tattooOffset: new Vector2(0f, 0f), labelText: $"+{EatEnergy}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f), isAbility: true);
         }
     }
 

@@ -38,7 +38,7 @@ public partial class Cigarette : Thing
 
             InitStat(StatType.Durability, current: DurabilityAmount, max: DurabilityAmount);
 
-            AddTrait(AbilityName, "💨", $"Puff the cigarette, gaining {GetStatIcon(StatType.Energy)} and exhaling a cloud of smoke nearby", offset: new Vector2(0f, -1f));
+            AddTrait(AbilityName, "💨", $"Puff the cigarette, gaining {GetStatIcon(StatType.Energy)} and exhaling a cloud of smoke nearby", offset: new Vector2(0f, -1f), isAbility: true);
             AddTrait("", GetStatIcon(StatType.Health), $"Smoking removes {HealthCost}{GetStatIcon(StatType.Health)}", offset: new Vector2(0f, 0f), labelText: $"-{HealthCost}", labelFontSize: 18, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", GetStatIcon(StatType.Energy), $"You gain {EnergyGained}{GetStatIcon(StatType.Energy)} for taking a drag", offset: new Vector2(0f, 0f), labelText: $"+{EnergyGained}", labelFontSize: 18, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", GetStatIcon(StatType.Charisma), $"You gain {CharismaAmount}{GetStatIcon(StatType.Charisma)} for {CharismaTime}s after taking a drag", offset: new Vector2(0f, 0f), labelText: $"+{CharismaAmount}", labelFontSize: 18, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
