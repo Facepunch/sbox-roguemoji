@@ -14,15 +14,6 @@
         color: #aaaaaa;
         flex-shrink:0;
     }
-
-    .player-1 { color: #3333ff; } 
-    .player-2 { color: #ff0000; }
-    .player-3 { color: #009900; }
-    .player-4 { color: #ff00ff; }
-    .player-5 { color: #ffff00; }
-    .player-6 { color: #2299ff; }
-    .player-7 { color: #8800bb; }
-    .player-8 { color: #ff8800; }
 </style>
 
 <root class="log_message @playerClass()">
@@ -36,7 +27,7 @@
 
     private string playerClass()
     {
-        return PlayerNum > 0 ? $"player-{PlayerNum}" : "";
+        return PlayerNum > 0 ? $"text_player-{PlayerNum}" : "";
     }
 
     protected override int BuildHash()

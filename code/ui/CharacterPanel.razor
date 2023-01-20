@@ -31,10 +31,10 @@
         width:100px;
         font-size: 64px;
         background-color: #090909;
-        border-radius:3px;
+        border-radius: 3px;
         text-align: center;
         justify-content: center;
-        padding-bottom:4px;
+        padding-bottom: 4px;
         font-family: W10Emoji;
     }
 
@@ -145,9 +145,7 @@
             @(Hud.GetHallucinationText(player, Hud.GetConfusedText(player.DisplayName), HallucinationTextType.Name)
         </div> -->
 
-        <div class="char_icon @GetPlayerClass()" @ref=PlayerIcon @onmousedown=@((PanelEvent e) => OnMouseDownPlayerIcon(e as MousePanelEvent))> 
-            @(Hud.GetHallucinationTextThing(player, player.DisplayIcon.Substring(player.CharSkip), HallucinationTextType.Icon))
-        </div>
+        <CharacterPortrait class="char_icon" @ref=CharPortrait></CharacterPortrait>
 
         <div class="input_recharge_bar">
             <div class="input_recharge_bar_overlay" style="width: @Utils.Map(player.ActionRechargePercent, 0f, 1f, 0f, 100f, EasingType.SineInOut)%; opacity: @Utils.Map(player.ActionRechargePercent, 0f, 1f, 0.25f, 1f, EasingType.ExpoIn);"></div>
@@ -182,32 +180,12 @@
 {
     public EquipmentPanel EquipmentPanel { get; set; }
     public WieldingPanel WieldingPanel { get; set; }
-    public Panel PlayerIcon { get; set; }
-
-    string GetPlayerClass()
-    {
-        var player = RoguemojiGame.Instance.LocalPlayer;
-        return (player?.PlayerNum ?? 0) > 0 ? $"icon-player-{player.PlayerNum}" : "";
-    }
+    public CharacterPortrait CharPortrait { get; set; }
 
     protected override int BuildHash()
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
         return HashCode.Combine(player.GetInfoDisplayHash(), player.ActionRechargePercent, player.StatHash, player.ConfusionSeed);
-    }
-
-    public void OnMouseDownPlayerIcon(MousePanelEvent e)
-    {
-        bool rightClick = e.Button == "mouseright";
-        bool shift = Input.Down(InputButton.Run);
-
-        var player = RoguemojiGame.Instance.LocalPlayer;
-        if (player == null)
-            return;
-
-        Hud.Instance.PlayerIconClicked(rightClick, shift);
-
-        Hud.Instance.UnfocusChatbox();
     }
 }
 

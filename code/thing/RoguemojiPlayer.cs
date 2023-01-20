@@ -904,7 +904,7 @@ public partial class RoguemojiPlayer : Thing
             else if (!thing.HasFlag(ThingFlags.Equipment))
                 WieldThing(thing);
         }
-        else if (destinationPanelType == PanelType.PlayerIcon)
+        else if (destinationPanelType == PanelType.CharPortrait)
         {
             if (thing.HasFlag(ThingFlags.Equipment))
                 TryEquipThing(thing);
@@ -972,7 +972,7 @@ public partial class RoguemojiPlayer : Thing
                 WieldThing(thing, dontRequireAction: true);
             }
         }
-        else if (destinationPanelType == PanelType.PlayerIcon)
+        else if (destinationPanelType == PanelType.CharPortrait)
         {
             // todo
         }

@@ -1,0 +1,69 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+
+@inherits Panel;
+@namespace Roguemoji
+
+<style>
+    .char_portrait_tooltip  {
+        color: white;
+        font-size: 16px;
+        position: absolute;
+        padding: 2px 4px 2px 4px;
+        border-radius: 2px;
+        border: 1px solid #ffffff33;
+        box-shadow: 2px 2px 12px #000000;
+        font-family: RobotoMono;
+        flex-direction: column;
+        background-color: #000000fc;
+    }
+
+    .char_portrait_title {
+        padding-bottom: 2px;
+    }
+
+    .char_portrait_line {
+        flex-direction: row;
+    }
+
+    .char_portrait_action {
+        color: #555555;
+        padding-right: 6px;
+    }
+
+    .char_portrait_bind {
+        color: #888888;
+        //align-items: flex-end;
+        //background-color: blue;
+        //flex-grow: 1;
+    }
+</style>
+
+@if(Thing == null)
+{
+    return;
+}
+
+<root class="char_portrait_tooltip">
+    <div class="char_portrait_title @playerClass()">
+        @(Hud.GetConfusedText(Hud.GetTooltip(Thing)))
+    </div>
+
+    <div class="wielding_line">
+        <span class="char_portrait_action">
+            @(Hud.GetConfusedText("Character Info"))
+        </span>
+
+        <span class="char_portrait_bind">[C]</span>
+    </div>
+</root>
+
+@code
+{
+    public Thing Thing { get; set; }
+
+    private string playerClass()
+    {
+        return Thing.PlayerNum > 0 ? $"text_player-{Thing.PlayerNum}" : "";
+    }
+}

@@ -1,0 +1,71 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@using System;
+
+@inherits Panel;
+@namespace Roguemoji
+
+<style>
+    .char_portrait {
+        font-size: 64px;
+        background-color: #090909;
+        border-radius: 3px;
+        text-align: center;
+        justify-content: center;
+        padding-bottom: 4px;
+        font-family: W10Emoji;
+    }
+</style>
+
+@{
+    var player = RoguemojiGame.Instance.LocalPlayer;
+}
+
+<root class="char_portrait @GetPlayerClass()">
+    @(Hud.GetHallucinationTextThing(player, player.DisplayIcon.Substring(player.CharSkip), HallucinationTextType.Icon))
+</root>
+
+@code
+{
+    string GetPlayerClass()
+    {
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        return (player?.PlayerNum ?? 0) > 0 ? $"icon-player-{player.PlayerNum}" : "";
+    }
+
+    protected override Panel CreateTooltipPanel()
+    {
+        var panel = Hud.Instance.AddChild<CharPortraitTooltip>();
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        panel.Thing = player;
+        return panel;
+    }
+
+    protected override void OnAfterTreeRender(bool firstTime)
+    {
+        base.OnAfterTreeRender(firstTime);
+
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        Tooltip = player.DisplayName;
+    }
+
+    protected override void OnMouseDown(MousePanelEvent e)
+    {
+        bool rightClick = e.Button == "mouseright";
+        bool shift = Input.Down(InputButton.Run);
+
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        if (player == null)
+            return;
+
+        Hud.Instance.PlayerIconClicked(rightClick, shift);
+
+        Hud.Instance.UnfocusChatbox();
+    }
+
+    protected override int BuildHash()
+    {
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        return HashCode.Combine(player.GetInfoDisplayHash(), player.ActionRechargePercent, player.StatHash, player.ConfusionSeed, player.HallucinatingSeed);
+    }
+}

@@ -205,7 +205,7 @@
     {
         var panel = Hud.Instance.AddChild<CellTooltip>();
         panel.Thing = Thing;
-        panel.AddClass($"player-{Thing.PlayerNum}");
+        panel.AddClass($"tooltip_player-{Thing.PlayerNum}");
         return panel;
     }
 

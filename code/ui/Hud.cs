@@ -7,7 +7,7 @@ using System.Diagnostics.SymbolStore;
 using static Roguemoji.DebugDrawing;
 namespace Roguemoji;
 
-public enum PanelType { None, ArenaGrid, InventoryGrid, EquipmentGrid, Wielding, PlayerIcon, Log, Nearby, Info, Character, Stats, ChatPanel, Chatbox, LevelLabel };
+public enum PanelType { None, ArenaGrid, InventoryGrid, EquipmentGrid, Wielding, CharPortrait, Log, Nearby, Info, Character, Stats, ChatPanel, Chatbox, LevelLabel };
 public enum CursorMode { Point, Pinch, Invalid, Write, PointDown, ThumbsUp, Ok, Check, MiddleFinger, Point2, PointLeft, PointRight }
 
 public struct FloaterData
@@ -244,7 +244,7 @@ public partial class Hud : RootPanel
         else if (Contains(GetRect(PanelType.Log), pos))             return PanelType.Log;
         else if (Contains(GetRect(PanelType.EquipmentGrid), pos))   return PanelType.EquipmentGrid;
         else if (Contains(GetRect(PanelType.Wielding), pos))        return PanelType.Wielding;
-        else if (Contains(GetRect(PanelType.PlayerIcon), pos))      return PanelType.PlayerIcon;
+        else if (Contains(GetRect(PanelType.CharPortrait), pos))    return PanelType.CharPortrait;
         else if (Contains(GetRect(PanelType.Character), pos))       return PanelType.Character;
         else if (Contains(GetRect(PanelType.Info), pos))            return PanelType.Info;
         else if (Contains(GetRect(PanelType.ChatPanel), pos))       return PanelType.ChatPanel;
@@ -269,7 +269,7 @@ public partial class Hud : RootPanel
 			case PanelType.Character:       return MainPanel.CharacterPanel;
             case PanelType.EquipmentGrid:   return MainPanel.CharacterPanel.EquipmentPanel;
             case PanelType.Wielding:        return MainPanel.CharacterPanel.WieldingPanel;
-            case PanelType.PlayerIcon:      return MainPanel.CharacterPanel.PlayerIcon;
+            case PanelType.CharPortrait:    return MainPanel.CharacterPanel.CharPortrait;
             case PanelType.Info:            return MainPanel.InfoPanel;
             case PanelType.ChatPanel:       return MainPanel.ChatPanel;
             case PanelType.Chatbox:         return MainPanel.Chatbox;
