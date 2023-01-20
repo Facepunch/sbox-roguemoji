@@ -1205,7 +1205,7 @@ public partial class RoguemojiPlayer : Thing
 
     public bool IsPotionTypeIdentified(PotionType potionType)
     {
-        return true;
+        //return true;
         return IdentifiedPotionTypes.Contains(potionType);
     }
 }

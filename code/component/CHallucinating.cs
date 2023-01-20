@@ -19,7 +19,7 @@ public class CHallucinating : ThingComponent
         if (Thing is RoguemojiPlayer player)
             player.HallucinatingSeed = Game.Random.Int(1, 999);
 
-        Trait = thing.AddTrait("Hallucinating", Globals.Icon(IconType.Hallucination), $"Drastically reduced {Thing.GetStatIcon(StatType.Sight)}", offset: Vector2.Zero);
+        Trait = thing.AddTrait("Hallucinating", Globals.Icon(IconType.Hallucination), $"Sees things in a new way", offset: Vector2.Zero);
 
         RoguemojiGame.Instance.AddFloater(Globals.Icon(IconType.Hallucination), Thing.GridPos, time: 0f, Thing.CurrentLevelId, new Vector2(-14f, 4f), Vector2.Zero, height: 0f, text: "", requireSight: true, EasingType.Linear, fadeInTime: 0.025f, scale: 0.5f, opacity: 0.25f, parent: Thing);
     }

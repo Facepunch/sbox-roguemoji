@@ -96,7 +96,7 @@
 
      <div class="selected_info">
         <div class="name_label"> 
-            @(Hud.GetHallucinationTextThing(SelectedThing, Hud.GetConfusedText(GetName(SelectedThing)), HallucinationTextType.Name))
+            @(Hud.GetConfusedText(Hud.GetHallucinationTextThing(SelectedThing, GetName(SelectedThing), HallucinationTextType.Name)))
         </div>
 
         @if (SelectedThing.HasFlag(ThingFlags.Equipment))
@@ -139,7 +139,7 @@
         @if (!string.IsNullOrEmpty(SelectedThing.Description)) 
         { 
             <div class="info_description_label">
-                @(Hud.GetHallucinationTextThing(SelectedThing, Hud.GetConfusedText(GetDescription(SelectedThing)), HallucinationTextType.Description))
+                @(Hud.GetConfusedText(Hud.GetHallucinationTextThing(SelectedThing, GetDescription(SelectedThing), HallucinationTextType.Description)))
             </div>
         }
     </div>
