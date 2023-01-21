@@ -82,8 +82,8 @@ public partial class Potion : Thing
                 var gridPos = breakGridPos + new IntVector(x, y);
                 if (gridManager.IsGridPosInBounds(gridPos))
                 {
-                    RoguemojiGame.Instance.AddFloater(SplashIcon, gridPos, Game.Random.Float(0.7f, 0.9f), levelId, new Vector2(0f, 0f), new Vector2(0f, Game.Random.Float(-10f, -15f)), height: 0f, text: "", requireSight: false, EasingType.QuadOut, 
-                        fadeInTime: Game.Random.Float(0.01f, 0.05f), scale: Game.Random.Float(0.75f, 0.9f), opacity: 0.4f);
+                    RoguemojiGame.Instance.AddFloater(SplashIcon, gridPos, Game.Random.Float(0.7f, 0.9f), levelId, new Vector2(0f, 0f), new Vector2(0f, Game.Random.Float(-10f, -15f)), height: 0f, text: "", requireSight: false, alwaysShowWhenAdjacent: true, 
+                        EasingType.QuadOut, fadeInTime: Game.Random.Float(0.01f, 0.05f), scale: Game.Random.Float(0.75f, 0.9f), opacity: 0.4f);
 
                     ApplyEffectToGridPos(gridPos);
 

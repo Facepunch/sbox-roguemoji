@@ -18,6 +18,7 @@ public struct FloaterData
     public TimeSince timeSinceStart;
     public string text;
     public bool requireSight;
+    public bool alwaysShowWhenAdjacent;
     public Vector2 offsetStart;
     public Vector2 offsetEnd;
     public float height;
@@ -27,7 +28,7 @@ public struct FloaterData
     public float opacity;
     public Thing parent;
 
-    public FloaterData(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height, string text, bool requireSight, EasingType offsetEasingType, float fadeInTime, float scale, float opacity, Thing parent)
+    public FloaterData(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height, string text, bool requireSight, bool alwaysShowWhenAdjacent, EasingType offsetEasingType, float fadeInTime, float scale, float opacity, Thing parent)
     {
         this.icon = icon;
         this.gridPos = gridPos;
@@ -38,6 +39,7 @@ public struct FloaterData
         this.height = height;
         this.text = text;
         this.requireSight = requireSight;
+        this.alwaysShowWhenAdjacent = alwaysShowWhenAdjacent;
         this.offsetEasingType = offsetEasingType;
         this.fadeInTime = fadeInTime;
         this.scale = scale;
@@ -444,9 +446,9 @@ public partial class Hud : RootPanel
         return "aeiou".IndexOf(name[0].ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0;
     }
 
-    public void AddFloater(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height, string text = "", bool requireSight = true, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, Thing parent = null)
+    public void AddFloater(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height, string text = "", bool requireSight = true, bool alwaysShowWhenAdjacent = false, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, Thing parent = null)
     {
-        Floaters.Add(new FloaterData(icon, gridPos, time, offsetStart, offsetEnd, height, text, requireSight, offsetEasingType, fadeInTime, scale, opacity, parent));
+        Floaters.Add(new FloaterData(icon, gridPos, time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, parent));
     }
 
     public void RemoveFloater(string icon, Thing parent = null)

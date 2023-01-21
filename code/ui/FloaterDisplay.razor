@@ -51,7 +51,7 @@
     @foreach(var floater in Hud.Instance.Floaters)
     {
         var floaterGridPos = floater.parent != null ? floater.parent.GridPos : floater.gridPos;
-        @if (!floater.requireSight || player.IsCellVisible(floaterGridPos))
+        @if (!floater.requireSight || player.IsCellVisible(floaterGridPos) || (floater.alwaysShowWhenAdjacent && (player.GridPos - floaterGridPos).ManhattanLength <= 2))
         {
             Vector2 parentOffset = floater.parent?.TotalOffset ?? Vector2.Zero;
             Vector2 pos = ((Hud.Instance.GetScreenPosForArenaGridPos(floaterGridPos) + parentOffset) / ScaleToScreen) + new Vector2(-RoguemojiGame.CellSize / 2, -RoguemojiGame.CellSize / 2);

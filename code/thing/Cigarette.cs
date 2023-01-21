@@ -122,7 +122,7 @@ public class CCigaretteCharismaBuff : ThingComponent
         Trait = Thing.AddTrait("", Thing.GetStatIcon(StatType), $"Smoking gave you {changeSign}{ChangeAmount}{Thing.GetStatIcon(StatType)} temporarily", offset: new Vector2(0f, 0f), 
             tattooIcon: "🚬", tattooScale: 0.65f, tattooOffset: new Vector2(8f, 1f));
 
-        RoguemojiGame.Instance.AddFloater(Thing.GetStatIcon(StatType), Thing.GridPos, 1.5f, Thing.CurrentLevelId, new Vector2(Game.Random.Float(-7f, 7f), Game.Random.Float(-1f, 10f)), new Vector2(Game.Random.Float(10f, 20f) * (Thing.FloaterNum++ % 2 == 0 ? -1 : 1), Game.Random.Float(-13f, 3f)), height: Game.Random.Float(10f, 35f), text: $"+{ChangeAmount}", requireSight: true, EasingType.Linear, fadeInTime: 0.75f, scale: 0.75f, parent: Thing);
+        RoguemojiGame.Instance.AddFloater(Thing.GetStatIcon(StatType), Thing.GridPos, 1.5f, Thing.CurrentLevelId, new Vector2(Game.Random.Float(-7f, 7f), Game.Random.Float(-1f, 10f)), new Vector2(Game.Random.Float(10f, 20f) * (Thing.FloaterNum++ % 2 == 0 ? -1 : 1), Game.Random.Float(-13f, 3f)), height: Game.Random.Float(10f, 35f), text: $"+{ChangeAmount}", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.75f, scale: 0.75f, parent: Thing);
     }
 
     public override void Update(float dt)
@@ -141,6 +141,6 @@ public class CCigaretteCharismaBuff : ThingComponent
     {
         Thing.AdjustStat(StatType, -ChangeAmount);
         Thing.RemoveTrait(Trait);
-        RoguemojiGame.Instance.AddFloater(Thing.GetStatIcon(StatType), Thing.GridPos, 1.5f, Thing.CurrentLevelId, new Vector2(Game.Random.Float(-7f, 7f), Game.Random.Float(-1f, 10f)), new Vector2(Game.Random.Float(10f, 20f) * (Thing.FloaterNum++ % 2 == 0 ? -1 : 1), Game.Random.Float(-13f, 3f)), height: Game.Random.Float(10f, 35f), text: $"-{ChangeAmount}", requireSight: true, EasingType.Linear, fadeInTime: 0.75f, scale: 0.75f, parent: Thing);
+        RoguemojiGame.Instance.AddFloater(Thing.GetStatIcon(StatType), Thing.GridPos, 1.5f, Thing.CurrentLevelId, new Vector2(Game.Random.Float(-7f, 7f), Game.Random.Float(-1f, 10f)), new Vector2(Game.Random.Float(10f, 20f) * (Thing.FloaterNum++ % 2 == 0 ? -1 : 1), Game.Random.Float(-13f, 3f)), height: Game.Random.Float(10f, 35f), text: $"-{ChangeAmount}", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.75f, scale: 0.75f, parent: Thing);
     }
 }

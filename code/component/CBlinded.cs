@@ -31,7 +31,7 @@ public class CBlinded : ThingComponent
         AdjustSight(-1);
         Trait = thing.AddTrait("Blinded", Globals.Icon(IconType.Blindness), $"Drastically reduced {Thing.GetStatIcon(StatType.Sight)}", offset: Vector2.Zero);
 
-        RoguemojiGame.Instance.AddFloater(Globals.Icon(IconType.Blindness), Thing.GridPos, time: 0f, Thing.CurrentLevelId, new Vector2(-14f, -4f), Vector2.Zero, height: 0f, text: "", requireSight: true, EasingType.Linear, fadeInTime: 0.025f, scale: 0.5f, opacity: 0.25f, parent: Thing);
+        RoguemojiGame.Instance.AddFloater(Globals.Icon(IconType.Blindness), Thing.GridPos, time: 0f, Thing.CurrentLevelId, new Vector2(-14f, -4f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.5f, opacity: 0.25f, parent: Thing);
     }
 
     public override void Update(float dt)

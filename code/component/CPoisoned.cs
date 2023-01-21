@@ -24,7 +24,7 @@ public class CPoisoned : ThingComponent
 
         Trait = thing.AddTrait("Poisoned", Globals.Icon(IconType.Poison), GetTraitDescription(), offset: Vector2.Zero, labelText: "", labelFontSize: 18, labelOffset: new Vector2(0f, -12f), labelColor: new Color(0.2f, 1f, 0.2f));
 
-        RoguemojiGame.Instance.AddFloater(Globals.Icon(IconType.Poison), Thing.GridPos, time: 0f, Thing.CurrentLevelId, new Vector2(-14f, -14f), Vector2.Zero, height: 0f, text: "", requireSight: true, EasingType.Linear, fadeInTime: 0.025f, scale: 0.5f, opacity: 0.25f, parent: Thing);
+        RoguemojiGame.Instance.AddFloater(Globals.Icon(IconType.Poison), Thing.GridPos, time: 0f, Thing.CurrentLevelId, new Vector2(-14f, -14f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.5f, opacity: 0.25f, parent: Thing);
     }
 
     public override void Update(float dt)
@@ -41,7 +41,7 @@ public class CPoisoned : ThingComponent
             var offset = new Vector2(Game.Random.Float(-5f, 4f), Game.Random.Float(-5f, 4f));
             var scale = Utils.Map(TimeElapsed, 0f, Lifetime, 0.8f, 0.25f, EasingType.QuadIn);
             var opacity = Utils.Map(TimeElapsed, 0f, Lifetime, 0.75f, 0.4f);
-            RoguemojiGame.Instance.AddFloater(Globals.Icon(IconType.Poison), Thing.GridPos, 0.25f, Thing.CurrentLevelId, offset, offset, height: 0f, text: "", requireSight: true, EasingType.SineIn, fadeInTime: 0.025f, scale: scale, opacity: opacity, parent: Thing);
+            RoguemojiGame.Instance.AddFloater(Globals.Icon(IconType.Poison), Thing.GridPos, 0.25f, Thing.CurrentLevelId, offset, offset, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.SineIn, fadeInTime: 0.025f, scale: scale, opacity: opacity, parent: Thing);
         }
 
         TimeElapsed += dt;

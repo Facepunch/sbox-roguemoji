@@ -17,7 +17,7 @@ public class CConfused : ThingComponent
         ShouldUpdate = true;
 
         Trait = thing.AddTrait("Confused", Globals.Icon(IconType.Confusion), $"Confused and woozy", offset: Vector2.Zero);
-        RoguemojiGame.Instance.AddFloater(Globals.Icon(IconType.Confusion), Thing.GridPos, time: 0f, Thing.CurrentLevelId, new Vector2(15f, -16f), Vector2.Zero, height: 0f, text: "", requireSight: true, EasingType.Linear, fadeInTime: 0.025f, scale: 0.4f, opacity: 0.4f, parent: Thing);
+        RoguemojiGame.Instance.AddFloater(Globals.Icon(IconType.Confusion), Thing.GridPos, time: 0f, Thing.CurrentLevelId, new Vector2(15f, -16f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.4f, opacity: 0.4f, parent: Thing);
 
         if(Thing is RoguemojiPlayer player)
             player.ConfusionSeed = Game.Random.Int(1, 999);
