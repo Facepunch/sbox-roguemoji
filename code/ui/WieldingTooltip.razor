@@ -57,7 +57,7 @@
     }
 
     <div class="wielding_title">
-        @(Hud.GetConfusedText(Hud.GetTooltip(Thing)))
+        @(Hud.GetConfusedText(Hud.GetHallucinationTextKeyStr(Thing.DisplayIcon.Substring(Thing.CharSkip), Hud.GetTooltip(Thing), HallucinationTextType.Name)))
     </div>
 
     @if(Thing.HasFlag(ThingFlags.Useable))

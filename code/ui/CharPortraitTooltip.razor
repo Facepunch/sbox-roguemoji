@@ -46,7 +46,7 @@
 
 <root class="char_portrait_tooltip">
     <div class="char_portrait_title @playerClass()">
-        @(Hud.GetConfusedText(Hud.GetTooltip(Thing)))
+        @(Hud.GetConfusedText(Hud.GetHallucinationTextKeyStr(Thing.DisplayIcon.Substring(Thing.CharSkip), Thing.DisplayName, HallucinationTextType.Name)))
     </div>
 
     <div class="wielding_line">
