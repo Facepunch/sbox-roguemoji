@@ -181,7 +181,7 @@ public partial class Thing : Entity
         //    DrawDebugText($"{GetStat(StatType.Health).CurrentValue}");
     }
 
-    public virtual bool TryMove(Direction direction, bool shouldAnimate = true)
+    public virtual bool TryMove(Direction direction, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
     {
         Sandbox.Diagnostics.Assert.True(ContainingGridType != GridType.None);
 

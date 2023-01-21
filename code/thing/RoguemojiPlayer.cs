@@ -200,7 +200,8 @@ public partial class RoguemojiPlayer : Thing
             case 18: InventoryGridManager.SpawnThing<PotionEnergy>(gridPos); break;
             case 19: InventoryGridManager.SpawnThing<ScrollTeleport>(gridPos); break;
             case 20: InventoryGridManager.SpawnThing<BookTeleport>(gridPos); break;
-            case 21: InventoryGridManager.SpawnThing<AcademicCap>(gridPos); break;
+            //case 21: InventoryGridManager.SpawnThing<AcademicCap>(gridPos); break;
+            case 21: InventoryGridManager.SpawnThing<RugbyBall>(gridPos); break;
             case 22: InventoryGridManager.SpawnThing<Joystick>(gridPos); break;
             case 23: InventoryGridManager.SpawnThing<ScrollFear>(gridPos); break;
         }
@@ -351,9 +352,9 @@ public partial class RoguemojiPlayer : Thing
         RoguemojiGame.Instance.FlickerWieldingPanel();
     }
 
-    public bool TryMove(Direction direction, bool shouldQueueAction = false, bool shouldAnimate = true)
+    public override bool TryMove(Direction direction, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
 	{
-        if (!Acting.IsActionReady)
+        if (!Acting.IsActionReady && !dontRequireAction)
         {
             if(shouldQueueAction)
             {
@@ -369,7 +370,7 @@ public partial class RoguemojiPlayer : Thing
 
         var oldLevelId = CurrentLevelId;
 
-        var success = base.TryMove(direction, shouldAnimate: false);
+        var success = base.TryMove(direction, shouldAnimate: false, shouldQueueAction: false);
 		if (success)
 		{
             if(HasEquipmentType(TypeLibrary.GetType(typeof(Sunglasses))))
@@ -389,7 +390,9 @@ public partial class RoguemojiPlayer : Thing
 			SetIcon("🤨");
         }
 
-        Acting.PerformedAction();
+        if(!dontRequireAction)
+            Acting.PerformedAction();
+
 		return success;
 	}
 
