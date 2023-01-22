@@ -72,6 +72,9 @@ public class CRugbyCharge : ThingComponent
     public TimeSince TimeSinceMove { get; set; }
     public int RemainingDistance { get; set; }
     public int DistanceMoved { get; set; }
+    public float StartTimer { get; set; }
+    public float StartDelay { get; set; }
+    public int IconId { get; set; }
 
     public override void Init(Thing thing)
     {
@@ -80,9 +83,13 @@ public class CRugbyCharge : ThingComponent
         ShouldUpdate = true;
         TimeSinceMove = 0f;
         DistanceMoved = 0;
+        StartDelay = 0.5f;
 
         if (thing.GetComponent<CActing>(out var component))
             ((CActing)component).PreventAction();
+
+        if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component2))
+            IconId = ((CIconPriority)component2).AddIconPriority("😤", (int)PlayerIconPriority.RugbyCharge);
     }
 
     public override void Update(float dt)
@@ -92,6 +99,12 @@ public class CRugbyCharge : ThingComponent
         if (Thing.ContainingGridType != GridType.Arena)
         {
             Remove();
+            return;
+        }
+
+        if(StartTimer < StartDelay)
+        {
+            StartTimer += dt;
             return;
         }
 
@@ -157,6 +170,9 @@ public class CRugbyCharge : ThingComponent
 
         if (Thing.GetComponent<CActing>(out var component))
             ((CActing)component).AllowAction();
+
+        if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component2))
+            ((CIconPriority)component2).RemoveIconPriority(IconId);
     }
 
     public override void OnThingDied()

@@ -10,6 +10,8 @@ public enum IconType { Blink, Teleport, Fear, Telekinesis, Poison, Blindness, Sl
 public enum VerbType { Use, Read }
 public enum HallucinationTextType { Icon, Name, Tooltip, Description, GeneralDescription }
 
+public enum PlayerIconPriority { Default, Sunglasses, Attack, RugbyCharge, Dead }
+
 public struct HallucinationData
 {
     public string icon;

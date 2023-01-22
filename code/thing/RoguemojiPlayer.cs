@@ -13,6 +13,8 @@ public partial class RoguemojiPlayer : Thing
     public CActing Acting { get; private set; }
     private float _startingActionDelay = 0.5f;
 
+    public CIconPriority IconPriority { get; private set; }
+
     [Net] public IntVector CameraGridOffset { get; set; }
     public Vector2 CameraPixelOffset { get; set; } // Client-only
     public float CameraFade { get; set; } // Client-only
@@ -86,11 +88,13 @@ public partial class RoguemojiPlayer : Thing
         base.Spawn();
 
         Acting = AddComponent<CActing>();
+        IconPriority = AddComponent<CIconPriority>();
+        IconPriority.SetDefaultIcon("😀");
     }
 
     void SetStartingValues()
     {
-        DisplayIcon = "🙂";
+        DisplayIcon = "😀";
         Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanUseThings;
         IsDead = false;
         //ActionDelay = TimeSinceAction = 0.5f;
@@ -156,6 +160,8 @@ public partial class RoguemojiPlayer : Thing
         Acting = AddComponent<CActing>();
         Acting.ActionDelay = _startingActionDelay;
         Acting.IsActionReady = false;
+        IconPriority = AddComponent<CIconPriority>();
+        IconPriority.SetDefaultIcon("😀");
     }
 
     [ClientRpc]
@@ -219,7 +225,7 @@ public partial class RoguemojiPlayer : Thing
 	{
 		base.Update(dt);
 
-        //DebugText = $"{("🧉").GetHashCode()}";
+        //DebugText = $"{Acting.ActionDelay}";
 
         InventoryGridManager.Update(dt);
 
@@ -373,11 +379,6 @@ public partial class RoguemojiPlayer : Thing
         var success = base.TryMove(direction, shouldAnimate: false, shouldQueueAction: false);
 		if (success)
 		{
-            if(HasEquipmentType(TypeLibrary.GetType(typeof(Sunglasses))))
-                SetIcon("😎");
-            else
-                SetIcon("😀");
-
             var switchedLevel = oldLevelId != CurrentLevelId;
             var movedCamera = RecenterCamera(shouldAnimate: !switchedLevel);
 
@@ -387,7 +388,7 @@ public partial class RoguemojiPlayer : Thing
         }
         else 
 		{
-			SetIcon("🤨");
+            IconPriority.AddIconPriority("🤨", (int)PlayerIconPriority.Attack, 0.4f);
         }
 
         if(!dontRequireAction)
@@ -563,7 +564,8 @@ public partial class RoguemojiPlayer : Thing
 
         IsDead = true;
         StopAiming();
-        SetIcon("😑");
+
+        IconPriority.AddIconPriority("😑", (int)PlayerIconPriority.Attack);
 
         OnDied();
     }

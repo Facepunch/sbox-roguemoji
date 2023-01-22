@@ -493,8 +493,6 @@ public partial class Thing : Entity
         //GridManager.RefreshGridPos(GridPos);
     }
 
-    
-
     public override int GetHashCode()
     {
         return HashCode.Combine(DisplayIcon, WieldedThing?.ThingId ?? 0, PlayerNum + ThingId, RotationDegrees, IconScale, IconDepth, Flags);

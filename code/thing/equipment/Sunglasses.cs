@@ -6,6 +6,7 @@ public partial class Sunglasses : Thing
 {
     public int CharismaAmount { get; private set; }
     public int SightAmount { get; private set; }
+    public int IconId { get; set; }
 
     public Sunglasses()
 	{
@@ -31,7 +32,14 @@ public partial class Sunglasses : Thing
         foreach(var pair in Stats)
             thing.AdjustStat(pair.Key, pair.Value.CurrentValue);
 
-        thing.SetIcon("😎");
+        if(thing is RoguemojiPlayer player)
+        {
+            if (thing.GetComponent<CIconPriority>(out var component))
+            {
+                var iconPriority = (CIconPriority)component;
+                IconId = iconPriority.AddIconPriority("😎", (int)PlayerIconPriority.Sunglasses);
+            }
+        }
     }
 
     public override void OnUnequippedFrom(Thing thing)
@@ -39,7 +47,13 @@ public partial class Sunglasses : Thing
         foreach (var pair in Stats)
             thing.AdjustStat(pair.Key, -pair.Value.CurrentValue);
 
-        if (!thing.HasEquipmentType(TypeLibrary.GetType(typeof(Sunglasses))))
-            thing.SetIcon("😀");
+        if (thing is RoguemojiPlayer player)
+        {
+            if (thing.GetComponent<CIconPriority>(out var component))
+            {
+                var iconPriority = (CIconPriority)component;
+                iconPriority.RemoveIconPriority(IconId);
+            }
+        }
     }
 }
