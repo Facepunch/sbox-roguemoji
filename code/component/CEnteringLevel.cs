@@ -7,6 +7,7 @@ namespace Roguemoji;
 public class CEnteringLevel : ThingComponent
 {
     public float Lifetime { get; set; }
+    public int IconId { get; set; }
 
     public override void Init(Thing thing)
     {
@@ -23,6 +24,9 @@ public class CEnteringLevel : ThingComponent
 
         thing.VfxFly(startingGridPos: new IntVector(thing.GridPos.x, -3), lifetime: fallTime, progressEasingType: EasingType.SineIn);
         thing.VfxScale(0f, 1f, 1f);
+
+        if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component))
+            IconId = ((CIconPriority)component).AddIconPriority("🙃", (int)PlayerIconPriority.EnterLevel);
     }
 
     public override void Update(float dt)
@@ -38,5 +42,8 @@ public class CEnteringLevel : ThingComponent
     public override void OnRemove()
     {
         Thing.IsInTransit = false;
+
+        if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component))
+            ((CIconPriority)component).RemoveIconPriority(IconId);
     }
 }

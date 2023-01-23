@@ -416,6 +416,15 @@ public static class Utils
         return new string(characters);
     }
 
+    public static string GetRandomIcon(string i0, string i1) { int rand = Game.Random.Int(0, 1); switch(rand) { case 0: default: return i0; case 1: return i1; } }
+    public static string GetRandomIcon(string i0, string i1, string i2) { int rand = Game.Random.Int(0, 2); switch (rand) { case 0: default: return i0; case 1: return i1; case 2: return i2; } }
+    public static string GetRandomIcon(string i0, string i1, string i2, string i3) { int rand = Game.Random.Int(0, 3); switch (rand) { case 0: default: return i0; case 1: return i1; case 2: return i2; case 3: return i3; } }
+    public static string GetRandomIcon(string i0, string i1, string i2, string i3, string i4) { int rand = Game.Random.Int(0, 4); switch (rand) { case 0: default: return i0; case 1: return i1; case 2: return i2; case 3: return i3; case 4: return i4; } }
+    public static string GetRandomIcon(string i0, string i1, string i2, string i3, string i4, string i5) { int rand = Game.Random.Int(0, 5); switch (rand) { case 0: default: return i0; case 1: return i1; case 2: return i2; case 3: return i3; case 4: return i4; case 5: return i5; } }
+    public static string GetRandomIcon(string i0, string i1, string i2, string i3, string i4, string i5, string i6) { int rand = Game.Random.Int(0, 6); switch (rand) { case 0: default: return i0; case 1: return i1; case 2: return i2; case 3: return i3; case 4: return i4; case 5: return i5; case 6: return i6; } }
+    public static string GetRandomIcon(string i0, string i1, string i2, string i3, string i4, string i5, string i6, string i7) { int rand = Game.Random.Int(0, 7); switch (rand) { case 0: default: return i0; case 1: return i1; case 2: return i2; case 3: return i3; case 4: return i4; case 5: return i5; case 6: return i6; case 7: return i7; } }
+
+
     private class NodeInfo<T>
     {
         private const int MaxPoolSize = 8192;

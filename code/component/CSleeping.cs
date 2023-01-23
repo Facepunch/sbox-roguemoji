@@ -9,6 +9,7 @@ public class CSleeping : ThingComponent
     public Trait Trait { get; private set; }
 
     public float Lifetime { get; set; }
+    public int IconId { get; set; }
 
     public override void Init(Thing thing)
     {
@@ -20,6 +21,9 @@ public class CSleeping : ThingComponent
 
         if (thing.GetComponent<CActing>(out var component))
             ((CActing)component).PreventAction();
+
+        if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component2))
+            IconId = ((CIconPriority)component2).AddIconPriority("😴", (int)PlayerIconPriority.Sleeping);
 
         RoguemojiGame.Instance.AddFloater(Globals.Icon(IconType.Sleeping), Thing.GridPos, time: 0f, Thing.CurrentLevelId, new Vector2(15f, -8f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.5f, opacity: 0.66f, parent: Thing);
     }
@@ -47,6 +51,9 @@ public class CSleeping : ThingComponent
             
         if (Thing.GetComponent<CActing>(out var component))
             ((CActing)component).AllowAction();
+
+        if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component2))
+            ((CIconPriority)component2).RemoveIconPriority(IconId);
 
         RoguemojiGame.Instance.RemoveFloater(Globals.Icon(IconType.Sleeping), Thing.CurrentLevelId, parent: Thing);
     }

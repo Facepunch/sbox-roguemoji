@@ -384,11 +384,14 @@ public partial class RoguemojiPlayer : Thing
 
             if(shouldAnimate && !switchedLevel)
                 VfxSlide(direction, 0.1f, RoguemojiGame.CellSize);
-                //VfxSlide(direction, movedCamera ? 0.1f : 0.2f, RoguemojiGame.CellSize);
+            //VfxSlide(direction, movedCamera ? 0.1f : 0.2f, RoguemojiGame.CellSize);
+
+            if(Game.Random.Int(0, 5) == 0)
+                IconPriority.AddIconPriority(Utils.GetRandomIcon("😄", "🙂"), (int)PlayerIconPriority.Move, 1.0f);
         }
         else 
 		{
-            IconPriority.AddIconPriority("🤨", (int)PlayerIconPriority.Attack, 0.4f);
+            IconPriority.AddIconPriority("😠", (int)PlayerIconPriority.Attack, 0.4f);
         }
 
         if(!dontRequireAction)
@@ -555,6 +558,8 @@ public partial class RoguemojiPlayer : Thing
             return;
 
         base.TakeDamage(source);
+
+        IconPriority.AddIconPriority(Utils.GetRandomIcon("😲", "😲", "😧", "😨") , (int)PlayerIconPriority.TakeDamage, 1.0f);
     }
 
     public override void Destroy()
@@ -565,7 +570,7 @@ public partial class RoguemojiPlayer : Thing
         IsDead = true;
         StopAiming();
 
-        IconPriority.AddIconPriority("😑", (int)PlayerIconPriority.Attack);
+        IconPriority.AddIconPriority("💀", (int)PlayerIconPriority.Dead);
 
         OnDied();
     }

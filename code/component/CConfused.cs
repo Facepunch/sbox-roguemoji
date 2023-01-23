@@ -9,6 +9,7 @@ public class CConfused : ThingComponent
     public Trait Trait { get; private set; }
 
     public float Lifetime { get; set; }
+    public int IconId { get; set; }
 
     public override void Init(Thing thing)
     {
@@ -21,6 +22,9 @@ public class CConfused : ThingComponent
 
         if(Thing is RoguemojiPlayer player)
             player.ConfusionSeed = Game.Random.Int(1, 999);
+
+        if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component))
+            IconId = ((CIconPriority)component).AddIconPriority("🥴", (int)PlayerIconPriority.Confused);
     }
 
     public override void Update(float dt)
@@ -44,6 +48,9 @@ public class CConfused : ThingComponent
 
         if (Thing is RoguemojiPlayer player)
             player.ConfusionSeed = 0;
+
+        if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component))
+            ((CIconPriority)component).RemoveIconPriority(IconId);
     }
 
     public override void OnThingDestroyed()

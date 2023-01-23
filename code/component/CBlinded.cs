@@ -15,6 +15,7 @@ public class CBlinded : ThingComponent
     public int CurrSightDelta { get; set; }
     public int TotalAmount { get; set; }
     public bool IsReducing { get; set; }
+    public int IconId { get; set; }
 
     public override void Init(Thing thing)
     {
@@ -32,6 +33,9 @@ public class CBlinded : ThingComponent
         Trait = thing.AddTrait("Blinded", Globals.Icon(IconType.Blindness), $"Drastically reduced {Thing.GetStatIcon(StatType.Sight)}", offset: Vector2.Zero);
 
         RoguemojiGame.Instance.AddFloater(Globals.Icon(IconType.Blindness), Thing.GridPos, time: 0f, Thing.CurrentLevelId, new Vector2(-14f, -4f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.5f, opacity: 0.25f, parent: Thing);
+
+        if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component))
+            IconId = ((CIconPriority)component).AddIconPriority("😑", (int)PlayerIconPriority.Blinded);
     }
 
     public override void Update(float dt)
@@ -92,6 +96,9 @@ public class CBlinded : ThingComponent
         Thing.AdjustStat(StatType.Sight, -CurrSightDelta);
         Thing.RemoveTrait(Trait);
         RoguemojiGame.Instance.RemoveFloater(Globals.Icon(IconType.Blindness), Thing.CurrentLevelId, parent: Thing);
+
+        if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component))
+            ((CIconPriority)component).RemoveIconPriority(IconId);
     }
 
     public override void OnThingDestroyed()

@@ -8,12 +8,16 @@ public class CFearful : ThingComponent
 {
     public Thing FearedThing { get; set; }
     public float Lifetime { get; set; }
+    public int IconId { get; set; }
 
     public override void Init(Thing thing)
     {
         base.Init(thing);
 
         ShouldUpdate = true;
+
+        if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component))
+            IconId = ((CIconPriority)component).AddIconPriority("😱", (int)PlayerIconPriority.Fearful);
 
         RoguemojiGame.Instance.AddFloater("💧", Thing.GridPos, time: 0f, Thing.CurrentLevelId, new Vector2(10f, -10f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.65f, parent: Thing);
     }
@@ -31,6 +35,9 @@ public class CFearful : ThingComponent
     public override void OnRemove()
     {
         RoguemojiGame.Instance.RemoveFloater("💧", Thing.CurrentLevelId, parent: Thing);
+
+        if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component))
+            ((CIconPriority)component).RemoveIconPriority(IconId);
     }
 
     public override void OnThingDestroyed()

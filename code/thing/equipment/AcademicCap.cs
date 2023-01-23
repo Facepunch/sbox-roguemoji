@@ -25,6 +25,9 @@ public partial class AcademicCap : Thing
     public override void OnEquippedTo(Thing thing)
     {
         thing.AdjustStat(StatType.Intelligence, IntelligenceAmount);
+
+        if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component))
+            ((CIconPriority)component).AddIconPriority("🤓", (int)PlayerIconPriority.AcademicCapNerd, 1.0f);
     }
 
     public override void OnUnequippedFrom(Thing thing)
