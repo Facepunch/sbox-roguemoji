@@ -175,7 +175,8 @@ public partial class RoguemojiPlayer : Thing
         int rand = Game.Random.Int(0, 23);
         switch (rand)
         {
-            case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
+            //case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
+            case 0: InventoryGridManager.SpawnThing<PotionMedicine>(gridPos); break;
             case 1: InventoryGridManager.SpawnThing<Potato>(gridPos); break;
             //case 2: InventoryGridManager.SpawnThing<Nut>(gridPos); break;
             case 2: InventoryGridManager.SpawnThing<PotionHallucination>(gridPos); break;
