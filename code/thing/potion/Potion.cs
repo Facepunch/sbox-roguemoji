@@ -72,34 +72,30 @@ public partial class Potion : Thing
         base.HitOther(target, direction);
 
         if(HasComponent<CProjectile>())
-            Break();
+            Break(target.GridPos);
     }
 
-    public void Break()
+    public void Break(IntVector breakGridPos)
     {
-        var gridManager = ThingWieldingThis?.ContainingGridManager ?? this.ContainingGridManager;
-        var levelId = ThingWieldingThis?.CurrentLevelId ?? CurrentLevelId;
-        var breakGridPos = ThingWieldingThis?.GridPos ?? this.GridPos;
-
         for(int x = -1; x <= 1; x++)
         {
             for (int y = -1; y <= 1; y++)
             {
                 var gridPos = breakGridPos + new IntVector(x, y);
-                if (gridManager.IsGridPosInBounds(gridPos))
+                if (ContainingGridManager.IsGridPosInBounds(gridPos))
                 {
-                    RoguemojiGame.Instance.AddFloater(SplashIcon, gridPos, Game.Random.Float(0.7f, 0.9f), levelId, new Vector2(0f, 0f), new Vector2(0f, Game.Random.Float(-10f, -15f)), height: 0f, text: "", requireSight: false, alwaysShowWhenAdjacent: true, 
+                    RoguemojiGame.Instance.AddFloater(SplashIcon, gridPos, Game.Random.Float(0.7f, 0.9f), CurrentLevelId, new Vector2(0f, 0f), new Vector2(0f, Game.Random.Float(-10f, -15f)), height: 0f, text: "", requireSight: false, alwaysShowWhenAdjacent: true, 
                         EasingType.QuadOut, fadeInTime: Game.Random.Float(0.01f, 0.05f), scale: Game.Random.Float(0.75f, 0.9f), opacity: 0.4f);
 
                     ApplyEffectToGridPos(gridPos);
 
-                    foreach (var thing in gridManager.GetThingsAt(gridPos))
+                    foreach (var thing in ContainingGridManager.GetThingsAt(gridPos))
                         ApplyEffectToThing(thing);
                 }
             }
         }
 
-        RoguemojiGame.Instance.RevealPotion(PotionType, breakGridPos, levelId);
+        RoguemojiGame.Instance.RevealPotion(PotionType, breakGridPos, CurrentLevelId);
 
         Destroy();
     }
