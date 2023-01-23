@@ -31,11 +31,19 @@ public partial class Mushroom : Thing
                 int amountRecovered = Math.Min(amount, user.GetStatMax(StatType.Health) - user.GetStatClamped(StatType.Health));
                 user.AddSideFloater(GetStatIcon(StatType.Health), text: $"+{amountRecovered}");
                 user.AdjustStat(StatType.Health, amount);
+
+                if (user is RoguemojiPlayer && user.GetComponent<CIconPriority>(out var c))
+                    ((CIconPriority)c).AddIconPriority("😋", (int)PlayerIconPriority.EatReaction, 0.5f);
+
                 break;
             case 1:
                 var poison = user.AddComponent<CPoisoned>();
                 poison.Lifetime = 60f;
                 user.AddSideFloater(Globals.Icon(IconType.Poison));
+
+                if (user is RoguemojiPlayer && user.GetComponent<CIconPriority>(out var c2))
+                    ((CIconPriority)c2).AddIconPriority("🤢", (int)PlayerIconPriority.EatReaction, 0.5f);
+
                 break;
         }
 

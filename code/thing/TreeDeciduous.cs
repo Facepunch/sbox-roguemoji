@@ -5,6 +5,8 @@ using System.Linq;
 namespace Roguemoji;
 public partial class TreeDeciduous : Thing
 {
+    public bool HasDroppedLeaf { get; private set; }
+
 	public TreeDeciduous()
 	{
 		DisplayIcon = "🌳";
@@ -54,17 +56,47 @@ public partial class TreeDeciduous : Thing
     {
         base.OnBumpedIntoBy(thing);
 
-        if(WieldedThing != null && Game.Random.Int(0, 1) == 0)
+        if(WieldedThing != null)
         {
-            if (ContainingGridManager.GetRandomEmptyAdjacentGridPos(GridPos, out var dropGridPos, allowNonSolid: true))
+            if (Game.Random.Int(0, 1) == 0)
             {
-                var droppedThing = WieldedThing;
+                if (ContainingGridManager.GetRandomEmptyAdjacentGridPos(GridPos, out var dropGridPos, allowNonSolid: true))
+                {
+                    var droppedThing = WieldedThing;
 
-                ContainingGridManager.AddThing(droppedThing);
-                droppedThing.SetGridPos(dropGridPos);
-                droppedThing.VfxFly(GridPos, lifetime: 0.2f, heightY: 30f, progressEasingType: EasingType.Linear, heightEasingType: EasingType.SineInOut);
+                    ContainingGridManager.AddThing(droppedThing);
+                    droppedThing.SetGridPos(dropGridPos);
+                    droppedThing.VfxFly(GridPos, lifetime: 0.25f, heightY: 30f, progressEasingType: EasingType.Linear, heightEasingType: EasingType.SineInOut);
 
-                WieldThing(null);
+                    droppedThing.CanBeSeenByPlayerClient(GridPos);
+
+                    var tempIconDepth = droppedThing.AddComponent<CTempIconDepth>();
+                    tempIconDepth.Lifetime = 0.35f;
+                    tempIconDepth.SetTempIconDepth(5);
+
+                    WieldThing(null);
+                }
+            }
+        }
+        else
+        {
+            if (!HasDroppedLeaf && Game.Random.Int(0, 5) == 0)
+            {
+                if (ContainingGridManager.GetRandomEmptyAdjacentGridPos(GridPos, out var dropGridPos, allowNonSolid: true))
+                {
+                    var leaf = ContainingGridManager.SpawnThing<Leaf>(dropGridPos);
+                    leaf.SetIcon("🍃");
+
+                    leaf.VfxFly(GridPos, lifetime: 0.25f, heightY: 35f, progressEasingType: EasingType.Linear, heightEasingType: EasingType.SineInOut);
+
+                    leaf.CanBeSeenByPlayerClient(GridPos);
+
+                    var tempIconDepth = leaf.AddComponent<CTempIconDepth>();
+                    tempIconDepth.Lifetime = 0.35f;
+                    tempIconDepth.SetTempIconDepth(5);
+
+                    HasDroppedLeaf = true;
+                }
             }
         }
     }

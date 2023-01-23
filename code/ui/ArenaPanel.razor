@@ -145,7 +145,7 @@
     {
         var canSeeThing = player.IsGridPosOnCamera(thing.GridPos) && player.IsCellVisible(thing.GridPos);
 
-        if ((canSeeThing || thing.TimeSinceLocalPlayerSaw < 0.2f) && !thing.DontRender)
+        if ((canSeeThing || thing.TimeSinceLocalPlayerSaw < 0.25f) && !thing.DontRender)
         {
             var offsetGridPos = thing.GridPos - player.CameraGridOffset;
             var index = GetIndex(offsetGridPos);

@@ -492,6 +492,34 @@ public partial class GridManager : Entity
         return false;
     }
 
+    public bool GetRandomAdjacentGridPos(IntVector startGridPos, out IntVector gridPos, bool cardinalOnly = false)
+    {
+        List<IntVector> gridPositions = new();
+        gridPos = startGridPos;
+
+        for (int x = -1; x <= 1; x++)
+        {
+            for (int y = -1; y <= 1; y++)
+            {
+                if (x == 0 && y == 0)
+                    continue;
+
+                var currGridPos = startGridPos + new IntVector(x, y);
+                if (!IsGridPosInBounds(currGridPos))
+                    continue;
+                
+                gridPositions.Add(currGridPos);
+            }
+        }
+
+        if (gridPositions.Count > 0)
+        {
+            gridPos = gridPositions[Game.Random.Int(0, gridPositions.Count - 1)];
+            return true;
+        }
+
+        return false;
+    }
 
     public void Restart()
 	{

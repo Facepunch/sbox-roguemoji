@@ -30,7 +30,7 @@ public class VfxFly : ThingComponent
         float progress = Utils.Map(TimeElapsed, 0f, Lifetime, 0f, 1f, ProgressEasingType);
         SetOffset(progress);
 
-        if(TimeElapsed > Lifetime)
+        if (TimeElapsed > Lifetime)
             Remove();
     }
 

@@ -15,4 +15,20 @@ public partial class Leaf : Thing
     }
 
     // todo: make crunching noise when you move onto it
+
+    public override void OnAddComponent(TypeDescription type)
+    {
+        base.OnAddComponent(type);
+
+        if (type == TypeLibrary.GetType(typeof(CProjectile)))
+            SetIcon("🍃");
+    }
+
+    public override void OnRemoveComponent(TypeDescription type)
+    {
+        base.OnRemoveComponent(type);
+
+        if (type == TypeLibrary.GetType(typeof(CProjectile)) || type == TypeLibrary.GetType(typeof(CTempIconDepth)))
+            SetIcon("🍂");
+    }
 }

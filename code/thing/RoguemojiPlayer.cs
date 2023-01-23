@@ -46,7 +46,7 @@ public partial class RoguemojiPlayer : Thing
 
     public RoguemojiPlayer()
 	{
-		IconDepth = 5;
+		IconDepth = 2;
         ShouldUpdate = true;
 		DisplayName = "Player";
 		Tooltip = "";

@@ -42,6 +42,9 @@ public partial class Juicebox : Thing
         RoguemojiGame.Instance.AddFloater(GetStatIcon(StatType.Health), user.GridPos, 1.33f, user.CurrentLevelId, new Vector2(Game.Random.Float(8f, 12f) * (user.FloaterNum % 2 == 0 ? -1 : 1), Game.Random.Float(-3f, 8f)), new Vector2(Game.Random.Float(12f, 15f) * (user.FloaterNum++ % 2 == 0 ? -1 : 1), Game.Random.Float(-13f, 3f)), height: Game.Random.Float(10f, 35f), text: $"+{amountRecovered}", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.1f, scale: 0.75f, parent: user);
         user.AdjustStat(StatType.Health, HealthAmount);
 
+        if (user is RoguemojiPlayer && user.GetComponent<CIconPriority>(out var component))
+            ((CIconPriority)component).AddIconPriority("😋", (int)PlayerIconPriority.EatReaction, 0.5f);
+
         base.Use(user);
 
         if (GetStatClamped(StatType.Durability) == 0)

@@ -133,7 +133,7 @@ public partial class Thing : Entity
 
     public virtual void Update(float dt)
     {
-        //DebugText = $"{GetStatClamped(StatType.Health)}";
+        //DebugText = $"{IconDepth}";
 
         //DebugText = "Server Components (" + Components.Count + "):\n";
         for (int i = ThingComponents.Count - 1; i >= 0; i--)
@@ -672,5 +672,15 @@ public partial class Thing : Entity
     public bool CanSee(IntVector gridPos, int sight)
     {
         return Utils.GetDistance(GridPos, gridPos) <= sight && ContainingGridManager.HasLineOfSight(GridPos, gridPos, sight, out IntVector collisionCell);
+    }
+
+    [ClientRpc]
+    public void CanBeSeenByPlayerClient(IntVector conditionalGridPos)
+    {
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        if (player.IsCellVisible(conditionalGridPos))
+        {
+            TimeSinceLocalPlayerSaw = 0f;
+        }
     }
 }

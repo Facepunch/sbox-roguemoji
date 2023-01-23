@@ -6,11 +6,11 @@ using Sandbox;
 
 namespace Roguemoji;
 
-public enum IconType { Blink, Teleport, Fear, Telekinesis, Poison, Blindness, Sleeping, Confusion, Hallucination, Speed, Medicine, Mutation, Stunned }
+public enum IconType { Blink, Teleport, Fear, Telekinesis, Poison, Blindness, Sleeping, Confusion, Hallucination, Speed, Medicine, Mutation, Stunned, UnarmedAttack, }
 public enum VerbType { Use, Read }
 public enum HallucinationTextType { Icon, Name, Tooltip, Description }
 
-public enum PlayerIconPriority { Default, Move, ExitLevel, EnterLevel, AcademicCapNerd, SpeedIncrease, Sunglasses, Blinded, Poisoned, Attack, Confused, Fearful, Hallucinating, Sleeping, TakeDamage, Stunned, RugbyCharge, Dead }
+public enum PlayerIconPriority { Default, Move, ExitLevel, EnterLevel, AcademicCapNerd, SpeedIncrease, Sunglasses, Blinded, Poisoned, Attack, Confused, Fearful, Hallucinating, Sleeping, EatReaction, TakeDamage, Stunned, RugbyCharge, Dead }
 
 public struct HallucinationData
 {
@@ -54,6 +54,7 @@ public static class Globals
             case IconType.Medicine: return "💊";
             case IconType.Mutation: return "🧬";
             case IconType.Stunned: return "💫";
+            case IconType.UnarmedAttack: return "✊";
         }
 
         return "";

@@ -101,8 +101,8 @@
 <root class="wielding @GetWieldingClass(wieldedThing)" style="border-color: @(wieldedThing == null || !wieldedThing.HasFlag(ThingFlags.Useable) ? "#303030" : "#777777");">
     @if(wieldedThing == null)
     {
-        <div>
-            @Hud.GetHallucinationTextStr("🖐", HallucinationTextType.Icon)
+        <div style="padding-bottom: 8px;">
+            @Hud.GetHallucinationTextStr(Globals.Icon(IconType.UnarmedAttack), HallucinationTextType.Icon)
         </div>
     }
     else

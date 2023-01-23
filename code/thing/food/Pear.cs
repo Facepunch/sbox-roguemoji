@@ -30,6 +30,9 @@ public partial class Pear : Thing
         user.AdjustStat(StatType.Health, EatHealth);
         Destroy();
 
+        if (user is RoguemojiPlayer && user.GetComponent<CIconPriority>(out var component))
+            ((CIconPriority)component).AddIconPriority("😋", (int)PlayerIconPriority.EatReaction, 1.0f);
+
         base.Use(user);
     }
 }

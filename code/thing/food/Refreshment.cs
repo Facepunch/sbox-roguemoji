@@ -36,6 +36,9 @@ public partial class Refreshment : Thing
             }
         }
 
+        if (user is RoguemojiPlayer && user.GetComponent<CIconPriority>(out var component))
+            ((CIconPriority)component).AddIconPriority("😙", (int)PlayerIconPriority.EatReaction, 1.0f);
+
         base.Use(user);
     }
 }
