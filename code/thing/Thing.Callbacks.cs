@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using Sandbox.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,22 @@ public partial class Thing : Entity
     }
     public virtual void OnChangedStat(StatType statType, int changeCurrent, int changeMin, int changeMax)
     {
+        if (statType == StatType.Speed && GetComponent<CActing>(out var acting))
+        {
+            ((CActing)acting).ActionDelay = CActing.CalculateActionDelay(GetStatClamped(StatType.Speed));
+        }
+        else if (statType == StatType.Intelligence && HasStat(StatType.Mana))
+        {
+            int amount = changeCurrent * 1;
+            AdjustStatMax(StatType.Mana, amount);
+        }
+        else if (statType == StatType.Stamina && HasStat(StatType.Energy))
+        {
+            int amount = changeCurrent * 2;
+            AdjustStatMax(StatType.Energy, amount);
+            StaminaDelay = Utils.Map(GetStatClamped(StatType.Stamina), 0, 20, 3f, 0.1f);
+        }
+
         StatHash = 0;
         foreach (var pair in Stats)
             StatHash += pair.Value.HashCode;

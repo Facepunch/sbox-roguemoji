@@ -11,7 +11,6 @@ public enum AimingType { Direction, TargetCell }
 public partial class RoguemojiPlayer : Thing
 {
     public CActing Acting { get; private set; }
-    private float _startingActionDelay = 0.5f;
 
     public CIconPriority IconPriority { get; private set; }
 
@@ -121,7 +120,7 @@ public partial class RoguemojiPlayer : Thing
         InitStat(StatType.Mana, 0, 0, 0);
         InitStat(StatType.Attack, 1);
         InitStat(StatType.Strength, 2);
-        InitStat(StatType.Speed, 5);
+        InitStat(StatType.Speed, 13);
         InitStat(StatType.Intelligence, 5);
         InitStat(StatType.Stamina, 5);
         InitStat(StatType.Stealth, 0, -999, 999);
@@ -155,13 +154,13 @@ public partial class RoguemojiPlayer : Thing
 
         RestartClient();
 
-        SetStartingValues();
         ThingComponents.Clear();
         Acting = AddComponent<CActing>();
-        Acting.ActionDelay = _startingActionDelay;
         Acting.IsActionReady = false;
         IconPriority = AddComponent<CIconPriority>();
         IconPriority.SetDefaultIcon("😀");
+
+        SetStartingValues();
     }
 
     [ClientRpc]
@@ -189,7 +188,8 @@ public partial class RoguemojiPlayer : Thing
             case 6: InventoryGridManager.SpawnThing<PotionBlindness>(gridPos); break;
             //case 7: InventoryGridManager.SpawnThing<Coat>(gridPos); break;
             case 7: InventoryGridManager.SpawnThing<ScrollTelekinesis>(gridPos); break;
-            case 8: InventoryGridManager.SpawnThing<SafetyVest>(gridPos); break;
+            //case 8: InventoryGridManager.SpawnThing<SafetyVest>(gridPos); break;
+            case 8: InventoryGridManager.SpawnThing<PotionSpeed>(gridPos); break;
             case 9: InventoryGridManager.SpawnThing<Sunglasses>(gridPos); break;
             //case 10: InventoryGridManager.SpawnThing<Telescope>(gridPos); break;
             //case 10: InventoryGridManager.SpawnThing<Refreshment>(gridPos); break;
@@ -1035,21 +1035,6 @@ public partial class RoguemojiPlayer : Thing
         if (statType == StatType.Sight)
         {
             RefreshVisibility(To.Single(this));
-        }
-        else if(statType == StatType.Speed)
-        {
-            Acting.ActionDelay = CActing.CalculateActionDelay(GetStatClamped(StatType.Speed));
-        }
-        else if(statType == StatType.Intelligence)
-        {
-            int amount = changeCurrent * 1;
-            AdjustStatMax(StatType.Mana, amount);
-        }
-        else if (statType == StatType.Stamina)
-        {
-            int amount = changeCurrent * 2;
-            AdjustStatMax(StatType.Energy, amount);
-            StaminaDelay = Utils.Map(GetStatClamped(StatType.Stamina), 0, 20, 3f, 0.1f);
         }
 
         base.OnChangedStat(statType, changeCurrent, changeMin, changeMax);

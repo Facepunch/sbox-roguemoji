@@ -40,7 +40,7 @@ public partial class Squirrel : Thing
 
         Targeting = AddComponent<CTargeting>();
         Acting = AddComponent<CActing>();
-        Acting.ActionDelay = 1f;
+        Acting.ActionDelay = CActing.CalculateActionDelay(GetStatClamped(StatType.Speed));
         Acting.ActionTimer = Game.Random.Float(0f, 1f);
     }
 

@@ -6,11 +6,11 @@ using Sandbox;
 
 namespace Roguemoji;
 
-public enum IconType { Blink, Teleport, Fear, Telekinesis, Poison, Blindness, Sleeping, Confusion, Hallucination, }
+public enum IconType { Blink, Teleport, Fear, Telekinesis, Poison, Blindness, Sleeping, Confusion, Hallucination, Speed }
 public enum VerbType { Use, Read }
-public enum HallucinationTextType { Icon, Name, Tooltip, Description, GeneralDescription }
+public enum HallucinationTextType { Icon, Name, Tooltip, Description }
 
-public enum PlayerIconPriority { Default, Move, ExitLevel, EnterLevel, AcademicCapNerd, Sunglasses, Blinded, Poisoned, Attack, Confused, Fearful, Hallucinating, Sleeping, TakeDamage, RugbyCharge, Dead }
+public enum PlayerIconPriority { Default, Move, ExitLevel, EnterLevel, AcademicCapNerd, SpeedIncrease, Sunglasses, Blinded, Poisoned, Attack, Confused, Fearful, Hallucinating, Sleeping, TakeDamage, RugbyCharge, Dead }
 
 public struct HallucinationData
 {
@@ -31,9 +31,64 @@ public struct HallucinationData
 public static class Globals
 {
     private static List<HallucinationData> _hallucinations;
-    private static List<string> _generalDescriptions;
 
     static Globals()
+    {
+        CreateHallucinationData();
+    }
+
+    public static string Icon(IconType iconType)
+    {
+        switch (iconType)
+        {
+            case IconType.Blink: return "✨";
+            case IconType.Teleport: return "➰";
+            case IconType.Fear: return "😱";
+            case IconType.Telekinesis: return "🙌";
+            case IconType.Poison: return "☠️";
+            case IconType.Blindness: return "🙈";
+            case IconType.Sleeping: return "💤";
+            case IconType.Confusion: return "❓";
+            case IconType.Hallucination: return "😵";
+            case IconType.Speed: return "🏁";
+        }
+
+        return "";
+    }
+
+    public static string GetStatReqString(StatType statType, int reqAmount, VerbType verbType)
+    {
+        string icon = Thing.GetStatIcon(statType);
+        string verb = "";
+
+        switch(verbType) 
+        {
+            case VerbType.Use: verb = "use"; break;
+            case VerbType.Read: verb = "read"; break;
+        }
+
+        return $"You need {reqAmount}{icon} to {verb} this";
+    }
+
+    public static string GetHallucinationText(string str, int seed, HallucinationTextType textType)
+    {
+        int strCode = string.IsNullOrEmpty(str) ? 0 : Math.Abs(str.GetHashCode());
+        var inputCode = Math.Abs(strCode + seed);
+        var data = _hallucinations[inputCode % _hallucinations.Count];
+
+        if (textType == HallucinationTextType.Icon)
+            return data.icon;
+        else if(textType == HallucinationTextType.Name)
+            return data.name;
+        else if (textType == HallucinationTextType.Tooltip)
+            return data.tooltip;
+        else if (textType == HallucinationTextType.Description)
+            return data.descriptions[strCode % 3];
+
+        return "???";
+    }
+
+    private static void CreateHallucinationData()
     {
         _hallucinations = new List<HallucinationData>()
         {
@@ -82,64 +137,5 @@ public static class Globals
             new HallucinationData("🆗", "The Word OK", "The word OK", "It's gonna be okay", "It's gonna be okay", "It's gonna be okay"),
             new HallucinationData("🥓", "Bacon", "Some bacon", "Two crispy strips of bacon", "Two crispy strips of bacon", "Two crispy strips of bacon"),
         };
-
-        _generalDescriptions = new List<string>()
-        {
-            "Testing teesting...",
-            "Testing teesting... 2",
-            "Testing teesting... 3",
-        };
-    }
-
-    public static string Icon(IconType iconType)
-    {
-        switch (iconType)
-        {
-            case IconType.Blink: return "✨";
-            case IconType.Teleport: return "➰";
-            case IconType.Fear: return "😱";
-            case IconType.Telekinesis: return "🙌";
-            case IconType.Poison: return "☠️";
-            case IconType.Blindness: return "🙈";
-            case IconType.Sleeping: return "💤";
-            case IconType.Confusion: return "❓";
-            case IconType.Hallucination: return "😵";
-        }
-
-        return "";
-    }
-
-    public static string GetStatReqString(StatType statType, int reqAmount, VerbType verbType)
-    {
-        string icon = Thing.GetStatIcon(statType);
-        string verb = "";
-
-        switch(verbType) 
-        {
-            case VerbType.Use: verb = "use"; break;
-            case VerbType.Read: verb = "read"; break;
-        }
-
-        return $"You need {reqAmount}{icon} to {verb} this";
-    }
-
-    public static string GetHallucinationText(string str, int seed, HallucinationTextType textType)
-    {
-        int strCode = string.IsNullOrEmpty(str) ? 0 : Math.Abs(str.GetHashCode());
-        var inputCode = Math.Abs(strCode + seed);
-        var data = _hallucinations[inputCode % _hallucinations.Count];
-
-        if (textType == HallucinationTextType.Icon)
-            return data.icon;
-        else if(textType == HallucinationTextType.Name)
-            return data.name;
-        else if (textType == HallucinationTextType.Tooltip)
-            return data.tooltip;
-        else if (textType == HallucinationTextType.Description)
-            return data.descriptions[strCode % 3];
-        else if (textType == HallucinationTextType.GeneralDescription)
-            return _generalDescriptions[inputCode % _generalDescriptions.Count];
-
-        return "???";
     }
 }
