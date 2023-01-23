@@ -177,7 +177,8 @@ public partial class RoguemojiPlayer : Thing
         {
             //case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
             case 0: InventoryGridManager.SpawnThing<PotionMedicine>(gridPos); break;
-            case 1: InventoryGridManager.SpawnThing<Potato>(gridPos); break;
+            //case 1: InventoryGridManager.SpawnThing<Potato>(gridPos); break;
+            case 1: InventoryGridManager.SpawnThing<PotionMutation>(gridPos); break;
             //case 2: InventoryGridManager.SpawnThing<Nut>(gridPos); break;
             case 2: InventoryGridManager.SpawnThing<PotionHallucination>(gridPos); break;
             case 3: InventoryGridManager.SpawnThing<Mushroom>(gridPos); break;

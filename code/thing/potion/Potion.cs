@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public enum PotionType { Health, Mana, Energy, Poison, Blindness, Sleeping, Confusion, Hallucination, Speed }
+public enum PotionType { Health, Mana, Energy, Poison, Blindness, Sleeping, Confusion, Hallucination, Speed, Medicine, Mutation, }
 public partial class Potion : Thing
 {
     [Net] public PotionType PotionType { get; protected set; }
@@ -30,6 +30,8 @@ public partial class Potion : Thing
             case PotionType.Sleeping: return "Sleeping Potion";
             case PotionType.Confusion: return "Confusion Potion";
             case PotionType.Speed: return "Speed Potion";
+            case PotionType.Medicine: return "Medicine Potion";
+            case PotionType.Mutation: return "Mutation Potion";
         }
 
         return "";
@@ -47,6 +49,8 @@ public partial class Potion : Thing
             case PotionType.Sleeping: return $"🧉{Globals.Icon(IconType.Sleeping)}";
             case PotionType.Confusion: return $"🧉{Globals.Icon(IconType.Confusion)}";
             case PotionType.Speed: return $"🧉{Globals.Icon(IconType.Speed)}";
+            case PotionType.Medicine: return $"🧉{Globals.Icon(IconType.Medicine)}";
+            case PotionType.Mutation: return $"🧉{Globals.Icon(IconType.Mutation)}";
         }
 
         return "🧉";

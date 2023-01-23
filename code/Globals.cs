@@ -6,7 +6,7 @@ using Sandbox;
 
 namespace Roguemoji;
 
-public enum IconType { Blink, Teleport, Fear, Telekinesis, Poison, Blindness, Sleeping, Confusion, Hallucination, Speed, Medicine, }
+public enum IconType { Blink, Teleport, Fear, Telekinesis, Poison, Blindness, Sleeping, Confusion, Hallucination, Speed, Medicine, Mutation }
 public enum VerbType { Use, Read }
 public enum HallucinationTextType { Icon, Name, Tooltip, Description }
 
@@ -49,9 +49,10 @@ public static class Globals
             case IconType.Blindness: return "🙈";
             case IconType.Sleeping: return "💤";
             case IconType.Confusion: return "❓";
-            case IconType.Hallucination: return "😵";
+            case IconType.Hallucination: return "🤪";
             case IconType.Speed: return "🏁";
             case IconType.Medicine: return "💊";
+            case IconType.Mutation: return "🧬";
         }
 
         return "";

@@ -23,7 +23,7 @@ public class CHallucinating : ThingComponent
         Trait = thing.AddTrait("Hallucinating", Globals.Icon(IconType.Hallucination), $"Sees things in a new way", offset: Vector2.Zero);
 
         if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component))
-            IconId = ((CIconPriority)component).AddIconPriority("😵", (int)PlayerIconPriority.Hallucinating);
+            IconId = ((CIconPriority)component).AddIconPriority("🤪", (int)PlayerIconPriority.Hallucinating);
 
         RoguemojiGame.Instance.AddFloater(Globals.Icon(IconType.Hallucination), Thing.GridPos, time: 0f, Thing.CurrentLevelId, new Vector2(-14f, 4f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.5f, opacity: 0.25f, parent: Thing);
     }

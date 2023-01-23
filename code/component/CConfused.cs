@@ -24,7 +24,7 @@ public class CConfused : ThingComponent
             player.ConfusionSeed = Game.Random.Int(1, 999);
 
         if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component))
-            IconId = ((CIconPriority)component).AddIconPriority("🥴", (int)PlayerIconPriority.Confused);
+            IconId = ((CIconPriority)component).AddIconPriority("😵", (int)PlayerIconPriority.Confused);
     }
 
     public override void Update(float dt)

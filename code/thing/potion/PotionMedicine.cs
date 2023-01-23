@@ -12,7 +12,7 @@ public partial class PotionMedicine : Potion
 
     public PotionMedicine()
     {
-        PotionType = PotionType.Confusion;
+        PotionType = PotionType.Medicine;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         DisplayName = Potion.GetDisplayName(PotionType);
@@ -43,9 +43,6 @@ public partial class PotionMedicine : Potion
 
     public override void ApplyEffectToThing(Thing thing)
     {
-        if (!thing.HasComponent<CActing>())
-            return;
-
         thing.RemoveComponent<CPoisoned>();
         thing.RemoveComponent<CHallucinating>();
         thing.RemoveComponent<CConfused>();

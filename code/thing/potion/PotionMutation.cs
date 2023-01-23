@@ -1,29 +1,30 @@
 ﻿using Sandbox;
+using Sandbox.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Roguemoji;
-public partial class PotionHallucination : Potion
+public partial class PotionMutation : Potion
 {
     public override string AbilityName => "Quaff Potion";
-    public override string SplashIcon => Globals.Icon(IconType.Hallucination);
+    public override string SplashIcon => Globals.Icon(IconType.Mutation);
 
-    public PotionHallucination()
+    public PotionMutation()
     {
-        PotionType = PotionType.Hallucination;
+        PotionType = PotionType.Mutation;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         DisplayName = Potion.GetDisplayName(PotionType);
-        Description = "Makes drinker hallucinate";
-        Tooltip = "A hallucination potion";
+        Description = "Causes unpredictable changes";
+        Tooltip = "A mutation potion";
         
-        SetTattoo(Globals.Icon(IconType.Hallucination));
+        SetTattoo(Globals.Icon(IconType.Mutation));
 
         if (Game.IsServer)
         {
             AddTrait(AbilityName, "😋", $"Consume potion to cause an effect", offset: new Vector2(0f, -1f), tattooIcon: "🧉", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f), isAbility: true);
-            AddTrait("", "🤪", $"Makes you hallucinate", offset: new Vector2(0f, 0f));
+            AddTrait("", Globals.Icon(IconType.Mutation), $"Adds a positive or negative trait", offset: new Vector2(0f, 0f));
         }
     }
 
@@ -42,11 +43,8 @@ public partial class PotionHallucination : Potion
 
     public override void ApplyEffectToThing(Thing thing)
     {
-        if (!thing.HasComponent<CActing>())
-            return;
 
-        var hallucinating = thing.AddComponent<CHallucinating>();
-        hallucinating.Lifetime = 60f;
-        thing.AddSideFloater(Globals.Icon(IconType.Hallucination));
+
+        thing.AddSideFloater(Globals.Icon(IconType.Mutation));
     }
 }
