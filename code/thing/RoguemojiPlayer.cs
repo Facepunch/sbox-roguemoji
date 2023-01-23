@@ -362,6 +362,9 @@ public partial class RoguemojiPlayer : Thing
 
     public override bool TryMove(Direction direction, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
 	{
+        if (IsInTransit)
+            return false;
+
         if (!Acting.IsActionReady && !dontRequireAction)
         {
             if(shouldQueueAction)

@@ -1,5 +1,4 @@
 ﻿using Sandbox;
-using Sandbox.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +15,7 @@ public partial class RugbyBall : Thing
 	{
 		DisplayIcon = "🏉";
         DisplayName = "Rugby Ball";
-        Description = "Charge with this and knock things back";
+        Description = "Charge and slam into things";
         Tooltip = "A rugby ball";
         IconDepth = 0;
 		Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable | ThingFlags.UseRequiresAiming;
@@ -26,7 +25,7 @@ public partial class RugbyBall : Thing
             EnergyCost = 6;
             CooldownTime = 15f;
 
-            AddTrait(AbilityName, "💪", $"Run in a direction and bodyslam", offset: new Vector2(0f, -1f), tattooIcon: "🏉", tattooOffset: new Vector2(1f, -1.5f), tattooScale: 0.55f, isAbility: true);
+            AddTrait(AbilityName, "💪", $"Run in a direction and push anything you hit, stunning them", offset: new Vector2(0f, -1f), tattooIcon: "🏉", tattooOffset: new Vector2(1f, -1.5f), tattooScale: 0.55f, isAbility: true);
             AddTrait("", GetStatIcon(StatType.Energy), $"Ability costs {EnergyCost}{GetStatIcon(StatType.Energy)}", offset: new Vector2(0f, -3f), labelText: $"{EnergyCost}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
         }
@@ -83,7 +82,7 @@ public class CRugbyCharge : ThingComponent
         ShouldUpdate = true;
         TimeSinceMove = 0f;
         DistanceMoved = 0;
-        StartDelay = 0.5f;
+        StartDelay = 0.4f;
 
         if (thing.GetComponent<CActing>(out var component))
             ((CActing)component).PreventAction();
@@ -157,6 +156,9 @@ public class CRugbyCharge : ThingComponent
                 acting.ActionTimer = 0f;
             }
         }
+
+        var stunned = thing.AddComponent<CStunned>();
+        stunned.Lifetime = 2f;
     }
 
     public override void OnBumpedOutOfBounds(Direction dir)
@@ -178,5 +180,13 @@ public class CRugbyCharge : ThingComponent
     public override void OnThingDied()
     {
         Remove();
+    }
+
+    public override void OnAddComponent(TypeDescription type)
+    {
+        base.OnAddComponent(type);
+
+        if (type == TypeLibrary.GetType(typeof(CExitingLevel)))
+            Remove();
     }
 }

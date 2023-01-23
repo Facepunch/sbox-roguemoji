@@ -185,7 +185,10 @@ public partial class Thing : Entity
     {
         Sandbox.Diagnostics.Assert.True(ContainingGridType != GridType.None);
 
-        if(direction == Direction.None)
+        if (IsInTransit)
+            return false;
+
+        if (direction == Direction.None)
             return true;
 
         IntVector vec = GridManager.GetIntVectorForDirection(direction);
