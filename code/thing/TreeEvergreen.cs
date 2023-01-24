@@ -4,6 +4,8 @@ using System;
 namespace Roguemoji;
 public partial class TreeEvergreen : Thing
 {
+    public int HealthAmount { get; set; }
+
 	public TreeEvergreen()
 	{
 		DisplayIcon = "🌲";
@@ -14,18 +16,17 @@ public partial class TreeEvergreen : Thing
         Flags = ThingFlags.Solid | ThingFlags.Selectable;
 		PathfindMovementCost = 999f;
 		SightBlockAmount = 14;
+        HealthAmount = 400;
     }
 
-    public override void TakeDamageFrom(Thing source)
+    public override void Hurt(int amount, bool showImpactFloater = true)
     {
-        int amount = source.GetStatClamped(StatType.Attack);
-
         if (amount <= 0)
             return;
 
         if (!HasStat(StatType.Health))
-            InitStat(StatType.Health, 100, min: 0, max: 100);
+            InitStat(StatType.Health, HealthAmount, min: 0, max: HealthAmount);
 
-        base.TakeDamageFrom(source);
+        base.Hurt(amount, showImpactFloater);
     }
 }

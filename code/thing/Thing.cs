@@ -239,7 +239,9 @@ public partial class Thing : Entity
         }
 
         OnBumpedIntoThing(target);
-        target.OnBumpedIntoBy(this);
+
+        if(target != null && !target.IsRemoved)
+            target.OnBumpedIntoBy(this);
     }
 
     public virtual bool InteractWith(Thing target)
@@ -266,8 +268,8 @@ public partial class Thing : Entity
 
     public virtual void TakeDamageFrom(Thing source)
     {
-        if (!HasStat(StatType.Health))
-            return;
+        //if (!HasStat(StatType.Health))
+        //    return;
 
         int amount = source.GetStatClamped(StatType.Attack);
         Hurt(amount);

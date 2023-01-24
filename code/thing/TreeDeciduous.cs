@@ -7,6 +7,8 @@ public partial class TreeDeciduous : Thing
 {
     public bool HasDroppedLeaf { get; private set; }
 
+    public int HealthAmount { get; set; }
+
 	public TreeDeciduous()
 	{
 		DisplayIcon = "🌳";
@@ -17,6 +19,7 @@ public partial class TreeDeciduous : Thing
         Flags = ThingFlags.Solid | ThingFlags.Selectable;
 		PathfindMovementCost = 999f;
 		SightBlockAmount = 13;
+        HealthAmount = 400;
 
         if (Game.IsClient)
         {
@@ -101,19 +104,17 @@ public partial class TreeDeciduous : Thing
         }
     }
 
-    public override void TakeDamageFrom(Thing source)
+    public override void Hurt(int amount, bool showImpactFloater = true)
     {
         if (WieldedThing != null)
             return;
-
-        int amount = source.GetStatClamped(StatType.Attack);
 
         if (amount <= 0)
             return;
 
         if (!HasStat(StatType.Health))
-            InitStat(StatType.Health, 100, min: 0, max: 100);
+            InitStat(StatType.Health, HealthAmount, min: 0, max: HealthAmount);
 
-        base.TakeDamageFrom(source);
+        base.Hurt(amount, showImpactFloater);
     }
 }
