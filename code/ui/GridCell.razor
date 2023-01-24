@@ -114,14 +114,10 @@
         text-align: center;
         font-family: RobotoMono;
     }
-
-    .invisible_but_seen {
-        opacity: 0.25;
-    }
 </style>
 
 <root class="icon @GetWieldedClass() @GetSolidClass()" )>
-    <div class="@GetPlayerClass() @GetDraggingClass() @GetCooldownClass(Thing) @Hud.GetUnusableClass(Thing) @GetInventoryClass() @Hud.Instance.GetEquipmentHighlightClass(Thing) @GetInvisibleClass()" @ref=IconPanel>
+    <div class="@GetPlayerClass() @GetDraggingClass() @GetCooldownClass(Thing) @Hud.GetUnusableClass(Thing) @GetInventoryClass() @Hud.Instance.GetEquipmentHighlightClass(Thing)" style="opacity:@(GetOpacity());" @ref=IconPanel>
         @(Hud.GetHallucinationTextThing(Thing, Thing.DisplayIcon.Substring(Thing.CharSkip), HallucinationTextType.Icon))
 
         @if(Thing.HasTattoo)
@@ -203,9 +199,9 @@
     bool IsWielded()            { return Thing == RoguemojiGame.Instance.LocalPlayer?.WieldedThing; }
     string GetEquipmentClass()  { return Thing.HasFlag(ThingFlags.Equipment) ? "icon_equipment" : ""; }
     string GetInventoryClass()  { return Thing.ContainingGridType == GridType.Inventory ? "is_in_inventory" : ""; }
-    string GetInvisibleClass()  { return Thing.GetStatClamped(StatType.Invisible) > 0 ? "invisible_but_seen" : ""; }
     string GetCooldownClass(Thing thing)    { return thing.IsOnCooldown && thing.ContainingGridType != GridType.Arena ? "cell_icon_cooldown" : ""; }
-    
+
+    float GetOpacity()         { return Thing.Opacity * (Thing.GetStatClamped(StatType.Invisible) > 0 ? 0.25f : 1f); }
 
     protected override Panel CreateTooltipPanel()
     {

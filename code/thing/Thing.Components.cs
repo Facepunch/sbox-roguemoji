@@ -153,6 +153,16 @@ public partial class Thing : Entity
         fly.HeightEasingType = heightEasingType;
     }
 
+    [ClientRpc]
+    public void VfxOpacityLerp(float lifetime, float startOpacity, float endOpacity, EasingType easingType = EasingType.Linear)
+    {
+        var opacityLerp = AddComponent<VfxOpacityLerp>();
+        opacityLerp.Lifetime = lifetime;
+        opacityLerp.StartOpacity = startOpacity;
+        opacityLerp.EndOpacity = endOpacity;
+        opacityLerp.EasingType = easingType;
+    }
+
     void RemoveMoveVfx()
     {
         RemoveComponent<VfxSlide>();

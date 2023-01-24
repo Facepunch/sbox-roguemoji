@@ -54,11 +54,12 @@ public partial class Thing : Entity
     [Net] public int StackNum { get; set; }
     [Net] public float PathfindMovementCost { get; set; }
 
-    public Vector2 MoveOffset { get; set; }
-    public Vector2 ShakeOffset { get; set; }
+    public Vector2 MoveOffset { get; set; } // Client-only
+    public Vector2 ShakeOffset { get; set; } // Client-only
     public Vector2 TotalOffset => MoveOffset + ShakeOffset;
-    public float RotationDegrees { get; set; }
-    public float IconScale { get; set; }
+    public float RotationDegrees { get; set; } // Client-only
+    public float IconScale { get; set; } // Client-only
+    public float Opacity { get; set; } // Client-only
     public int CharSkip { get; set; } // Client-only
 
     [Net] public string DebugText { get; set; }
@@ -116,6 +117,8 @@ public partial class Thing : Entity
         Tooltip = "";
         IconDepth = (int)IconDepthLevel.Normal;
         IconScale = 1f;
+        Opacity = 1f;
+
         ThingId = RoguemojiGame.ThingId++;
         IsRemoved = false;
         IsOnCooldown = false;
@@ -469,6 +472,11 @@ public partial class Thing : Entity
         IconScale = scale;
     }
 
+    public void SetOpacity(float opacity)
+    {
+        Opacity = opacity;
+    }
+
     public void DrawDebugText(string text, Color color, int line = 0, float time = 0f)
     {
         if (Game.IsServer)
@@ -499,7 +507,8 @@ public partial class Thing : Entity
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(DisplayIcon, WieldedThing?.ThingId ?? 0, PlayerNum + ThingId, RotationDegrees, IconScale, IconDepth, Flags);
+        var transformHash = HashCode.Combine(RotationDegrees, IconScale, IconDepth, Flags, Opacity);
+        return HashCode.Combine(DisplayIcon, WieldedThing?.ThingId ?? 0, PlayerNum + ThingId, transformHash);
         //return HashCode.Combine((DisplayIcon + ThingId.ToString()), PlayerNum, Offset, RotationDegrees, IconScale, IconDepth, Flags);
     }
 

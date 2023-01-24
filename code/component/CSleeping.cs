@@ -11,6 +11,8 @@ public class CSleeping : ThingComponent
     public float Lifetime { get; set; }
     public int IconId { get; set; }
 
+    // todo: loud noises nearby should wake thing up
+
     public override void Init(Thing thing)
     {
         base.Init(thing);

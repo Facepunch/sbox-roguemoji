@@ -19,6 +19,7 @@ public partial class PuddleBlood : Thing
     }
 
     // todo: make splashing noise when you move onto it
+    // todo: make visible when walking onto this while invisible
 
     public override void Update(float dt)
     {
@@ -37,7 +38,12 @@ public partial class PuddleBlood : Thing
             _iconState++;
             DisplayIcon = "🟥";
         }
-        else if(_elapsedTime > 20f)
+        else if(_iconState == 2 && _elapsedTime > 25f)
+        {
+            _iconState++;
+            VfxOpacityLerp(5f, 1f, 0f);
+        }
+        else if(_iconState == 3 && _elapsedTime > 30f)
         {
             Destroy();
         }
