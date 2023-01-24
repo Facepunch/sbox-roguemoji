@@ -100,4 +100,20 @@ public partial class TreeDeciduous : Thing
             }
         }
     }
+
+    public override void TakeDamageFrom(Thing source)
+    {
+        if (WieldedThing != null)
+            return;
+
+        int amount = source.GetStatClamped(StatType.Attack);
+
+        if (amount <= 0)
+            return;
+
+        if (!HasStat(StatType.Health))
+            InitStat(StatType.Health, 100, min: 0, max: 100);
+
+        base.TakeDamageFrom(source);
+    }
 }

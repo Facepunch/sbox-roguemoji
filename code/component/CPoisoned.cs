@@ -40,7 +40,7 @@ public class CPoisoned : ThingComponent
         {
             HurtTimer -= HurtDelay;
 
-            Thing.TakeDamage(Level, showImpactFloater: false);
+            Thing.Hurt(Level, showImpactFloater: false);
 
             var offset = new Vector2(Game.Random.Float(-5f, 4f), Game.Random.Float(-5f, 4f));
             var scale = Utils.Map(TimeElapsed, 0f, Lifetime, 0.8f, 0.25f, EasingType.QuadIn);

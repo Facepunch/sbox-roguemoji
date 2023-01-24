@@ -559,12 +559,12 @@ public partial class RoguemojiPlayer : Thing
         fade.ShouldFadeOut = shouldFadeOut;
     }
 
-    public override void TakeDamage(Thing source)
+    public override void TakeDamageFrom(Thing source)
     {
         if (IsDead)
             return;
 
-        base.TakeDamage(source);
+        base.TakeDamageFrom(source);
 
         IconPriority.AddIconPriority(Utils.GetRandomIcon("😲", "😲", "😧", "😨") , (int)PlayerIconPriority.TakeDamage, 1.0f);
     }

@@ -15,4 +15,17 @@ public partial class TreeEvergreen : Thing
 		PathfindMovementCost = 999f;
 		SightBlockAmount = 14;
     }
+
+    public override void TakeDamageFrom(Thing source)
+    {
+        int amount = source.GetStatClamped(StatType.Attack);
+
+        if (amount <= 0)
+            return;
+
+        if (!HasStat(StatType.Health))
+            InitStat(StatType.Health, 100, min: 0, max: 100);
+
+        base.TakeDamageFrom(source);
+    }
 }

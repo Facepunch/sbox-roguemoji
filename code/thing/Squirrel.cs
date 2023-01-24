@@ -141,9 +141,9 @@ public partial class Squirrel : Thing
         Acting.ActionTimer = Game.Random.Float(0f, 0.1f);
     }
 
-    public override void TakeDamage(Thing source)
+    public override void TakeDamageFrom(Thing source)
     {
-        base.TakeDamage(source);
+        base.TakeDamageFrom(source);
 
         int amount = source.GetStatClamped(StatType.Attack);
 

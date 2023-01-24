@@ -55,7 +55,7 @@ public partial class Cigarette : Thing
         AdjustStat(StatType.Durability, -DurabilityCost);
 
         // take damage
-        user.TakeDamage(1);
+        user.Hurt(1);
 
         // temp charisma buff
         if(user.GetComponent<CCigaretteCharismaBuff>(out var component))

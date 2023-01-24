@@ -260,23 +260,20 @@ public partial class Thing : Entity
 
         target.VfxShake(0.2f, 4f);
 
-        if (target.HasStat(StatType.Health))
-        {
-            var damagingThing = ThingWieldingThis != null ? ThingWieldingThis : this;
-            target.TakeDamage(damagingThing);
-        }
+        var damagingThing = ThingWieldingThis != null ? ThingWieldingThis : this;
+        target.TakeDamageFrom(damagingThing);
     }
 
-    public virtual void TakeDamage(Thing source)
+    public virtual void TakeDamageFrom(Thing source)
     {
         if (!HasStat(StatType.Health))
             return;
 
         int amount = source.GetStatClamped(StatType.Attack);
-        TakeDamage(amount);
+        Hurt(amount);
     }
 
-    public virtual void TakeDamage(int amount, bool showImpactFloater = true)
+    public virtual void Hurt(int amount, bool showImpactFloater = true)
     {
         if (!HasStat(StatType.Health))
             return;
@@ -515,7 +512,7 @@ public partial class Thing : Entity
     public int GetInfoDisplayHash()
     {
         // todo: check all stats
-        return HashCode.Combine(NetworkIdent, DisplayIcon, WieldedThing?.DisplayIcon ?? "", Flags);
+        return HashCode.Combine(NetworkIdent, DisplayIcon, WieldedThing?.DisplayIcon ?? "", Flags, HasStats);
     }
 
     public int GetNearbyCellHash()

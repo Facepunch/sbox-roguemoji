@@ -58,7 +58,7 @@ public partial class Thing : Entity
             case StatType.Hearing: return "👂️";
             case StatType.Smell: return "👃";
 
-            case StatType.Durability: return "🔧";
+            case StatType.Durability: return "⚙️";
             case StatType.MaxHealth: return "💕";
         }
 

@@ -25,14 +25,14 @@ public partial class ProjectileCigaretteSmoke : Thing
     {
         base.OnMovedOntoThing(thing);
 
-        thing.TakeDamage(this);
+        thing.TakeDamageFrom(this);
     }
 
     public override void OnMovedOntoBy(Thing thing)
     {
         base.OnMovedOntoBy(thing);
 
-        thing.TakeDamage(this);
+        thing.TakeDamageFrom(this);
     }
 
     public override void OnRemoveComponent(TypeDescription type)
