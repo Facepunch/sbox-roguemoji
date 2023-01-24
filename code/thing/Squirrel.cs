@@ -64,14 +64,16 @@ public partial class Squirrel : Thing
         }
         else
         {
-            if (Targeting.Target.CurrentLevelId != CurrentLevelId)
+            var target = Targeting.Target;
+
+            if (target.CurrentLevelId != CurrentLevelId)
             {
                 Targeting.Target = null;
             }
             else
             {
-                int adjustedSight = Math.Max(GetStatClamped(StatType.Sight) - Targeting.Target.GetStatClamped(StatType.Stealth), 1);
-                bool canSeeTarget = CanSee(Targeting.Target.GridPos, adjustedSight);
+                int adjustedSight = Math.Max(GetStatClamped(StatType.Sight) - target.GetStatClamped(StatType.Stealth), 1);
+                bool canSeeTarget = CanSeeGridPos(target.GridPos, adjustedSight) && CanSeeThing(target);
                 bool isFearful = GetComponent<CFearful>(out var fearful);
 
                 //RoguemojiGame.Instance.DebugGridLine(GridPos, Targeting.Target.GridPos, canSeeTarget ? new Color(0f, 0f, 1f, 0.2f) : new Color(1f, 0f, 0f, 0.2f), 0f, CurrentLevelId);
@@ -79,7 +81,7 @@ public partial class Squirrel : Thing
                 if (Acting.IsActionReady)
                 {
                     if (canSeeTarget)
-                        TargetLastSeenPos = Targeting.Target.GridPos;
+                        TargetLastSeenPos = target.GridPos;
 
                     var targetPos = isFearful
                         ? CFearful.GetTargetRetreatPoint(GridPos, ((CFearful)fearful).FearedThing.GridPos, ContainingGridManager)

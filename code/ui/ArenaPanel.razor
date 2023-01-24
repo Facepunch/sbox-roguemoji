@@ -143,7 +143,7 @@
 
     @foreach(Thing thing in GetThings())
     {
-        var canSeeThing = player.IsGridPosOnCamera(thing.GridPos) && player.IsCellVisible(thing.GridPos);
+        var canSeeThing = player.IsGridPosOnCamera(thing.GridPos) && player.IsCellVisible(thing.GridPos) && player.CanSeeThing(thing);
 
         if ((canSeeThing || thing.TimeSinceLocalPlayerSaw < 0.25f) && !thing.DontRender)
         {

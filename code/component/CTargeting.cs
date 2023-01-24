@@ -53,6 +53,9 @@ public class CTargeting : ThingComponent
         if (other == null || other.Faction != TargetFaction || other.IsRemoved || other == Target || other.IsInTransit)
             return false;
 
+        if (!Thing.CanSeeThing(other))
+            return false;
+
         int adjustedSight = Math.Max(Thing.GetStatClamped(StatType.Sight) - other.GetStatClamped(StatType.Stealth), 1);
         int distance = Utils.GetDistance(Thing.GridPos, other.GridPos);
         int existingDistance = Target != null ? Utils.GetDistance(Thing.GridPos, Target.GridPos) : int.MaxValue;

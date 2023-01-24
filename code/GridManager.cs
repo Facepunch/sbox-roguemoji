@@ -521,6 +521,11 @@ public partial class GridManager : Entity
         return false;
     }
 
+    public static bool IsAdjacent(IntVector a, IntVector b, bool cardinalOnly = false)
+    {
+        return (a - b).ManhattanLength <= (cardinalOnly ? 1 : 2);
+    }
+
     public void Restart()
 	{
         foreach (var thing in Things)

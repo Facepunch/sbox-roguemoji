@@ -144,7 +144,7 @@
         }
     </div>
 
-    @if (SelectedThing.HasStats) 
+    @if (SelectedThing.ShouldShowInfoStats())
     { 
         <StatsDisplay Thing=@SelectedThing></StatsDisplay>     
     }

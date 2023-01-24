@@ -669,9 +669,14 @@ public partial class Thing : Entity
         }
     }
 
-    public bool CanSee(IntVector gridPos, int sight)
+    public bool CanSeeGridPos(IntVector gridPos, int sight)
     {
         return Utils.GetDistance(GridPos, gridPos) <= sight && ContainingGridManager.HasLineOfSight(GridPos, gridPos, sight, out IntVector collisionCell);
+    }
+
+    public bool CanSeeThing(Thing thing)
+    {
+        return thing == this || thing.GetStatClamped(StatType.Invisible) <= 0 || this.GetStatClamped(StatType.SeeInvisible) > 0;
     }
 
     [ClientRpc]

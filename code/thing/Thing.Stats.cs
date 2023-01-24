@@ -8,6 +8,7 @@ namespace Roguemoji;
 public enum StatType { 
     Health, Energy, Mana, Attack, Strength, Speed, Intelligence, Stamina, Stealth, Charisma, Sight, Hearing, Smell,
     Durability, MaxHealth, 
+    Invisible, SeeInvisible,
 }
 
 public partial class Stat : Entity
@@ -198,6 +199,9 @@ public partial class Thing : Entity
         if(stat.StatType == StatType.Stealth && stat.ClampedValue == 0)
             return true;
 
+        if (stat.StatType == StatType.Invisible || stat.StatType == StatType.SeeInvisible)
+            return true;
+
         return false;
     }
 
@@ -335,6 +339,20 @@ public partial class Thing : Entity
             case StatType.Health: return true;
             case StatType.Energy: return true;
             case StatType.Mana: return true;
+        }
+
+        return false;
+    }
+
+    public bool ShouldShowInfoStats()
+    {
+        if (!HasStats)
+            return false;
+
+        foreach (var pair in Stats)
+        {
+            if (!IsHiddenOnInfoPanel(pair.Value))
+                return true;
         }
 
         return false;
