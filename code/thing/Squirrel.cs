@@ -161,7 +161,8 @@ public partial class Squirrel : Thing
 
     public override void Destroy()
     {
-        ContainingGridManager.SpawnThing<PuddleBlood>(GridPos);
+        if(!ContainingGridManager.DoesGridPosContainThingType<PuddleBlood>(GridPos))
+            ContainingGridManager.SpawnThing<PuddleBlood>(GridPos);
 
         if (Game.Random.Float(0f, 1f) < 0.5f)
             ContainingGridManager.SpawnThing<Bone>(GridPos);

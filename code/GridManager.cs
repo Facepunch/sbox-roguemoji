@@ -365,7 +365,25 @@ public partial class GridManager : Entity
 		return Things.Where(x => x.GridPos.Equals(gridPos));
     }
 
-	public IEnumerable<Thing> GetThingsWithinRange(IntVector gridPos, int range, ThingFlags allFlags = ThingFlags.None, ThingFlags anyFlags = ThingFlags.None, ThingFlags noneFlags = ThingFlags.None)
+    public bool DoesGridPosContainThingType(IntVector gridPos, TypeDescription type)
+    {
+        var things = GetThingsAt(gridPos);
+
+        foreach(Thing thing in things)
+        {
+            if (type == TypeLibrary.GetType(thing.GetType()))
+                return true;
+        }
+
+        return false;
+    }
+
+    public bool DoesGridPosContainThingType<T>(IntVector gridPos) where T : Thing
+    {
+        return DoesGridPosContainThingType(gridPos, TypeLibrary.GetType(typeof(T)));
+    }
+
+    public IEnumerable<Thing> GetThingsWithinRange(IntVector gridPos, int range, ThingFlags allFlags = ThingFlags.None, ThingFlags anyFlags = ThingFlags.None, ThingFlags noneFlags = ThingFlags.None)
 	{
 		var things = new List<Thing>();
 

@@ -11,11 +11,11 @@ public partial class PuddleBlood : Thing
 	{
 		DisplayIcon = "🩸";
         DisplayName = "Puddle of Blood";
-        Description = "A puddle of blood";
+        Description = "The ground is covered in a sticky layer of blood";
         Tooltip = "A puddle of blood";
         IconDepth = (int)IconDepthLevel.Normal;
         ShouldUpdate = true;
-		//Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
+        Flags = ThingFlags.Selectable;
     }
 
     // todo: make splashing noise when you move onto it
@@ -37,15 +37,7 @@ public partial class PuddleBlood : Thing
         {
             _iconState++;
             DisplayIcon = "🟥";
-        }
-        else if(_iconState == 2 && _elapsedTime > 25f)
-        {
-            _iconState++;
-            VfxOpacityLerp(5f, 1f, 0f);
-        }
-        else if(_iconState == 3 && _elapsedTime > 30f)
-        {
-            Destroy();
+            ShouldUpdate = false;
         }
     }
 }
