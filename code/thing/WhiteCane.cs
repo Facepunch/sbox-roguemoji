@@ -36,7 +36,7 @@ public partial class WhiteCane : Thing
 
     public override void OnNoLongerWieldedBy(Thing thing)
     {
-        base.OnNoLongerWieldingThing(thing);
+        base.OnNoLongerWieldedBy(thing);
 
         thing.AdjustStatMin(StatType.Sight, -MinSightChange);
         thing.AdjustStat(StatType.Attack, -GetStatClamped(StatType.Attack));

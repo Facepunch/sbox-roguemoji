@@ -262,17 +262,17 @@ public partial class Thing : Entity
 
         target.VfxShake(0.2f, 4f);
 
-        var damagingThing = ThingWieldingThis != null ? ThingWieldingThis : this;
-        target.TakeDamageFrom(damagingThing);
+        target.TakeDamageFrom(this);
     }
 
-    public virtual void TakeDamageFrom(Thing source)
+    public virtual void TakeDamageFrom(Thing thing)
     {
         //if (!HasStat(StatType.Health))
         //    return;
 
-        int amount = source.GetStatClamped(StatType.Attack);
-        Hurt(amount);
+        int amount = thing.GetStatClamped(StatType.Attack);
+
+        Hurt(amount, showImpactFloater: true);
     }
 
     public virtual void Hurt(int amount, bool showImpactFloater = true)
@@ -534,7 +534,7 @@ public partial class Thing : Entity
 
         if (WieldedThing != null)
         {
-            OnNoLongerWieldingThing(thing);
+            OnNoLongerWieldingThing(WieldedThing);
             WieldedThing.OnNoLongerWieldedBy(this);
         }
 

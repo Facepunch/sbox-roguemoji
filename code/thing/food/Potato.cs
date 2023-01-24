@@ -45,7 +45,7 @@ public partial class Potato : Thing
 
     public override void OnNoLongerWieldedBy(Thing thing)
     {
-        base.OnNoLongerWieldingThing(thing);
+        base.OnNoLongerWieldedBy(thing);
         thing.AdjustStat(StatType.Attack, -GetStatClamped(StatType.Attack));
     }
 }

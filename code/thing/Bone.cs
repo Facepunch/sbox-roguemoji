@@ -26,7 +26,7 @@ public partial class Bone : Thing
 
     public override void OnNoLongerWieldedBy(Thing thing)
     {
-        base.OnNoLongerWieldingThing(thing);
+        base.OnNoLongerWieldedBy(thing);
         thing.AdjustStat(StatType.Attack, -GetStatClamped(StatType.Attack));
     }
 }

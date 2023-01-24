@@ -560,12 +560,12 @@ public partial class RoguemojiPlayer : Thing
         fade.ShouldFadeOut = shouldFadeOut;
     }
 
-    public override void TakeDamageFrom(Thing source)
+    public override void TakeDamageFrom(Thing thing)
     {
         if (IsDead)
             return;
 
-        base.TakeDamageFrom(source);
+        base.TakeDamageFrom(thing);
 
         IconPriority.AddIconPriority(Utils.GetRandomIcon("😲", "😲", "😧", "😨") , (int)PlayerIconPriority.TakeDamage, 1.0f);
     }
@@ -727,24 +727,24 @@ public partial class RoguemojiPlayer : Thing
         thing.ContainingGridManager?.RemoveThing(thing);
         var targetGridManager = GetGridManager(targetGridType);
 
-        Thing targetThing = targetGridType != GridType.Arena ? targetGridManager.GetThingsAt(targetGridPos).OrderByDescending(x => x.GetZPos()).FirstOrDefault() : null;
+        Thing existingInvEquipItem = targetGridType != GridType.Arena ? targetGridManager.GetThingsAt(targetGridPos).OrderByDescending(x => x.GetZPos()).FirstOrDefault() : null;
         IntVector sourceGridPos = thing.GridPos;
 
         targetGridManager.AddThing(thing);
         thing.SetGridPos(targetGridPos);
 
-        if (targetThing != null)
+        if (existingInvEquipItem != null)
         {
-            if(sourceGridType == GridType.Equipment && targetGridType == GridType.Inventory && !targetThing.HasFlag(ThingFlags.Equipment))
+            if(sourceGridType == GridType.Equipment && targetGridType == GridType.Inventory && !existingInvEquipItem.HasFlag(ThingFlags.Equipment))
             {
                 if (InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
-                    SwapGridThingPos(targetThing, GridType.Inventory, emptyGridPos);
+                    SwapGridThingPos(existingInvEquipItem, GridType.Inventory, emptyGridPos);
                 else
-                    MoveThingTo(targetThing, GridType.Arena, GridPos, dontRequireAction: true);
+                    MoveThingTo(existingInvEquipItem, GridType.Arena, GridPos, dontRequireAction: true);
             }
             else
             {
-                MoveThingTo(targetThing, sourceGridType, sourceGridPos, dontRequireAction: true);
+                MoveThingTo(existingInvEquipItem, sourceGridType, sourceGridPos, dontRequireAction: true);
             }
         }
 

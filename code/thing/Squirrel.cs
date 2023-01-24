@@ -141,21 +141,21 @@ public partial class Squirrel : Thing
         Acting.ActionTimer = Game.Random.Float(0f, 0.1f);
     }
 
-    public override void TakeDamageFrom(Thing source)
+    public override void TakeDamageFrom(Thing thing)
     {
-        base.TakeDamageFrom(source);
+        base.TakeDamageFrom(thing);
 
-        int amount = source.GetStatClamped(StatType.Attack);
+        int amount = thing.GetStatClamped(StatType.Attack);
 
         if (amount > 0 && GetStatClamped(StatType.Health) == 1 && !HasComponent<CFearful>())
         {
             var fearful = AddComponent<CFearful>();
             fearful.Lifetime = 5f;
 
-            if (source.GetComponent<CProjectile>(out var component))
+            if (thing.GetComponent<CProjectile>(out var component))
                 fearful.FearedThing = ((CProjectile)component).Thrower;
             else
-                fearful.FearedThing = source;
+                fearful.FearedThing = thing;
         }
     }
 

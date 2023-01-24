@@ -24,6 +24,7 @@ public partial class Thing : Entity
 
         foreach (var component in ThingComponents) { component.Value.OnNoLongerWieldedBy(thing); }
     }
+
     public virtual void OnChangedStat(StatType statType, int changeCurrent, int changeMin, int changeMax)
     {
         if (statType == StatType.Speed && GetComponent<CActing>(out var acting))
