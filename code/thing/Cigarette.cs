@@ -23,8 +23,8 @@ public partial class Cigarette : Thing
         DisplayName = "Cigarette";
         Description = "Unhealthy but cool";
         Tooltip = "A cigarette";
-        IconDepth = 0;
-		Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
+        IconDepth = (int)IconDepthLevel.Normal;
+        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         if (Game.IsServer)
         {

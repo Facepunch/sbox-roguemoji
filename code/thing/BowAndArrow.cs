@@ -17,8 +17,8 @@ public partial class BowAndArrow : Thing
         DisplayName = "Longbow";
         Description = "Shoots arrows";
         Tooltip = "A longbow";
-        IconDepth = 0;
-		Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable | ThingFlags.UseRequiresAiming;
+        IconDepth = (int)IconDepthLevel.Normal;
+        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable | ThingFlags.UseRequiresAiming;
 
         if (Game.IsServer)
         {

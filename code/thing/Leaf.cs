@@ -10,8 +10,8 @@ public partial class Leaf : Thing
         DisplayName = "Leaves";
         Description = "Small pile of dry leaves";
         Tooltip = "A pile of leaves";
-        IconDepth = 0;
-		Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
+        IconDepth = (int)IconDepthLevel.Normal;
+        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
     }
 
     // todo: make crunching noise when you move onto it

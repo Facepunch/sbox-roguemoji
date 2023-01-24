@@ -10,7 +10,7 @@ public partial class Bouquet : Thing
         DisplayName = "Bouquet";
         Description = "A lovely bunch of flowers";
         Tooltip = "A bouquet";
-        IconDepth = 0;
-		Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
+        IconDepth = (int)IconDepthLevel.Normal;
+        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
     }
 }

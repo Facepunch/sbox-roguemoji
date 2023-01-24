@@ -12,7 +12,7 @@ public partial class ProjectileArrow : Thing
         DisplayName = "Arrow";
         Description = "";
         Tooltip = "";
-        IconDepth = 8;
+        IconDepth = (int)IconDepthLevel.Projectile;
 
         if (Game.IsServer)
         {

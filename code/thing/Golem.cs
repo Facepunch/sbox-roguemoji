@@ -13,8 +13,8 @@ public partial class Golem : Thing
         DisplayName = "Golem";
         Description = "Living rock that moves with mindless intent";
         Tooltip = "A golem";
-        IconDepth = 1;
-		Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanUseThings;
+        IconDepth = (int)IconDepthLevel.Solid;
+        Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanUseThings;
         PathfindMovementCost = 15f;
         SightBlockAmount = 12;
 

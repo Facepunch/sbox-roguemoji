@@ -9,8 +9,8 @@ public partial class Backpack : Thing
 		DisplayIcon = "🎒";
         DisplayName = "Backpack";
         Description = "Increases your inventory size";
-        IconDepth = 0;
-		Tooltip = "A backpack";
+        IconDepth = (int)IconDepthLevel.Normal;
+        Tooltip = "A backpack";
 		Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Equipment;
     }
 

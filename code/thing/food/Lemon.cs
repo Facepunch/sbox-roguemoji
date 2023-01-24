@@ -13,7 +13,7 @@ public partial class Lemon : Thing
         DisplayName = "Lemon";
         Description = "So sour!";
         Tooltip = "A lemon";
-        IconDepth = 0;
+        IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         if (Game.IsServer)

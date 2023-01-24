@@ -13,7 +13,7 @@ public partial class Nut : Thing
         DisplayName = "Nut";
         Description = "Some sort of nut";
         Tooltip = "A nut";
-        IconDepth = 0;
+        IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         if (Game.IsServer)

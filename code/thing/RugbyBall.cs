@@ -17,8 +17,8 @@ public partial class RugbyBall : Thing
         DisplayName = "Rugby Ball";
         Description = "Charge and slam into things";
         Tooltip = "A rugby ball";
-        IconDepth = 0;
-		Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable | ThingFlags.UseRequiresAiming;
+        IconDepth = (int)IconDepthLevel.Normal;
+        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable | ThingFlags.UseRequiresAiming;
 
         if (Game.IsServer)
         {

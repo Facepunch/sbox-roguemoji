@@ -12,8 +12,8 @@ public partial class GlassesOfSeeInvisible : Thing
         DisplayName = "Glasses of See Invisible";
         Description = "Allows you to see invisible things";
         Tooltip = "Glasses of See Invisible";
-        IconDepth = 0;
-		Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Equipment;
+        IconDepth = (int)IconDepthLevel.Normal;
+        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Equipment;
 
         if (Game.IsServer)
         {

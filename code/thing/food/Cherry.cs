@@ -13,7 +13,7 @@ public partial class Cherry : Thing
         DisplayName = "Cherries";
         Description = "Sweet and juicy";
         Tooltip = "A couple cherries";
-        IconDepth = 0;
+        IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         if (Game.IsServer)

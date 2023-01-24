@@ -15,7 +15,7 @@ public partial class Potion : Thing
     public Potion()
     {
         DisplayIcon = "🧉";
-        IconDepth = 0;
+        IconDepth = (int)IconDepthLevel.Normal;
     }
 
     public static string GetDisplayName(PotionType potionType)

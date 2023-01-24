@@ -13,7 +13,7 @@ public partial class Pear : Thing
         DisplayName = "Pear";
         Description = "Pear-shaped and delicious";
         Tooltip = "A pear";
-        IconDepth = 0;
+        IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         if (Game.IsServer)

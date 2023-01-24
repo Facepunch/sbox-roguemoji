@@ -12,7 +12,7 @@ public partial class Mushroom : Thing
         DisplayName = "Mushroom";
         Description = "There's a good chance it's poisonous";
         Tooltip = "A mushroom";
-        IconDepth = 0;
+        IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         if (Game.IsServer)

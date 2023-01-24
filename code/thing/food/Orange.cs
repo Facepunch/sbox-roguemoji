@@ -13,7 +13,7 @@ public partial class Orange : Thing
         DisplayName = "Orange";
         Description = "Delicious citrus";
         Tooltip = "An orange";
-        IconDepth = 0;
+        IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         if (Game.IsServer)

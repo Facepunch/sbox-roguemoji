@@ -19,7 +19,7 @@ public partial class BookBlink : Thing
         DisplayName = "Book of Blink";
         Description = "Teleport to a target place nearby";
         Tooltip = "A book of Blink";
-        IconDepth = 0;
+        IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
 
         SetTattoo(Globals.Icon(IconType.Blink), scale: 0.5f, offset: new Vector2(0.5f, -4f), offsetWielded: new Vector2(0f, 0f), offsetInfo: new Vector2(1f, -1f), offsetCharWielded: new Vector2(0.5f, -8f), offsetInfoWielded: new Vector2(-1f, -2f));

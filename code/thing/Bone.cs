@@ -8,7 +8,7 @@ public partial class Bone : Thing
 	{
 		DisplayIcon = "🦴";
 		DisplayName = "Bone";
-        IconDepth = 0;
+        IconDepth = (int)IconDepthLevel.Normal;
 		Tooltip = "A bone";
 		Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
 

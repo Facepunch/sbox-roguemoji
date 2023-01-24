@@ -12,7 +12,7 @@ public partial class ProjectileCigaretteSmoke : Thing
         DisplayName = "Cigarette Smoke";
         Description = "";
         Tooltip = "";
-        IconDepth = 8;
+        IconDepth = (int)IconDepthLevel.Projectile;
         Flags = ThingFlags.DoesntBumpThings;
 
         if (Game.IsServer)

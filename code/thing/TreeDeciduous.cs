@@ -13,8 +13,8 @@ public partial class TreeDeciduous : Thing
         DisplayName = "Tree";
         Description = "A tall deciduous tree";
         Tooltip = "A tree";
-        IconDepth = 1;
-		Flags = ThingFlags.Solid | ThingFlags.Selectable;
+        IconDepth = (int)IconDepthLevel.Solid;
+        Flags = ThingFlags.Solid | ThingFlags.Selectable;
 		PathfindMovementCost = 999f;
 		SightBlockAmount = 13;
 
@@ -72,7 +72,7 @@ public partial class TreeDeciduous : Thing
 
                     var tempIconDepth = droppedThing.AddComponent<CTempIconDepth>();
                     tempIconDepth.Lifetime = 0.35f;
-                    tempIconDepth.SetTempIconDepth(5);
+                    tempIconDepth.SetTempIconDepth((int)IconDepthLevel.Projectile);
 
                     WieldThing(null);
                 }
@@ -93,7 +93,7 @@ public partial class TreeDeciduous : Thing
 
                     var tempIconDepth = leaf.AddComponent<CTempIconDepth>();
                     tempIconDepth.Lifetime = 0.35f;
-                    tempIconDepth.SetTempIconDepth(5);
+                    tempIconDepth.SetTempIconDepth((int)IconDepthLevel.Projectile);
 
                     HasDroppedLeaf = true;
                 }

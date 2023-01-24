@@ -14,7 +14,7 @@ public partial class Scroll : Thing
     public Scroll()
     {
         DisplayIcon = "📜";
-        IconDepth = 0;
+        IconDepth = (int)IconDepthLevel.Normal;
     }
 
     public static string GetDisplayName(ScrollType scrollType)

@@ -9,8 +9,8 @@ namespace Roguemoji;
 public enum IconType { Blink, Teleport, Fear, Telekinesis, Poison, Blindness, Sleeping, Confusion, Hallucination, Speed, Medicine, Mutation, Stunned, UnarmedAttack, Invisible }
 public enum VerbType { Use, Read }
 public enum HallucinationTextType { Icon, Name, Tooltip, Description }
-
 public enum PlayerIconPriority { Default, Move, ExitLevel, EnterLevel, AcademicCapNerd, SpeedIncrease, Invisible, GlassesOfSeeInvisible, Sunglasses, Blinded, Poisoned, Attack, Confused, Fearful, Hallucinating, Sleeping, EatReaction, TakeDamage, Stunned, RugbyCharge, Dead }
+public enum IconDepthLevel { Puddle = 0, Hole = 1, Normal = 2, Solid = 5, Player = 6, Projectile = 8, Effect = 9 }
 
 public struct HallucinationData
 {

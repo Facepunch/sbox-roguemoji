@@ -46,7 +46,6 @@ public partial class RoguemojiPlayer : Thing
 
     public RoguemojiPlayer()
 	{
-		IconDepth = 2;
         ShouldUpdate = true;
 		DisplayName = "Player";
 		Tooltip = "";
@@ -94,6 +93,7 @@ public partial class RoguemojiPlayer : Thing
     void SetStartingValues()
     {
         DisplayIcon = "😀";
+        IconDepth = (int)IconDepthLevel.Player;
         Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanUseThings;
         IsDead = false;
         //ActionDelay = TimeSinceAction = 0.5f;

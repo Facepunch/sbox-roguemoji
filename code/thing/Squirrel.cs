@@ -16,7 +16,7 @@ public partial class Squirrel : Thing
 		DisplayIcon = "🐿";
         DisplayName = "Squirrel";
         Description = "A bushy-tailed rodent";
-        IconDepth = 1;
+        IconDepth = (int)IconDepthLevel.Solid;
         ShouldUpdate = true;
 		Tooltip = "A squirrel";
 		Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanUseThings;
@@ -161,7 +161,9 @@ public partial class Squirrel : Thing
 
     public override void Destroy()
     {
-        if(Game.Random.Float(0f, 1f) < 0.5f)
+        ContainingGridManager.SpawnThing<PuddleBlood>(GridPos);
+
+        if (Game.Random.Float(0f, 1f) < 0.5f)
             ContainingGridManager.SpawnThing<Bone>(GridPos);
 
         base.Destroy();

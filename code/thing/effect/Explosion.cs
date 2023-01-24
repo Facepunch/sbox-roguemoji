@@ -10,8 +10,8 @@ public partial class Explosion : Thing
 	public Explosion()
 	{
         DisplayIcon = "💥";
-		IconDepth = 9;
-		_spawnTime = 0f;
+        IconDepth = (int)IconDepthLevel.Effect;
+        _spawnTime = 0f;
 		ShouldUpdate = true;
 	}
 

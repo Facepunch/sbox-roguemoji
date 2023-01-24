@@ -13,7 +13,7 @@ public partial class AppleGreen : Thing
         DisplayName = "Green Apple";
         Description = "Full of energy";
         Tooltip = "A green apple";
-        IconDepth = 0;
+        IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         if (Game.IsServer)

@@ -114,7 +114,7 @@ public partial class Thing : Entity
         DisplayIcon = ".";
         DisplayName = Name;
         Tooltip = "";
-        IconDepth = 0;
+        IconDepth = (int)IconDepthLevel.Normal;
         IconScale = 1f;
         ThingId = RoguemojiGame.ThingId++;
         IsRemoved = false;
@@ -159,6 +159,7 @@ public partial class Thing : Entity
             WieldedThing.Update(dt);
     }
 
+    // todo: dont call this for everything
     [Event.Tick.Client]
     public virtual void ClientTick()
     {
@@ -175,7 +176,7 @@ public partial class Thing : Entity
             DrawDebugText(DebugText);
 
         //DrawDebugText(ContainingGridManager?.Name.ToString() ?? "null");
-        //DrawDebugText(Flags.ToString());
+        //DrawDebugText($"{DisplayName}{GetZPos()}");
 
         //if(HasStat(StatType.Health))
         //    DrawDebugText($"{GetStat(StatType.Health).CurrentValue}");

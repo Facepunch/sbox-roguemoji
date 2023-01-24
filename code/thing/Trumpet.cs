@@ -10,7 +10,7 @@ public partial class Trumpet : Thing
         DisplayName = "Trumpet";
         Description = "Loud and annoying";
         Tooltip = "A trumpet";
-        IconDepth = 0;
-		Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
+        IconDepth = (int)IconDepthLevel.Normal;
+        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
     }
 }

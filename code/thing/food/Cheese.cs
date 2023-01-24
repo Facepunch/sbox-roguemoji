@@ -13,7 +13,7 @@ public partial class Cheese : Thing
         DisplayName = "Cheese";
         Tooltip = "A wedge of cheese";
         Description = "Stinky and delicious";
-        IconDepth = 0;
+        IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         if (Game.IsServer)

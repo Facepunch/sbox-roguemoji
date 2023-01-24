@@ -10,7 +10,7 @@ public partial class Hole : Thing
         DisplayName = "Hole";
         Description = "A deep hole leading to another area";
         Tooltip = "A hole";
-        IconDepth = 1;
+        IconDepth = (int)IconDepthLevel.Hole;
         Flags = ThingFlags.Exclusive | ThingFlags.Selectable;
         PathfindMovementCost = 15f;
 

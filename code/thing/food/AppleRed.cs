@@ -13,7 +13,7 @@ public partial class AppleRed : Thing
         DisplayName = "Red Apple";
         Description = "Keeps the 👨‍⚕️ away";
         Tooltip = "A red apple";
-        IconDepth = 0;
+        IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         if (Game.IsServer)

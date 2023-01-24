@@ -8,8 +8,8 @@ public partial class Door : Thing
 	{
 		DisplayIcon = "️🚪";
         DisplayName = "Door";
-        IconDepth = 1;
-		Tooltip = "A door";
+        IconDepth = (int)IconDepthLevel.Solid;
+        Tooltip = "A door";
         Flags = ThingFlags.Solid | ThingFlags.Selectable;
         PathfindMovementCost = 15f;
         SightBlockAmount = 20;

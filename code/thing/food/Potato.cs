@@ -13,7 +13,7 @@ public partial class Potato : Thing
         DisplayName = "Potato";
         Description = "Uncooked and hard as a rock";
         Tooltip = "A potato";
-        IconDepth = 0;
+        IconDepth = (int)IconDepthLevel.Normal;
 
         if (Game.IsServer)
         {
