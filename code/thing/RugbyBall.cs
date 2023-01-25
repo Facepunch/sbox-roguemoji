@@ -128,18 +128,9 @@ public class CRugbyCharge : ThingComponent
         //Thing.DebugText = $"{RemainingDistance}";
     }
 
-    public override void OnBumpedIntoThing(Thing thing)
+    public override void OnWieldedThingBumpedInto(Thing thing)
     {
         ShoveThing(thing);
-
-        Remove();
-    }
-
-    public override void OnMovedOntoBy(Thing thing)
-    {
-        Thing.HitOther(thing, Direction);
-        ShoveThing(thing);
-        
         Remove();
     }
 

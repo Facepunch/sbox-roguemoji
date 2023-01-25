@@ -70,6 +70,7 @@ public partial class Thing : Entity
     public virtual void OnEquippedTo(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnEquippedTo(thing); } }
     public virtual void OnUnequippedFrom(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnUnequippedFrom(thing); } }
     public virtual void OnActionRecharged() { foreach (var component in ThingComponents) { component.Value.OnActionRecharged(); } }
+    public virtual void OnWieldedThingBumpedInto(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnWieldedThingBumpedInto(thing); } }
     public virtual void OnBumpedIntoThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoThing(thing); } }
     public virtual void OnBumpedIntoBy(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoBy(thing); } } // thing may be null
     public virtual void OnBumpedOutOfBounds(Direction dir) { foreach (var component in ThingComponents) { component.Value.OnBumpedOutOfBounds(dir); } }

@@ -25,7 +25,7 @@ public partial class Axe : Thing
 
             InitStat(StatType.Attack, 3);
             InitStat(StatType.Durability, current: DurabilityAmount, max: DurabilityAmount);
-            AddTrait("", "🌲", $"Deals {TreeAttackAmount}{GetStatIcon(StatType.Attack)} against trees", offset: Vector2.Zero, tattooIcon: "🪓", tattooScale: 0.7f, tattooOffset: new Vector2(6f, 6f));
+            AddTrait("", "🌲", $"Deals {TreeAttackAmount}{GetStatIcon(StatType.Attack)} to trees", offset: Vector2.Zero, tattooIcon: "🪓", tattooScale: 0.7f, tattooOffset: new Vector2(6f, 6f));
             AddTrait("", GetStatIcon(StatType.Attack), $"Attacking costs {DurabilityCost}{GetStatIcon(StatType.Durability)}", offset: new Vector2(0f, -3f), tattooIcon: GetStatIcon(StatType.Durability), tattooScale: 0.8f, tattooOffset: new Vector2(0f, 0f), labelText: $"-{DurabilityCost}", labelFontSize: 18, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));;
         }
     }
