@@ -48,7 +48,7 @@ public partial class Potion : Thing
             case PotionType.Blindness: return $"🧉{Globals.Icon(IconType.Blindness)}";
             case PotionType.Sleeping: return $"🧉{Globals.Icon(IconType.Sleeping)}";
             case PotionType.Confusion: return $"🧉{Globals.Icon(IconType.Confusion)}";
-            case PotionType.Speed: return $"🧉{Globals.Icon(IconType.Speed)}";
+            case PotionType.Speed: return $"🧉{GetStatIcon(StatType.Speed)}";
             case PotionType.Medicine: return $"🧉{Globals.Icon(IconType.Medicine)}";
             case PotionType.Mutation: return $"🧉{Globals.Icon(IconType.Mutation)}";
         }

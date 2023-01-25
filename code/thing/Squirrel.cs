@@ -21,17 +21,19 @@ public partial class Squirrel : Thing
 		Tooltip = "A squirrel";
 		Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanUseThings;
         PathfindMovementCost = 5f;
-        SightBlockAmount = 5;
         Faction = FactionType.Enemy;
         CantSeeTargetLoseDelay = 5f;
 
-        InitStat(StatType.Health, 5, 0, 5);
-        InitStat(StatType.Attack, 1);
-        InitStat(StatType.Speed, 2);
-        InitStat(StatType.Sight, 7);
-        InitStat(StatType.Hearing, 3);
-        //InitStat(StatType.Smell, 3);
-        FinishInitStats();
+        if (Game.IsServer)
+        {
+            InitStat(StatType.Health, 5, 0, 5);
+            InitStat(StatType.Attack, 1);
+            InitStat(StatType.Speed, 2);
+            InitStat(StatType.Sight, 7);
+            InitStat(StatType.Hearing, 3);
+            InitStat(StatType.SightBlockAmount, 5);
+            //InitStat(StatType.Smell, 3);
+        }
     }
 
     public override void Spawn()

@@ -16,13 +16,14 @@ public partial class Golem : Thing
         IconDepth = (int)IconDepthLevel.Solid;
         Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanUseThings;
         PathfindMovementCost = 15f;
-        SightBlockAmount = 12;
 
-        InitStat(StatType.Speed, 2);
-        InitStat(StatType.Sight, 7);
-        InitStat(StatType.Hearing, 3);
-        //InitStat(StatType.Smell, 3);
-        FinishInitStats();
+        if (Game.IsServer)
+        {
+            InitStat(StatType.Speed, 2);
+            InitStat(StatType.Sight, 7);
+            InitStat(StatType.Hearing, 3);
+            InitStat(StatType.SightBlockAmount, 20);
+        }
     }
 
     public override void Spawn()

@@ -44,7 +44,7 @@ public partial class GridManager : Entity
 		if(GridType == GridType.Arena)
 		{
 			foreach (var player in VisionChangedPlayers)
-				player.RefreshVisibility();
+				player.RefreshVisibility(To.Single(player));
 
 			VisionChangedPlayers.Clear();
 		}
@@ -150,8 +150,8 @@ public partial class GridManager : Entity
 
 		if (GridType == GridType.Arena)
 		{
-			if (thing.SightBlockAmount > 0)
-				CheckVisionChange(thing);
+			if (thing.GetStatClamped(StatType.SightBlockAmount) > 0)
+				CheckPlayerVisionChange(thing, gridPos, PlayerVisionChangeReason.ChangedGridPos);
 
 			CheckAimingChange(gridPos);
         }
@@ -166,23 +166,28 @@ public partial class GridManager : Entity
 
 			if (GridType == GridType.Arena)
 			{
-				if (thing.SightBlockAmount > 0)
-					CheckVisionChange(thing);
+				if (thing.GetStatClamped(StatType.SightBlockAmount) > 0)
+					CheckPlayerVisionChange(thing, gridPos, PlayerVisionChangeReason.ChangedGridPos);
 
 				CheckAimingChange(gridPos);
 			}
         }
     }
 
-	void CheckVisionChange(Thing thing)
+	public void CheckPlayerVisionChange(Thing thing, IntVector gridPos, PlayerVisionChangeReason reason)
 	{
 		foreach(var player in ContainedPlayers)
 		{
+            if (VisionChangedPlayers.Contains(player) || thing == player)
+                continue;
+
 			var sight = player.GetStatClamped(StatType.Sight);
-            if (VisionChangedPlayers.Contains(player) || thing == player || thing.SightBlockAmount < sight)
+
+            // if thing doesn't block our sight, we can ignore it, unless it lowered its SightBlockAmount (as it might previously have been blocking us)
+            if (thing.GetStatClamped(StatType.SightBlockAmount) < sight && reason != PlayerVisionChangeReason.DecreasedSightBlockAmount)
 				continue;
 
-			var dist = GetDistance(player.GridPos, thing.GridPos);
+			var dist = GetDistance(player.GridPos, gridPos);
 			if (dist > sight)
 				continue;
 
@@ -689,7 +694,7 @@ public partial class GridManager : Entity
 	{
         foreach (var thing in GetThingsAt(gridPos))
         {
-            if (thing.SightBlockAmount >= sight)
+            if (thing.GetStatClamped(StatType.SightBlockAmount) >= sight && thing.GetStatClamped(StatType.Invisible) <= 0)
 				return true;
         }
 

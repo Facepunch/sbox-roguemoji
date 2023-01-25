@@ -40,7 +40,7 @@ public partial class Thing : Entity
         return AddComponent(TypeLibrary.GetType(typeof(T))) as T;
     }
 
-    public void RemoveComponent(TypeDescription type)
+    public bool RemoveComponent(TypeDescription type)
     {
         if (ThingComponents.ContainsKey(type))
         {
@@ -48,12 +48,15 @@ public partial class Thing : Entity
             component.OnRemove();
             ThingComponents.Remove(type);
             OnRemoveComponent(type);
+            return true;
         }
+
+        return false;
     }
 
-    public void RemoveComponent<T>() where T : ThingComponent
+    public bool RemoveComponent<T>() where T : ThingComponent
     {
-        RemoveComponent(TypeLibrary.GetType(typeof(T)));
+        return RemoveComponent(TypeLibrary.GetType(typeof(T)));
     }
 
     public bool GetComponent(TypeDescription type, out ThingComponent component)

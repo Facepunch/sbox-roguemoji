@@ -43,8 +43,6 @@ public partial class PotionMutation : Potion
 
     public override void ApplyEffectToThing(Thing thing)
     {
-
-
-        thing.AddSideFloater(Globals.Icon(IconType.Mutation));
+        //thing.AddSideFloater(Globals.Icon(IconType.Mutation));
     }
 }

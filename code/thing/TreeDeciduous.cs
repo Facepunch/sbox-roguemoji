@@ -18,10 +18,13 @@ public partial class TreeDeciduous : Thing
         IconDepth = (int)IconDepthLevel.Solid;
         Flags = ThingFlags.Solid | ThingFlags.Selectable;
 		PathfindMovementCost = 999f;
-		SightBlockAmount = 13;
         HealthAmount = 400;
 
-        if (Game.IsClient)
+        if (Game.IsServer)
+        {
+            InitStat(StatType.SightBlockAmount, 13);
+        }
+        else 
         {
             WieldedThingOffset = new Vector2(9.6f, 7.2f);
             WieldedThingFontSize = 14;

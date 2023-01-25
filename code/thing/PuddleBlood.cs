@@ -11,7 +11,7 @@ public partial class PuddleBlood : Thing
 	{
 		DisplayIcon = "🩸";
         DisplayName = "Puddle of Blood";
-        Description = "The ground is covered in a sticky layer of blood";
+        Description = "The ground is covered in a layer of blood";
         Tooltip = "A puddle of blood";
         IconDepth = (int)IconDepthLevel.Normal;
         ShouldUpdate = true;

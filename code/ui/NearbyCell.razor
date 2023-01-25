@@ -47,7 +47,7 @@
     }
 </style>
 
-<root class="nearby_icon @GetSelectedClass() @GetUnusableClass(Thing, RoguemojiGame.Instance.LocalPlayer)">
+<root class="nearby_icon @GetSelectedClass() @GetUnusableClass(Thing, RoguemojiGame.Instance.LocalPlayer)" style="opacity:@(GetOpacity());">
     <div class="@GetPlayerClass() @GetDraggingClass()" @ref=IconPanel>
         @(Hud.GetHallucinationTextThing(Thing, Thing.DisplayIcon, HallucinationTextType.Icon))
 
@@ -97,6 +97,8 @@
 
         return "";
     }
+
+    float GetOpacity() { return Thing.Opacity * (Thing.GetStatClamped(StatType.Invisible) > 0 ? 0.25f : 1f); }
 
     protected override Panel CreateTooltipPanel()
     {

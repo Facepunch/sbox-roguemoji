@@ -8,7 +8,7 @@ namespace Roguemoji;
 public enum StatType { 
     Health, Energy, Mana, Attack, Strength, Speed, Intelligence, Stamina, Stealth, Charisma, Sight, Hearing, Smell,
     Durability, MaxHealth, 
-    Invisible, SeeInvisible,
+    Invisible, SeeInvisible, SightBlockAmount,
 }
 
 public partial class Stat : Entity
@@ -49,7 +49,7 @@ public partial class Thing : Entity
             case StatType.Mana: return "💠";
             case StatType.Attack: return "⚔️";
             case StatType.Strength: return "💪";
-            case StatType.Speed: return "🕓️";
+            case StatType.Speed: return "🏁";
             case StatType.Intelligence: return "🧠";
             case StatType.Stamina: return "🏃";
             case StatType.Stealth: return "👤";
@@ -196,11 +196,13 @@ public partial class Thing : Entity
 
     public static bool IsHiddenOnInfoPanel(Stat stat)
     {
-        if(stat.StatType == StatType.Stealth && stat.ClampedValue == 0)
-            return true;
-
-        if (stat.StatType == StatType.Invisible || stat.StatType == StatType.SeeInvisible)
-            return true;
+        switch (stat.StatType)
+        {
+            case StatType.Invisible: return true;
+            case StatType.SeeInvisible: return true;
+            case StatType.SightBlockAmount: return true;
+            case StatType.Stealth: return (stat.ClampedValue == 0);
+        }
 
         return false;
     }
@@ -215,6 +217,8 @@ public partial class Thing : Entity
 			HasStats = true;
 		}
 
+        Sandbox.Diagnostics.Assert.True(!Stats.ContainsKey(statType));
+
         Stats[statType] = new Stat()
         {
             StatType = statType,
@@ -223,16 +227,8 @@ public partial class Thing : Entity
             MaxValue = max,
             IsModifier = isModifier,
 		};
-    }
 
-    public virtual void FinishInitStats()
-    {
-        foreach(var pair in Stats)
-        {
-            var statType = pair.Key;
-            var stat = pair.Value;
-            OnChangedStat(statType, changeCurrent: stat.CurrentValue, changeMin: stat.MinValue, changeMax: stat.MaxValue);
-        }
+        OnChangedStat(statType, changeCurrent: current, changeMin: min, changeMax: max);
     }
 
     public void AdjustStat(StatType statType, int amount)

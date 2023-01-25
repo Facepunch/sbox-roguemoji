@@ -76,8 +76,6 @@ public partial class Thing : Entity
     public Vector2 InfoWieldedThingOffset { get; set; } // Client-only
     public int InfoWieldedThingFontSize { get; set; } // Client-only
 
-    [Net] public int SightBlockAmount { get; set; }
-
     [Net] public IList<Thing> EquippedThings { get; private set; }
 
     [Net] public float ActionRechargePercent { get; set; }

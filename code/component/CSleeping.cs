@@ -19,7 +19,7 @@ public class CSleeping : ThingComponent
 
         ShouldUpdate = true;
 
-        Trait = thing.AddTrait("Sleeping", "😴", $"Napping until rested or bumped into", offset: Vector2.Zero);
+        Trait = thing.AddTrait("Sleeping", Globals.Icon(IconType.Sleeping), $"Napping until rested or hit", offset: Vector2.Zero);
 
         if (thing.GetComponent<CActing>(out var component))
             ((CActing)component).PreventAction();
@@ -27,7 +27,7 @@ public class CSleeping : ThingComponent
         if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component2))
             IconId = ((CIconPriority)component2).AddIconPriority("😴", (int)PlayerIconPriority.Sleeping);
 
-        RoguemojiGame.Instance.AddFloater(Globals.Icon(IconType.Sleeping), Thing.GridPos, time: 0f, Thing.CurrentLevelId, new Vector2(15f, -8f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.5f, opacity: 0.66f, parent: Thing);
+        RoguemojiGame.Instance.AddFloater(Globals.Icon(IconType.Sleeping), Thing.GridPos, time: 0f, Thing.CurrentLevelId, new Vector2(15f, -10f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.5f, opacity: 0.66f, parent: Thing);
     }
 
     public override void Update(float dt)

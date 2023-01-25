@@ -43,12 +43,13 @@ public partial class PotionMedicine : Potion
 
     public override void ApplyEffectToThing(Thing thing)
     {
+        if(thing.HasComponent<CPoisoned>() || thing.HasComponent<CHallucinating>() || thing.HasComponent<CConfused>() || thing.HasComponent<CBlinded>() || thing.HasComponent<CFearful>())
+            thing.AddSideFloater(Globals.Icon(IconType.Medicine));
+
         thing.RemoveComponent<CPoisoned>();
         thing.RemoveComponent<CHallucinating>();
         thing.RemoveComponent<CConfused>();
         thing.RemoveComponent<CBlinded>();
         thing.RemoveComponent<CFearful>();
-
-        thing.AddSideFloater(Globals.Icon(IconType.Medicine));
     }
 }

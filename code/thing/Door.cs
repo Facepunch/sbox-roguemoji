@@ -12,6 +12,10 @@ public partial class Door : Thing
         Tooltip = "A door";
         Flags = ThingFlags.Solid | ThingFlags.Selectable;
         PathfindMovementCost = 15f;
-        SightBlockAmount = 20;
+
+        if (Game.IsServer)
+        {
+            InitStat(StatType.SightBlockAmount, 20);
+        }
     }
 }

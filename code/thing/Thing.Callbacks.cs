@@ -42,6 +42,19 @@ public partial class Thing : Entity
             AdjustStatMax(StatType.Energy, amount);
             StaminaDelay = Utils.Map(GetStatClamped(StatType.Stamina), 0, 20, 3f, 0.1f);
         }
+        else if(statType == StatType.Invisible && GetStatClamped(StatType.SightBlockAmount) > 0)
+        {
+            int currInvis = GetStatClamped(StatType.Invisible);
+            int oldInvis = currInvis - changeCurrent;
+
+            // if we've actually changed invisibility state (anything >0 is invisible)
+            if (currInvis == 0 || oldInvis == 0)
+                ContainingGridManager?.CheckPlayerVisionChange(this, GridPos, PlayerVisionChangeReason.ChangedInvisibleAmount);
+        }
+        else if(statType == StatType.SightBlockAmount)
+        {
+            ContainingGridManager?.CheckPlayerVisionChange(this, GridPos, changeCurrent > 0 ? PlayerVisionChangeReason.IncreasedSightBlockAmount : PlayerVisionChangeReason.DecreasedSightBlockAmount);
+        }
 
         StatHash = 0;
         foreach (var pair in Stats)

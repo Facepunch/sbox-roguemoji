@@ -7,7 +7,7 @@ namespace Roguemoji;
 public partial class PotionSpeed : Potion
 {
     public override string AbilityName => "Quaff Potion";
-    public override string SplashIcon => Globals.Icon(IconType.Speed);
+    public override string SplashIcon => Thing.GetStatIcon(StatType.Speed);
 
     public PotionSpeed()
     {
@@ -18,7 +18,7 @@ public partial class PotionSpeed : Potion
         Description = "Temporarily quickens the drinker";
         Tooltip = "A speed potion";
         
-        SetTattoo(Globals.Icon(IconType.Speed));
+        SetTattoo(Thing.GetStatIcon(StatType.Speed));
 
         if (Game.IsServer)
         {
@@ -49,6 +49,6 @@ public partial class PotionSpeed : Potion
 
         var speedIncrease = thing.AddComponent<CSpeedIncrease>();
         speedIncrease.Lifetime = 30f;
-        thing.AddSideFloater(Globals.Icon(IconType.Speed));
+        thing.AddSideFloater(Thing.GetStatIcon(StatType.Speed));
     }
 }

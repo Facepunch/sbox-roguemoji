@@ -100,8 +100,6 @@ public partial class RoguemojiPlayer : Thing
         //IsActionReady = true;
         QueuedAction = null;
         QueuedActionName = "";
-        RefreshVisibility(firstRefresh: true);
-        SightBlockAmount = 10;
         IsAiming = false;
         SelectedThing = null;
         Faction = FactionType.Player;
@@ -125,8 +123,9 @@ public partial class RoguemojiPlayer : Thing
         InitStat(StatType.Stamina, 5);
         InitStat(StatType.Stealth, 0, -999, 999);
         InitStat(StatType.Charisma, 3);
-        InitStat(StatType.Sight, 9, min: 0);
+        InitStat(StatType.Sight, 9, min: 0); // setting this will RefreshVisibility for the player
         InitStat(StatType.Hearing, 3);
+        InitStat(StatType.SightBlockAmount, 10);
         //InitStat(StatType.Smell, 1);
         FinishInitStats();
 
@@ -1048,10 +1047,8 @@ public partial class RoguemojiPlayer : Thing
         base.OnChangedStat(statType, changeCurrent, changeMin, changeMax);
     }
 
-    public override void FinishInitStats()
+    void FinishInitStats()
     {
-        base.FinishInitStats();
-
         var mana = GetStat(StatType.Mana);
         if (mana != null)
             mana.CurrentValue = mana.MaxValue;
@@ -1193,6 +1190,7 @@ public partial class RoguemojiPlayer : Thing
 
     public bool IsScrollTypeIdentified(ScrollType scrollType)
     {
+        return true;
         return IdentifiedScrollTypes.Contains(scrollType);
     }
 

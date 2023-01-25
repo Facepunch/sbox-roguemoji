@@ -18,6 +18,8 @@ public class SeenThingData
     public int playerNum;
 }
 
+public enum PlayerVisionChangeReason { ChangedGridPos, IncreasedSightBlockAmount, DecreasedSightBlockAmount, ChangedInvisibleAmount }
+
 public partial class RoguemojiPlayer : Thing
 {
     public HashSet<IntVector> VisibleCells { get; set; } // Client-only
@@ -27,7 +29,7 @@ public partial class RoguemojiPlayer : Thing
     private HashSet<IntVector> _wasVisible = new HashSet<IntVector>();
 
     [ClientRpc]
-    public void RefreshVisibility(bool firstRefresh = false)
+    public void RefreshVisibility()
     {
         if (!SeenCells.ContainsKey(CurrentLevelId))
             SeenCells.Add(CurrentLevelId, new HashSet<IntVector>());
@@ -43,15 +45,8 @@ public partial class RoguemojiPlayer : Thing
 
         ComputeVisibility(GridPos, rangeLimit: GetStatClamped(StatType.Sight));
 
-        //// add the visible cells again afterwards to include the new ones
-        //foreach (var gridPos in VisibleCells)
-        //    _seenCells.Add(gridPos);
-
-        if(!firstRefresh)
-        {
-            foreach (var gridPos in _wasVisible.Except(VisibleCells))
-                SaveSeenData(gridPos);
-        }
+        foreach (var gridPos in _wasVisible.Except(VisibleCells))
+            SaveSeenData(gridPos);
     }
 
     void SaveSeenData(IntVector gridPos)
@@ -316,6 +311,6 @@ public partial class RoguemojiPlayer : Thing
     {
         Game.AssertClient();
 
-        return ContainingGridManager.GetThingsAtClient(new IntVector(x, y)).Where(x => x.SightBlockAmount >= GetStatClamped(StatType.Sight)).Count() > 0;
+        return ContainingGridManager.GetThingsAtClient(new IntVector(x, y)).Where(x => x.GetStatClamped(StatType.SightBlockAmount) >= GetStatClamped(StatType.Sight)).Where(x => x.GetStatClamped(StatType.Invisible) <= 0).Count() > 0;
     }
 }
