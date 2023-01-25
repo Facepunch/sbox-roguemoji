@@ -42,6 +42,14 @@ public partial class PotionInvisible : Potion
 
     public override void ApplyEffectToThing(Thing thing)
     {
+        MakeInvisible(thing);
+
+        if (thing.WieldedThing != null)
+            MakeInvisible(thing.WieldedThing);
+    }
+
+    void MakeInvisible(Thing thing)
+    {
         var invisible = thing.AddComponent<CInvisible>();
         invisible.Lifetime = 60f;
     }

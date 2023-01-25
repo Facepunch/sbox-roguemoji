@@ -685,7 +685,14 @@ public partial class Thing : Entity
 
     public bool CanSeeThing(Thing thing)
     {
-        return thing.GetStatClamped(StatType.Invisible) <= 0 || this.GetStatClamped(StatType.SeeInvisible) > 0 || thing.ContainingGridType != GridType.Arena || GridPos.Equals(thing.GridPos) || WieldedThing == thing || thing == this;
+        return
+            thing.ContainingGridType == GridType.Inventory ||
+            thing.ContainingGridType == GridType.Equipment ||
+            thing.GetStatClamped(StatType.Invisible) <= 0 || 
+            this.GetStatClamped(StatType.SeeInvisible) > 0 || 
+            (thing.ContainingGridType == GridType.Arena && GridPos.Equals(thing.GridPos)) || 
+            WieldedThing == thing || 
+            thing == this;
     }
 
     [ClientRpc]
