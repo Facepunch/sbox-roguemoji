@@ -22,17 +22,7 @@ public partial class TreeEvergreen : Thing
         if (Game.IsServer)
         {
             InitStat(StatType.SightBlockAmount, 14);
-        }
-    }
-
-    public override void Hurt(int amount, bool showImpactFloater = true)
-    {
-        if (amount <= 0)
-            return;
-
-        if (!HasStat(StatType.Health))
             InitStat(StatType.Health, HealthAmount, min: 0, max: HealthAmount);
-
-        base.Hurt(amount, showImpactFloater);
+        }
     }
 }

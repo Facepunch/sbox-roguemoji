@@ -23,6 +23,7 @@ public partial class TreeDeciduous : Thing
         if (Game.IsServer)
         {
             InitStat(StatType.SightBlockAmount, 13);
+            InitStat(StatType.Health, HealthAmount, min: 0, max: HealthAmount);
         }
         else 
         {
@@ -64,29 +65,26 @@ public partial class TreeDeciduous : Thing
 
         if(WieldedThing != null)
         {
-            if (Game.Random.Int(0, 1) == 0)
+            if (ContainingGridManager.GetRandomEmptyAdjacentGridPos(GridPos, out var dropGridPos, allowNonSolid: true))
             {
-                if (ContainingGridManager.GetRandomEmptyAdjacentGridPos(GridPos, out var dropGridPos, allowNonSolid: true))
-                {
-                    var droppedThing = WieldedThing;
+                var droppedThing = WieldedThing;
 
-                    ContainingGridManager.AddThing(droppedThing);
-                    droppedThing.SetGridPos(dropGridPos);
-                    droppedThing.VfxFly(GridPos, lifetime: 0.25f, heightY: 30f, progressEasingType: EasingType.Linear, heightEasingType: EasingType.SineInOut);
+                ContainingGridManager.AddThing(droppedThing);
+                droppedThing.SetGridPos(dropGridPos);
+                droppedThing.VfxFly(GridPos, lifetime: 0.25f, heightY: 30f, progressEasingType: EasingType.Linear, heightEasingType: EasingType.SineInOut);
 
-                    droppedThing.CanBeSeenByPlayerClient(GridPos);
+                droppedThing.CanBeSeenByPlayerClient(GridPos);
 
-                    var tempIconDepth = droppedThing.AddComponent<CTempIconDepth>();
-                    tempIconDepth.Lifetime = 0.35f;
-                    tempIconDepth.SetTempIconDepth((int)IconDepthLevel.Projectile);
+                var tempIconDepth = droppedThing.AddComponent<CTempIconDepth>();
+                tempIconDepth.Lifetime = 0.35f;
+                tempIconDepth.SetTempIconDepth((int)IconDepthLevel.Projectile);
 
-                    WieldThing(null);
-                }
+                WieldThing(null);
             }
         }
         else
         {
-            if (!HasDroppedLeaf && Game.Random.Int(0, 5) == 0)
+            if (!HasDroppedLeaf && Game.Random.Int(0, 4) == 0)
             {
                 if (ContainingGridManager.GetRandomEmptyAdjacentGridPos(GridPos, out var dropGridPos, allowNonSolid: true))
                 {
@@ -105,19 +103,5 @@ public partial class TreeDeciduous : Thing
                 }
             }
         }
-    }
-
-    public override void Hurt(int amount, bool showImpactFloater = true)
-    {
-        if (WieldedThing != null)
-            return;
-
-        if (amount <= 0)
-            return;
-
-        if (!HasStat(StatType.Health))
-            InitStat(StatType.Health, HealthAmount, min: 0, max: HealthAmount);
-
-        base.Hurt(amount, showImpactFloater);
     }
 }

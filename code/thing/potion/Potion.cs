@@ -71,25 +71,27 @@ public partial class Potion : Thing
     {
         base.HitOther(target, direction);
 
-        if(HasComponent<CProjectile>())
-            Break(target.GridPos);
+        Break(target.GridPos);
     }
 
     public void Break(IntVector breakGridPos)
     {
-        for(int x = -1; x <= 1; x++)
+        var gridManager = ThingWieldingThis?.ContainingGridManager ?? ContainingGridManager;
+        var levelId = ThingWieldingThis?.CurrentLevelId ?? CurrentLevelId;
+
+        for (int x = -1; x <= 1; x++)
         {
             for (int y = -1; y <= 1; y++)
             {
                 var gridPos = breakGridPos + new IntVector(x, y);
-                if (ContainingGridManager.IsGridPosInBounds(gridPos))
+                if (gridManager.IsGridPosInBounds(gridPos))
                 {
-                    RoguemojiGame.Instance.AddFloater(SplashIcon, gridPos, Game.Random.Float(0.7f, 0.9f), CurrentLevelId, new Vector2(0f, 0f), new Vector2(0f, Game.Random.Float(-10f, -15f)), height: 0f, text: "", requireSight: false, alwaysShowWhenAdjacent: true, 
+                    RoguemojiGame.Instance.AddFloater(SplashIcon, gridPos, Game.Random.Float(0.7f, 0.9f), levelId, new Vector2(0f, 0f), new Vector2(0f, Game.Random.Float(-10f, -15f)), height: 0f, text: "", requireSight: false, alwaysShowWhenAdjacent: true, 
                         EasingType.QuadOut, fadeInTime: Game.Random.Float(0.01f, 0.05f), scale: Game.Random.Float(0.75f, 0.9f), opacity: 0.4f);
 
                     ApplyEffectToGridPos(gridPos);
 
-                    foreach (var thing in ContainingGridManager.GetThingsAt(gridPos))
+                    foreach (var thing in gridManager.GetThingsAt(gridPos))
                         ApplyEffectToThing(thing);
                 }
             }
