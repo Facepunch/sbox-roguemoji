@@ -46,11 +46,6 @@
         text-shadow: 0px 0px 0px #000000;
     }
 
-    .dragging {
-        opacity: 0.2;
-        transition: opacity 0.1s ease-in;
-    }
-
     .cell_icon_cooldown {
         color: #ffffff99;
     }
@@ -117,7 +112,7 @@
 </style>
 
 <root class="icon @GetWieldedClass() @GetSolidClass()" )>
-    <div class="@GetPlayerClass() @GetDraggingClass() @GetCooldownClass(Thing) @Hud.GetUnusableClass(Thing) @GetInventoryClass() @Hud.Instance.GetEquipmentHighlightClass(Thing)" style="opacity:@(GetOpacity());" @ref=IconPanel>
+    <div class="@GetPlayerClass() @GetCooldownClass(Thing) @Hud.GetUnusableClass(Thing) @GetInventoryClass() @Hud.Instance.GetEquipmentHighlightClass(Thing)" style="opacity:@(GetOpacity());" @ref=IconPanel>
         @(Hud.GetHallucinationTextThing(Thing, Thing.DisplayIcon.Substring(Thing.CharSkip), HallucinationTextType.Icon))
 
         @if(Thing.HasTattoo)
@@ -162,7 +157,7 @@
     {
         var wieldedThing = Thing.WieldedThing;
         var wieldedOffset = Thing.WieldedThingOffset;
-        <div class="wielded_thing @GetCooldownClass(wieldedThing)" style="left:@(wieldedOffset.x)px; top:@(wieldedOffset.y)px; font-size:@(Thing.WieldedThingFontSize);">
+        <div class="wielded_thing @GetCooldownClass(wieldedThing)" style="left:@(wieldedOffset.x)px; top:@(wieldedOffset.y)px; font-size:@(Thing.WieldedThingFontSize); opacity:@(GetOpacityWielded());">
             @(Hud.GetHallucinationTextThing(wieldedThing, wieldedThing.DisplayIcon.Substring(wieldedThing.CharSkip), HallucinationTextType.Icon))
 
             @if (wieldedThing.HasTattoo)
@@ -194,14 +189,14 @@
 
     string GetPlayerClass()     { return Thing.PlayerNum > 0 ? $"icon-player-{Thing.PlayerNum}" : ""; }
     string GetSolidClass()      { return Thing.HasFlag(ThingFlags.Solid) ? "solid" : ""; }
-    string GetDraggingClass()   { return Thing == Hud.Instance.DraggedThing ? "dragging" : ""; }
     string GetWieldedClass()    { return IsWielded() ? "wielded" : ""; }
     bool IsWielded()            { return Thing == RoguemojiGame.Instance.LocalPlayer?.WieldedThing; }
     string GetEquipmentClass()  { return Thing.HasFlag(ThingFlags.Equipment) ? "icon_equipment" : ""; }
     string GetInventoryClass()  { return Thing.ContainingGridType == GridType.Inventory ? "is_in_inventory" : ""; }
     string GetCooldownClass(Thing thing)    { return thing.IsOnCooldown && thing.ContainingGridType != GridType.Arena ? "cell_icon_cooldown" : ""; }
 
-    float GetOpacity()         { return Thing.Opacity * (Thing.GetStatClamped(StatType.Invisible) > 0 ? 0.25f : 1f); }
+    float GetOpacity()          { return Thing.Opacity * (Thing.GetStatClamped(StatType.Invisible) > 0 ? 0.25f : 1f) * (Thing == Hud.Instance.DraggedThing ? 0.2f : 1f); }
+    float GetOpacityWielded()   { return Thing.WieldedThing.Opacity * (Thing.WieldedThing.GetStatClamped(StatType.Invisible) > 0 ? 0.25f : 1f); }
 
     protected override Panel CreateTooltipPanel()
     {

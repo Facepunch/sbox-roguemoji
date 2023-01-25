@@ -167,6 +167,7 @@ public partial class RoguemojiGame : GameManager
 		player.RecenterCamera();
 
 		client.Pawn = player;
+        player.RefreshVisibility(To.Single(player));
 
 		Players.Add(player);
     }

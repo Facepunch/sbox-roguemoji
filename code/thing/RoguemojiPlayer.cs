@@ -151,8 +151,6 @@ public partial class RoguemojiPlayer : Thing
     {
         base.Restart();
 
-        RestartClient();
-
         ThingComponents.Clear();
         Acting = AddComponent<CActing>();
         Acting.IsActionReady = false;
@@ -160,6 +158,8 @@ public partial class RoguemojiPlayer : Thing
         IconPriority.SetDefaultIcon("😀");
 
         SetStartingValues();
+
+        RestartClient();
     }
 
     [ClientRpc]
@@ -314,10 +314,6 @@ public partial class RoguemojiPlayer : Thing
             if (component.ShouldUpdate)
                 component.Update(dt);
         }
-
-        //DrawDebugText("" + CameraGridOffset + ", " + CameraPixelOffset);
-        //DrawDebugText("# Things: " + InventoryGridManager.Things.Count);
-        //Log.Info("Player:Client - Sight: " + GetStat(StatType.Sight));
     }
 
     public override void OnActionRecharged()

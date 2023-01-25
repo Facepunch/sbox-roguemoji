@@ -143,9 +143,11 @@
 
     @foreach(Thing thing in GetThings())
     {
-        var canSeeThing = player.IsGridPosOnCamera(thing.GridPos) && player.IsCellVisible(thing.GridPos) && player.CanSeeThing(thing);
+        var canSeeGridPos = player.IsGridPosOnCamera(thing.GridPos) && player.IsCellVisible(thing.GridPos);
+        var canSeeThing = canSeeGridPos && (player.CanSeeThing(thing) || thing.TimeSinceLocalPlayerSaw < 0.25f);
+        var canSeeWieldedThing = canSeeGridPos && thing.WieldedThing != null && (player.CanSeeThing(thing.WieldedThing) || thing.WieldedThing.TimeSinceLocalPlayerSaw < 0.25f);
 
-        if ((canSeeThing || thing.TimeSinceLocalPlayerSaw < 0.25f) && !thing.DontRender)
+        if ((canSeeThing || canSeeWieldedThing) && !thing.DontRender)
         {
             var offsetGridPos = thing.GridPos - player.CameraGridOffset;
             var index = GetIndex(offsetGridPos);
@@ -160,6 +162,9 @@
 
         if (canSeeThing)
             thing.TimeSinceLocalPlayerSaw = 0f;
+
+        if (canSeeWieldedThing)
+            thing.WieldedThing.TimeSinceLocalPlayerSaw = 0f;
     }
 
     @for(int x = -1; x <= RoguemojiGame.ArenaPanelWidth; x++)
