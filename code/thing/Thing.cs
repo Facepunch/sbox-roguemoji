@@ -77,6 +77,7 @@ public partial class Thing : Entity
     public int InfoWieldedThingFontSize { get; set; } // Client-only
 
     [Net] public IList<Thing> EquippedThings { get; private set; }
+    [Net] public Thing InInventoryOf { get; set; }
 
     [Net] public float ActionRechargePercent { get; set; }
 
@@ -600,6 +601,7 @@ public partial class Thing : Entity
         CurrentLevelId = LevelId.None;
         IsRemoved = false;
         EquippedThings.Clear();
+        InInventoryOf = null;
         WieldedThing = null;
         ThingWieldingThis = null;
         IsOnCooldown = false;
@@ -686,10 +688,10 @@ public partial class Thing : Entity
     public bool CanSeeThing(Thing thing)
     {
         return
-            thing.ContainingGridType == GridType.Inventory ||
-            thing.ContainingGridType == GridType.Equipment ||
             thing.GetStatClamped(StatType.Invisible) <= 0 || 
-            this.GetStatClamped(StatType.SeeInvisible) > 0 || 
+            this.GetStatClamped(StatType.SeeInvisible) > 0 ||
+            thing.ContainingGridType == GridType.Equipment ||
+            (thing.ContainingGridType == GridType.Inventory && thing.InInventoryOf == this) ||
             (thing.ContainingGridType == GridType.Arena && GridPos.Equals(thing.GridPos)) || 
             WieldedThing == thing || 
             thing == this;

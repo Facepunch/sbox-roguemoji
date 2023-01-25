@@ -746,6 +746,9 @@ public partial class RoguemojiPlayer : Thing
         if (sourceGridType == GridType.Equipment && owningPlayer != null)
             owningPlayer.UnequipThing(thing);
 
+        if (sourceGridType == GridType.Inventory)
+            thing.InInventoryOf = null;
+
         if (targetGridType == GridType.Arena)
         {
             if(thing == WieldedThing)
@@ -753,9 +756,14 @@ public partial class RoguemojiPlayer : Thing
 
             thing.CurrentLevelId = CurrentLevelId;
         }
-            
-        if (targetGridType == GridType.Inventory && wieldIfPossible && WieldedThing == null && !thing.HasFlag(ThingFlags.Equipment))
-            WieldThing(thing, dontRequireAction: true);
+
+        if (targetGridType == GridType.Inventory)
+        {
+            if(wieldIfPossible && WieldedThing == null && !thing.HasFlag(ThingFlags.Equipment))
+                WieldThing(thing, dontRequireAction: true);
+
+            thing.InInventoryOf = this;
+        } 
 
         if (targetGridType == GridType.Equipment)
             targetGridManager.OwningPlayer.EquipThing(thing);
