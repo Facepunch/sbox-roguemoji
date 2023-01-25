@@ -52,6 +52,18 @@ public class CInvisible : ThingComponent
             ((CIconPriority)component).RemoveIconPriority(IconId);
     }
 
+    public override void OnBumpedIntoThing(Thing thing)
+    {
+        if (TimeElapsed > 0f)
+            Remove();
+    }
+
+    public override void OnBumpedIntoBy(Thing thing)
+    {
+        if (TimeElapsed > 0f)
+            Remove();
+    }
+
     public override void OnThingDied()
     {
         Remove();

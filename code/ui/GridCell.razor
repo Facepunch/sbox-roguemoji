@@ -111,34 +111,42 @@
     }
 </style>
 
-<root class="icon @GetWieldedClass() @GetSolidClass()" )>
+<root class="icon @GetWieldedClass() @GetSolidClass()">
+    @{
+        var player = RoguemojiGame.Instance.LocalPlayer;
+    }
+
     <div class="@GetPlayerClass() @GetCooldownClass(Thing) @Hud.GetUnusableClass(Thing) @GetInventoryClass() @Hud.Instance.GetEquipmentHighlightClass(Thing)" style="opacity:@(GetOpacity());" @ref=IconPanel>
-        @(Hud.GetHallucinationTextThing(Thing, Thing.DisplayIcon.Substring(Thing.CharSkip), HallucinationTextType.Icon))
-
-        @if(Thing.HasTattoo)
+        @if(player.CanSeeThing(Thing)) 
         {
-            int fontSize = MathX.FloorToInt(29f * Thing.TattooData.Scale);
-            var offset = Thing.TattooData.Offset;
-            <div class="grid_cell_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                @(Hud.GetHallucinationTextThing(Thing, Hud.GetTattooIcon(Thing), HallucinationTextType.Icon, tattoo: true))
-            </div>
-        }
+            @(Hud.GetHallucinationTextThing(Thing, Thing.DisplayIcon.Substring(Thing.CharSkip), HallucinationTextType.Icon))
 
-        @if(Thing.HasStat(StatType.Health))
-        {
-            int hp = Thing.GetStatClamped(StatType.Health);
-            int hpMax = Thing.GetStatMax(StatType.Health);
-
-            if(hp < hpMax && hp > 0)
+            @if(Thing.HasTattoo)
             {
-                var hpPercent = Math.Clamp((float)hp / (float)hpMax, 0f, 1f);
-                //var hpBarColor = Lerp3(new Color(0f, 0.9f, 0f), new Color(0.75f, 0.25f, 0f), new Color(1f, 0f, 0f), 1f - hpPercent);
+                int fontSize = MathX.FloorToInt(29f * Thing.TattooData.Scale);
+                var offset = Thing.TattooData.Offset;
+                <div class="grid_cell_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
+                    @(Hud.GetHallucinationTextThing(Thing, Hud.GetTattooIcon(Thing), HallucinationTextType.Icon, tattoo: true))
+                </div>
+            }
 
-                <div class="grid_cell_stat_bar"></div>
-                <div class="grid_cell_stat_bar_overlay" style="width: @(hpPercent * 100f)%; background-color: @(Thing.GetStatColor(StatType.Health));"></div>
+            @if(Thing.HasStat(StatType.Health))
+            {
+                int hp = Thing.GetStatClamped(StatType.Health);
+                int hpMax = Thing.GetStatMax(StatType.Health);
+
+                if(hp < hpMax && hp > 0)
+                {
+                    var hpPercent = Math.Clamp((float)hp / (float)hpMax, 0f, 1f);
+                    //var hpBarColor = Lerp3(new Color(0f, 0.9f, 0f), new Color(0.75f, 0.25f, 0f), new Color(1f, 0f, 0f), 1f - hpPercent);
+
+                    <div class="grid_cell_stat_bar"></div>
+                    <div class="grid_cell_stat_bar_overlay" style="width: @(hpPercent * 100f)%; background-color: @(Thing.GetStatColor(StatType.Health));"></div>
+                }
             }
         }
-        else if (Thing.HasStat(StatType.Durability) && Thing.ContainingGridType != GridType.Arena)
+
+        @if (Thing.HasStat(StatType.Durability) && Thing.ContainingGridType != GridType.Arena)
         {
             int durability = Thing.GetStatClamped(StatType.Durability);
             int durabilityMax = Thing.GetStatMax(StatType.Durability);
@@ -157,18 +165,22 @@
     {
         var wieldedThing = Thing.WieldedThing;
         var wieldedOffset = Thing.WieldedThingOffset;
-        <div class="wielded_thing @GetCooldownClass(wieldedThing)" style="left:@(wieldedOffset.x)px; top:@(wieldedOffset.y)px; font-size:@(Thing.WieldedThingFontSize); opacity:@(GetOpacityWielded());">
-            @(Hud.GetHallucinationTextThing(wieldedThing, wieldedThing.DisplayIcon.Substring(wieldedThing.CharSkip), HallucinationTextType.Icon))
 
-            @if (wieldedThing.HasTattoo)
-            {
-                int fontSize = MathX.FloorToInt(18f * wieldedThing.TattooData.Scale);
-                var offset = wieldedThing.TattooData.OffsetWielded;
-                <div class="grid_cell_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
-                    @(Hud.GetHallucinationTextThing(wieldedThing, Hud.GetTattooIcon(wieldedThing), HallucinationTextType.Icon, tattoo: true))
-                </div>
-            }
-        </div>
+        if(player.CanSeeThing(wieldedThing))
+        {
+            <div class="wielded_thing @GetCooldownClass(wieldedThing)" style="left:@(wieldedOffset.x)px; top:@(wieldedOffset.y)px; font-size:@(Thing.WieldedThingFontSize); opacity:@(GetOpacityWielded());">
+                @(Hud.GetHallucinationTextThing(wieldedThing, wieldedThing.DisplayIcon.Substring(wieldedThing.CharSkip), HallucinationTextType.Icon))
+
+                @if (wieldedThing.HasTattoo)
+                {
+                    int fontSize = MathX.FloorToInt(18f * wieldedThing.TattooData.Scale);
+                    var offset = wieldedThing.TattooData.OffsetWielded;
+                    <div class="grid_cell_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
+                        @(Hud.GetHallucinationTextThing(wieldedThing, Hud.GetTattooIcon(wieldedThing), HallucinationTextType.Icon, tattoo: true))
+                    </div>
+                }
+            </div>
+        }
     }
 
     @if (Thing.IsOnCooldown && Thing.ContainingGridType != GridType.Arena)

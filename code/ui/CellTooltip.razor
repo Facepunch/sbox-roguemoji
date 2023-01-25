@@ -42,7 +42,7 @@
     }
 </style>
 
-<root class="cell_tooltip @GetEquipmentClass()">
+<root class="cell_tooltip @GetEquipmentClass()" style="display:@(RoguemojiGame.Instance.LocalPlayer.CanSeeThing(Thing) ? "flex" : "none");">
     @(Hud.GetConfusedText(Hud.GetHallucinationTextThing(Thing, Hud.GetTooltip(Thing), HallucinationTextType.Tooltip)))
 
     @if(Thing.ContainingGridType == GridType.Inventory)

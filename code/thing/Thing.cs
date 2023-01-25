@@ -140,6 +140,8 @@ public partial class Thing : Entity
         for (int i = ThingComponents.Count - 1; i >= 0; i--)
         {
             // todo: ArgumentOutOfRangeException
+            if(i >= ThingComponents.Count) 
+                continue;
             KeyValuePair<TypeDescription, ThingComponent> pair = ThingComponents.ElementAt(i);
 
             var component = pair.Value;
@@ -683,7 +685,7 @@ public partial class Thing : Entity
 
     public bool CanSeeThing(Thing thing)
     {
-        return thing == this || thing.GetStatClamped(StatType.Invisible) <= 0 || this.GetStatClamped(StatType.SeeInvisible) > 0;
+        return thing.GetStatClamped(StatType.Invisible) <= 0 || this.GetStatClamped(StatType.SeeInvisible) > 0 || thing.ContainingGridType != GridType.Arena || GridPos.Equals(thing.GridPos) || WieldedThing == thing || thing == this;
     }
 
     [ClientRpc]
