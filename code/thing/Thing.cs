@@ -230,19 +230,13 @@ public partial class Thing : Entity
     {
         VfxNudge(direction, 0.1f, 10f);
 
-        if(WieldedThing != null)
-        {
-            WieldedThing.HitOther(target, direction);
-        }
-        else
-        {
-            HitOther(target, direction);
-        }
+        var bumpingThing = WieldedThing ?? this;
+        bumpingThing.HitOther(target, direction);
 
-        OnBumpedIntoThing(target);
+        bumpingThing.OnBumpedIntoThing(target);
 
         if(target != null && !target.IsRemoved)
-            target.OnBumpedIntoBy(this);
+            target.OnBumpedIntoBy(bumpingThing);
     }
 
     public virtual bool InteractWith(Thing target)

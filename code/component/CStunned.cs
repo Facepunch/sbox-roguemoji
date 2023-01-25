@@ -67,12 +67,4 @@ public class CStunned : ThingComponent
     {
         Remove();
     }
-
-    public override void OnBumpedIntoBy(Thing thing)
-    {
-        base.OnBumpedIntoBy(thing);
-
-        if(TimeElapsed > 0f)
-            Remove();
-    }
 }

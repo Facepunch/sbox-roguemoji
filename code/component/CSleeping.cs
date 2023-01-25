@@ -72,8 +72,6 @@ public class CSleeping : ThingComponent
 
     public override void OnBumpedIntoBy(Thing thing)
     {
-        base.OnBumpedIntoBy(thing);
-
         if(TimeElapsed > 0f)
             Remove();
     }
