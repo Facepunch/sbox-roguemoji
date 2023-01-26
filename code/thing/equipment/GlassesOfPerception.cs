@@ -2,12 +2,12 @@
 using System;
 
 namespace Roguemoji;
-public partial class GlassesOfSeeInvisible : Thing
+public partial class GlassesOfPerception : Thing
 {
     public int Range { get; set; }
     public int IconId { get; set; }
 
-    public GlassesOfSeeInvisible()
+    public GlassesOfPerception()
 	{
 		DisplayIcon = "👓️";
         DisplayName = "Glasses of Perception";
@@ -38,7 +38,7 @@ public partial class GlassesOfSeeInvisible : Thing
             if (thing.GetComponent<CIconPriority>(out var component))
             {
                 var iconPriority = (CIconPriority)component;
-                IconId = iconPriority.AddIconPriority("🤓", (int)PlayerIconPriority.GlassesOfSeeInvisible);
+                IconId = iconPriority.AddIconPriority("🤓", (int)PlayerIconPriority.GlassesOfPerception);
             }
         }
     }

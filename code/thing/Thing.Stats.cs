@@ -102,10 +102,10 @@ public partial class Thing : Entity
             case StatType.Attack: return $"Amount of physical damage dealt";
             case StatType.Strength: return $"Physical power and ability to move heavy objects";
             case StatType.Speed: return $"Reduces the delay between actions";
-            case StatType.Intelligence: return $"Skill with magic and technology";
-            case StatType.Stamina: return $"Regenerates energy more quickly";
-            case StatType.Stealth: return $"Skill at avoiding detection";
-            case StatType.Charisma: return $"Likeability and attractiveness";
+            case StatType.Intelligence: return $"Skill with magic and technology/Increases {GetStatIcon(StatType.Mana)} capacity";
+            case StatType.Stamina: return $"Regenerates energy more quickly/Increases {GetStatIcon(StatType.Energy)} capacity";
+            case StatType.Stealth: return $"Skill at avoiding detection/A value below 0 makes you more noticeable";
+            case StatType.Charisma: return $"Likeability and attractiveness/A value below 0 makes you more disliked";
             case StatType.Sight: return $"The ability to see farther and see through objects";
             case StatType.Hearing: return $"The ability to notice sounds from a distance";
             case StatType.Smell: return $"The ability to detect odors left by things";
@@ -116,20 +116,6 @@ public partial class Thing : Entity
         }
 
         return "???";
-    }
-
-    public static string GetStatInfoDescription(StatType statType, Thing thing)
-    {
-        switch (statType)
-        {
-            case StatType.Speed: return $"Delay: {CActing.CalculateActionDelay(thing.GetStatClamped(StatType.Speed)).ToString("N2")}s";
-            case StatType.Intelligence: return $"Increases {GetStatIcon(StatType.Mana)} capacity";
-            case StatType.Stamina: return $"Increases {GetStatIcon(StatType.Energy)} capacity";
-            case StatType.Stealth: return $"A value below 0 makes you more noticeable";
-            case StatType.Charisma: return $"A value below zero makes you more disliked";
-        }
-
-        return "";
     }
 
     public static string GetStatColor(StatType statType)

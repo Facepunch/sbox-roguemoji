@@ -119,8 +119,8 @@ public partial class RoguemojiPlayer : Thing
         InitStat(StatType.Attack, 1);
         InitStat(StatType.Strength, 1);
         InitStat(StatType.Speed, 13);
-        InitStat(StatType.Intelligence, 5);
-        InitStat(StatType.Stamina, 5);
+        InitStat(StatType.Intelligence, 4);
+        InitStat(StatType.Stamina, 4);
         InitStat(StatType.Stealth, 0, -999, 999);
         InitStat(StatType.Charisma, 3);
         InitStat(StatType.Sight, 9, min: 0); // setting this will RefreshVisibility for the player
@@ -192,7 +192,7 @@ public partial class RoguemojiPlayer : Thing
             //case 8: InventoryGridManager.SpawnThing<SafetyVest>(gridPos); break;
             case 8: InventoryGridManager.SpawnThing<PotionSpeed>(gridPos); break;
             //case 9: InventoryGridManager.SpawnThing<Sunglasses>(gridPos); break;
-            case 9: InventoryGridManager.SpawnThing<GlassesOfSeeInvisible>(gridPos); break;
+            case 9: InventoryGridManager.SpawnThing<GlassesOfPerception>(gridPos); break;
             //case 10: InventoryGridManager.SpawnThing<Telescope>(gridPos); break;
             //case 10: InventoryGridManager.SpawnThing<Refreshment>(gridPos); break;
             case 10: InventoryGridManager.SpawnThing<PotionSleeping>(gridPos); break;

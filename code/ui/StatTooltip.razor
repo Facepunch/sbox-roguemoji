@@ -24,7 +24,8 @@
 
     .stat_tooltip_desc {
         font-size: 16px;
-        color: #777777;
+        //color: #777777;
+        color: #555555;
     }
 
     .stat_tooltip_max {
@@ -52,19 +53,16 @@
         }
     </div>
 
-    <div class="stat_tooltip_desc">
-        @(Hud.GetConfusedText(Thing.GetStatDescription(StatType)))
-    </div>
-
     @{
-        var player = RoguemojiGame.Instance.LocalPlayer;
-    }
+        string desc = Thing.GetStatDescription(StatType);
+        string[] lines = desc.Split('/');
 
-    @if (!Stat.IsModifier && !player.IsHallucinating)
-    {
-        <div class="stat_tooltip_info_desc">
-            @(Hud.GetConfusedText(Thing.GetStatInfoDescription(StatType, Thing)))
-        </div>
+        foreach(var line in lines)
+        {
+            <div class="stat_tooltip_desc">
+                @(lines.Length > 1 ? "◾️ " : "")@(Hud.GetConfusedText(line))
+            </div>
+        }
     }
 </root>
 
