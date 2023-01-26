@@ -138,7 +138,7 @@ public partial class Squirrel : Thing
         base.OnLoseTarget();
 
         RoguemojiGame.Instance.RemoveFloater("❕", CurrentLevelId, parent: this);
-        RoguemojiGame.Instance.AddFloater("❔", GridPos, Game.Random.Float(0.95f, 1.1f), CurrentLevelId, new Vector2(0f, -10f), new Vector2(0f, -30f), height: 0f, text: "", requireSight: false, alwaysShowWhenAdjacent: true, EasingType.QuadOut, 0.1f, parent: this);
+        RoguemojiGame.Instance.AddFloater("❔", GridPos, Game.Random.Float(0.95f, 1.1f), CurrentLevelId, new Vector2(0f, -10f), new Vector2(0f, -30f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.QuadOut, 0.1f, parent: this);
         Acting.PerformedAction();
         Acting.ActionTimer = Game.Random.Float(0f, 0.1f);
     }

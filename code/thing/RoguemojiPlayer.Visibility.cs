@@ -16,6 +16,8 @@ public class SeenThingData
     public int zIndex;
     public bool isSolid;
     public int playerNum;
+    public float opacity;
+    public float wieldedOpacity;
 }
 
 public enum PlayerVisionChangeReason { ChangedGridPos, IncreasedSightBlockAmount, DecreasedSightBlockAmount, ChangedInvisibleAmount }
@@ -61,6 +63,9 @@ public partial class RoguemojiPlayer : Thing
         var things = ContainingGridManager.GetThingsAtClient(gridPos).OrderBy(x => x.GetZPos());
         foreach (var thing in things)
         {
+            if(!CanSeeThing(thing))
+                continue;
+
             var seenData = new SeenThingData()
             {
                 icon = thing.DisplayIcon,
@@ -68,6 +73,8 @@ public partial class RoguemojiPlayer : Thing
                 hasWieldedThing = thing.WieldedThing != null,
                 isSolid = thing.HasFlag(ThingFlags.Solid),
                 playerNum = thing.PlayerNum,
+                opacity = thing.Opacity * (thing.GetStatClamped(StatType.Invisible) > 0 ? 0.5f : 1f),
+                wieldedOpacity = thing.WieldedThing != null ? (thing.WieldedThing.Opacity * (thing.WieldedThing.GetStatClamped(StatType.Invisible) > 0 ? 0.5f : 1f)) : 0f,
             };
 
             if (thing.HasTattoo)

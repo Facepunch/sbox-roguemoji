@@ -664,11 +664,13 @@ public partial class Thing : Entity
         }
     }
 
+    /// <summary> Whether the gridPos is in range and line of sight is not blocked. </summary>
     public bool CanSeeGridPos(IntVector gridPos, int sight)
     {
         return Utils.GetDistance(GridPos, gridPos) <= sight && ContainingGridManager.HasLineOfSight(GridPos, gridPos, sight, out IntVector collisionCell);
     }
 
+    /// <summary> Whether the thing is invisible and we can see invisible. Does not consider range or line of sight. </summary>
     public bool CanSeeThing(Thing thing)
     {
         return
@@ -680,6 +682,7 @@ public partial class Thing : Entity
             thing == this;
     }
 
+    /// <summary> If conditionalGridPos is visible to player, declare that this thing has been noticed by them, so keep rendering it for moment even if it moves to a non-visible gridpos. </summary>
     [ClientRpc]
     public void CanBeSeenByPlayerClient(IntVector conditionalGridPos)
     {

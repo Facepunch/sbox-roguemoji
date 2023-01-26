@@ -77,12 +77,27 @@ public partial class Potion : Thing
         SetTattoo(icon, scale: 0.475f, offset: new Vector2(-0.858505f, 6f), offsetWielded: new Vector2(-1.5f, 6f), offsetInfo: new Vector2(-3.5f, 16f), offsetCharWielded: new Vector2(0f, 8f), offsetInfoWielded: new Vector2(-4.75f, 6.25f));
     }
 
-    public override void HitOther(Thing target, Direction direction)
+    public override void OnBumpedIntoThing(Thing thing)
     {
-        base.HitOther(target, direction);
+        base.OnBumpedIntoThing(thing);
 
-        Break(target.GridPos);
+        Break(thing.GridPos);
     }
+
+    public override void OnBumpedOutOfBounds(Direction dir)
+    {
+        base.OnBumpedOutOfBounds(dir);
+
+        Break(GridPos);
+    }
+
+    //public override void HitOther(Thing target, Direction direction)
+    //{
+    //    base.HitOther(target, direction);
+
+    //    Break(target.GridPos);
+    //}
+
 
     public void Break(IntVector breakGridPos)
     {
@@ -96,7 +111,7 @@ public partial class Potion : Thing
                 var gridPos = breakGridPos + new IntVector(x, y);
                 if (gridManager.IsGridPosInBounds(gridPos))
                 {
-                    RoguemojiGame.Instance.AddFloater(SplashIcon, gridPos, Game.Random.Float(0.7f, 0.9f), levelId, new Vector2(0f, 0f), new Vector2(0f, Game.Random.Float(-10f, -15f)), height: 0f, text: "", requireSight: false, alwaysShowWhenAdjacent: true, 
+                    RoguemojiGame.Instance.AddFloater(SplashIcon, gridPos, Game.Random.Float(0.7f, 0.9f), levelId, new Vector2(0f, 0f), new Vector2(0f, Game.Random.Float(-10f, -15f)), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, 
                         EasingType.QuadOut, fadeInTime: Game.Random.Float(0.01f, 0.05f), scale: Game.Random.Float(0.75f, 0.9f), opacity: 0.4f);
 
                     ApplyEffectToGridPos(gridPos);
