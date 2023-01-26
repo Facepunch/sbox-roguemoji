@@ -230,7 +230,8 @@
         var equipmentHighlightHash = Hud.Instance.GetContainingPanelType(Hud.Instance.MousePosition) == PanelType.EquipmentGrid ? 1 : 0;
         var statHash = HashCode.Combine(player.StatHash, Thing.StatHash);
         var identifiedHash = HashCode.Combine(Thing is Scroll scroll && player.IsScrollTypeIdentified(scroll.ScrollType) ? 1 : 0, Thing is Potion potion && player.IsPotionTypeIdentified(potion.PotionType) ? 1 : 0);
-        return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, HashCode.Combine(cooldownHash, wieldedCooldownHash, equipmentHighlightHash, statHash, identifiedHash), player.ConfusionSeed, player.HallucinatingSeed);
+        var playerCanSeeHash = player.CanSeeThing(Thing) ? 1 : 0;
+        return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, HashCode.Combine(cooldownHash, wieldedCooldownHash, equipmentHighlightHash, statHash, identifiedHash), player.ConfusionSeed, player.HallucinatingSeed, playerCanSeeHash);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

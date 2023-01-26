@@ -6,9 +6,9 @@ using System.Linq;
 namespace Roguemoji;
 
 public enum StatType { 
-    Health, Energy, Mana, Attack, Strength, Speed, Intelligence, Stamina, Stealth, Charisma, Sight, Hearing, Smell,
+    Health, Energy, Mana, Attack, Strength, Speed, Intelligence, Stamina, Stealth, Charisma, Sight, Hearing, Smell, Perception,
     Durability, MaxHealth, 
-    Invisible, SeeInvisible, SightBlockAmount,
+    Invisible, SightBlockAmount,
 }
 
 public partial class Stat : Entity
@@ -57,6 +57,7 @@ public partial class Thing : Entity
             case StatType.Sight: return "👁";
             case StatType.Hearing: return "👂️";
             case StatType.Smell: return "👃";
+            case StatType.Perception: return "🕵️";
 
             case StatType.Durability: return "⚙️";
             case StatType.MaxHealth: return "💕";
@@ -82,6 +83,7 @@ public partial class Thing : Entity
             case StatType.Sight: return "Sight";
             case StatType.Hearing: return "Hearing";
             case StatType.Smell: return "Smell";
+            case StatType.Perception: return "Perception";
 
             case StatType.Durability: return "Durability";
             case StatType.MaxHealth: return "Max Health";
@@ -107,6 +109,7 @@ public partial class Thing : Entity
             case StatType.Sight: return $"The ability to see farther and see through objects";
             case StatType.Hearing: return $"The ability to notice sounds from a distance";
             case StatType.Smell: return $"The ability to detect odors left by things";
+            case StatType.Perception: return $"The range at which you can detect invisible things";
 
             case StatType.Durability: return $"Remaining physical integrity";
             case StatType.MaxHealth: return "Maximum amount of life available";
@@ -145,7 +148,7 @@ public partial class Thing : Entity
             case StatType.Charisma: return "#dd33bb";
             case StatType.Sight: return "#ffff55";
             case StatType.Hearing: return "#aa5500";
-            case StatType.Smell: return "#5b3e31";
+            case StatType.Perception: return "#dddd88";
 
             case StatType.Durability: return "#aaaacc";
             case StatType.MaxHealth: return "#ff1111";
@@ -199,7 +202,7 @@ public partial class Thing : Entity
         switch (stat.StatType)
         {
             case StatType.Invisible: return true;
-            case StatType.SeeInvisible: return true;
+            case StatType.Perception: return (stat.ClampedValue == 0);
             case StatType.SightBlockAmount: return true;
             case StatType.Stealth: return (stat.ClampedValue == 0);
         }

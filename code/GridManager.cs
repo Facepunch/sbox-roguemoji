@@ -216,8 +216,11 @@ public partial class GridManager : Entity
         }
 	}
 
-    int GetDistance(IntVector a, IntVector b)
+    public static int GetDistance(IntVector a, IntVector b)
     {
+        if(a.Equals(b)) 
+            return 0;
+
 		var xDiff = MathF.Abs(b.x - a.x);
         var yDiff = MathF.Abs(b.y - a.y);
         return (int)Math.Round(Math.Sqrt(xDiff * xDiff + yDiff * yDiff));

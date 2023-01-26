@@ -242,6 +242,9 @@ public partial class RoguemojiPlayer : Thing
                 component.Update(dt);
         }
 
+        if(SelectedThing != null && !CanSeeThing(SelectedThing))
+            SelectThing(null);
+
         //DebugText = "";
         //if (QueuedAction != null)
         //    DebugText = QueuedActionName;

@@ -676,11 +676,10 @@ public partial class Thing : Entity
     public bool CanSeeThing(Thing thing)
     {
         return
-            thing.GetStatClamped(StatType.Invisible) <= 0 || 
-            this.GetStatClamped(StatType.SeeInvisible) > 0 ||
+            thing.GetStatClamped(StatType.Invisible) <= 0 ||
+            (thing.ContainingGridType == GridType.Arena && (GridPos.Equals(thing.GridPos) || (GetStatClamped(StatType.Perception) > 0 && GridManager.GetDistance(GridPos, thing.GridPos) <= GetStatClamped(StatType.Perception)))) ||
             thing.ContainingGridType == GridType.Equipment ||
             (thing.ContainingGridType == GridType.Inventory && thing.InInventoryOf == this) ||
-            (thing.ContainingGridType == GridType.Arena && GridPos.Equals(thing.GridPos)) || 
             WieldedThing == thing || 
             thing == this;
     }
