@@ -51,6 +51,6 @@ public partial class PotionInvisible : Potion
     void MakeInvisible(Thing thing)
     {
         var invisible = thing.AddComponent<CInvisible>();
-        invisible.Lifetime = 610f;
+        invisible.Lifetime = 60f;
     }
 }

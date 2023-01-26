@@ -36,16 +36,4 @@ public partial class Potato : Thing
 
         base.Use(user);
     }
-
-    public override void OnWieldedBy(Thing thing)
-    {
-        base.OnWieldedBy(thing);
-        thing.AdjustStat(StatType.Attack, GetStatClamped(StatType.Attack));
-    }
-
-    public override void OnNoLongerWieldedBy(Thing thing)
-    {
-        base.OnNoLongerWieldedBy(thing);
-        thing.AdjustStat(StatType.Attack, -GetStatClamped(StatType.Attack));
-    }
 }

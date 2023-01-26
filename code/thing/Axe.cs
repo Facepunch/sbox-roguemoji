@@ -30,20 +30,6 @@ public partial class Axe : Thing
         }
     }
 
-    public override void OnWieldedBy(Thing thing)
-    {
-        base.OnWieldedBy(thing);
-
-        thing.AdjustStat(StatType.Attack, GetStatClamped(StatType.Attack));
-    }
-
-    public override void OnNoLongerWieldedBy(Thing thing)
-    {
-        base.OnNoLongerWieldedBy(thing);
-
-        thing.AdjustStat(StatType.Attack, -GetStatClamped(StatType.Attack));
-    }
-
     public override void HitOther(Thing target, Direction direction)
     {
         if (target is TreeDeciduous || target is TreeEvergreen)

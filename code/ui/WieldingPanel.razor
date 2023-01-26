@@ -92,10 +92,49 @@
         border-radius: 3px;
         border: 1px solid #303030;
     }
+
+    .attack_container {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        color: #ffffff;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        margin: 0px;
+        padding: 0px;
+        left: 44px;
+        top: 44px;
+        z-index: 4000;
+    }
+
+    .attack_icon {
+        font-size: 26;
+        //background-color: #0000ff22;
+        position: absolute;
+        text-stroke-color: #404040;
+        text-stroke-width: 4px;
+        opacity: 0.7;
+    }
+
+    .attack_label {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-size: 18;
+        text-stroke-color: #000000ee;
+        text-stroke-width: 6px;
+        font-family: RobotoMono;
+        opacity: 1.0;
+    }
 </style>
 
 @{
-    var wieldedThing = RoguemojiGame.Instance.LocalPlayer.WieldedThing;
+    var player = RoguemojiGame.Instance.LocalPlayer;
+    var wieldedThing = player.WieldedThing;
 }
 
 <root class="wielding @GetWieldingClass(wieldedThing)" style="border-color: @(wieldedThing == null || !wieldedThing.HasFlag(ThingFlags.Useable) ? "#303030" : "#777777");">
@@ -144,6 +183,20 @@
             <div class="wielding_frame"></div>
         }
     }
+
+    @{
+        var attackDamage = player.GetAttackDamage(checkWielded: true);
+    }
+
+    <div class="attack_container">
+        <div class="attack_icon" style="opacity:@(attackDamage > 0 ? 0.7f : 0.1f);">
+            @(Thing.GetStatIcon(StatType.Attack))
+        </div>
+
+        <div class="attack_label" style="opacity:@(attackDamage > 0 ? 1f : 0.3f);">
+            @(attackDamage)
+        </div>
+    </div>
 </root>
 
 @code

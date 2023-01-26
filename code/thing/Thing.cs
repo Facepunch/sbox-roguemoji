@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 
 namespace Roguemoji;
 
@@ -249,9 +248,8 @@ public partial class Thing : Entity
         //if (shouldUse && HasFlag(ThingFlags.Useable) && target.CanUseThing(this))
         //    Use(target);
 
-        target.VfxShake(0.2f, 4f);
-
         target.TakeDamageFrom(this);
+        target.VfxShake(0.2f, 4f);
     }
 
     public virtual void TakeDamageFrom(Thing thing)
@@ -259,9 +257,7 @@ public partial class Thing : Entity
         //if (!HasStat(StatType.Health))
         //    return;
 
-        int amount = thing.GetStatClamped(StatType.Attack);
-
-        Hurt(amount, showImpactFloater: true);
+        Hurt(thing.GetAttackDamage(), showImpactFloater: true);
     }
 
     public virtual void Hurt(int amount, bool showImpactFloater = true)
@@ -692,5 +688,19 @@ public partial class Thing : Entity
         {
             TimeSinceLocalPlayerSaw = 0f;
         }
+    }
+
+    public int GetAttackDamage(bool checkWielded = false)
+    {
+        if (checkWielded && WieldedThing != null)
+            return WieldedThing.GetAttackDamage();
+
+        if (HasStat(StatType.Attack))
+            return GetStatClamped(StatType.Attack);
+
+        if(HasStat(StatType.Strength))
+            return GetStatClamped(StatType.Strength);
+
+        return 0;
     }
 }

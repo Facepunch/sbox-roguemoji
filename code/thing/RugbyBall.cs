@@ -25,6 +25,8 @@ public partial class RugbyBall : Thing
             EnergyCost = 6;
             CooldownTime = 15f;
 
+            InitStat(StatType.Attack, 1);
+
             AddTrait(AbilityName, "💪", $"Run in a direction and push anything you hit, stunning them", offset: new Vector2(0f, -1f), tattooIcon: "🏉", tattooOffset: new Vector2(1f, -1.5f), tattooScale: 0.55f, isAbility: true);
             AddTrait("", GetStatIcon(StatType.Energy), $"Ability costs {EnergyCost}{GetStatIcon(StatType.Energy)}", offset: new Vector2(0f, -3f), labelText: $"{EnergyCost}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
@@ -148,8 +150,11 @@ public class CRugbyCharge : ThingComponent
             }
         }
 
-        var stunned = thing.AddComponent<CStunned>();
-        stunned.Lifetime = 2f;
+        if (thing.HasComponent<CActing>())
+        {
+            var stunned = thing.AddComponent<CStunned>();
+            stunned.Lifetime = 2f;
+        }
     }
 
     public override void OnBumpedOutOfBounds(Direction dir)

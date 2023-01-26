@@ -20,7 +20,7 @@ public partial class WhiteCane : Thing
         {
             MinSightChange = 2;
 
-            InitStat(StatType.Attack, 1);
+            InitStat(StatType.Attack, 2);
             AddTrait("", "😎", $"Prevents your {GetStatIcon(StatType.Sight)} from reaching zero", offset: Vector2.Zero, tattooIcon: "🦯", tattooScale: 0.7f, tattooOffset: new Vector2(7f, 6f));
         }
     }
@@ -30,7 +30,6 @@ public partial class WhiteCane : Thing
         base.OnWieldedBy(thing);
 
         thing.AdjustStatMin(StatType.Sight, MinSightChange);
-        thing.AdjustStat(StatType.Attack, GetStatClamped(StatType.Attack));
         Trait = thing.AddTrait("", "😎", $"Your {GetStatIcon(StatType.Sight)} can't go down to zero", offset: Vector2.Zero, tattooIcon: "🦯", tattooScale: 0.7f, tattooOffset: new Vector2(7f, 6f), source: DisplayName);
     }
 
@@ -39,7 +38,6 @@ public partial class WhiteCane : Thing
         base.OnNoLongerWieldedBy(thing);
 
         thing.AdjustStatMin(StatType.Sight, -MinSightChange);
-        thing.AdjustStat(StatType.Attack, -GetStatClamped(StatType.Attack));
         thing.RemoveTrait(Trait);
     }
 }

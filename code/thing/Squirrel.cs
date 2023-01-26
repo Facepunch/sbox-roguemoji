@@ -147,8 +147,7 @@ public partial class Squirrel : Thing
     {
         base.TakeDamageFrom(thing);
 
-        int amount = thing.GetStatClamped(StatType.Attack);
-
+        int amount = thing.GetAttackDamage();
         if (amount > 0 && GetStatClamped(StatType.Health) == 1 && !HasComponent<CFearful>())
         {
             var fearful = AddComponent<CFearful>();
