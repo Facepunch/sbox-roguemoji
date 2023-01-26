@@ -23,7 +23,6 @@ public partial class PotionMedicine : Potion
 
         if (Game.IsServer)
         {
-            AddTrait(AbilityName, "😋", $"Consume potion to cause an effect", offset: new Vector2(0f, -1f), tattooIcon: "🧉", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f), isAbility: true);
             AddTrait("", Globals.Icon(IconType.Medicine), $"Cures {Globals.Icon(IconType.Poison)}{Globals.Icon(IconType.Hallucination)}{Globals.Icon(IconType.Confusion)}{Globals.Icon(IconType.Blindness)}{Globals.Icon(IconType.Fear)}", offset: new Vector2(0f, 0f));
         }
     }

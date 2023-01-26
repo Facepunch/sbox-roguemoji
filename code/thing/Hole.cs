@@ -25,16 +25,24 @@ public partial class Hole : Thing
         base.OnMovedOntoBy(thing);
 
         if (thing is RoguemojiPlayer player)
-        {
-            player.RemoveComponent<VfxSlide>();
+            SwallowThing(player);
+    }
 
-            var nextLevelId = CurrentLevelId == LevelId.Forest0 ? LevelId.Forest1 : LevelId.Forest2;
-            //RoguemojiGame.Instance.ChangePlayerLevel(player, nextLevelId, shouldAnimateFall: true);
+    public override void OnMovedOntoThing(Thing thing)
+    {
+        base.OnMovedOntoThing(thing);
 
-            var exitingLevel = player.AddComponent<CExitingLevel>();
-            exitingLevel.TargetLevelId = nextLevelId;
+        if (thing is RoguemojiPlayer player)
+            SwallowThing(player);
+    }
 
-            //player.VfxFadeCamera(lifetime: 0.5f, shouldFadeOut: false);
-        }
+    void SwallowThing(Thing thing)
+    {
+        thing.RemoveComponent<VfxSlide>();
+
+        var nextLevelId = (CurrentLevelId == LevelId.Forest0) ? LevelId.Forest1 : LevelId.Forest2;
+
+        var exitingLevel = thing.AddComponent<CExitingLevel>();
+        exitingLevel.TargetLevelId = nextLevelId;
     }
 }

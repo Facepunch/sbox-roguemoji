@@ -16,6 +16,12 @@ public partial class Potion : Thing
     {
         DisplayIcon = "🧉";
         IconDepth = (int)IconDepthLevel.Normal;
+
+        if (Game.IsServer)
+        {
+            AddTrait(AbilityName, "😋", $"Consume potion to cause an effect", offset: new Vector2(0f, -1f), tattooIcon: "🧉", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f), isAbility: true);
+            AddTrait("Fragile", "🧉", $"Potion breaks when it hits something", offset: new Vector2(0f, -1f), tattooIcon: "💥", tattooScale: 0.65f, tattooOffset: new Vector2(7f, 7f));
+        }
     }
 
     public static string GetDisplayName(PotionType potionType)
@@ -29,9 +35,11 @@ public partial class Potion : Thing
             case PotionType.Blindness: return "Blindness Potion";
             case PotionType.Sleeping: return "Sleeping Potion";
             case PotionType.Confusion: return "Confusion Potion";
+            case PotionType.Hallucination: return "Hallucination Potion";
             case PotionType.Speed: return "Speed Potion";
             case PotionType.Medicine: return "Medicine Potion";
             case PotionType.Mutation: return "Mutation Potion";
+            case PotionType.Invisibility: return "Invisibility Potion";
         }
 
         return "";
@@ -48,9 +56,11 @@ public partial class Potion : Thing
             case PotionType.Blindness: return $"🧉{Globals.Icon(IconType.Blindness)}";
             case PotionType.Sleeping: return $"🧉{Globals.Icon(IconType.Sleeping)}";
             case PotionType.Confusion: return $"🧉{Globals.Icon(IconType.Confusion)}";
+            case PotionType.Hallucination: return $"🧉{Globals.Icon(IconType.Hallucination)}";
             case PotionType.Speed: return $"🧉{GetStatIcon(StatType.Speed)}";
             case PotionType.Medicine: return $"🧉{Globals.Icon(IconType.Medicine)}";
             case PotionType.Mutation: return $"🧉{Globals.Icon(IconType.Mutation)}";
+            case PotionType.Invisibility: return $"🧉{Globals.Icon(IconType.Invisible)}";
         }
 
         return "🧉";
@@ -97,7 +107,7 @@ public partial class Potion : Thing
             }
         }
 
-        RoguemojiGame.Instance.RevealPotion(PotionType, breakGridPos, CurrentLevelId);
+        RoguemojiGame.Instance.RevealPotion(PotionType, breakGridPos, levelId);
 
         Destroy();
     }

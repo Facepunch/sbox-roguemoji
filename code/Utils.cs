@@ -410,7 +410,7 @@ public static class Utils
             char temp = characters[i];
             characters[i] = characters[randomIndex];
             characters[randomIndex] = temp;
-            mixedCounter += mixedCounter + 1;
+            mixedCounter += mixedCounter + 4;
         }
 
         return new string(characters);

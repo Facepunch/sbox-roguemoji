@@ -29,23 +29,28 @@ public partial class ScrollTeleport : Scroll
     {
         base.Use(user);
 
-        if (user.ContainingGridManager.GetRandomEmptyGridPos(out var targetGridPos, allowNonSolid: true))
-        {
-            RoguemojiGame.Instance.AddFloater("✨", user.GridPos, 0.8f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.2f);
-            RoguemojiGame.Instance.AddFloater("✨", targetGridPos, 1.0f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.1f);
-
-            user.SetGridPos(targetGridPos);
-
-            if (user is RoguemojiPlayer player)
-                player.RecenterCamera();
-        }
-        else
-        {
-            RoguemojiGame.Instance.AddFloater("✨", user.GridPos, 0.8f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.2f);
-        }
+        TeleportThing(user);
+        RoguemojiGame.Instance.AddFloater("✨", user.GridPos, 0.8f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.2f);
 
         RoguemojiGame.Instance.RevealScroll(ScrollType, user.GridPos, user.CurrentLevelId);
 
         Destroy();
+    }
+
+    public static void TeleportThing(Thing thing)
+    {
+        if (thing.ContainingGridManager.GetRandomEmptyGridPos(out var targetGridPos, allowNonSolid: true))
+        {
+            RoguemojiGame.Instance.AddFloater("✨", targetGridPos, 1.0f, thing.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.1f);
+
+            thing.SetGridPos(targetGridPos);
+
+            if (thing is RoguemojiPlayer player)
+                player.RecenterCamera();
+        }
+        else
+        {
+            RoguemojiGame.Instance.AddFloater("✨", thing.GridPos, 0.8f, thing.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.2f);
+        }
     }
 }

@@ -6,7 +6,7 @@ using Sandbox;
 
 namespace Roguemoji;
 
-public enum IconType { Blink, Teleport, Fear, Telekinesis, Poison, Blindness, Sleeping, Confusion, Hallucination, Medicine, Mutation, Stunned, UnarmedAttack, Invisible }
+public enum IconType { Blink, Teleport, Fear, Telekinesis, Poison, Blindness, Sleeping, Confusion, Hallucination, Medicine, Mutation, Stunned, UnarmedAttack, Invisible, Polymorph, Displace }
 public enum VerbType { Use, Read }
 public enum HallucinationTextType { Icon, Name, Tooltip, Description }
 public enum PlayerIconPriority { Default, Move, ExitLevel, EnterLevel, AcademicCapNerd, SpeedIncrease, Invisible, GlassesOfPerception, Sunglasses, Blinded, Poisoned, Attack, Confused, Fearful, Hallucinating, Sleeping, EatReaction, TakeDamage, Stunned, RugbyCharge, Dead }
@@ -55,6 +55,8 @@ public static class Globals
             case IconType.Stunned: return "💫";
             case IconType.UnarmedAttack: return "✊";
             case IconType.Invisible: return "🦲";
+            case IconType.Polymorph: return "🐑";
+            case IconType.Displace: return "🌟";
         }
 
         return "";

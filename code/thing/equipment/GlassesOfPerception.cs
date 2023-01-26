@@ -22,7 +22,7 @@ public partial class GlassesOfPerception : Thing
         {
             Range = 5;
             InitStat(StatType.Perception, Range, isModifier: true);
-            AddTrait("", Globals.Icon(IconType.Invisible), $"Reveals invisible things", offset: new Vector2(0f, -1f), tattooIcon: "👁️‍🗨️", tattooOffset: new Vector2(8f, 8f), tattooScale: 0.7f);
+            //AddTrait("", Globals.Icon(IconType.Invisible), $"Reveals invisible things", offset: new Vector2(0f, -1f), tattooIcon: "👁️‍🗨️", tattooOffset: new Vector2(8f, 8f), tattooScale: 0.7f);
         }
     }
 

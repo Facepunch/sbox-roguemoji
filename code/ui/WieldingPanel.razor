@@ -16,7 +16,7 @@
         border-radius: 3px;
         padding-bottom: 4px;
         pointer-events: all;
-        margin-bottom: 8px;
+        margin-bottom: 16px;
         font-family: W10Emoji;
     }
 
@@ -114,7 +114,6 @@
         position: absolute;
         text-stroke-color: #404040;
         text-stroke-width: 4px;
-        opacity: 0.7;
     }
 
     .attack_label {
@@ -128,7 +127,7 @@
         text-stroke-color: #000000ee;
         text-stroke-width: 6px;
         font-family: RobotoMono;
-        opacity: 1.0;
+        padding-left: 1px;
     }
 </style>
 
@@ -189,7 +188,7 @@
     }
 
     <div class="attack_container">
-        <div class="attack_icon" style="opacity:@(attackDamage > 0 ? 0.7f : 0.1f);">
+        <div class="attack_icon" style="opacity:@(attackDamage > 0 ? 0.7f : 0.15f);">
             @(Thing.GetStatIcon(StatType.Attack))
         </div>
 

@@ -104,7 +104,7 @@ public partial class BookBlink : Thing
             return null;
 
         int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 1, 10);
-        return ScrollBlink.BlinkGetAimingCells(radius, ThingWieldingThis);
+        return Scroll.GetAimingCells(radius, ThingWieldingThis);
     }
 
     public override bool IsPotentialAimingTargetCell(IntVector gridPos)
@@ -113,6 +113,6 @@ public partial class BookBlink : Thing
             return false;
 
         int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 1, 10);
-        return ScrollBlink.BlinkIsPotentialAimingCell(gridPos, radius, ThingWieldingThis);
+        return Scroll.IsPotentialAimingCell(gridPos, radius, ThingWieldingThis);
     }
 }

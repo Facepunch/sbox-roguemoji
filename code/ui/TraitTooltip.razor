@@ -74,10 +74,20 @@
             }
         </div>
     }
+
+    @{
+        string desc = Trait.Description;
+        string[] lines = desc.Split('/');
+
+        foreach(var line in lines)
+        {
+            <div class="trait_tooltip_desc">
+                @(lines.Length > 1 ? "◾️ " : "")@(Hud.GetConfusedText(line))
+            </div>
+        }
+    }
     
-    <div class="trait_tooltip_desc"> 
-        @(Hud.GetConfusedText(Trait.Description))
-    </div>
+    
 
     @{
         var player = RoguemojiGame.Instance.LocalPlayer;

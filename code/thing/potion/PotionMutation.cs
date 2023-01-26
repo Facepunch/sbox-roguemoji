@@ -23,7 +23,6 @@ public partial class PotionMutation : Potion
 
         if (Game.IsServer)
         {
-            AddTrait(AbilityName, "😋", $"Consume potion to cause an effect", offset: new Vector2(0f, -1f), tattooIcon: "🧉", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f), isAbility: true);
             AddTrait("", Globals.Icon(IconType.Mutation), $"Adds a positive or negative trait", offset: new Vector2(0f, 0f));
         }
     }

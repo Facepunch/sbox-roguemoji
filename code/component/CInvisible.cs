@@ -17,7 +17,7 @@ public class CInvisible : ThingComponent
 
         ShouldUpdate = true;
 
-        Trait = thing.AddTrait("Invisible", Globals.Icon(IconType.Invisible), $"Can't be seen by most things", offset: Vector2.Zero);
+        Trait = thing.AddTrait("Invisible", Globals.Icon(IconType.Invisible), $"Can't be seen by most things/Hitting or getting hit ends effect", offset: Vector2.Zero);
 
         if (!thing.HasStat(StatType.Invisible))
             thing.InitStat(StatType.Invisible, 1);

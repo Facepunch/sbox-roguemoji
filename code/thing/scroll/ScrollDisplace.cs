@@ -1,23 +1,24 @@
 ﻿using Sandbox;
+using Sandbox.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Roguemoji;
-public partial class ScrollBlink : Scroll
+public partial class ScrollDisplace : Scroll
 {
     public override string AbilityName => "Read Scroll";
 
-    public ScrollBlink()
+    public ScrollDisplace()
 	{
-        ScrollType = ScrollType.Blink;
+        ScrollType = ScrollType.Displace;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
 
         DisplayName = GetDisplayName(ScrollType);
-        Description = "Teleport to a target place nearby";
-        Tooltip = "A scroll of Blink";
+        Description = "Forces things to teleport";
+        Tooltip = "A scroll of Displace";
 
-        SetTattoo(Globals.Icon(IconType.Blink));
+        SetTattoo(Globals.Icon(IconType.Displace));
 
         if (Game.IsServer)
         {
@@ -30,7 +31,14 @@ public partial class ScrollBlink : Scroll
     {
         base.Use(user, targetGridPos);
 
-        var things = user.ContainingGridManager.GetThingsAt(targetGridPos).WithAll(ThingFlags.Solid).ToList();
+        var things = user.ContainingGridManager.GetThingsAt(targetGridPos).ToList();
+        foreach(var thing in things)
+        {
+            ScrollTeleport.TeleportThing(thing);
+        }
+
+        RoguemojiGame.Instance.AddFloater("✨", targetGridPos, 0.8f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.2f);
+
         if (things.Count > 0)
         {
             if (user.ContainingGridManager.GetRandomEmptyAdjacentGridPos(targetGridPos, out var emptyGridPos, allowNonSolid: true))
@@ -39,15 +47,7 @@ public partial class ScrollBlink : Scroll
                 targetGridPos = user.GridPos;
         }
 
-        RoguemojiGame.Instance.AddFloater("✨", user.GridPos, 0.8f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.2f);
-        RoguemojiGame.Instance.AddFloater("✨", targetGridPos, 0.5f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.1f);
-
-        user.SetGridPos(targetGridPos);
-
-        if (user is RoguemojiPlayer player)
-            player.RecenterCamera();
-
-        RoguemojiGame.Instance.RevealScroll(ScrollType, user.GridPos, user.CurrentLevelId);
+        RoguemojiGame.Instance.RevealScroll(ScrollType, targetGridPos, user.CurrentLevelId);
 
         Destroy();
     }

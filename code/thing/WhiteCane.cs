@@ -18,7 +18,7 @@ public partial class WhiteCane : Thing
 
         if (Game.IsServer)
         {
-            MinSightChange = 2;
+            MinSightChange = 1;
 
             InitStat(StatType.Attack, 2);
             AddTrait("", "😎", $"Prevents your {GetStatIcon(StatType.Sight)} from reaching zero", offset: Vector2.Zero, tattooIcon: "🦯", tattooScale: 0.7f, tattooOffset: new Vector2(7f, 6f));
