@@ -97,28 +97,6 @@
         text-shadow: 0px 0px 0px #000000;
     }
 
-    .aiming {
-        position: absolute;
-        width: 40px;
-        height: 40px;
-        z-index: 9997;
-        pointer-events: none;
-        border: 1px solid #ffff3311;
-        border-radius:3px;
-        color: #ffffff;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        font-size: 25px;
-        padding-bottom: 2px;
-    }
-
-    .aiming_pin {
-        color: white;
-        font-size: 29px;
-        z-index: 10001;
-    }
-
     .arena_fade {
         width: 100%;
         height: 100%;
@@ -218,11 +196,11 @@
                     <div class="unseen" style="left: @(x * RoguemojiGame.CellSize + player.CameraPixelOffset.x); top: @(y * RoguemojiGame.CellSize + player.CameraPixelOffset.y);"></div>
                 }
             }
-            else if(player.IsAiming && player.AimingCells.Contains(gridPos))
+            else if(player.IsAiming && player.AimingGridType == GridType.Arena && player.AimingCells.Contains(gridPos))
             {
                 var aimOpacity = 0.4f + MathF.Sin(Time.Now * 16f) * 0.3f;
                 var dir = GridManager.GetDirectionForIntVector(gridPos - player.GridPos);
-                <div class="aiming" style="left: @(x * RoguemojiGame.CellSize + player.CameraPixelOffset.x + 1); top: @(y * RoguemojiGame.CellSize + player.CameraPixelOffset.y + 1); opacity: @(aimOpacity); transform: rotate(@(GetAimingAngle(dir)));">
+                <div class="aiming_cell" style="left: @(x * RoguemojiGame.CellSize + player.CameraPixelOffset.x + 1); top: @(y * RoguemojiGame.CellSize + player.CameraPixelOffset.y + 1); opacity: @(aimOpacity); transform: rotate(@(GetAimingAngle(dir)));">
                     @if(player.AimingType == AimingType.Direction)
                         @(GetArrowIcon(dir))
                 </div>
@@ -309,12 +287,12 @@
 
         if (player.ContainingGridManager.IsGridPosInBounds(gridPos))
         {
-            if(player.IsAiming && player.AimingCells.Contains(gridPos) && visible)
+            if(player.IsAiming && player.AimingGridType == GridType.Arena && player.AimingCells.Contains(gridPos) && visible)
             {
                 if (rightClick)
                     RoguemojiGame.StopAimingCmd();
                 else
-                    RoguemojiGame.ConfirmAimingCmd(gridPos.x, gridPos.y);
+                    RoguemojiGame.ConfirmAimingCmd(GridType.Arena, gridPos.x, gridPos.y);
             }
             else
             {

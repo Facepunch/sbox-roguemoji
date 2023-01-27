@@ -147,4 +147,27 @@
     .equipment_item_highlight {
         text-shadow: 0px 0px 1px #aa55aa88;
     }
+
+    .aiming_cell {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        z-index: 9997;
+        pointer-events: none;
+        border: 1px solid #ffff3311;
+        border-radius: 3px;
+        color: #ffffff;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-size: 25px;
+        padding-bottom: 2px;
+    }
+
+    .aiming_pin {
+        position: absolute;
+        color: white;
+        font-size: 29px;
+        z-index: 10001;
+    }
 }

@@ -233,10 +233,10 @@ public partial class RoguemojiGame : GameManager
 	}
 
     [ConCmd.Server]
-    public static void ConfirmAimingCmd(int x, int y)
+    public static void ConfirmAimingCmd(GridType gridType, int x, int y)
     {
         var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
-        player.ConfirmAiming(new IntVector(x, y));
+        player.ConfirmAiming(gridType, new IntVector(x, y));
     }
 
     [ConCmd.Server]

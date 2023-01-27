@@ -8,17 +8,17 @@ namespace Roguemoji;
 [Flags]
 public enum ThingFlags
 {
-    None = 0,
-    Solid = 1,
-    Selectable = 2,
-    Equipment = 4,
-    Useable = 8,
-    UseRequiresAiming = 16,
-    AimTypeTargetCell = 32,
-    CanUseThings = 64,
-    CanBePickedUp = 128,
-    Exclusive = 256,
-    DoesntBumpThings = 512,
+    None = (1 << 0),
+    Solid = (1 << 1),
+    Selectable = (1 << 2),
+    Equipment = (1 << 3),
+    Useable = (1 << 4),
+    UseRequiresAiming = (1 << 5),
+    AimTypeTargetCell = (1 << 6),
+    CanUseThings = (1 << 7),
+    CanBePickedUp = (1 << 8),
+    Exclusive = (1 << 9),
+    DoesntBumpThings = (1 << 10),
 }
 
 public enum FactionType { Neutral, Player, Enemy }
@@ -311,12 +311,12 @@ public partial class Thing : Entity
         WieldedThing.Use(this, direction);
     }
 
-    public virtual void UseWieldedThing(IntVector targetGridPos)
+    public virtual void UseWieldedThing(GridType gridType, IntVector targetGridPos)
     {
         if (WieldedThing == null)
             return;
 
-        WieldedThing.Use(this, targetGridPos);
+        WieldedThing.Use(this, gridType, targetGridPos);
     }
 
     // Override and return false when user doesn't have required stats (IsOnCooldown already handled elsewhere).
@@ -335,7 +335,7 @@ public partial class Thing : Entity
         PerformedAction(user);
     }
 
-    public virtual void Use(Thing user, IntVector targetGridPos) 
+    public virtual void Use(Thing user, GridType gridType, IntVector targetGridPos) 
     {
         PerformedAction(user);
     }
@@ -595,6 +595,7 @@ public partial class Thing : Entity
         DontRender = false;
     }
 
+    public virtual GridType AimingGridType => GridType.Arena;
     public virtual HashSet<IntVector> GetAimingTargetCellsClient() { return null; }
     public virtual bool IsPotentialAimingTargetCell(IntVector gridPos) { return false; }
 

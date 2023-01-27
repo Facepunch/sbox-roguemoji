@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public enum ScrollType { Blink, Teleport, Fear, Telekinesis, Displace, Confetti }
+public enum ScrollType { Blink, Teleport, Fear, Telekinesis, Displace, Confetti, Identify, }
 public partial class Scroll : Thing
 {
     [Net] public ScrollType ScrollType { get; protected set; }
@@ -28,6 +28,7 @@ public partial class Scroll : Thing
             case ScrollType.Teleport: return "Scroll of Teleport";
             case ScrollType.Displace: return "Scroll of Displace";
             case ScrollType.Confetti: return "Scroll of Confetti";
+            case ScrollType.Identify: return "Scroll of Identify";
         }
 
         return "";
@@ -42,6 +43,7 @@ public partial class Scroll : Thing
             case ScrollType.Telekinesis: return $"📜{Globals.Icon(IconType.Telekinesis)}";
             case ScrollType.Teleport: return $"📜{Globals.Icon(IconType.Teleport)}";
             case ScrollType.Confetti: return $"📜{Globals.Icon(IconType.Confetti)}";
+            case ScrollType.Identify: return $"📜{Globals.Icon(IconType.Identify)}";
         }
 
         return "🧉";
@@ -72,9 +74,9 @@ public partial class Scroll : Thing
         RoguemojiGame.Instance.RevealScroll(ScrollType, user.GridPos, user.CurrentLevelId);
     }
 
-    public override void Use(Thing user, IntVector targetGridPos)
+    public override void Use(Thing user, GridType gridType, IntVector targetGridPos)
     {
-        base.Use(user, targetGridPos);
+        base.Use(user, gridType, targetGridPos);
         RoguemojiGame.Instance.RevealScroll(ScrollType, user.GridPos, user.CurrentLevelId);
     }
 
@@ -83,7 +85,7 @@ public partial class Scroll : Thing
         SetTattoo(icon, scale: 0.5f, offset: new Vector2(1.5f, 0f), offsetWielded: new Vector2(0.5f, 2.3f), offsetInfo: new Vector2(8f, 5f), offsetCharWielded: new Vector2(2.5f, -0.5f), offsetInfoWielded: new Vector2(2.5f, 1f));
     }
 
-    public static HashSet<IntVector> GetAimingCells(int radius, Thing thingWieldingThis)
+    public static HashSet<IntVector> GetArenaAimingCells(int radius, Thing thingWieldingThis)
     {
         HashSet<IntVector> aimingCells = new HashSet<IntVector>();
 
@@ -106,8 +108,9 @@ public partial class Scroll : Thing
         return aimingCells;
     }
 
-    public static bool IsPotentialAimingCell(IntVector gridPos, int radius, Thing thingWieldingThis)
+    public static bool IsPotentialArenaAimingCell(IntVector gridPos, int radius, Thing thingWieldingThis)
     {
+        // todo: rething this
         for (int x = -radius; x <= radius; x++)
         {
             for (int y = -radius; y <= radius; y++)
@@ -123,5 +126,39 @@ public partial class Scroll : Thing
         }
 
         return false;
+    }
+
+    public static HashSet<IntVector> GetInventoryAimingCells(Thing thingWieldingThis)
+    {
+        HashSet<IntVector> aimingCells = new HashSet<IntVector>();
+
+        var player = thingWieldingThis as RoguemojiPlayer;
+        if(player == null)
+            return aimingCells;
+
+        var gridManager = player.InventoryGridManager;
+
+        for (int x = 0; x < gridManager.GridWidth; x++)
+        {
+            for (int y = 0; y < gridManager.GridHeight; y++)
+            {
+                var gridPos = new IntVector(x, y);
+                if (gridManager.GetThingsAtClient(gridPos).Count() == 0)
+                    continue;
+
+                aimingCells.Add(gridPos);
+            }
+        }
+
+        return aimingCells;
+    }
+
+    public static bool IsPotentialInventoryAimingCell(IntVector gridPos, Thing thingWieldingThis)
+    {
+        var player = thingWieldingThis as RoguemojiPlayer;
+        if (player == null)
+            return false;
+
+        return player.InventoryGridManager.GetThingsAt(gridPos).Count() > 0;
     }
 }

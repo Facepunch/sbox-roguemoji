@@ -24,9 +24,9 @@ public partial class ScrollTelekinesis : Scroll
         }
     }
 
-    public override void Use(Thing user, IntVector targetGridPos)
+    public override void Use(Thing user, GridType gridType, IntVector targetGridPos)
     {
-        base.Use(user, targetGridPos);
+        base.Use(user, gridType, targetGridPos);
 
         var targetThing = user.ContainingGridManager.GetThingsAt(targetGridPos).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
         if (targetThing == null || targetThing == user)

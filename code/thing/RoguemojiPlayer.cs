@@ -33,6 +33,7 @@ public partial class RoguemojiPlayer : Thing
     [Net] public bool IsAiming { get; set; }
     [Net] public AimingSource AimingSource { get; set; }
     [Net] public AimingType AimingType { get; set; }
+    [Net] public GridType AimingGridType { get; set; }
     public HashSet<IntVector> AimingCells { get; set; } // Client-only
 
     [Net] public IList<ScrollType> IdentifiedScrollTypes { get; private set; }
@@ -200,9 +201,10 @@ public partial class RoguemojiPlayer : Thing
             case 11: InventoryGridManager.SpawnThing<ScrollConfetti>(gridPos); break;
             //case 11: InventoryGridManager.SpawnThing<Cigarette>(gridPos); break;
             case 12: InventoryGridManager.SpawnThing<ScrollBlink>(gridPos); break;
-            case 13: InventoryGridManager.SpawnThing<BowAndArrow>(gridPos); break;
-            //case 14: InventoryGridManager.SpawnThing<Backpack>(gridPos); break;
-            case 14: InventoryGridManager.SpawnThing<PotionInvisible>(gridPos); break;
+            //case 13: InventoryGridManager.SpawnThing<BowAndArrow>(gridPos); break;
+            case 13: InventoryGridManager.SpawnThing<ScrollIdentify>(gridPos); break;
+            case 14: InventoryGridManager.SpawnThing<Backpack>(gridPos); break;
+            //case 14: InventoryGridManager.SpawnThing<Joystick>(gridPos); break;
             //case 14: InventoryGridManager.SpawnThing<Juicebox>(gridPos); break;
             case 15: InventoryGridManager.SpawnThing<BookBlink>(gridPos); break;
             case 16: InventoryGridManager.SpawnThing<PotionMana>(gridPos); break;
@@ -213,7 +215,7 @@ public partial class RoguemojiPlayer : Thing
             case 20: InventoryGridManager.SpawnThing<BookTeleport>(gridPos); break;
             //case 21: InventoryGridManager.SpawnThing<AcademicCap>(gridPos); break;
             case 21: InventoryGridManager.SpawnThing<RugbyBall>(gridPos); break;
-            case 22: InventoryGridManager.SpawnThing<Joystick>(gridPos); break;
+            case 22: InventoryGridManager.SpawnThing<PotionInvisible>(gridPos); break;
             case 23: InventoryGridManager.SpawnThing<ScrollFear>(gridPos); break;
         }
     }
@@ -662,7 +664,7 @@ public partial class RoguemojiPlayer : Thing
         if (WieldedThing.HasFlag(ThingFlags.UseRequiresAiming))
         {
             AimingType aimingType = WieldedThing.HasFlag(ThingFlags.AimTypeTargetCell) ? AimingType.TargetCell : AimingType.Direction;
-            StartAiming(AimingSource.UsingWieldedItem, aimingType);
+            StartAiming(AimingSource.UsingWieldedItem, aimingType, WieldedThing.AimingGridType);
         }
         else
         {
@@ -689,16 +691,16 @@ public partial class RoguemojiPlayer : Thing
         base.UseWieldedThing(direction);
     }
 
-    public override void UseWieldedThing(IntVector targetGridPos)
+    public override void UseWieldedThing(GridType gridType, IntVector targetGridPos)
     {
         if (!Acting.IsActionReady)
         {
-            QueuedAction = new UseWieldedThingTargetAction(targetGridPos);
+            QueuedAction = new UseWieldedThingTargetAction(gridType, targetGridPos);
             QueuedActionName = QueuedAction.ToString();
             return;
         }
 
-        base.UseWieldedThing(targetGridPos);
+        base.UseWieldedThing(gridType, targetGridPos);
     }
 
     public void MoveThingTo(Thing thing, GridType targetGridType, IntVector targetGridPos, bool dontRequireAction = false, bool wieldIfPossible = false)
@@ -1078,11 +1080,11 @@ public partial class RoguemojiPlayer : Thing
         if (WieldedThing == null)
             return;
 
-        StartAiming(AimingSource.Throwing, AimingType.Direction);
+        StartAiming(AimingSource.Throwing, AimingType.Direction, GridType.Arena);
         //RoguemojiGame.Instance.LogMessageClient(To.Single(this), "Press WASD to throw or F to cancel", playerNum: 0);
     }
 
-    public void StartAiming(AimingSource aimingSource, AimingType aimingType)
+    public void StartAiming(AimingSource aimingSource, AimingType aimingType, GridType aimingGridType)
     {
         if (QueuedAction != null)
         {
@@ -1093,6 +1095,7 @@ public partial class RoguemojiPlayer : Thing
         IsAiming = true;
         AimingSource = aimingSource;
         AimingType = aimingType;
+        AimingGridType = aimingGridType;
 
         if(aimingType == AimingType.Direction)
         {
@@ -1155,7 +1158,7 @@ public partial class RoguemojiPlayer : Thing
             UseWieldedThing(direction);
     }
 
-    public void ConfirmAiming(IntVector gridPos)
+    public void ConfirmAiming(GridType gridType, IntVector gridPos)
     {
         if (!IsAiming)
             return;
@@ -1167,7 +1170,7 @@ public partial class RoguemojiPlayer : Thing
         }
         else if(AimingType == AimingType.TargetCell && AimingSource == AimingSource.UsingWieldedItem)
         {
-            UseWieldedThing(gridPos);
+            UseWieldedThing(gridType, gridPos);
             StopAiming();
         }
     }
@@ -1367,20 +1370,22 @@ public class UseWieldedThingDirectionAction : IQueuedAction
 
 public class UseWieldedThingTargetAction : IQueuedAction
 {
+    public GridType GridType { get; set; }
     public IntVector TargetGridPos { get; set; }
 
-    public UseWieldedThingTargetAction(IntVector targetGridPos)
+    public UseWieldedThingTargetAction(GridType gridType, IntVector targetGridPos)
     {
+        GridType = gridType;
         TargetGridPos = targetGridPos;
     }
 
     public void Execute(RoguemojiPlayer player)
     {
-        player.UseWieldedThing(TargetGridPos);
+        player.UseWieldedThing(GridType, TargetGridPos);
     }
 
     public override string ToString()
     {
-        return $"UseWieldedThing {TargetGridPos}";
+        return $"UseWieldedThing {GridType}:{TargetGridPos}";
     }
 }

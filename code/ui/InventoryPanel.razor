@@ -82,6 +82,40 @@
             @((index + 1 == 10) ? 0 : index + 1) 
         </div>
     }
+
+    @if (player.IsAiming && player.AimingGridType == GridType.Inventory)
+    {
+        for (int x = -1; x <= player.InventoryGridManager.GridWidth; x++)
+        {
+            for (int y = -1; y <= player.InventoryGridManager.GridHeight; y++)
+            {
+                var gridPos = new IntVector(x, y);
+                if (player.AimingCells.Contains(gridPos))
+                {
+                    var aimOpacity = 0.4f + MathF.Sin(Time.Now * 16f) * 0.3f;
+                    <div class="aiming_cell" style="left: @(x * RoguemojiGame.CellSize + 1); top: @(y * RoguemojiGame.CellSize + 1); opacity: @(aimOpacity);"></div>
+
+                    @if (player.AimingType == AimingType.TargetCell)
+                    {
+                        var inventoryPanel = Hud.Instance.GetGridPanel(GridType.Inventory);
+                        Log.Info("inventoryPanel.MousePosition: " + inventoryPanel.MousePosition);
+
+                        var mouseGridPos = inventoryPanel.GetGridPos(inventoryPanel.MousePosition);
+
+                        if (gridPos.Equals(mouseGridPos))
+                        {
+                            var charRect = Hud.Instance.GetRect(PanelType.Character);
+
+                            <div class="aiming_pin" style="left: @((x * RoguemojiGame.CellSize) + 9); top: @((y * RoguemojiGame.CellSize) - 13);">
+                                @(Hud.GetHallucinationTextStr("📍", HallucinationTextType.Icon))
+                            </div>
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 </root>
 
 @code
@@ -98,11 +132,24 @@
     {
         base.OnMouseDown(e);
 
-        var gridPos = GetGridPos(MousePosition);
         var player = RoguemojiGame.Instance.LocalPlayer;
+        var gridPos = GetGridPos(MousePosition);
+        bool rightClick = e.Button == "mouseright";
 
         if(player.InventoryGridManager.IsGridPosInBounds(gridPos))
-            Hud.Instance.GridCellClicked(gridPos, GridType.Inventory, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), doubleClick: false);
+        {
+            if(player.IsAiming && player.AimingGridType == GridType.Inventory && player.AimingCells.Contains(gridPos))
+            {
+                if (rightClick)
+                    RoguemojiGame.StopAimingCmd();
+                else
+                    RoguemojiGame.ConfirmAimingCmd(GridType.Inventory, gridPos.x, gridPos.y);
+            }
+            else
+            {
+                Hud.Instance.GridCellClicked(gridPos, GridType.Inventory, rightClick: e.Button == "mouseright", shift: Input.Down(InputButton.Run), doubleClick: false);
+            }
+        }
 
         Hud.Instance.UnfocusChatbox();
     }
@@ -112,6 +159,7 @@
         var player = RoguemojiGame.Instance.LocalPlayer;
         var gridWidthHash = player.InventoryGridManager.GridWidth;
         var selectedThingHash = player.SelectedThing?.NetworkIdent ?? 0;
-        return HashCode.Combine(GetThings().Count, gridWidthHash, selectedThingHash);
+        var aimingHash = player.IsAiming && player.AimingGridType == GridType.Inventory ? Game.Random.Int(0, 9999) : 0;
+        return HashCode.Combine(GetThings().Count, gridWidthHash, selectedThingHash, aimingHash);
     }
 }

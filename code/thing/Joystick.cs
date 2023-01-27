@@ -44,7 +44,7 @@ public partial class Joystick : Thing
         return true;
     }
 
-    public override void Use(Thing user, IntVector targetGridPos)
+    public override void Use(Thing user, GridType gridType, IntVector targetGridPos)
     {
         if (IsOnCooldown)
             return;
@@ -70,7 +70,7 @@ public partial class Joystick : Thing
 
         StartCooldown(CooldownTime);
 
-        base.Use(user, targetGridPos);
+        base.Use(user, gridType, targetGridPos);
     }
 
     public override HashSet<IntVector> GetAimingTargetCellsClient() 

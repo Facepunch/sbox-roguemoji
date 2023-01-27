@@ -69,7 +69,7 @@ public partial class BookBlink : Thing
         return true;
     }
 
-    public override void Use(Thing user, IntVector targetGridPos)
+    public override void Use(Thing user, GridType gridType, IntVector targetGridPos)
     {
         if (!user.TrySpendStat(StatType.Mana, ManaCost))
             return;
@@ -93,7 +93,7 @@ public partial class BookBlink : Thing
 
         StartCooldown(CooldownTime);
 
-        base.Use(user, targetGridPos);
+        base.Use(user, gridType, targetGridPos);
     }
 
     public override HashSet<IntVector> GetAimingTargetCellsClient()
@@ -104,7 +104,7 @@ public partial class BookBlink : Thing
             return null;
 
         int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 1, 10);
-        return Scroll.GetAimingCells(radius, ThingWieldingThis);
+        return Scroll.GetArenaAimingCells(radius, ThingWieldingThis);
     }
 
     public override bool IsPotentialAimingTargetCell(IntVector gridPos)
@@ -113,6 +113,6 @@ public partial class BookBlink : Thing
             return false;
 
         int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 1, 10);
-        return Scroll.IsPotentialAimingCell(gridPos, radius, ThingWieldingThis);
+        return Scroll.IsPotentialArenaAimingCell(gridPos, radius, ThingWieldingThis);
     }
 }

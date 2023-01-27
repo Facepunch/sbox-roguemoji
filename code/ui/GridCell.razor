@@ -260,21 +260,19 @@
     {
         base.OnMouseDown(e);
 
+        var player = RoguemojiGame.Instance.LocalPlayer;
         bool shift = Input.Down(InputButton.Run);
         bool rightClick = e.Button == "mouseright";
+        var gridPos = Thing.GridPos;
 
         if (Thing.ContainingGridType == GridType.Arena)
         {
-            var player = RoguemojiGame.Instance.LocalPlayer;
-            var gridPos = Thing.GridPos;
             bool visible = player.IsCellVisible(gridPos);
 
-            if(player.IsAiming && player.AimingCells.Contains(gridPos) && visible)
+            if(player.IsAiming && player.AimingGridType == GridType.Arena && player.AimingCells.Contains(gridPos) && visible)
             {
-                if (rightClick)
-                    RoguemojiGame.StopAimingCmd();
-                else
-                    RoguemojiGame.ConfirmAimingCmd(gridPos.x, gridPos.y);
+                if (rightClick)             RoguemojiGame.StopAimingCmd();
+                else                        RoguemojiGame.ConfirmAimingCmd(GridType.Arena, gridPos.x, gridPos.y);
             }
             else
             {
@@ -283,17 +281,29 @@
         }
         else if (Thing.ContainingGridType == GridType.Inventory)
         {
-            if(shift || rightClick)
-                Hud.Instance.GridCellClicked(Thing.GridPos, GridType.Inventory, rightClick, shift, doubleClick: false);
+            if (player.IsAiming && player.AimingGridType == GridType.Inventory && player.AimingCells.Contains(gridPos))
+            {
+                if (rightClick)             RoguemojiGame.StopAimingCmd();
+                else                        RoguemojiGame.ConfirmAimingCmd(GridType.Inventory, gridPos.x, gridPos.y);
+            }
             else
-                Hud.Instance.StartDragging(Thing, this, rightClick, PanelType.InventoryGrid);
+            {
+                if (shift || rightClick)    Hud.Instance.GridCellClicked(Thing.GridPos, GridType.Inventory, rightClick, shift, doubleClick: false);
+                else                        Hud.Instance.StartDragging(Thing, this, rightClick, PanelType.InventoryGrid);
+            }
         }
         else if (Thing.ContainingGridType == GridType.Equipment)
         {
-            if(shift || rightClick)
-                Hud.Instance.GridCellClicked(Thing.GridPos, GridType.Equipment, rightClick, shift, doubleClick: false);
+            if (player.IsAiming && player.AimingGridType == GridType.Equipment && player.AimingCells.Contains(gridPos))
+            {
+                if (rightClick)             RoguemojiGame.StopAimingCmd();
+                else                        RoguemojiGame.ConfirmAimingCmd(GridType.Equipment, gridPos.x, gridPos.y);
+            }
             else
-                Hud.Instance.StartDragging(Thing, this, rightClick, PanelType.EquipmentGrid);
+            {
+                if(shift || rightClick)     Hud.Instance.GridCellClicked(Thing.GridPos, GridType.Equipment, rightClick, shift, doubleClick: false);
+                else                        Hud.Instance.StartDragging(Thing, this, rightClick, PanelType.EquipmentGrid);
+            }
         }
 
         e.StopPropagation();
