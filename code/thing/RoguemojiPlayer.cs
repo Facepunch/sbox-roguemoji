@@ -283,6 +283,7 @@ public partial class RoguemojiPlayer : Thing
                     else if (Input.Pressed(InputButton.Back))                                                   TryMove(Direction.Down, shouldQueueAction: true);
                     else if (Input.Pressed(InputButton.Forward))                                                TryMove(Direction.Up, shouldQueueAction: true);
                     else if (Input.Pressed(InputButton.Flashlight))                                             StartAimingThrow();
+                    else if (Input.Pressed(InputButton.Voice))                                                  SelectWieldedItem();
                     else if (Input.Down(InputButton.Left))                                                      TryMove(Direction.Left);
                     else if (Input.Down(InputButton.Right))                                                     TryMove(Direction.Right);
                     else if (Input.Down(InputButton.Back))                                                      TryMove(Direction.Down);
@@ -626,6 +627,12 @@ public partial class RoguemojiPlayer : Thing
     {
         if (EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
             MoveThingTo(thing, GridType.Equipment, emptyGridPos);
+    }
+
+    void SelectWieldedItem()
+    {
+        if (WieldedThing != null)
+            SelectThing(WieldedThing);
     }
 
     public override void UseWieldedThing()
