@@ -38,7 +38,7 @@ public partial class ScrollIdentify : Scroll
         if (item == null)
             return;
 
-        item.Destroy();
+        RoguemojiGame.Instance.AddFloaterInventory(player, Globals.Icon(IconType.Identified), item.GridPos, 1f, new Vector2(0f, 0f), new Vector2(0, -10f), height: 0f, text: "", EasingType.QuadOut, fadeInTime: 0.5f, scale: 0.8f, opacity: 0.66f, parent: item);
 
         RoguemojiGame.Instance.RevealScroll(ScrollType, user.GridPos, user.CurrentLevelId);
 

@@ -98,8 +98,6 @@
                     @if (player.AimingType == AimingType.TargetCell)
                     {
                         var inventoryPanel = Hud.Instance.GetGridPanel(GridType.Inventory);
-                        Log.Info("inventoryPanel.MousePosition: " + inventoryPanel.MousePosition);
-
                         var mouseGridPos = inventoryPanel.GetGridPos(inventoryPanel.MousePosition);
 
                         if (gridPos.Equals(mouseGridPos))

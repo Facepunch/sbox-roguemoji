@@ -39,12 +39,14 @@
         public IntVector gridPos { get; set; }
         public Color color { get; set; }
         public float time { get; set; }
+        public GridType gridType { get; set; }
 
-        public DebugGridCellData(IntVector gridPos, Color color, float time)
+        public DebugGridCellData(IntVector gridPos, Color color, float time, GridType gridType)
         {
             this.gridPos = gridPos;
             this.color = color;
             this.time = time;
+            this.gridType = gridType;
         }
     }
 
@@ -82,16 +84,22 @@
             GraphicsX.Line(line.color, 2f, line.a, 1f, line.b);
 
         foreach (var cell in DebugGridCells)
-            GraphicsX.Circle(Hud.Instance.GetScreenPosForArenaGridPos(cell.gridPos), 18f / ScaleFromScreen, 15f / ScaleFromScreen, cell.color);
+        {
+            var pos = cell.gridType == GridType.Arena ? Hud.Instance.GetScreenPosForArenaGridPos(cell.gridPos) : Hud.Instance.GetScreenPosForInventoryGridPos(cell.gridPos);
+            GraphicsX.Circle(pos, 18f / ScaleFromScreen, 15f / ScaleFromScreen, cell.color);
+        }
+        
     }
 
-    public void GridLine(IntVector a, IntVector b, Color color, float time)
+    public void GridLine(IntVector a, IntVector b, Color color, float time, GridType gridTypeA = GridType.Arena, GridType gridTypeB = GridType.Arena)
     {
-        DebugLines.Add(new DebugLineData(Hud.Instance.GetScreenPosForArenaGridPos(a), Hud.Instance.GetScreenPosForArenaGridPos(b), color, time));
+        var posA = (gridTypeA == GridType.Arena) ? Hud.Instance.GetScreenPosForArenaGridPos(a) : Hud.Instance.GetScreenPosForInventoryGridPos(a);
+        var posB = (gridTypeB == GridType.Arena) ? Hud.Instance.GetScreenPosForArenaGridPos(b) : Hud.Instance.GetScreenPosForInventoryGridPos(b);
+        DebugLines.Add(new DebugLineData(posA, posB, color, time));
     }
 
-    public void GridCell(IntVector gridPos, Color color, float time)
+    public void GridCell(IntVector gridPos, Color color, float time, GridType gridType = GridType.Arena)
     {
-        DebugGridCells.Add(new DebugGridCellData(gridPos, color, time));
+        DebugGridCells.Add(new DebugGridCellData(gridPos, color, time, gridType));
     }
 }

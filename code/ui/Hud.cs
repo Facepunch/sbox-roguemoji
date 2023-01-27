@@ -26,9 +26,11 @@ public struct FloaterData
     public float fadeInTime;
     public float scale;
     public float opacity;
+    public GridType gridType;
     public Thing parent;
 
-    public FloaterData(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height, string text, bool requireSight, bool alwaysShowWhenAdjacent, EasingType offsetEasingType, float fadeInTime, float scale, float opacity, Thing parent)
+    public FloaterData(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height, string text, bool requireSight, bool alwaysShowWhenAdjacent, 
+        EasingType offsetEasingType, float fadeInTime, float scale, float opacity, GridType gridType, Thing parent)
     {
         this.icon = icon;
         this.gridPos = gridPos;
@@ -44,6 +46,7 @@ public struct FloaterData
         this.fadeInTime = fadeInTime;
         this.scale = scale;
         this.opacity = opacity;
+        this.gridType = gridType;
         this.parent = parent;
     }
 }
@@ -289,7 +292,7 @@ public partial class Hud : RootPanel
         {
             case GridType.Arena:        return MainPanel?.ArenaPanel ?? null;
             case GridType.Inventory:    return MainPanel?.InventoryPanel ?? null;
-            case GridType.Equipment:    return MainPanel.CharacterPanel?.EquipmentPanel ?? null;
+            case GridType.Equipment:    return MainPanel?.CharacterPanel?.EquipmentPanel ?? null;
         }
 
 		return null;
@@ -324,7 +327,24 @@ public partial class Hud : RootPanel
 
         //Log.Info($"GetScreenPosForArenaGridPos: {gridPos} - {(rect.TopLeft + arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset)}");
 
-        return rect.TopLeft + arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset + new Vector2(-logRect.Width + 4, 14);
+        return arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset;
+    }
+
+    public Vector2 GetScreenPosForInventoryGridPos(IntVector gridPos)
+    {
+        var inventoryPanel = GetGridPanel(GridType.Inventory);
+        var rect = GetRect(PanelType.InventoryGrid);
+        var charRect = GetRect(PanelType.Character);
+
+        if (inventoryPanel == null)
+            return Vector2.Zero;
+
+        //Log.Info("inventoryPanel.GetCellPos(gridPos): " + inventoryPanel.GetCellPos(gridPos));
+        //var pos = rect.TopLeft + new Vector2(gridPos.x * (RoguemojiGame.CellSize / ScaleFromScreen) + (4f / ScaleFromScreen), gridPos.y * (RoguemojiGame.CellSize / ScaleFromScreen) + (14f / ScaleFromScreen));
+        //Log.Info("rect.TopLeft: " + rect.TopLeft + " pos: " + pos);
+        //return pos;
+
+        return inventoryPanel.GetCellPos(gridPos) + new Vector2(2f, 2f) / ScaleFromScreen;
     }
 
     public static string GetUnusableClass(Thing thing)
@@ -446,9 +466,10 @@ public partial class Hud : RootPanel
         return "aeiou".IndexOf(name[0].ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0;
     }
 
-    public void AddFloater(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height, string text = "", bool requireSight = true, bool alwaysShowWhenAdjacent = false, EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, Thing parent = null)
+    public void AddFloater(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height, string text = "", bool requireSight = true, bool alwaysShowWhenAdjacent = false, 
+        EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, GridType gridType = GridType.Arena, Thing parent = null)
     {
-        Floaters.Add(new FloaterData(icon, gridPos, time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, parent));
+        Floaters.Add(new FloaterData(icon, gridPos, time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, gridType, parent));
     }
 
     public void RemoveFloater(string icon, Thing parent = null)

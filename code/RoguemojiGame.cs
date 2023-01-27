@@ -442,22 +442,30 @@ public partial class RoguemojiGame : GameManager
         return thing;
     }
 
+    public void AddFloaterInventory(RoguemojiPlayer player, string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height = 0f, string text = "", 
+        EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, Thing parent = null)
+    {
+        AddFloaterClient(To.Single(player), icon, gridPos.x, gridPos.y, time, offsetStart, offsetEnd, height, text, requireSight: false, alwaysShowWhenAdjacent: false, offsetEasingType, fadeInTime, scale, opacity, GridType.Inventory, (parent != null) ? parent.NetworkIdent : -1);
+    }
+
     public void AddFloater(string icon, IntVector gridPos, float time, LevelId levelId, Vector2 offsetStart, Vector2 offsetEnd, float height = 0f, string text = "", bool requireSight = true, bool alwaysShowWhenAdjacent = false, 
                         EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, Thing parent = null)
     {
 		foreach(var player in Players)
 		{
 			if (player.CurrentLevelId == levelId)
-                AddFloaterClient(To.Single(player), icon, gridPos.x, gridPos.y, time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, (parent != null) ? parent.NetworkIdent : -1);
+            {
+                AddFloaterClient(To.Single(player), icon, gridPos.x, gridPos.y, time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, GridType.Arena, (parent != null) ? parent.NetworkIdent : -1);
+            }
 		}
     }
 
     [ClientRpc]
     public void AddFloaterClient(string icon, int x, int y, float time, Vector2 offsetStart, Vector2 offsetEnd, float height = 0f, string text = "", bool requireSight = true, bool alwaysShowWhenAdjacent = false, 
-                                EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, int parentIdent = -1)
+                                EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, GridType gridType = GridType.Arena, int parentIdent = -1)
     {
         Thing parent = (parentIdent == -1) ? null : Entity.FindByIndex(parentIdent) as Thing;
-        Hud.Instance.AddFloater(icon, new IntVector(x, y), time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, parent);
+        Hud.Instance.AddFloater(icon, new IntVector(x, y), time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, gridType, parent);
     }
 
     public void RemoveFloater(string icon, LevelId levelId, Thing parent = null)
@@ -546,33 +554,25 @@ public partial class RoguemojiGame : GameManager
         player.IdentifyPotion(potionType);
     }
 
-    public void DebugGridLine(IntVector a, IntVector b, Color color, float time, LevelId levelId)
+    public void DebugGridLine(IntVector a, IntVector b, Color color, float time, GridType gridTypeA = GridType.Arena, GridType gridTypeB = GridType.Arena)
 	{
-        foreach (var player in Players)
-        {
-			if (player.CurrentLevelId == levelId)
-                DebugGridLineClient(To.Single(player), a, b, color, time);
-        }
+        DebugGridLineClient(a, b, color, time, gridTypeA, gridTypeB);
     }
 
     [ClientRpc]
-	public void DebugGridLineClient(IntVector a, IntVector b, Color color, float time)
+	public void DebugGridLineClient(IntVector a, IntVector b, Color color, float time, GridType gridTypeA = GridType.Arena, GridType gridTypeB = GridType.Arena)
 	{
-		Hud.Instance.DebugDrawing.GridLine(a, b, color, time);
+		Hud.Instance.DebugDrawing.GridLine(a, b, color, time, gridTypeA, gridTypeB);
 	}
 
-    public void DebugGridCell(IntVector gridPos, Color color, float time, LevelId levelId)
+    public void DebugGridCell(IntVector gridPos, Color color, float time, GridType gridType = GridType.Arena)
     {
-        foreach (var player in Players)
-        {
-            if (player.CurrentLevelId == levelId)
-                DebugGridCellClient(To.Single(player), gridPos, color, time);
-        }
+        DebugGridCellClient(gridPos, color, time, gridType);
     }
 
     [ClientRpc]
-    public void DebugGridCellClient(IntVector gridPos, Color color, float time)
+    public void DebugGridCellClient(IntVector gridPos, Color color, float time, GridType gridType)
     {
-        Hud.Instance.DebugDrawing.GridCell(gridPos, color, time);
+        Hud.Instance.DebugDrawing.GridCell(gridPos, color, time, gridType);
     }
 }
