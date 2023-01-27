@@ -63,7 +63,7 @@ public class CConfetti : ThingComponent
         player.MoveThingTo(item, GridType.Arena, gridPos, dontRequireAction: true);
 
         var time = Game.Random.Float(0.3f, 0.4f);
-        item.VfxFly(player.GridPos, lifetime: time, heightY: Game.Random.Float(20f, 35f), progressEasingType: EasingType.Linear, heightEasingType: EasingType.Linear);
+        item.VfxFly(player.GridPos, lifetime: time, heightY: Game.Random.Float(20f, 55f), progressEasingType: EasingType.Linear, heightEasingType: EasingType.QuadInOut);
 
         item.CanBeSeenByPlayerClient(player.GridPos);
 

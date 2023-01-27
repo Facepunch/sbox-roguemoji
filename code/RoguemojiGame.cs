@@ -239,6 +239,13 @@ public partial class RoguemojiGame : GameManager
         player.ConfirmAiming(new IntVector(x, y));
     }
 
+    [ConCmd.Server]
+    public static void StopAimingCmd()
+    {
+        var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
+        player.StopAiming();
+    }
+
     [ClientRpc]
 	public void RefreshGridPanelClient(GridType gridType)
 	{

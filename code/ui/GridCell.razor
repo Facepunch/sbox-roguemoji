@@ -270,9 +270,16 @@
             bool visible = player.IsCellVisible(gridPos);
 
             if(player.IsAiming && player.AimingCells.Contains(gridPos) && visible)
-                RoguemojiGame.ConfirmAimingCmd(gridPos.x, gridPos.y);
-            else 
+            {
+                if (rightClick)
+                    RoguemojiGame.StopAimingCmd();
+                else
+                    RoguemojiGame.ConfirmAimingCmd(gridPos.x, gridPos.y);
+            }
+            else
+            {
                 Hud.Instance.GridCellClicked(Thing.GridPos, GridType.Arena, rightClick, shift, doubleClick: false, visible);
+            }
         }
         else if (Thing.ContainingGridType == GridType.Inventory)
         {

@@ -143,6 +143,7 @@ public static class Globals
             new HallucinationData("🎲", "Die", "A single die", "It landed on 1", "It landed on 1", "It landed on 1"),
             new HallucinationData("🆗", "The Word OK", "The word OK", "It's gonna be okay", "It's gonna be okay", "It's gonna be okay"),
             new HallucinationData("🥓", "Bacon", "Some bacon", "Two crispy strips of bacon", "Two crispy strips of bacon", "Two crispy strips of bacon"),
+            new HallucinationData("🐘", "Elephant", "An elephant", "A massive lumbering elephant", "A massive lumbering elephant", "A massive lumbering elephant"),
         };
     }
 }

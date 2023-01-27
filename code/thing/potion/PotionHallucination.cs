@@ -21,7 +21,7 @@ public partial class PotionHallucination : Potion
 
         if (Game.IsServer)
         {
-            AddTrait("", "🤪", $"Makes you hallucinate", offset: new Vector2(0f, 0f));
+            AddTrait("", "🐘", $"Hallucinating makes things appear to be different things", offset: new Vector2(0f, -1f), tattooIcon: "🤪", tattooScale: 0.9f, tattooOffset: new Vector2(12f, 12f));
         }
     }
 
