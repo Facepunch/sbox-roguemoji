@@ -7,8 +7,6 @@ using System.Linq;
 namespace Roguemoji;
 public partial class ScrollDisplace : Scroll
 {
-    public override string AbilityName => "Read Scroll";
-
     public ScrollDisplace()
 	{
         ScrollType = ScrollType.Displace;

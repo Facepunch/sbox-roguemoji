@@ -6,7 +6,6 @@ using System.Linq;
 namespace Roguemoji;
 public partial class PotionEnergy : Potion
 {
-    public override string AbilityName => "Quaff Potion";
     public override string SplashIcon => GetStatIcon(StatType.Energy);
     public int EnergyAmount { get; private set; }
 

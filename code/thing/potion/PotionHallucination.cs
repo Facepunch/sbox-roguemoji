@@ -6,7 +6,6 @@ using System.Linq;
 namespace Roguemoji;
 public partial class PotionHallucination : Potion
 {
-    public override string AbilityName => "Quaff Potion";
     public override string SplashIcon => Globals.Icon(IconType.Hallucination);
 
     public PotionHallucination()

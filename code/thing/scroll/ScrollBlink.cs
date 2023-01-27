@@ -6,8 +6,6 @@ using System.Linq;
 namespace Roguemoji;
 public partial class ScrollBlink : Scroll
 {
-    public override string AbilityName => "Read Scroll";
-
     public ScrollBlink()
 	{
         ScrollType = ScrollType.Blink;

@@ -547,6 +547,42 @@ public partial class GridManager : Entity
         return false;
     }
 
+    public bool GetRandomEmptyGridPosWithinRange(IntVector startGridPos, out IntVector gridPos, int range, bool allowNonSolid = false)
+    {
+        List<IntVector> gridPositions = new();
+        gridPos = startGridPos;
+
+        for (int x = -range; x <= range; x++)
+        {
+            for (int y = -range; y <= range; y++)
+            {
+                if (x == 0 && y == 0)
+                    continue;
+
+                var currGridPos = startGridPos + new IntVector(x, y);
+                if (!IsGridPosInBounds(currGridPos))
+                    continue;
+
+                if (Utils.GetDistance(startGridPos, currGridPos) > range)
+                    continue;
+
+                var things = allowNonSolid ? GetThingsAt(currGridPos).WithAny(ThingFlags.Solid | ThingFlags.Exclusive) : GetThingsAt(currGridPos);
+                if (things.Count() > 0)
+                    continue;
+
+                gridPositions.Add(currGridPos);
+            }
+        }
+
+        if (gridPositions.Count > 0)
+        {
+            gridPos = gridPositions[Game.Random.Int(0, gridPositions.Count - 1)];
+            return true;
+        }
+
+        return false;
+    }
+
     public static bool IsAdjacent(IntVector a, IntVector b, bool cardinalOnly = false)
     {
         return (a - b).ManhattanLength <= (cardinalOnly ? 1 : 2);

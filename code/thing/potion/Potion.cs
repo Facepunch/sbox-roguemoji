@@ -10,6 +10,7 @@ public partial class Potion : Thing
 {
     [Net] public PotionType PotionType { get; protected set; }
     public override string ChatDisplayIcons => GetChatDisplayIcons(PotionType);
+    public override string AbilityName => "Quaff Potion";
     public virtual string SplashIcon => "";
 
     public Potion()

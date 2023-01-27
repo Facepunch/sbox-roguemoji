@@ -5,10 +5,11 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public enum ScrollType { Blink, Teleport, Fear, Telekinesis, Displace }
+public enum ScrollType { Blink, Teleport, Fear, Telekinesis, Displace, Confetti }
 public partial class Scroll : Thing
 {
     [Net] public ScrollType ScrollType { get; protected set; }
+    public override string AbilityName => "Read Scroll";
     public override string ChatDisplayIcons => GetChatDisplayIcons(ScrollType);
 
     public Scroll()
@@ -26,6 +27,7 @@ public partial class Scroll : Thing
             case ScrollType.Telekinesis: return "Scroll of Telekinesis";
             case ScrollType.Teleport: return "Scroll of Teleport";
             case ScrollType.Displace: return "Scroll of Displace";
+            case ScrollType.Confetti: return "Scroll of Confetti";
         }
 
         return "";
@@ -39,7 +41,7 @@ public partial class Scroll : Thing
             case ScrollType.Fear: return $"📜{Globals.Icon(IconType.Fear)}";
             case ScrollType.Telekinesis: return $"📜{Globals.Icon(IconType.Telekinesis)}";
             case ScrollType.Teleport: return $"📜{Globals.Icon(IconType.Teleport)}";
-            case ScrollType.Displace: return $"📜{Globals.Icon(IconType.Displace)}";
+            case ScrollType.Confetti: return $"📜{Globals.Icon(IconType.Confetti)}";
         }
 
         return "🧉";

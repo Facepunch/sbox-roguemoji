@@ -6,8 +6,6 @@ using System.Linq;
 namespace Roguemoji;
 public partial class ScrollFear : Scroll
 {
-    public override string AbilityName => "Read Scroll";
-
     public ScrollFear()
     {
         ScrollType = ScrollType.Fear;

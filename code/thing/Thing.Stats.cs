@@ -109,7 +109,7 @@ public partial class Thing : Entity
             case StatType.Sight: return $"The ability to see farther and see through objects";
             case StatType.Hearing: return $"The ability to notice sounds from a distance";
             case StatType.Smell: return $"The ability to detect odors left by things";
-            case StatType.Perception: return $"The range at which you can detect invisible things";
+            case StatType.Perception: return $"The range in which you can detect invisible things";
 
             case StatType.Durability: return $"Remaining physical integrity";
             case StatType.MaxHealth: return "Maximum amount of life available";
