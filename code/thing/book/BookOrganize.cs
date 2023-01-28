@@ -4,32 +4,32 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Roguemoji;
-public partial class BookTeleport : Thing
+public partial class BookOrganize : Thing
 {
     [Net] public int ManaCost { get; private set; }
     [Net] public int ReqInt { get; private set; }
     public float CooldownTime { get; private set; }
 
-    public override string ChatDisplayIcons => $"📘{Globals.Icon(IconType.Teleport)}";
+    public override string ChatDisplayIcons => $"📘{Globals.Icon(IconType.Organize)}";
 
-    public BookTeleport()
+    public BookOrganize()
 	{
 		DisplayIcon = "📘";
-        DisplayName = "Book of Teleport";
-        Description = "Teleport to a random place on the current floor";
-        Tooltip = "A book of Teleport";
+        DisplayName = "Book of Organize";
+        Description = "Organizes the items below your hotbar";
+        Tooltip = "A book of Organize";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
-        SetTattoo(Globals.Icon(IconType.Teleport), scale: 0.5f, offset: new Vector2(0.5f, -4f), offsetWielded: new Vector2(0f, 0f), offsetInfo: new Vector2(1f, -1f), offsetCharWielded: new Vector2(2.5f, -6f), offsetInfoWielded: new Vector2(-1f, -2f));
+        SetTattoo(Globals.Icon(IconType.Organize), scale: 0.5f, offset: new Vector2(0.5f, -4f), offsetWielded: new Vector2(0f, 0f), offsetInfo: new Vector2(1f, -1f), offsetCharWielded: new Vector2(2.5f, -6f), offsetInfoWielded: new Vector2(-1f, -2f));
 
         if (Game.IsServer)
         {
-            ManaCost = 2;
-            ReqInt = 6;
-            CooldownTime = 5f;
+            ManaCost = 1;
+            ReqInt = 3;
+            CooldownTime = 10f;
 
-            AddTrait(AbilityName, "📖", $"Spend {GetStatIcon(StatType.Mana)} to cast the spell Teleport", offset: new Vector2(0f, -2f), tattooIcon: Globals.Icon(IconType.Teleport), tattooScale: 0.7f, tattooOffset: new Vector2(0f, -5f), isAbility: true);
+            AddTrait(AbilityName, "📖", $"Spend {GetStatIcon(StatType.Mana)} to cast the spell Organize", offset: new Vector2(0f, -2f), tattooIcon: Globals.Icon(IconType.Organize), tattooScale: 0.7f, tattooOffset: new Vector2(0f, -5f), isAbility: true);
             AddTrait("", GetStatIcon(StatType.Mana), $"{ManaCost}{GetStatIcon(StatType.Mana)} used to cast spell", offset: new Vector2(0f, -3f), labelText: $"{ManaCost}", labelFontSize: 16, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", GetStatIcon(StatType.Intelligence), Globals.GetStatReqString(StatType.Intelligence, ReqInt, VerbType.Read), offset: new Vector2(0f, -1f), labelText: $"≥{ReqInt}", labelFontSize: 16, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
@@ -72,19 +72,14 @@ public partial class BookTeleport : Thing
         if (!user.TrySpendStat(StatType.Mana, ManaCost))
             return;
 
-        if (user.ContainingGridManager.GetRandomEmptyGridPos(out var targetGridPos, allowNonSolid: true))
-        {
-            RoguemojiGame.Instance.AddFloater("✨", user.GridPos, 0.8f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.2f);
-            RoguemojiGame.Instance.AddFloater("✨", targetGridPos, 0.5f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.1f);
+        var player = user as RoguemojiPlayer;
+        if (player == null)
+            return;
 
-            user.SetGridPos(targetGridPos);
+        player.AddComponent<COrganize>();
 
-            if (user is RoguemojiPlayer player)
-                player.RecenterCamera();
+        StartCooldown(CooldownTime);
 
-            StartCooldown(CooldownTime);
-
-            base.Use(user);
-        }
+        base.Use(user);
     }
 }

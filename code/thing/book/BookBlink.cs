@@ -4,14 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Roguemoji;
-public partial class BookBlink : Thing
+public partial class BookBlink : Book
 {
     [Net] public int ManaCost { get; private set; }
     [Net] public int ReqInt { get; private set; }
     public float CooldownTime { get; private set; }
 
     public override string ChatDisplayIcons => $"📘{Globals.Icon(IconType.Blink)}";
-    public override string AbilityName => "Read Book";
 
     public BookBlink()
 	{

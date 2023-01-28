@@ -31,13 +31,5 @@ public partial class ScrollOrganize : Scroll
             return;
 
         player.AddComponent<COrganize>();
-
-        //var orderedItems = player.InventoryGridManager.GetAllThings().Where(x => x.GridPos.y > 0).OrderBy(x => x.Tooltip);
-        //int startingIndex = player.InventoryGridManager.GetIndex(new IntVector(0, 1));
-        //for(int i = 0; i < orderedItems.Count(); i++)
-        //{
-        //    var thing = orderedItems.ElementAt(i);
-        //    player.SwapGridThingPos(thing, GridType.Inventory, player.InventoryGridManager.GetGridPos(startingIndex + i));
-        //}
     }
 }
