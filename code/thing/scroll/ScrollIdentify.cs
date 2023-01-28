@@ -19,11 +19,6 @@ public partial class ScrollIdentify : Scroll
         Tooltip = "A scroll of Identify";
 
         SetTattoo(Globals.Icon(IconType.Identify));
-
-        if (Game.IsServer)
-        {
-            AddTrait(AbilityName, "🔥", $"Sacrifice to cast the inscribed spell", offset: new Vector2(0f, -2f), tattooIcon: "📜", tattooScale: 0.45f, tattooOffset: new Vector2(0f, 4f), isAbility: true);
-        }
     }
 
     public override void Use(Thing user, GridType gridType, IntVector targetGridPos)
@@ -38,9 +33,18 @@ public partial class ScrollIdentify : Scroll
         if (item == null)
             return;
 
-        RoguemojiGame.Instance.AddFloaterInventory(player, Globals.Icon(IconType.Identified), item.GridPos, 1f, new Vector2(0f, 0f), new Vector2(0, -10f), height: 0f, text: "", EasingType.QuadOut, fadeInTime: 0.5f, scale: 0.8f, opacity: 0.66f, parent: item);
-
-        RoguemojiGame.Instance.RevealScroll(ScrollType, user.GridPos, user.CurrentLevelId);
+        if (item is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType))
+        {
+            RoguemojiGame.Instance.RevealScroll(scroll.ScrollType, user.GridPos, user.CurrentLevelId);
+            //player.IdentifyScroll(scroll.ScrollType);
+            RoguemojiGame.Instance.AddFloaterInventory(player, Globals.Icon(IconType.Identified), scroll.GridPos, 0.6f, new Vector2(0f, 0f), new Vector2(0, -10f), height: 0f, text: "", EasingType.QuadOut, fadeInTime: 0.1f, scale: 0.8f, opacity: 1f, parent: scroll);
+        }
+        else if(item is Potion potion && !player.IsPotionTypeIdentified(potion.PotionType))
+        {
+            RoguemojiGame.Instance.RevealPotion(potion.PotionType, user.GridPos, user.CurrentLevelId);
+            //player.IdentifyPotion(potion.PotionType);
+            RoguemojiGame.Instance.AddFloaterInventory(player, Globals.Icon(IconType.Identified), potion.GridPos, 0.6f, new Vector2(0f, 0f), new Vector2(0, -10f), height: 0f, text: "", EasingType.QuadOut, fadeInTime: 0.1f, scale: 0.8f, opacity: 1f, parent: potion);
+        }
 
         Destroy();
     }

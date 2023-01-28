@@ -1212,7 +1212,7 @@ public partial class RoguemojiPlayer : Thing
 
     public bool IsScrollTypeIdentified(ScrollType scrollType)
     {
-        return true;
+        //return true;
         return IdentifiedScrollTypes.Contains(scrollType);
     }
 
@@ -1228,7 +1228,7 @@ public partial class RoguemojiPlayer : Thing
 
     public bool IsPotionTypeIdentified(PotionType potionType)
     {
-        return true;
+        //return true;
         return IdentifiedPotionTypes.Contains(potionType);
     }
 }
