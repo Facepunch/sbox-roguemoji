@@ -139,7 +139,7 @@ public partial class RoguemojiPlayer : Thing
         EquipmentGridManager.Restart();
 
         for (int x = 0; x < RoguemojiGame.InventoryWidth; x++)
-            for (int y = 0; y < RoguemojiGame.InventoryHeight - 1; y++)
+            for (int y = 0; y < RoguemojiGame.InventoryHeight; y++)
                 SpawnRandomInventoryThing(new IntVector(x, y));
 
         RoguemojiGame.Instance.RefreshGridPanelClient(GridType.Inventory);
@@ -171,7 +171,7 @@ public partial class RoguemojiPlayer : Thing
 
     void SpawnRandomInventoryThing(IntVector gridPos)
     {
-        int rand = Game.Random.Int(0, 23);
+        int rand = Game.Random.Int(0, 24);
         switch (rand)
         {
             //case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -217,6 +217,7 @@ public partial class RoguemojiPlayer : Thing
             case 21: InventoryGridManager.SpawnThing<RugbyBall>(gridPos); break;
             case 22: InventoryGridManager.SpawnThing<PotionInvisible>(gridPos); break;
             case 23: InventoryGridManager.SpawnThing<ScrollFear>(gridPos); break;
+            case 24: InventoryGridManager.SpawnThing<ScrollOrganize>(gridPos); break;
         }
     }
 
@@ -1212,7 +1213,7 @@ public partial class RoguemojiPlayer : Thing
 
     public bool IsScrollTypeIdentified(ScrollType scrollType)
     {
-        //return true;
+        return true;
         return IdentifiedScrollTypes.Contains(scrollType);
     }
 
@@ -1228,7 +1229,7 @@ public partial class RoguemojiPlayer : Thing
 
     public bool IsPotionTypeIdentified(PotionType potionType)
     {
-        //return true;
+        return true;
         return IdentifiedPotionTypes.Contains(potionType);
     }
 }

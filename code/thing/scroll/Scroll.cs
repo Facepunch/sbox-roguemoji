@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public enum ScrollType { Blink, Teleport, Fear, Telekinesis, Displace, Confetti, Identify, }
+public enum ScrollType { Blink, Teleport, Fear, Telekinesis, Displace, Confetti, Identify, Organize, }
 public partial class Scroll : Thing
 {
     [Net] public ScrollType ScrollType { get; protected set; }
@@ -27,13 +27,14 @@ public partial class Scroll : Thing
     {
         switch (scrollType)
         {
-            case ScrollType.Blink: return "Scroll of Blink";
-            case ScrollType.Fear: return "Scroll of Fear";
-            case ScrollType.Telekinesis: return "Scroll of Telekinesis";
-            case ScrollType.Teleport: return "Scroll of Teleport";
-            case ScrollType.Displace: return "Scroll of Displace";
-            case ScrollType.Confetti: return "Scroll of Confetti";
-            case ScrollType.Identify: return "Scroll of Identify";
+            case ScrollType.Blink: return "Blink";
+            case ScrollType.Fear: return "Fear";
+            case ScrollType.Telekinesis: return "Telekinesis";
+            case ScrollType.Teleport: return "Teleport";
+            case ScrollType.Displace: return "Displace";
+            case ScrollType.Confetti: return "Confetti";
+            case ScrollType.Identify: return "Identify";
+            case ScrollType.Organize: return "Organize";
         }
 
         return "";
@@ -49,6 +50,7 @@ public partial class Scroll : Thing
             case ScrollType.Teleport: return $"📜{Globals.Icon(IconType.Teleport)}";
             case ScrollType.Confetti: return $"📜{Globals.Icon(IconType.Confetti)}";
             case ScrollType.Identify: return $"📜{Globals.Icon(IconType.Identify)}";
+            case ScrollType.Organize: return $"📜{Globals.Icon(IconType.Organize)}";
         }
 
         return "🧉";

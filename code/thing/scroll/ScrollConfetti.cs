@@ -22,8 +22,6 @@ public partial class ScrollConfetti : Scroll
     {
         base.Use(user);
 
-        Destroy();
-
         if(user is RoguemojiPlayer player)
             user.AddComponent<CConfetti>();
 
