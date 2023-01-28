@@ -159,11 +159,11 @@ public partial class RoguemojiPlayer : Thing
 
         SetStartingValues();
 
-        RestartClient();
+        ClearVisionKnowledgeClient();
     }
 
     [ClientRpc]
-    public void RestartClient()
+    public void ClearVisionKnowledgeClient()
     {
         SeenCells.Clear();
         SeenThings.Clear();
@@ -171,7 +171,7 @@ public partial class RoguemojiPlayer : Thing
 
     void SpawnRandomInventoryThing(IntVector gridPos)
     {
-        int rand = Game.Random.Int(0, 25);
+        int rand = Game.Random.Int(0, 26);
         switch (rand)
         {
             //case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -219,6 +219,7 @@ public partial class RoguemojiPlayer : Thing
             case 23: InventoryGridManager.SpawnThing<ScrollFear>(gridPos); break;
             case 24: InventoryGridManager.SpawnThing<ScrollOrganize>(gridPos); break;
             case 25: InventoryGridManager.SpawnThing<BookOrganize>(gridPos); break;
+            case 26: InventoryGridManager.SpawnThing<PotionAmnesia>(gridPos); break;
         }
     }
 
@@ -1214,7 +1215,7 @@ public partial class RoguemojiPlayer : Thing
 
     public bool IsScrollTypeIdentified(ScrollType scrollType)
     {
-        return true;
+        //return true;
         return IdentifiedScrollTypes.Contains(scrollType);
     }
 
@@ -1230,7 +1231,7 @@ public partial class RoguemojiPlayer : Thing
 
     public bool IsPotionTypeIdentified(PotionType potionType)
     {
-        return true;
+        //return true;
         return IdentifiedPotionTypes.Contains(potionType);
     }
 }
