@@ -167,7 +167,16 @@ public partial class RoguemojiPlayer : Thing
 
         SetStartingValues();
 
-        ClearVisionKnowledgeClient();
+        RestartClient();
+    }
+
+    [ClientRpc]
+    public void RestartClient()
+    {
+        SeenCells.Clear();
+        SeenThings.Clear();
+
+        Floaters?.Clear();
     }
 
     [ClientRpc]
@@ -179,7 +188,7 @@ public partial class RoguemojiPlayer : Thing
 
     void SpawnRandomInventoryThing(IntVector gridPos)
     {
-        int rand = Game.Random.Int(0, 26);
+        int rand = Game.Random.Int(0, 27);
         switch (rand)
         {
             //case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -228,6 +237,7 @@ public partial class RoguemojiPlayer : Thing
             case 24: InventoryGridManager.SpawnThing<ScrollOrganize>(gridPos); break;
             case 25: InventoryGridManager.SpawnThing<BookOrganize>(gridPos); break;
             case 26: InventoryGridManager.SpawnThing<PotionAmnesia>(gridPos); break;
+            case 27: InventoryGridManager.SpawnThing<PotionBurning>(gridPos); break;
         }
     }
 
@@ -1199,6 +1209,9 @@ public partial class RoguemojiPlayer : Thing
     {
         base.OnChangedGridPos();
 
+        //ContainingGridManager.AddFloater("🅰️", GridPos, 0f, Vector2.Zero, Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true,
+        //                EasingType.QuadOut, fadeInTime: 0f, 1f, opacity: 0.6f);
+
         RefreshVisibility(To.Single(this));
         ContainingGridManager.PlayerChangedGridPos(this);
 
@@ -1216,7 +1229,7 @@ public partial class RoguemojiPlayer : Thing
         if (!IdentifiedScrollTypes.Contains(scrollType))
         {
             IdentifiedScrollTypes.Add(scrollType);
-            RoguemojiGame.Instance.AddFloater(Globals.Icon(IconType.Identified), GridPos, 1f, CurrentLevelId, new Vector2(-1f, -10f), new Vector2(-1f, -30f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.5f, scale: 0.8f, opacity: 0.66f, parent: this);
+            AddFloater(Globals.Icon(IconType.Identified), 1f, new Vector2(-1f, -10f), new Vector2(-1f, -30f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.5f, scale: 0.8f, opacity: 0.66f);
             RoguemojiGame.Instance.LogMessageClient(To.Single(this), $"{Globals.Icon(IconType.Identified)}Identified 📜{RoguemojiGame.Instance.GetUnidentifiedScrollIcon(scrollType)} as {Scroll.GetDisplayName(scrollType)}{Scroll.GetChatDisplayIcons(scrollType)}", playerNum: 0);
         }
     }
@@ -1231,7 +1244,7 @@ public partial class RoguemojiPlayer : Thing
         if (!IdentifiedPotionTypes.Contains(potionType))
         {
             IdentifiedPotionTypes.Add(potionType);
-            RoguemojiGame.Instance.AddFloater(Globals.Icon(IconType.Identified), GridPos, 1f, CurrentLevelId, new Vector2(0f, -10f), new Vector2(0, -30f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.5f, scale: 0.8f, opacity: 0.66f, parent: this);
+            AddFloater(Globals.Icon(IconType.Identified), 1f, new Vector2(0f, -10f), new Vector2(0, -30f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.5f, scale: 0.8f, opacity: 0.66f);
             RoguemojiGame.Instance.LogMessageClient(To.Single(this), $"{Globals.Icon(IconType.Identified)}Identified 🧉{RoguemojiGame.Instance.GetUnidentifiedPotionIcon(potionType)} as {Potion.GetDisplayName(potionType)}{Potion.GetChatDisplayIcons(potionType)}", playerNum: 0);
         }
     }

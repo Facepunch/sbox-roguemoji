@@ -183,6 +183,38 @@
         }
     }
 
+    @if (Thing.HasFloaters)
+    {
+        foreach (var floater in Thing.Floaters)
+        {
+            if (Thing.ContainingGridType != GridType.Arena || !floater.requireSight || player.IsCellVisible(Thing.GridPos) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(player.GridPos, Thing.GridPos)))
+            {
+                if (player.CanSeeThing(Thing) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(player.GridPos, Thing.GridPos)))
+                {
+                    float scale = floater.height > 0f ? floater.scale * Utils.MapReturn(floater.timeSinceStart, 0f, floater.time, 1f, 1.2f, EasingType.SineInOut) : floater.scale;
+                    float fontSize = 29f * scale;
+
+                    Vector2 offset = floater.time > 0f ? Vector2.Lerp(floater.offsetStart, floater.offsetEnd, Utils.Map(floater.timeSinceStart, 0f, floater.time, 0f, 1f, floater.offsetEasingType)) : floater.offsetStart;
+
+                    if (floater.shakeAmount > 0f)
+                        offset += new Vector2(Game.Random.Float(-floater.shakeAmount, floater.shakeAmount), Game.Random.Float(-floater.shakeAmount, floater.shakeAmount));
+
+                    float height = floater.height > 0f ? Utils.MapReturn(floater.timeSinceStart, 0f, floater.time, 0f, floater.height, EasingType.SineInOut) : 0f;
+                    var opacity = floater.time > 0f ? (floater.timeSinceStart < floater.fadeInTime ? Utils.Map(floater.timeSinceStart, 0f, floater.fadeInTime, 0f, floater.opacity, EasingType.SineIn) : Utils.Map(floater.timeSinceStart, floater.fadeInTime, floater.time, floater.opacity, 0f, floater.offsetEasingType)) : floater.opacity;
+
+                    <div class="floater_draw" style="left: @(offset.x)px; top: @(offset.y - height)px; opacity: @(opacity); font-size: @(fontSize)px;">
+                        @(Hud.GetHallucinationTextStr(floater.icon, HallucinationTextType.Icon))
+
+                        @if (!string.IsNullOrEmpty(floater.text))
+                        {
+                            <div class="floater_text" style="top: @(13f * scale)px; font-size: @(fontSize * 0.72f);"> @(floater.text) </div>
+                        }
+                    </div>
+                }
+            }
+        }
+    }
+
     @if (Thing.IsOnCooldown && Thing.ContainingGridType != GridType.Arena)
     {
         var cooldownTimer = (Thing.CooldownTimer < 9.8f ? Thing.CooldownTimer : MathF.Ceiling(Thing.CooldownTimer));
@@ -231,7 +263,9 @@
         var statHash = HashCode.Combine(player.StatHash, Thing.StatHash);
         var identifiedHash = HashCode.Combine(Thing is Scroll scroll && player.IsScrollTypeIdentified(scroll.ScrollType) ? 1 : 0, Thing is Potion potion && player.IsPotionTypeIdentified(potion.PotionType) ? 1 : 0);
         var playerCanSeeHash = player.CanSeeThing(Thing) ? 1 : 0;
-        return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, HashCode.Combine(cooldownHash, wieldedCooldownHash, equipmentHighlightHash, statHash, identifiedHash), player.ConfusionSeed, player.HallucinatingSeed, playerCanSeeHash);
+        var floaterHash = Thing.HasFloaters ? Game.Random.Int(0, 9999) : 0;
+        return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, HashCode.Combine(cooldownHash, wieldedCooldownHash, equipmentHighlightHash, statHash, identifiedHash), 
+                                HashCode.Combine(player.ConfusionSeed, player.HallucinatingSeed), playerCanSeeHash, floaterHash);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

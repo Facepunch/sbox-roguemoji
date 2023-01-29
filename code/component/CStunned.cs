@@ -25,7 +25,7 @@ public class CStunned : ThingComponent
         if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component2))
             IconId = ((CIconPriority)component2).AddIconPriority("😖", (int)PlayerIconPriority.Stunned);
 
-        RoguemojiGame.Instance.AddFloater(Globals.Icon(IconType.Stunned), Thing.GridPos, time: 0f, Thing.CurrentLevelId, new Vector2(0f, -15f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.9f, opacity: 0.7f, parent: Thing);
+        thing.AddFloater(Globals.Icon(IconType.Stunned), time: 0f, new Vector2(0f, -15f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.9f, opacity: 0.7f);
     }
 
     public override void Update(float dt)

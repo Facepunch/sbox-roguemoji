@@ -147,7 +147,7 @@ public partial class Squirrel : Thing
         base.OnFindTarget(target);
 
         RoguemojiGame.Instance.RemoveFloater("❔", CurrentLevelId, parent: this);
-        RoguemojiGame.Instance.AddFloater("❕", GridPos, 1.55f, CurrentLevelId, new Vector2(0f, -10f), new Vector2(0f, -35f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.QuadOut, 0.05f, parent: this);
+        AddFloater("❕", 1.55f, new Vector2(0f, -10f), new Vector2(0f, -35f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.QuadOut, 0.05f);
         Acting.PerformedAction();
         Acting.ActionTimer = Game.Random.Float(0f, 0.1f);
         TargetLastSeenPos = target.GridPos;
@@ -158,7 +158,7 @@ public partial class Squirrel : Thing
         base.OnLoseTarget();
 
         RoguemojiGame.Instance.RemoveFloater("❕", CurrentLevelId, parent: this);
-        RoguemojiGame.Instance.AddFloater("❔", GridPos, Game.Random.Float(0.95f, 1.1f), CurrentLevelId, new Vector2(0f, -10f), new Vector2(0f, -30f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.QuadOut, 0.1f, parent: this);
+        AddFloater("❔", Game.Random.Float(0.95f, 1.1f), new Vector2(0f, -10f), new Vector2(0f, -30f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.QuadOut, 0.1f);
         Acting.PerformedAction();
         Acting.ActionTimer = Game.Random.Float(0f, 0.1f);
 
@@ -184,6 +184,7 @@ public partial class Squirrel : Thing
 
     public override void Destroy()
     {
+        // todo: dont spawn blood if burned to death
         if(!ContainingGridManager.DoesGridPosContainThingType<PuddleBlood>(GridPos))
             ContainingGridManager.SpawnThing<PuddleBlood>(GridPos);
 

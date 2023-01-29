@@ -19,7 +19,7 @@ public class CFearful : ThingComponent
         if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component))
             IconId = ((CIconPriority)component).AddIconPriority("😱", (int)PlayerIconPriority.Fearful);
 
-        RoguemojiGame.Instance.AddFloater("💧", Thing.GridPos, time: 0f, Thing.CurrentLevelId, new Vector2(10f, -10f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.65f, parent: Thing);
+        thing.AddFloater("💧", time: 0f, new Vector2(10f, -10f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.65f);
     }
 
     public override void Update(float dt)

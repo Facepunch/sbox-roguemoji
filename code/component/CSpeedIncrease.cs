@@ -23,7 +23,7 @@ public class CSpeedIncrease : ThingComponent
         thing.AdjustStat(StatType.Speed, SpeedAmount);
 
         Trait = thing.AddTrait("Speedy", Thing.GetStatIcon(StatType.Speed), $"{Thing.GetStatIcon(StatType.Speed)} increased by {SpeedAmount}", offset: Vector2.Zero);
-        RoguemojiGame.Instance.AddFloater(Thing.GetStatIcon(StatType.Speed), Thing.GridPos, time: 0f, Thing.CurrentLevelId, new Vector2(-16f, 8f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.4f, opacity: 0.33f, parent: Thing);
+        thing.AddFloater(Thing.GetStatIcon(StatType.Speed), time: 0f, new Vector2(-16f, 8f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.4f, opacity: 0.33f);
 
         if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component))
             IconId = ((CIconPriority)component).AddIconPriority("😆", (int)PlayerIconPriority.SpeedIncrease);

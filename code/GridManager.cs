@@ -27,6 +27,14 @@ public partial class GridManager : Entity
 
 	[Net] public LevelId LevelId { get; set; }
 
+    public GridManager()
+    {
+        if (Game.IsClient)
+        {
+            Floaters = new List<GridFloaterData>();
+        }
+    }
+
 	public void Init(int width, int height)
 	{
 		GridWidth = width;
@@ -49,6 +57,11 @@ public partial class GridManager : Entity
 			VisionChangedPlayers.Clear();
 		}
 	}
+
+    public void UpdateClient(float dt)
+    {
+        HandleFloaters(dt);
+    }
 
 	void UpdateThings(IList<Thing> things, float dt)
 	{

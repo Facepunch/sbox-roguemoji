@@ -37,6 +37,11 @@ public partial class Level : Entity
         GridManager.Update(dt);
     }
 
+    public void UpdateClient(float dt)
+    {
+        GridManager.UpdateClient(dt);
+    }
+
     public void Restart()
     {
         GridManager.Restart();

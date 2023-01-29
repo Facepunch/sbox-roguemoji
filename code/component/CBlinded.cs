@@ -32,7 +32,7 @@ public class CBlinded : ThingComponent
         AdjustSight(-1);
         Trait = thing.AddTrait("Blinded", Globals.Icon(IconType.Blindness), $"Drastically reduced {Thing.GetStatIcon(StatType.Sight)}", offset: Vector2.Zero);
 
-        RoguemojiGame.Instance.AddFloater(Globals.Icon(IconType.Blindness), Thing.GridPos, time: 0f, Thing.CurrentLevelId, new Vector2(-14f, -4f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.5f, opacity: 0.25f, parent: Thing);
+        thing.AddFloater(Globals.Icon(IconType.Blindness), time: 0f, new Vector2(-14f, -4f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.4f, opacity: 0.35f);
 
         if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component))
             IconId = ((CIconPriority)component).AddIconPriority("😑", (int)PlayerIconPriority.Blinded);
@@ -95,7 +95,7 @@ public class CBlinded : ThingComponent
     {
         Thing.AdjustStat(StatType.Sight, -CurrSightDelta);
         Thing.RemoveTrait(Trait);
-        RoguemojiGame.Instance.RemoveFloater(Globals.Icon(IconType.Blindness), Thing.CurrentLevelId, parent: Thing);
+        Thing.RemoveFloater(Globals.Icon(IconType.Blindness));
 
         if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component))
             ((CIconPriority)component).RemoveIconPriority(IconId);
@@ -103,7 +103,7 @@ public class CBlinded : ThingComponent
 
     public override void OnThingDestroyed()
     {
-        RoguemojiGame.Instance.RemoveFloater(Globals.Icon(IconType.Blindness), Thing.CurrentLevelId, parent: Thing);
+        Thing.RemoveFloater(Globals.Icon(IconType.Blindness));
     }
 
     public override void OnThingDied()

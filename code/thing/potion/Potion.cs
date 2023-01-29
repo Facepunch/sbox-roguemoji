@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public enum PotionType { Health, Mana, Energy, Poison, Blindness, Sleeping, Confusion, Hallucination, Speed, Medicine, Mutation, Invisibility, Amnesia, }
+public enum PotionType { Health, Mana, Energy, Poison, Blindness, Sleeping, Confusion, Hallucination, Speed, Medicine, Mutation, Invisibility, Amnesia, Burning, }
 public partial class Potion : Thing
 {
     [Net] public PotionType PotionType { get; protected set; }
@@ -42,6 +42,7 @@ public partial class Potion : Thing
             case PotionType.Mutation: return "Mutation Potion";
             case PotionType.Invisibility: return "Invisibility Potion";
             case PotionType.Amnesia: return "Amnesia Potion";
+            case PotionType.Burning: return "Burning Potion";
         }
 
         return "";
@@ -64,6 +65,7 @@ public partial class Potion : Thing
             case PotionType.Mutation: return $"🧉{Globals.Icon(IconType.Mutation)}";
             case PotionType.Invisibility: return $"🧉{Globals.Icon(IconType.Invisible)}";
             case PotionType.Amnesia: return $"🧉{Globals.Icon(IconType.Amnesia)}";
+            case PotionType.Burning: return $"🧉{Globals.Icon(IconType.Burning)}";
         }
 
         return "🧉";
@@ -114,7 +116,7 @@ public partial class Potion : Thing
                 var gridPos = breakGridPos + new IntVector(x, y);
                 if (gridManager.IsGridPosInBounds(gridPos))
                 {
-                    RoguemojiGame.Instance.AddFloater(SplashIcon, gridPos, Game.Random.Float(0.7f, 0.9f), levelId, new Vector2(0f, 0f), new Vector2(0f, Game.Random.Float(-10f, -15f)), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, 
+                    gridManager.AddFloater(SplashIcon, gridPos, Game.Random.Float(0.7f, 0.9f), new Vector2(0f, 0f), new Vector2(0f, Game.Random.Float(-10f, -15f)), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true,
                         EasingType.QuadOut, fadeInTime: Game.Random.Float(0.01f, 0.05f), scale: Game.Random.Float(0.75f, 0.9f), opacity: 0.4f);
 
                     ApplyEffectToGridPos(gridPos);

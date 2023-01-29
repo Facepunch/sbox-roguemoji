@@ -16,31 +16,6 @@
         position: absolute;
         z-index: 0;
     }
-
-    .floater_draw
-    {
-        width: 42px;
-        height: 42px;
-        position: absolute;
-        font-size: 29px;
-        color: white;
-        z-index: 0;
-        justify-content: center;
-        align-items: center;
-        text-stroke-color: black;
-        text-stroke-width: 2px;
-    }
-
-    .floater_text
-    {
-        font-size: 20px;
-        overflow:visible;
-        text-align: center;
-        position: absolute;
-        color: white;
-        text-stroke-color: black; 
-        text-stroke-width: 5px;
-    }
 </style>
 
 <root class="floater_display">
@@ -51,20 +26,24 @@
     @foreach(var floater in Hud.Instance.Floaters)
     {
         var parent = floater.parent;
-        var floaterGridPos = parent != null ? parent.GridPos : floater.gridPos;
-        @if (floater.gridType != GridType.Arena || !floater.requireSight || player.IsCellVisible(floaterGridPos) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(player.GridPos, floaterGridPos)))
+        var gridPos = parent != null ? parent.GridPos : floater.gridPos;
+        GridType gridType = parent?.ContainingGridType ?? floater.gridType;
+        @if (gridType != GridType.Arena || !floater.requireSight || player.IsCellVisible(gridPos) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(player.GridPos, gridPos)))
         {
-            //Log.Info($"{floater.icon} 0 {floater.gridType}");
-            if (parent == null || player.CanSeeThing(parent) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(player.GridPos, floaterGridPos)))
+            if (parent == null || player.CanSeeThing(parent) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(player.GridPos, gridPos)))
             {
                 Vector2 parentOffset = parent?.TotalOffset ?? Vector2.Zero;
-                var screenPos = (floater.gridType == GridType.Arena) ? Hud.Instance.GetScreenPosForArenaGridPos(floaterGridPos) : Hud.Instance.GetScreenPosForInventoryGridPos(floaterGridPos);
+                var screenPos = (gridType == GridType.Arena) ? Hud.Instance.GetScreenPosForArenaGridPos(gridPos) : Hud.Instance.GetScreenPosForInventoryGridPos(gridPos);
                 Vector2 pos = ((screenPos + parentOffset) / ScaleToScreen) + new Vector2(-RoguemojiGame.CellSize / 2, -RoguemojiGame.CellSize / 2);
 
                 float scale = floater.height > 0f ? floater.scale * Utils.MapReturn(floater.timeSinceStart, 0f, floater.time, 1f, 1.2f, EasingType.SineInOut) : floater.scale;
                 float fontSize = 29f * scale;
 
                 Vector2 offset = floater.time > 0f ? Vector2.Lerp(floater.offsetStart, floater.offsetEnd, Utils.Map(floater.timeSinceStart, 0f, floater.time, 0f, 1f, floater.offsetEasingType)) : floater.offsetStart;
+
+                if(floater.shakeAmount > 0f)
+                    offset += new Vector2(Game.Random.Float(-floater.shakeAmount, floater.shakeAmount), Game.Random.Float(-floater.shakeAmount, floater.shakeAmount));
+
                 float height = floater.height > 0f ? Utils.MapReturn(floater.timeSinceStart, 0f, floater.time, 0f, floater.height, EasingType.SineInOut) : 0f;
                 var opacity = floater.time > 0f ? (floater.timeSinceStart < floater.fadeInTime ? Utils.Map(floater.timeSinceStart, 0f, floater.fadeInTime, 0f, floater.opacity, EasingType.SineIn) : Utils.Map(floater.timeSinceStart, floater.fadeInTime, floater.time, floater.opacity, 0f, floater.offsetEasingType)) : floater.opacity;
 

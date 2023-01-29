@@ -43,7 +43,7 @@ public partial class ScrollTelekinesis : Scroll
             if (targetThing.GetComponent<CActing>(out var c))
                 ((CActing)c).PerformedAction();
 
-            RoguemojiGame.Instance.AddFloater($"{Globals.Icon(IconType.Telekinesis)}", targetGridPos, 0.5f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.1f, parent: targetThing);
+            targetThing.AddFloater($"{Globals.Icon(IconType.Telekinesis)}", 0.5f, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.1f);
         }
         else
         {

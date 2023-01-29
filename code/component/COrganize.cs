@@ -58,7 +58,7 @@ public class COrganize : ThingComponent
                 var thing = _orderedItems.ElementAt(_currIndex);
                 if(thing != null && thing.ContainingGridType == GridType.Inventory && thing.ContainingGridManager.OwningPlayer == player) 
                 {
-                    RoguemojiGame.Instance.AddFloaterInventory(player, "📥️", thing.GridPos, 0.5f, new Vector2(0f, 0f), new Vector2(0, -10f), height: 0f, text: "", EasingType.QuadOut, fadeInTime: 0.01f, scale: 1f, opacity: 1f, parent: thing);
+                    thing.AddFloater("📥️", time: 0.5f, new Vector2(0f, 0f), new Vector2(0, -10f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.01f, scale: 1f, opacity: 1f);
 
                     int startingIndex = Math.Min(player.InventoryGridManager.GridWidth, 10);
                     //int startingIndex = player.InventoryGridManager.GetIndex(new IntVector(0, 1));

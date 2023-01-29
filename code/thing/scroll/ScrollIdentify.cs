@@ -36,12 +36,12 @@ public partial class ScrollIdentify : Scroll
         if (item is Scroll scroll && !player.IsScrollTypeIdentified(scroll.ScrollType))
         {
             RoguemojiGame.Instance.RevealScroll(scroll.ScrollType, user.GridPos, user.CurrentLevelId);
-            RoguemojiGame.Instance.AddFloaterInventory(player, Globals.Icon(IconType.Identified), scroll.GridPos, 0.6f, new Vector2(0f, 0f), new Vector2(0, -10f), height: 0f, text: "", EasingType.QuadOut, fadeInTime: 0.1f, scale: 0.8f, opacity: 1f, parent: scroll);
+            scroll.AddFloater(Globals.Icon(IconType.Identified), 0.6f, new Vector2(0f, 0f), new Vector2(0, -10f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.1f, scale: 0.8f, opacity: 1f);
         }
         else if(item is Potion potion && !player.IsPotionTypeIdentified(potion.PotionType))
         {
             RoguemojiGame.Instance.RevealPotion(potion.PotionType, user.GridPos, user.CurrentLevelId);
-            RoguemojiGame.Instance.AddFloaterInventory(player, Globals.Icon(IconType.Identified), potion.GridPos, 0.6f, new Vector2(0f, 0f), new Vector2(0, -10f), height: 0f, text: "", EasingType.QuadOut, fadeInTime: 0.1f, scale: 0.8f, opacity: 1f, parent: potion);
+            potion.AddFloater(Globals.Icon(IconType.Identified), 0.6f, new Vector2(0f, 0f), new Vector2(0, -10f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.1f, scale: 0.8f, opacity: 1f);
         }
 
         Destroy();

@@ -104,14 +104,7 @@ public partial class RoguemojiGame : GameManager
 	{
 		float dt = Time.Delta;
 
-        _occupiedLevelIds.Clear();
-        foreach (RoguemojiPlayer player in Players)
-		{
-			if(player != null && player.IsValid)
-                _occupiedLevelIds.Add(player.CurrentLevelId);
-		}
-
-		foreach(var levelId in _occupiedLevelIds)
+		foreach(var levelId in GetOccupiedLevels())
 		{
 			Level level = Levels[levelId];
 			level.Update(dt);
@@ -121,6 +114,8 @@ public partial class RoguemojiGame : GameManager
 	[Event.Tick.Client]
 	public void ClientTick()
 	{
+        var dt = Time.Delta;
+
 		if (Hud.MainPanel.LogPanel != null)
 		{
 			while (LogMessageQueue.Count > 0)
@@ -152,6 +147,24 @@ public partial class RoguemojiGame : GameManager
                 _panelsToFlicker.RemoveAt(i);
             }
         }
+
+        foreach (var levelId in GetOccupiedLevels())
+        {
+            Level level = Levels[levelId];
+            level.UpdateClient(dt);
+        }
+    }
+
+    HashSet<LevelId> GetOccupiedLevels()
+    {
+        _occupiedLevelIds.Clear();
+        foreach (RoguemojiPlayer player in Players)
+        {
+            if (player != null && player.IsValid)
+                _occupiedLevelIds.Add(player.CurrentLevelId);
+        }
+
+        return _occupiedLevelIds;
     }
 
 	public override void ClientJoined(IClient client) // Server-only
@@ -443,29 +456,29 @@ public partial class RoguemojiGame : GameManager
     }
 
     public void AddFloaterInventory(RoguemojiPlayer player, string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height = 0f, string text = "", 
-        EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, Thing parent = null)
+        EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, float shakeAmount = 0f, Thing parent = null)
     {
-        AddFloaterClient(To.Single(player), icon, gridPos.x, gridPos.y, time, offsetStart, offsetEnd, height, text, requireSight: false, alwaysShowWhenAdjacent: false, offsetEasingType, fadeInTime, scale, opacity, GridType.Inventory, (parent != null) ? parent.NetworkIdent : -1);
+        AddFloaterClient(To.Single(player), icon, gridPos.x, gridPos.y, time, offsetStart, offsetEnd, height, text, requireSight: false, alwaysShowWhenAdjacent: false, offsetEasingType, fadeInTime, scale, opacity, shakeAmount, GridType.Inventory, (parent != null) ? parent.NetworkIdent : -1);
     }
 
     public void AddFloater(string icon, IntVector gridPos, float time, LevelId levelId, Vector2 offsetStart, Vector2 offsetEnd, float height = 0f, string text = "", bool requireSight = true, bool alwaysShowWhenAdjacent = false, 
-                        EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, Thing parent = null)
+                        EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, float shakeAmount = 0f, Thing parent = null)
     {
 		foreach(var player in Players)
 		{
 			if (player.CurrentLevelId == levelId)
             {
-                AddFloaterClient(To.Single(player), icon, gridPos.x, gridPos.y, time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, GridType.Arena, (parent != null) ? parent.NetworkIdent : -1);
+                AddFloaterClient(To.Single(player), icon, gridPos.x, gridPos.y, time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, shakeAmount, GridType.Arena, (parent != null) ? parent.NetworkIdent : -1);
             }
 		}
     }
 
     [ClientRpc]
     public void AddFloaterClient(string icon, int x, int y, float time, Vector2 offsetStart, Vector2 offsetEnd, float height = 0f, string text = "", bool requireSight = true, bool alwaysShowWhenAdjacent = false, 
-                                EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, GridType gridType = GridType.Arena, int parentIdent = -1)
+                                EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, float shakeAmount = 0f, GridType gridType = GridType.Arena, int parentIdent = -1)
     {
         Thing parent = (parentIdent == -1) ? null : Entity.FindByIndex(parentIdent) as Thing;
-        Hud.Instance.AddFloater(icon, new IntVector(x, y), time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, gridType, parent);
+        Hud.Instance.AddFloater(icon, new IntVector(x, y), time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, shakeAmount, gridType, parent);
     }
 
     public void RemoveFloater(string icon, LevelId levelId, Thing parent = null)

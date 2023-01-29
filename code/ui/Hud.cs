@@ -26,11 +26,12 @@ public struct FloaterData
     public float fadeInTime;
     public float scale;
     public float opacity;
+    public float shakeAmount;
     public GridType gridType;
     public Thing parent;
 
     public FloaterData(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height, string text, bool requireSight, bool alwaysShowWhenAdjacent, 
-        EasingType offsetEasingType, float fadeInTime, float scale, float opacity, GridType gridType, Thing parent)
+        EasingType offsetEasingType, float fadeInTime, float scale, float opacity, float shakeAmount, GridType gridType, Thing parent)
     {
         this.icon = icon;
         this.gridPos = gridPos;
@@ -46,6 +47,7 @@ public struct FloaterData
         this.fadeInTime = fadeInTime;
         this.scale = scale;
         this.opacity = opacity;
+        this.shakeAmount = shakeAmount;
         this.gridType = gridType;
         this.parent = parent;
     }
@@ -315,7 +317,7 @@ public partial class Hud : RootPanel
 		return point.x > rect.Left && point.x < rect.Right && point.y > rect.Top && point.y < rect.Bottom;
 	}
 
-    public Vector2 GetScreenPosForArenaGridPos(IntVector gridPos)
+    public Vector2 GetScreenPosForArenaGridPos(IntVector gridPos, bool relative = false)
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
         var arenaPanel = GetGridPanel(GridType.Arena);
@@ -325,9 +327,11 @@ public partial class Hud : RootPanel
         if (arenaPanel == null)
             return Vector2.Zero;
 
-        //Log.Info($"GetScreenPosForArenaGridPos: {gridPos} - {(rect.TopLeft + arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset)}");
-
-        return arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset;
+        if(relative)
+            return arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset + new Vector2(-logRect.Width + (-18f / ScaleFromScreen), (-10f / ScaleFromScreen));
+        //return rect.TopLeft + arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset + new Vector2(-logRect.Width + 4, 14);
+        else
+            return arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset;
     }
 
     public Vector2 GetScreenPosForInventoryGridPos(IntVector gridPos)
@@ -467,9 +471,9 @@ public partial class Hud : RootPanel
     }
 
     public void AddFloater(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height, string text = "", bool requireSight = true, bool alwaysShowWhenAdjacent = false, 
-        EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, GridType gridType = GridType.Arena, Thing parent = null)
+        EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, float shakeAmount = 0f, GridType gridType = GridType.Arena, Thing parent = null)
     {
-        Floaters.Add(new FloaterData(icon, gridPos, time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, gridType, parent));
+        Floaters.Add(new FloaterData(icon, gridPos, time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, shakeAmount, gridType, parent));
     }
 
     public void RemoveFloater(string icon, Thing parent = null)
