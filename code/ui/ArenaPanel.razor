@@ -2,6 +2,7 @@
 @using Sandbox;
 @using Sandbox.UI;
 @using System.Collections.Generic;
+@using System.Linq;
 @attribute [StyleSheet("/ui/Hud.scss")]
 
 @inherits GridPanel;
@@ -196,25 +197,34 @@
                     <div class="unseen" style="left: @(x * RoguemojiGame.CellSize + player.CameraPixelOffset.x); top: @(y * RoguemojiGame.CellSize + player.CameraPixelOffset.y);"></div>
                 }
             }
-            else if(player.IsAiming && player.AimingGridType == GridType.Arena && player.AimingCells.Contains(gridPos))
+            else
             {
-                var aimOpacity = 0.4f + MathF.Sin(Time.Now * 16f) * 0.3f;
-                var dir = GridManager.GetDirectionForIntVector(gridPos - player.GridPos);
-                <div class="aiming_cell" style="left: @(x * RoguemojiGame.CellSize + player.CameraPixelOffset.x + 1); top: @(y * RoguemojiGame.CellSize + player.CameraPixelOffset.y + 1); opacity: @(aimOpacity); transform: rotate(@(GetAimingAngle(dir)));">
-                    @if(player.AimingType == AimingType.Direction)
-                        @(GetArrowIcon(dir))
-                </div>
-
-                @if(player.AimingType == AimingType.TargetCell)
+                //if (level.GridManager.GetThingsAtClient(gridPos).Where(x => x.HasFlag(ThingFlags.Burning)).Count() > 0)
                 {
-                    var arenaPanel = Hud.Instance.GetGridPanel(GridType.Arena);
-                    var mouseGridPos = arenaPanel.GetGridPos(arenaPanel.MousePosition) + player.CameraGridOffset;
+                    
+                }
 
-                    if(gridPos.Equals(mouseGridPos))
+                if (player.IsAiming && player.AimingGridType == GridType.Arena && player.AimingCells.Contains(gridPos))
+                {
+                    var aimOpacity = 0.4f + MathF.Sin(Time.Now * 16f) * 0.3f;
+                    var dir = GridManager.GetDirectionForIntVector(gridPos - player.GridPos);
+                    <div class="aiming_cell" style="left: @(x * RoguemojiGame.CellSize + player.CameraPixelOffset.x + 1); top: @(y * RoguemojiGame.CellSize + player.CameraPixelOffset.y + 1); opacity: @(aimOpacity); transform: rotate(@(GetAimingAngle(dir)));">
+                        @if (player.AimingType == AimingType.Direction)
+                            @(GetArrowIcon(dir))
+
+                    </div>
+
+                    @if (player.AimingType == AimingType.TargetCell)
                     {
-                        <div class="aiming_pin" style="left: @((x * RoguemojiGame.CellSize) + player.CameraPixelOffset.x + 9); top: @((y * RoguemojiGame.CellSize) + player.CameraPixelOffset.y - 13);">
-                            @(Hud.GetHallucinationTextStr("📍", HallucinationTextType.Icon))
-                        </div>
+                        var arenaPanel = Hud.Instance.GetGridPanel(GridType.Arena);
+                        var mouseGridPos = arenaPanel.GetGridPos(arenaPanel.MousePosition) + player.CameraGridOffset;
+
+                        if (gridPos.Equals(mouseGridPos))
+                        {
+                            <div class="aiming_pin" style="left: @((x * RoguemojiGame.CellSize) + player.CameraPixelOffset.x + 9); top: @((y * RoguemojiGame.CellSize) + player.CameraPixelOffset.y - 13);">
+                                @(Hud.GetHallucinationTextStr("📍", HallucinationTextType.Icon))
+                            </div>
+                        }
                     }
                 }
             }

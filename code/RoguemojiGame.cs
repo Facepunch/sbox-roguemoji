@@ -39,7 +39,7 @@ public partial class RoguemojiGame : GameManager
 	public const int ArenaPanelHeight = 19;
 
     // todo: move to player
-    public const int InventoryWidth = 10; //5;
+    public const int InventoryWidth = 12; //5;
 	public const int InventoryHeight = 6;
     public const int EquipmentWidth = 4;
     public const int EquipmentHeight = 2;

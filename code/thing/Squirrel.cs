@@ -10,6 +10,7 @@ public partial class Squirrel : Thing
     public float CantSeeTargetElapsedTime { get; private set; }
     public float CantSeeTargetLoseDelay { get; private set; }
     public IntVector TargetLastSeenPos { get; set; }
+    public IntVector WanderGridPos { get; set; }
 
     public Squirrel()
 	{
@@ -62,6 +63,13 @@ public partial class Squirrel : Thing
 
         if (!Targeting.HasTarget)
         {
+            //RoguemojiGame.Instance.DebugGridLine(GridPos, WanderGridPos, new Color(0.6f, 0f, 1f, 0.8f), 0.025f);
+
+            if (Acting.IsActionReady && !GridPos.Equals(WanderGridPos))
+            {
+                TryToMove(WanderGridPos);
+            }
+
             //Targeting.Target = RoguemojiGame.Instance.GetClosestPlayer(GridPos);
         }
         else
@@ -78,7 +86,7 @@ public partial class Squirrel : Thing
                 bool canSeeTarget = CanSeeGridPos(target.GridPos, adjustedSight) && CanSeeThing(target);
                 bool isFearful = GetComponent<CFearful>(out var fearful);
 
-                //RoguemojiGame.Instance.DebugGridLine(GridPos, Targeting.Target.GridPos, canSeeTarget ? new Color(0f, 0f, 1f, 0.2f) : new Color(1f, 0f, 0f, 0.2f), 0f, CurrentLevelId);
+                //RoguemojiGame.Instance.DebugGridLine(GridPos, Targeting.Target.GridPos, canSeeTarget ? new Color(0f, 0f, 1f, 0.8f) : new Color(1f, 0f, 0f, 0.8f), 0.025f);
 
                 if (Acting.IsActionReady)
                 {
@@ -91,18 +99,7 @@ public partial class Squirrel : Thing
 
                     //RoguemojiGame.Instance.DebugGridLine(GridPos, targetPos, canSeeTarget ? new Color(0f, 0f, 1f, 0.2f) : new Color(1f, 0f, 0f, 0.2f), 0.5f, CurrentLevelId);
 
-                    var path = GetPathTo(GridPos, targetPos);
-                    if (path != null && path.Count > 0 && !path[0].Equals(GridPos))
-                    {
-                        var dir = GridManager.GetDirectionForIntVector(path[0] - GridPos);
-
-                        if(HasComponent<CConfused>() && Game.Random.Int(0, 1) == 0)
-                            dir = GridManager.GetRandomDirection(cardinalOnly: false);
-
-                        TryMove(dir);
-                    }
-
-                    Acting.PerformedAction();
+                    TryToMove(targetPos);
                 }
 
                 if(!isFearful)
@@ -120,6 +117,29 @@ public partial class Squirrel : Thing
                 }
             }
         }
+    }
+
+    void TryToMove(IntVector gridPos)
+    {
+        var path = GetPathTo(GridPos, gridPos);
+        if (path != null && path.Count > 0 && !path[0].Equals(GridPos))
+        {
+            var dir = GridManager.GetDirectionForIntVector(path[0] - GridPos);
+
+            if (HasComponent<CConfused>() && Game.Random.Int(0, 1) == 0)
+                dir = GridManager.GetRandomDirection(cardinalOnly: false);
+
+            TryMove(dir);
+        }
+
+        Acting.PerformedAction();
+    }
+
+    public override void OnSpawned()
+    {
+        base.OnSpawned();
+
+        WanderGridPos = GridPos;
     }
 
     public override void OnFindTarget(Thing target)
@@ -141,6 +161,8 @@ public partial class Squirrel : Thing
         RoguemojiGame.Instance.AddFloater("❔", GridPos, Game.Random.Float(0.95f, 1.1f), CurrentLevelId, new Vector2(0f, -10f), new Vector2(0f, -30f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.QuadOut, 0.1f, parent: this);
         Acting.PerformedAction();
         Acting.ActionTimer = Game.Random.Float(0f, 0.1f);
+
+        WanderGridPos = TargetLastSeenPos;
     }
 
     public override void TakeDamageFrom(Thing thing)

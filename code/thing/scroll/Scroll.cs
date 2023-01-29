@@ -19,7 +19,7 @@ public partial class Scroll : Thing
 
         if (Game.IsServer)
         {
-            AddTrait(AbilityName, Globals.Icon(IconType.SacrificeScroll), $"Sacrifice to cast the inscribed spell", offset: new Vector2(0f, -2f), tattooIcon: "📜", tattooScale: 0.45f, tattooOffset: new Vector2(0f, 4f), isAbility: true);
+            AddTrait(AbilityName, Globals.Icon(IconType.SacrificeScroll), $"Sacrifice to cast the inscribed spell", offset: new Vector2(0f, -2f), tattooIcon: "📜", tattooScale: 0.45f, tattooOffset: new Vector2(0f, 0f), isAbility: true);
         }
     }
 
@@ -92,7 +92,7 @@ public partial class Scroll : Thing
         RoguemojiGame.Instance.RevealScroll(ScrollType, user.GridPos, user.CurrentLevelId);
 
         if (user is RoguemojiPlayer player)
-            RoguemojiGame.Instance.AddFloaterInventory(player, Globals.Icon(IconType.SacrificeScroll), GridPos, 0.3f, new Vector2(0f, 0f), new Vector2(0, 0f), height: 0f, text: "", EasingType.QuadOut, fadeInTime: 0.04f, scale: 0.9f, opacity: 0.8f, parent: null);
+            RoguemojiGame.Instance.AddFloaterInventory(player, Globals.Icon(IconType.SacrificeScroll), GridPos, 0.3f, new Vector2(0f, 0f), new Vector2(0, 0f), height: 0f, text: "", EasingType.QuadOut, fadeInTime: 0.04f, scale: 1f, opacity: 0.9f, parent: null);
     }
 
     public void SetTattoo(string icon)

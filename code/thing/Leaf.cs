@@ -15,6 +15,7 @@ public partial class Leaf : Thing
     }
 
     // todo: make crunching noise when you move onto it
+    // todo: wind blows it easily
 
     public override void OnAddComponent(TypeDescription type)
     {

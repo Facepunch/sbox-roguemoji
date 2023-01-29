@@ -42,7 +42,11 @@
     }
 </style>
 
-<root class="cell_tooltip @GetEquipmentClass()" style="display:@(RoguemojiGame.Instance.LocalPlayer.CanSeeThing(Thing) ? "flex" : "none");">
+@{
+    var player = RoguemojiGame.Instance.LocalPlayer;
+}
+
+<root class="cell_tooltip @GetEquipmentClass()" style="display:@(player.CanSeeThing(Thing) ? "flex" : "none");">
     @(Hud.GetConfusedText(Hud.GetHallucinationTextThing(Thing, Hud.GetTooltip(Thing), HallucinationTextType.Tooltip)))
 
     @if(Thing.ContainingGridType == GridType.Inventory)
@@ -64,6 +68,15 @@
                 </span>
 
                 <span class="cell_tooltip_bind">[RMB]</span>
+
+                @{
+                    var index = Thing.ContainingGridManager.GetIndex(Thing.GridPos);
+                }
+
+                @if(index < 10)
+                {
+                    <span class="cell_tooltip_bind">@($"[{((index + 1 == 10) ? 0 : index + 1)}]") </span>
+                }
             </div>
         }
     }

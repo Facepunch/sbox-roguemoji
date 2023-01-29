@@ -92,6 +92,9 @@ public class CTargeting : ThingComponent
 
         foreach (var other in _potentialTargets)
         {
+            if (!Thing.CanSeeThing(other))
+                continue;
+
             int adjustedSight = Math.Max(sight - other.GetStatClamped(StatType.Stealth), 1);
             int distance = Utils.GetDistance(Thing.GridPos, other.GridPos);
             if (distance <= adjustedSight && distance < closestDistance)

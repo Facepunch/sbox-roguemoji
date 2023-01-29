@@ -30,8 +30,13 @@ public class COrganize : ThingComponent
         if (player.GetComponent<CIconPriority>(out var component2))
             IconId = ((CIconPriority)component2).AddIconPriority("🧐", (int)PlayerIconPriority.Organize);
 
-        _orderedItems = player.InventoryGridManager.GetAllThings().Where(x => x.GridPos.y > 0).OrderBy(x => x.GetType().Name).ToList();
+        _orderedItems = player.InventoryGridManager.GetAllThings().Where(x => !IsInHotbar(x)).OrderBy(x => x.GetType().Name).ToList();
         _currIndex = 0;
+    }
+    
+    bool IsInHotbar(Thing thing)
+    {
+        return thing.GridPos.y == 0 && thing.ContainingGridManager.GetIndex(thing.GridPos) < 10;
     }
 
     public override void Update(float dt)
@@ -55,7 +60,8 @@ public class COrganize : ThingComponent
                 {
                     RoguemojiGame.Instance.AddFloaterInventory(player, "📥️", thing.GridPos, 0.5f, new Vector2(0f, 0f), new Vector2(0, -10f), height: 0f, text: "", EasingType.QuadOut, fadeInTime: 0.01f, scale: 1f, opacity: 1f, parent: thing);
 
-                    int startingIndex = player.InventoryGridManager.GetIndex(new IntVector(0, 1));
+                    int startingIndex = Math.Min(player.InventoryGridManager.GridWidth, 10);
+                    //int startingIndex = player.InventoryGridManager.GetIndex(new IntVector(0, 1));
                     player.SwapGridThingPos(thing, GridType.Inventory, player.InventoryGridManager.GetGridPos(startingIndex + _currIndex));
                 }
 

@@ -113,6 +113,14 @@ public partial class RoguemojiPlayer : Thing
         IdentifiedScrollTypes.Clear();
         IdentifiedPotionTypes.Clear();
 
+        // -----------------
+        foreach (int i in Enum.GetValues(typeof(ScrollType)))
+            IdentifiedScrollTypes.Add((ScrollType)i);
+
+        foreach (int i in Enum.GetValues(typeof(PotionType)))
+            IdentifiedPotionTypes.Add((PotionType)i);
+        // -----------------
+
         ClearStats();
         InitStat(StatType.Health, 10, 0, 10);
         InitStat(StatType.Energy, 0, 0, 0);
@@ -1215,7 +1223,6 @@ public partial class RoguemojiPlayer : Thing
 
     public bool IsScrollTypeIdentified(ScrollType scrollType)
     {
-        //return true;
         return IdentifiedScrollTypes.Contains(scrollType);
     }
 
@@ -1231,7 +1238,6 @@ public partial class RoguemojiPlayer : Thing
 
     public bool IsPotionTypeIdentified(PotionType potionType)
     {
-        //return true;
         return IdentifiedPotionTypes.Contains(potionType);
     }
 }
