@@ -32,7 +32,7 @@ public partial class ScrollFear : Scroll
             if (thing.GetComponent<CActing>(out var component))
             {
                 var fearful = thing.AddComponent<CFearful>();
-                fearful.Lifetime = Game.Random.Float(4f, 6f);
+                fearful.Lifetime = Game.Random.Float(8f, 10f);
                 fearful.FearedThing = user;
 
                 var acting = (CActing)component;

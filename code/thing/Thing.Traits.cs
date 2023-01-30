@@ -72,6 +72,7 @@ public partial class Thing : Entity
             Traits = new List<Trait>();
 
         Traits.Add(trait);
+        RefreshTraitHash();
         return trait;
     }
 

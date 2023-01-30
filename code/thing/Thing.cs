@@ -358,7 +358,15 @@ public partial class Thing : Entity
 
         OnDestroyed();
 
+        DestroyClient();
+
         Remove();
+    }
+
+    [ClientRpc]
+    public void DestroyClient()
+    {
+
     }
 
     public virtual void SetGridPos(IntVector gridPos)

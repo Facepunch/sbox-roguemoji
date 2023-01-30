@@ -6,6 +6,7 @@ namespace Roguemoji;
 
 public class CFearful : ThingComponent
 {
+    public Trait Trait { get; private set; }
     public Thing FearedThing { get; set; }
     public float Lifetime { get; set; }
     public int IconId { get; set; }
@@ -15,6 +16,8 @@ public class CFearful : ThingComponent
         base.Init(thing);
 
         ShouldUpdate = true;
+
+        Trait = thing.AddTrait("Fearful", Globals.Icon(IconType.Fear), $"Terrified of something", offset: Vector2.Zero);
 
         if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component))
             IconId = ((CIconPriority)component).AddIconPriority("😱", (int)PlayerIconPriority.Fearful);
@@ -30,6 +33,8 @@ public class CFearful : ThingComponent
 
         if(Lifetime > 0f && TimeElapsed > Lifetime)
             Remove();
+
+        Trait.BarPercent = 1f - Utils.Map(TimeElapsed, 0f, Lifetime, 0f, 1f);
     }
 
     public override void OnRemove()
@@ -38,6 +43,8 @@ public class CFearful : ThingComponent
 
         if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component))
             ((CIconPriority)component).RemoveIconPriority(IconId);
+
+        Thing.RemoveTrait(Trait);
     }
 
     public override void OnThingDestroyed()
