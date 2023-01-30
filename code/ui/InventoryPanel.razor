@@ -54,6 +54,7 @@
 
     @{
         var player = RoguemojiGame.Instance.LocalPlayer;
+        var gridManager = player.InventoryGridManager;
     }
 
     @if (player?.InventoryGridManager?.Things == null)
@@ -77,7 +78,7 @@
     @for (int index = 0; index < Math.Min(GridWidth, 10); index++)
     {
         var gridPos = Hud.Instance.GetGridPanel(GridType.Inventory).GetGridPos(index);
-        var things = player.InventoryGridManager.GetThingsAtClient(gridPos);
+        var things = gridManager.GetThingsAtClient(gridPos);
         <div class="number_label @(things.Count() == 0 ? "dimmed" : "")" style="left: @(gridPos.x * RoguemojiGame.CellSize); top: @(gridPos.y * RoguemojiGame.CellSize); z-index:9999;"> 
             @((index + 1 == 10) ? 0 : index + 1) 
         </div>
@@ -85,9 +86,9 @@
 
     @if (player.IsAiming && player.AimingGridType == GridType.Inventory)
     {
-        for (int x = -1; x <= player.InventoryGridManager.GridWidth; x++)
+        for (int x = -1; x <= gridManager.GridWidth; x++)
         {
-            for (int y = -1; y <= player.InventoryGridManager.GridHeight; y++)
+            for (int y = -1; y <= gridManager.GridHeight; y++)
             {
                 var gridPos = new IntVector(x, y);
                 if (player.AimingCells.Contains(gridPos))
@@ -114,6 +115,31 @@
         }
     }
 
+    @foreach (var floater in gridManager.Floaters)
+    {
+        var screenPos = Hud.Instance.GetScreenPosForGridPos(gridManager.GridType, floater.gridPos, relative: true);
+        Vector2 pos = (screenPos / ScaleToScreen) + new Vector2(-RoguemojiGame.CellSize / 2, -RoguemojiGame.CellSize / 2);
+        
+        float scale = floater.height > 0f ? floater.scale * Utils.MapReturn(floater.timeSinceStart, 0f, floater.time, 1f, 1.2f, EasingType.SineInOut) : floater.scale;
+        float fontSize = 29f * scale;
+
+        Vector2 offset = floater.time > 0f ? Vector2.Lerp(floater.offsetStart, floater.offsetEnd, Utils.Map(floater.timeSinceStart, 0f, floater.time, 0f, 1f, floater.offsetEasingType)) : floater.offsetStart;
+
+        if (floater.shakeAmount > 0f)
+            offset += new Vector2(Game.Random.Float(-floater.shakeAmount, floater.shakeAmount), Game.Random.Float(-floater.shakeAmount, floater.shakeAmount));
+
+        float height = floater.height > 0f ? Utils.MapReturn(floater.timeSinceStart, 0f, floater.time, 0f, floater.height, EasingType.SineInOut) : 0f;
+        var opacity = floater.time > 0f ? (floater.timeSinceStart < floater.fadeInTime ? Utils.Map(floater.timeSinceStart, 0f, floater.fadeInTime, 0f, floater.opacity, EasingType.SineIn) : Utils.Map(floater.timeSinceStart, floater.fadeInTime, floater.time, floater.opacity, 0f, floater.offsetEasingType)) : floater.opacity;
+
+        <div class="floater_draw" style="left: @(pos.x + offset.x)px; top: @(pos.y + offset.y - height)px; opacity: @(opacity); font-size: @(fontSize)px;">
+            @(Hud.GetHallucinationTextStr(floater.icon, HallucinationTextType.Icon))
+
+            @if (!string.IsNullOrEmpty(floater.text))
+            {
+                <div class="floater_text" style="top: @(13f * scale)px; font-size: @(fontSize * 0.72f);"> @(floater.text) </div>
+            }
+        </div>
+    }
 </root>
 
 @code
@@ -158,6 +184,7 @@
         var gridWidthHash = player.InventoryGridManager.GridWidth;
         var selectedThingHash = player.SelectedThing?.NetworkIdent ?? 0;
         var aimingHash = player.IsAiming && player.AimingGridType == GridType.Inventory ? Game.Random.Int(0, 9999) : 0;
-        return HashCode.Combine(GetThings().Count, gridWidthHash, selectedThingHash, aimingHash);
+        var floaterHash = player.InventoryGridManager.Floaters.Count > 0 ? Game.Random.Int(0, 9999) : 0;
+        return HashCode.Combine(GetThings().Count, gridWidthHash, selectedThingHash, aimingHash, floaterHash);
     }
 }

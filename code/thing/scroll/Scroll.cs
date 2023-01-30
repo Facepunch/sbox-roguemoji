@@ -92,7 +92,7 @@ public partial class Scroll : Thing
         RoguemojiGame.Instance.RevealScroll(ScrollType, user.GridPos, user.CurrentLevelId);
 
         if (user is RoguemojiPlayer player)
-            RoguemojiGame.Instance.AddFloaterInventory(player, Globals.Icon(IconType.SacrificeScroll), GridPos, 0.3f, new Vector2(0f, 0f), new Vector2(0, 0f), height: 0f, text: "", EasingType.QuadOut, fadeInTime: 0.04f, scale: 1f, opacity: 0.9f, parent: null);
+            player.InventoryGridManager.AddFloater(Globals.Icon(IconType.SacrificeScroll), GridPos, 0.3f, new Vector2(0f, 0f), new Vector2(0, 0f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.04f, scale: 1f, opacity: 0.9f);
     }
 
     public void SetTattoo(string icon)

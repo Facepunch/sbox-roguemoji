@@ -317,38 +317,30 @@ public partial class Hud : RootPanel
 		return point.x > rect.Left && point.x < rect.Right && point.y > rect.Top && point.y < rect.Bottom;
 	}
 
-    public Vector2 GetScreenPosForArenaGridPos(IntVector gridPos, bool relative = false)
+    public Vector2 GetScreenPosForGridPos(GridType gridType, IntVector gridPos, bool relative = false)
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
-        var arenaPanel = GetGridPanel(GridType.Arena);
-        var rect = GetRect(PanelType.ArenaGrid);
-        var logRect = GetRect(PanelType.Log);
+        var panel = GetGridPanel(gridType);
 
-        if (arenaPanel == null)
+        if (panel == null)
             return Vector2.Zero;
 
-        if(relative)
-            return arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset + new Vector2(-logRect.Width + (-18f / ScaleFromScreen), (-10f / ScaleFromScreen));
-        //return rect.TopLeft + arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset + new Vector2(-logRect.Width + 4, 14);
+        if(gridType == GridType.Arena)
+        {
+            var offsetGridPos = gridPos - player.CameraGridOffset;
+
+            if (relative)
+                return new Vector2(offsetGridPos.x + 0.5f, offsetGridPos.y + 0.5f) * (RoguemojiGame.CellSize / ScaleFromScreen) + player.CameraPixelOffset;
+            else
+                return panel.GetCellScreenPos(offsetGridPos) + player.CameraPixelOffset;
+        }
         else
-            return arenaPanel.GetCellPos(gridPos - player.CameraGridOffset) + player.CameraPixelOffset;
-    }
-
-    public Vector2 GetScreenPosForInventoryGridPos(IntVector gridPos)
-    {
-        var inventoryPanel = GetGridPanel(GridType.Inventory);
-        var rect = GetRect(PanelType.InventoryGrid);
-        var charRect = GetRect(PanelType.Character);
-
-        if (inventoryPanel == null)
-            return Vector2.Zero;
-
-        //Log.Info("inventoryPanel.GetCellPos(gridPos): " + inventoryPanel.GetCellPos(gridPos));
-        //var pos = rect.TopLeft + new Vector2(gridPos.x * (RoguemojiGame.CellSize / ScaleFromScreen) + (4f / ScaleFromScreen), gridPos.y * (RoguemojiGame.CellSize / ScaleFromScreen) + (14f / ScaleFromScreen));
-        //Log.Info("rect.TopLeft: " + rect.TopLeft + " pos: " + pos);
-        //return pos;
-
-        return inventoryPanel.GetCellPos(gridPos) + new Vector2(2f, 2f) / ScaleFromScreen;
+        {
+            if (relative)
+                return new Vector2(gridPos.x + 0.5f, gridPos.y + 0.5f) * (RoguemojiGame.CellSize / ScaleFromScreen);
+            else
+                return panel.GetCellScreenPos(gridPos) + new Vector2(2f, 2f) / ScaleFromScreen;
+        }
     }
 
     public static string GetUnusableClass(Thing thing)

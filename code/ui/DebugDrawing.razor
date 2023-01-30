@@ -85,7 +85,7 @@
 
         foreach (var cell in DebugGridCells)
         {
-            var pos = cell.gridType == GridType.Arena ? Hud.Instance.GetScreenPosForArenaGridPos(cell.gridPos) : Hud.Instance.GetScreenPosForInventoryGridPos(cell.gridPos);
+            var pos = Hud.Instance.GetScreenPosForGridPos(cell.gridType, cell.gridPos);
             GraphicsX.Circle(pos, 18f / ScaleFromScreen, 15f / ScaleFromScreen, cell.color);
         }
         
@@ -93,8 +93,8 @@
 
     public void GridLine(IntVector a, IntVector b, Color color, float time, GridType gridTypeA = GridType.Arena, GridType gridTypeB = GridType.Arena)
     {
-        var posA = (gridTypeA == GridType.Arena) ? Hud.Instance.GetScreenPosForArenaGridPos(a) : Hud.Instance.GetScreenPosForInventoryGridPos(a);
-        var posB = (gridTypeB == GridType.Arena) ? Hud.Instance.GetScreenPosForArenaGridPos(b) : Hud.Instance.GetScreenPosForInventoryGridPos(b);
+        var posA = Hud.Instance.GetScreenPosForGridPos(gridTypeA, a);
+        var posB = Hud.Instance.GetScreenPosForGridPos(gridTypeB, b);
         DebugLines.Add(new DebugLineData(posA, posB, color, time));
     }
 

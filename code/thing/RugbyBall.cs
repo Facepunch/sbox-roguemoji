@@ -123,7 +123,7 @@ public class CRugbyCharge : ThingComponent
 
                 DistanceMoved++;
 
-                RoguemojiGame.Instance.AddFloater("☁️", oldPos, 0.5f, Thing.CurrentLevelId, new Vector2(0f, 4f), new Vector2(0f, -7f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.SineOut, fadeInTime: 0.15f, scale: 1.1f, opacity: 0.5f, parent: null);
+                Thing.ContainingGridManager.AddFloater("☁️", oldPos, 0.5f, new Vector2(0f, 4f), new Vector2(0f, -7f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.SineOut, fadeInTime: 0.15f, scale: 1.1f, opacity: 0.5f);
             }
         }
 
@@ -141,7 +141,7 @@ public class CRugbyCharge : ThingComponent
         var oldPos = thing.GridPos;
         if(thing.TryMove(Direction, dontRequireAction: true))
         {
-            RoguemojiGame.Instance.AddFloater("☁️", oldPos, 0.5f, Thing.CurrentLevelId, new Vector2(0f, 4f), new Vector2(0f, -7f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.SineOut, fadeInTime: 0.15f, scale: 1.1f, opacity: 0.5f, parent: null);
+            thing.ContainingGridManager.AddFloater("☁️", oldPos, 0.5f, new Vector2(0f, 4f), new Vector2(0f, -7f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.SineOut, fadeInTime: 0.15f, scale: 1.1f, opacity: 0.5f);
 
             if (thing.GetComponent<CActing>(out var component))
             {

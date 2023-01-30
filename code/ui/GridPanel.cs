@@ -27,7 +27,7 @@ public abstract class GridPanel : Panel
         return gridPos.y * GridWidth + gridPos.x;
     }
 
-    public Vector2 GetCellPos(IntVector gridPos)
+    public Vector2 GetCellScreenPos(IntVector gridPos)
     {
         return PanelPositionToScreenPosition(new Vector2(gridPos.x + 0.5f, gridPos.y + 0.5f) * (RoguemojiGame.CellSize / ScaleFromScreen));
     }

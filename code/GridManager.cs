@@ -616,7 +616,7 @@ public partial class GridManager : Entity
 		VisionChangedPlayers.Clear();
     }
 
-	public void AddPlayer(RoguemojiPlayer player)
+    public void AddPlayer(RoguemojiPlayer player)
 	{
 		ContainedPlayers.Add(player);
 	}

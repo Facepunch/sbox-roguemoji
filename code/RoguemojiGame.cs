@@ -51,9 +51,9 @@ public partial class RoguemojiGame : GameManager
 	public Queue<LogData> LogMessageQueue = new Queue<LogData>();
     public Queue<LogData> ChatMessageQueue = new Queue<LogData>();
 
-    public List<RoguemojiPlayer> Players = new List<RoguemojiPlayer>();
+    [Net] public IList<RoguemojiPlayer> Players { get; private set; }
 
-	public RoguemojiPlayer LocalPlayer => Game.LocalPawn as RoguemojiPlayer; // Client-only
+    public RoguemojiPlayer LocalPlayer => Game.LocalPawn as RoguemojiPlayer; // Client-only
 
 	public List<PanelFlickerData> _panelsToFlicker;
 
@@ -72,6 +72,8 @@ public partial class RoguemojiGame : GameManager
 		{
             Levels = new Dictionary<LevelId, Level>();
             CreateLevel(LevelId.Forest0);
+
+            Players = new List<RoguemojiPlayer>();
 
             UnidentifiedScrollSymbols = new List<string>() { "🈁", "🈂️", "🈷️", "🈯️", "🈹", "🈳", "🈚️", "🈸", "🈴", }; // 🈶 🈺 🈵
             UnidentifiedScrollSymbols.Shuffle();

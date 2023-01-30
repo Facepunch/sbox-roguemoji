@@ -281,7 +281,6 @@ public partial class Thing : Entity
 
             if (GetStatClamped(StatType.Health) <= 0)
             {
-                //RoguemojiGame.Instance.AddFloater("☠️", GridPos, 1.5f, CurrentLevelId, new Vector2(0f, 4f), new Vector2(0f, -7f), height: 0f, text: "", requireSight: true, EasingType.SineOut, fadeInTime: 0.15f, scale: 1f, parent: this);
                 Destroy();
             }
         }
@@ -477,7 +476,7 @@ public partial class Thing : Entity
 
             var panel = Hud.Instance.GetGridPanel(ContainingGridType);
             if (panel != null)
-                DebugOverlay.ScreenText(text, panel.GetCellPos(offsetGridPos), line, color, time);
+                DebugOverlay.ScreenText(text, panel.GetCellScreenPos(offsetGridPos), line, color, time);
         }
     }
 

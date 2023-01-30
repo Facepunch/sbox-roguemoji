@@ -230,7 +230,7 @@
     {
         if (@floater.requireSight || player.IsCellVisible(floater.gridPos) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(player.GridPos, floater.gridPos)))
         {
-            var screenPos = Hud.Instance.GetScreenPosForArenaGridPos(floater.gridPos, relative: true);
+            var screenPos = Hud.Instance.GetScreenPosForGridPos(GridType.Arena, floater.gridPos, relative: true);
             Vector2 pos = (screenPos / ScaleToScreen) + new Vector2(-RoguemojiGame.CellSize / 2, -RoguemojiGame.CellSize / 2);
 
             float scale = floater.height > 0f ? floater.scale * Utils.MapReturn(floater.timeSinceStart, 0f, floater.time, 1f, 1.2f, EasingType.SineInOut) : floater.scale;

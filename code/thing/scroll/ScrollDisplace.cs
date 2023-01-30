@@ -34,7 +34,7 @@ public partial class ScrollDisplace : Scroll
             ScrollTeleport.TeleportThing(thing);
         }
 
-        RoguemojiGame.Instance.AddFloater("✨", targetGridPos, 0.8f, user.CurrentLevelId, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.2f);
+        user.ContainingGridManager.AddFloater("✨", targetGridPos, 0.8f, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.2f);
 
         if (things.Count > 0)
         {

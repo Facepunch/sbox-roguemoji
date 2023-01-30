@@ -177,6 +177,8 @@ public partial class RoguemojiPlayer : Thing
         SeenThings.Clear();
 
         Floaters?.Clear();
+        InventoryGridManager.Floaters.Clear();
+        EquipmentGridManager.Floaters.Clear();
     }
 
     [ClientRpc]
@@ -188,7 +190,7 @@ public partial class RoguemojiPlayer : Thing
 
     void SpawnRandomInventoryThing(IntVector gridPos)
     {
-        int rand = Game.Random.Int(0, 27);
+        int rand = Game.Random.Int(0, 28);
         switch (rand)
         {
             //case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -230,7 +232,6 @@ public partial class RoguemojiPlayer : Thing
             case 18: InventoryGridManager.SpawnThing<Axe>(gridPos); break;
             case 19: InventoryGridManager.SpawnThing<ScrollTeleport>(gridPos); break;
             case 20: InventoryGridManager.SpawnThing<BookTeleport>(gridPos); break;
-            //case 21: InventoryGridManager.SpawnThing<AcademicCap>(gridPos); break;
             case 21: InventoryGridManager.SpawnThing<RugbyBall>(gridPos); break;
             case 22: InventoryGridManager.SpawnThing<PotionInvisible>(gridPos); break;
             case 23: InventoryGridManager.SpawnThing<ScrollFear>(gridPos); break;
@@ -238,6 +239,7 @@ public partial class RoguemojiPlayer : Thing
             case 25: InventoryGridManager.SpawnThing<BookOrganize>(gridPos); break;
             case 26: InventoryGridManager.SpawnThing<PotionAmnesia>(gridPos); break;
             case 27: InventoryGridManager.SpawnThing<PotionBurning>(gridPos); break;
+            case 28: InventoryGridManager.SpawnThing<AcademicCap>(gridPos); break;
         }
     }
 
@@ -260,8 +262,9 @@ public partial class RoguemojiPlayer : Thing
         //DebugText = $"{Acting.ActionDelay}";
 
         InventoryGridManager.Update(dt);
+        EquipmentGridManager.Update(dt);
 
-        for(int i = PlayerComponents.Count - 1; i >= 0; i--)
+        for (int i = PlayerComponents.Count - 1; i >= 0; i--)
         {
             KeyValuePair<TypeDescription, PlayerComponent> pair = PlayerComponents.ElementAt(i);
 
@@ -346,6 +349,9 @@ public partial class RoguemojiPlayer : Thing
             if (component.ShouldUpdate)
                 component.Update(dt);
         }
+
+        InventoryGridManager.UpdateClient(dt);
+        EquipmentGridManager.UpdateClient(dt);
     }
 
     public override void OnActionRecharged()
@@ -856,10 +862,6 @@ public partial class RoguemojiPlayer : Thing
     {
         if (gridType == GridType.Arena)
         {
-            //RoguemojiGame.Instance.AddFloater("💢", gridPos, 1.5f, CurrentLevelId, new Vector2(15f, -8f), new Vector2(15, -10f), "", requireSight: true, EasingType.ExpoIn, 0.1f, 0.75f, parent: this);
-            //RoguemojiGame.Instance.AddFloater("❗️", gridPos, 1f, CurrentLevelId, new Vector2(0f, -25f), new Vector2(0, -35f), "", requireSight: true, EasingType.Linear, 0.1f, 1.1f, parent: this);
-            //RoguemojiGame.Instance.AddFloater("❔", gridPos, 1.1f, CurrentLevelId, new Vector2(0f, -29f), new Vector2(0, -33f), "", requireSight: true, EasingType.SineIn, 0.25f, 1f, parent: this);
-
             var level = RoguemojiGame.Instance.GetLevel(CurrentLevelId);
             var thing = level.GridManager.GetThingsAt(gridPos).WithAll(ThingFlags.Selectable).Where(x => CanSeeThing(x)).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 

@@ -44,7 +44,7 @@ public partial class ScrollFear : Scroll
         foreach (var point in circlePoints)
         {
             if (!point.Equals(user.GridPos))
-                RoguemojiGame.Instance.AddFloater("❗️", point, Game.Random.Float(0.65f, 0.85f), user.CurrentLevelId, Vector2.Zero, new Vector2(0f, Game.Random.Float(-1f, -10f)), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, Game.Random.Float(0.25f, 0.35f), parent: null);
+                user.ContainingGridManager.AddFloater("❗️", point, Game.Random.Float(0.65f, 0.85f), Vector2.Zero, new Vector2(0f, Game.Random.Float(-1f, -10f)), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, Game.Random.Float(0.25f, 0.35f));
         }
 
         Destroy();
