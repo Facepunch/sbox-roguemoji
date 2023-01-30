@@ -137,6 +137,11 @@
             }
 
             <GridCell style="left: @((offsetGridPos.x * RoguemojiGame.CellSize) + player.CameraPixelOffset.x + thing.TotalOffset.x * ScaleToScreen); top: @((offsetGridPos.y * RoguemojiGame.CellSize) + player.CameraPixelOffset.y + thing.TotalOffset.y * ScaleToScreen);" Thing=@thing GridIndex=@index />
+
+            @if(thing.HasFloaters)
+            {
+                <FloaterDisplayCell Thing=@thing></FloaterDisplayCell>
+            }
         }
 
         if (canSeeThing)
@@ -226,7 +231,7 @@
         }
     }
 
-    <FloaterDisplay GridManager=@level.GridManager></FloaterDisplay>
+    <FloaterDisplayGrid GridManager=@level.GridManager></FloaterDisplayGrid>
 
     @if(player.CameraFade > 0f)
     {

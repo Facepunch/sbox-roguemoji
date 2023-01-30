@@ -275,9 +275,9 @@ public partial class Thing : Entity
             var floaterOffset = new Vector2(Game.Random.Float(3f, 10f) * (FloaterNum % 2 == 0 ? -1 : 1), Game.Random.Float(-3f, 8f));
 
             if (showImpactFloater)
-                AddFloater("💥", 0.45f, floaterOffset, floaterOffset, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineIn, 0.025f);
+                AddFloater("💥", 0.45f, floaterOffset, floaterOffset, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineIn, fadeInTime: 0.025f, scale: 1f, opacity: 1f, shakeAmount: 0f, moveToGridOnDeath: true);
 
-            AddFloater("💔", 1.2f, floaterOffset, new Vector2(Game.Random.Float(10f, 20f) * (FloaterNum++ % 2 == 0 ? -1 : 1), Game.Random.Float(-13f, 3f)), height: Game.Random.Float(10f, 25f), text: $"-{amount}", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.Linear, fadeInTime: 0.1f, scale: 0.75f);
+            AddFloater("💔", 1.2f, floaterOffset, new Vector2(Game.Random.Float(10f, 20f) * (FloaterNum++ % 2 == 0 ? -1 : 1), Game.Random.Float(-13f, 3f)), height: Game.Random.Float(10f, 25f), text: $"-{amount}", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.Linear, fadeInTime: 0.1f, scale: 0.75f, opacity: 1f, shakeAmount: 0f, moveToGridOnDeath: true);
 
             if (GetStatClamped(StatType.Health) <= 0)
             {
@@ -350,7 +350,9 @@ public partial class Thing : Entity
 
     public virtual void Destroy()
     {
-        if(ThingWieldingThis != null)
+        DestroyFloatersClient();
+
+        if (ThingWieldingThis != null)
             ThingWieldingThis.WieldThing(null);
 
         if (WieldedThing != null)
@@ -358,15 +360,7 @@ public partial class Thing : Entity
 
         OnDestroyed();
 
-        DestroyClient();
-
         Remove();
-    }
-
-    [ClientRpc]
-    public void DestroyClient()
-    {
-
     }
 
     public virtual void SetGridPos(IntVector gridPos)

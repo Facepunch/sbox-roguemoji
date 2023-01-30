@@ -1,0 +1,71 @@
+﻿@using Sandbox;
+@using Sandbox.UI;
+@using System.Collections.Generic;
+@using System;
+
+@inherits Panel;
+@namespace Roguemoji
+
+<style>
+    .floater_display_cell
+    {
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: visible;
+        position: absolute;
+        z-index: 20004;
+    }
+</style>
+
+<root class="floater_display_cell">
+    @{
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        var offsetGridPos = Thing.GridPos - player.CameraGridOffset;
+    }
+
+    @foreach (var floater in Thing.Floaters)
+    {
+        if (Thing.ContainingGridType != GridType.Arena || !floater.requireSight || player.IsCellVisible(Thing.GridPos) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(player.GridPos, Thing.GridPos)))
+        {
+            if (player.CanSeeThing(Thing) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(player.GridPos, Thing.GridPos)))
+            {
+                var screenPos = Hud.Instance.GetScreenPosForGridPos(Thing.ContainingGridManager.GridType, Thing.GridPos, relative: true);
+                Vector2 pos = (screenPos / ScaleToScreen) + new Vector2(-RoguemojiGame.CellSize / 2, -RoguemojiGame.CellSize / 2);
+
+                float scale = floater.height > 0f ? floater.scale * Utils.MapReturn(floater.timeSinceStart, 0f, floater.time, 1f, 1.2f, EasingType.SineInOut) : floater.scale;
+                float fontSize = 29f * scale;
+
+                Vector2 offset = floater.time > 0f ? Vector2.Lerp(floater.offsetStart, floater.offsetEnd, Utils.Map(floater.timeSinceStart, 0f, floater.time, 0f, 1f, floater.offsetEasingType)) : floater.offsetStart;
+
+                if (floater.shakeAmount > 0f)
+                    offset += new Vector2(Game.Random.Float(-floater.shakeAmount, floater.shakeAmount), Game.Random.Float(-floater.shakeAmount, floater.shakeAmount));
+
+                float height = floater.height > 0f ? Utils.MapReturn(floater.timeSinceStart, 0f, floater.time, 0f, floater.height, EasingType.SineInOut) : 0f;
+                var opacity = floater.time > 0f ? (floater.timeSinceStart < floater.fadeInTime ? Utils.Map(floater.timeSinceStart, 0f, floater.fadeInTime, 0f, floater.opacity, EasingType.SineIn) : Utils.Map(floater.timeSinceStart, floater.fadeInTime, floater.time, floater.opacity, 0f, floater.offsetEasingType)) : floater.opacity;
+
+                <div class="floater_draw" style="left: @(pos.x + offset.x)px; top: @(pos.y + offset.y - height)px; opacity: @(opacity); font-size: @(fontSize)px;">
+                    @(Hud.GetHallucinationTextStr(floater.icon, HallucinationTextType.Icon))
+
+                    @if (!string.IsNullOrEmpty(floater.text))
+                    {
+                        <div class="floater_text" style="top: @(13f * scale)px; font-size: @(fontSize * 0.72f);"> @(floater.text) </div>
+                    }
+                </div>
+            }
+        }
+    }
+</root>
+
+@code
+{
+    public Thing Thing { get; set; }
+
+    protected override int BuildHash()
+    {
+        var player = RoguemojiGame.Instance.LocalPlayer;
+        var floaterHash = Thing.HasFloaters ? Game.Random.Int(0, 9999) : 0;
+        return HashCode.Combine(player.CameraGridOffset, player.CameraPixelOffset, floaterHash);
+    }
+
+}

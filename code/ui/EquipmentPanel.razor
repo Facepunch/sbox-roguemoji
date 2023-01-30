@@ -69,13 +69,18 @@
         var index = GetIndex(thing.GridPos);
         <GridCell style="left: @(thing.GridPos.x * RoguemojiGame.CellSize); top: @(thing.GridPos.y * RoguemojiGame.CellSize);" Thing=@thing GridIndex=@index />
 
-        if (thing == player.SelectedThing)
+        @if(thing.HasFloaters)
+        {
+            <FloaterDisplayCell Thing=@thing></FloaterDisplayCell>
+        }
+
+        @if (thing == player.SelectedThing)
         {
             <div class="selected" style="left: @(thing.GridPos.x * RoguemojiGame.CellSize); top: @(thing.GridPos.y * RoguemojiGame.CellSize);"></div>
         }
     }
 
-    <FloaterDisplay GridManager=@gridManager></FloaterDisplay>
+    <FloaterDisplayGrid GridManager=@gridManager></FloaterDisplayGrid>
 </root>
 
 @code

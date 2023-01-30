@@ -58,7 +58,7 @@ public class CBurning : ThingComponent
 
     void Burn()
     {
-        if (Thing.HasStat(StatType.Health))
+        if (Thing.HasStat(StatType.Health) && Thing.GetStatClamped(StatType.Health) > 0)
         {
             Thing.Hurt(BurnDamage, showImpactFloater: false);
         }

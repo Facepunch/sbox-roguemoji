@@ -21,9 +21,10 @@ public struct ThingFloaterData
     public float scale;
     public float opacity;
     public float shakeAmount;
+    public bool moveToGridOnDeath;
 
     public ThingFloaterData(string icon, float time, Vector2 offsetStart, Vector2 offsetEnd, float height, string text, bool requireSight, bool alwaysShowWhenAdjacent,
-        EasingType offsetEasingType, float fadeInTime, float scale, float opacity, float shakeAmount)
+        EasingType offsetEasingType, float fadeInTime, float scale, float opacity, float shakeAmount, bool moveToGridOnDeath)
     {
         this.icon = icon;
         this.time = time;
@@ -39,6 +40,7 @@ public struct ThingFloaterData
         this.scale = scale;
         this.opacity = opacity;
         this.shakeAmount = shakeAmount;
+        this.moveToGridOnDeath = moveToGridOnDeath;
     }
 }
 
@@ -61,19 +63,19 @@ public partial class Thing : Entity
     }
 
     public void AddFloater(string icon, float time, Vector2 offsetStart, Vector2 offsetEnd, float height = 0f, string text = "", bool requireSight = true, bool alwaysShowWhenAdjacent = false,
-                        EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, float shakeAmount = 0f)
+                        EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, float shakeAmount = 0f, bool moveToGridOnDeath = false)
     {
-        AddFloaterClient(icon, time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, shakeAmount);
+        AddFloaterClient(icon, time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, shakeAmount, moveToGridOnDeath);
     }
 
     [ClientRpc]
     public void AddFloaterClient(string icon, float time, Vector2 offsetStart, Vector2 offsetEnd, float height = 0f, string text = "", bool requireSight = true, bool alwaysShowWhenAdjacent = false,
-                        EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, float shakeAmount = 0f)
+                        EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, float shakeAmount = 0f, bool moveToGridOnDeath = false)
     {
         if (Floaters == null)
             Floaters = new List<ThingFloaterData>();
 
-        Floaters.Add(new ThingFloaterData(icon, time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, shakeAmount));
+        Floaters.Add(new ThingFloaterData(icon, time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, shakeAmount, moveToGridOnDeath));
     }
 
     public void RemoveFloater(string icon)
@@ -95,14 +97,23 @@ public partial class Thing : Entity
         }
     }
 
-    public void RemoveAllFloaters()
-    {
-        RemoveAllFloatersClient();
-    }
-
     [ClientRpc]
-    public void RemoveAllFloatersClient()
+    public void DestroyFloatersClient()
     {
+        if (ContainingGridManager == null || Floaters == null)
+            return;
+
+        foreach(var floater in Floaters)
+        {
+            if(floater.moveToGridOnDeath)
+            {
+                ContainingGridManager.Floaters.Add(
+                    new GridFloaterData(floater.icon, GridPos, floater.time, floater.timeSinceStart, floater.offsetStart, floater.offsetEnd, floater.height, floater.text, 
+                    floater.requireSight, floater.alwaysShowWhenAdjacent, floater.offsetEasingType, floater.fadeInTime, floater.scale, floater.opacity, floater.shakeAmount)
+                );
+            }
+        }
+
         Floaters.Clear();
     }
 }

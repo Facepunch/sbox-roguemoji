@@ -76,6 +76,13 @@ public partial class Squirrel : Thing
         {
             var target = Targeting.Target;
 
+            if(target == null || !target.IsValid || (target.HasStat(StatType.Health) && target.GetStatClamped(StatType.Health) <= 0))
+            {
+                Targeting.LoseTarget();
+                WanderGridPos = GridPos;
+                return;
+            }
+
             if (target.CurrentLevelId != CurrentLevelId)
             {
                 Targeting.Target = null;
