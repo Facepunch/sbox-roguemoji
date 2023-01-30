@@ -126,7 +126,7 @@
         var canSeeThing = (canSeeGridPos && player.CanSeeThing(thing)) || thing.TimeSinceLocalPlayerSaw < 0.25f;
         var canSeeWieldedThing = canSeeGridPos && thing.WieldedThing != null && (player.CanSeeThing(thing.WieldedThing) || thing.WieldedThing.TimeSinceLocalPlayerSaw < 0.25f);
 
-        if ((canSeeThing || canSeeWieldedThing) && !thing.DontRender)
+        if ((canSeeThing || canSeeWieldedThing || thing.ShowFloaterOnInvisible()) && !thing.DontRender)
         {
             var offsetGridPos = thing.GridPos - player.CameraGridOffset;
             var index = GetIndex(offsetGridPos);

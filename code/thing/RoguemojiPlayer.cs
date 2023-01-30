@@ -131,7 +131,7 @@ public partial class RoguemojiPlayer : Thing
         InitStat(StatType.Stamina, 4);
         InitStat(StatType.Stealth, 0, -999, 999);
         InitStat(StatType.Charisma, 3);
-        InitStat(StatType.Sight, 8, min: 0); // setting this will RefreshVisibility for the player
+        InitStat(StatType.Sight, 7, min: 0); // setting this will RefreshVisibility for the player
         InitStat(StatType.Hearing, 3);
         InitStat(StatType.SightBlockAmount, 10);
         //InitStat(StatType.Smell, 1);

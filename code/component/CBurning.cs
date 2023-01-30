@@ -22,7 +22,7 @@ public class CBurning : ThingComponent
 
         ShouldUpdate = true;
 
-        BurnDelayMin = 1f;
+        BurnDelayMin = 2f;
         BurnDelayMax = 3f;
         BurnCountdown = Game.Random.Float(BurnDelayMin, BurnDelayMax);
         BurnDamage = 1;
@@ -32,7 +32,8 @@ public class CBurning : ThingComponent
         if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component2))
             IconId = ((CIconPriority)component2).AddIconPriority("🥵", (int)PlayerIconPriority.Sleeping);
 
-        thing.AddFloater(Globals.Icon(IconType.Burning), time: 0f, new Vector2(0f, -12f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.1f, scale: 1f, opacity: 0.5f, shakeAmount: 1f);
+        thing.AddFloater(Globals.Icon(IconType.Burning), time: 0f, new Vector2(0f, -12f), Vector2.Zero, height: 0f, text: "", requireSight: true, 
+            alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.5f, scale: 1f, opacity: 0.5f, shakeAmount: 1f, showOnInvisible: true);
     }
 
     public override void Update(float dt)
@@ -43,6 +44,13 @@ public class CBurning : ThingComponent
         if(Lifetime > 0f && TimeElapsed > Lifetime)
         {
             Remove();
+
+            if (!Thing.HasStat(StatType.Health))
+            {
+                Thing.ContainingGridManager.AddFloater(Globals.Icon(IconType.Burning), Thing.GridPos, 0.5f, new Vector2(0f, -12f), new Vector2(0, -18f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadIn, fadeInTime: 0.04f, scale: 1f, opacity: 0.6f, shakeAmount: 1f);
+                Thing.Destroy();
+            }
+
             return;
         }
 
@@ -85,9 +93,9 @@ public class CBurning : ThingComponent
                 {
                     var startOffset = -offset * 40f;
                     var endOffset = new Vector2(0f, 0f);
-                    var height = Game.Random.Float(5f, 30f);
+                    var height = Game.Random.Float(10f, 20f);
 
-                    Thing.ContainingGridManager.AddFloater(Globals.Icon(IconType.Burning), gridPos, 0.25f, startOffset, endOffset, height: height, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.01f, scale: Game.Random.Float(0.5f, 0.8f), opacity: 0.3f, shakeAmount: 1f);
+                    Thing.ContainingGridManager.AddFloater(Globals.Icon(IconType.Burning), gridPos, 0.15f, startOffset, endOffset, height: height, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.01f, scale: Game.Random.Float(0.6f, 0.75f), opacity: 0.5f, shakeAmount: 1f);
                 }
                 else
                 {
