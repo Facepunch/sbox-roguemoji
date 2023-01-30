@@ -63,7 +63,6 @@ public partial class Hud : RootPanel
 
 	public MainPanel MainPanel { get; private set; }
     public DebugDrawing DebugDrawing { get; set; }
-    public FloaterDisplay FloaterDisplay { get; set; }
     public CursorDisplay CursorDisplay { get; set; }
 
     public bool IsDraggingThing { get; set; }
@@ -88,7 +87,6 @@ public partial class Hud : RootPanel
 
 		MainPanel = AddChild<MainPanel>();
         DebugDrawing = AddChild<DebugDrawing>();
-        FloaterDisplay = AddChild<FloaterDisplay>();
         CursorDisplay = AddChild<CursorDisplay>();
     }
 
@@ -460,32 +458,6 @@ public partial class Hud : RootPanel
     public static bool StartsWithVowel(string name)
     {
         return "aeiou".IndexOf(name[0].ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0;
-    }
-
-    public void AddFloater(string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height, string text = "", bool requireSight = true, bool alwaysShowWhenAdjacent = false, 
-        EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, float shakeAmount = 0f, GridType gridType = GridType.Arena, Thing parent = null)
-    {
-        Floaters.Add(new FloaterData(icon, gridPos, time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, shakeAmount, gridType, parent));
-    }
-
-    public void RemoveFloater(string icon, Thing parent = null)
-    {
-        for(int i = Floaters.Count - 1; i >= 0; i--)
-        {
-            var floater = Floaters[i];
-            if (floater.parent == parent && (floater.icon == icon || string.IsNullOrEmpty(icon)))
-                Floaters.RemoveAt(i);
-        }
-    }
-
-    public void RemoveFloaters(Thing parent)
-    {
-        for (int i = Floaters.Count - 1; i >= 0; i--)
-        {
-            var floater = Floaters[i];
-            if (floater.parent == parent)
-                Floaters.RemoveAt(i);
-        }
     }
 
     public void Restart()

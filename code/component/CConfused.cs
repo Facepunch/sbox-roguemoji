@@ -44,7 +44,7 @@ public class CConfused : ThingComponent
     public override void OnRemove()
     {
         Thing.RemoveTrait(Trait);
-        RoguemojiGame.Instance.RemoveFloater(Globals.Icon(IconType.Confusion), Thing.CurrentLevelId, parent: Thing);
+        Thing.RemoveFloater(Globals.Icon(IconType.Confusion));
 
         if (Thing is RoguemojiPlayer player)
             player.ConfusionSeed = 0;
@@ -55,7 +55,7 @@ public class CConfused : ThingComponent
 
     public override void OnThingDestroyed()
     {
-        RoguemojiGame.Instance.RemoveFloater(Globals.Icon(IconType.Confusion), Thing.CurrentLevelId, parent: Thing);
+        Thing.RemoveFloater(Globals.Icon(IconType.Confusion));
     }
 
     public override void OnThingDied()

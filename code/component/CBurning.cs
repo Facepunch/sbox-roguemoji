@@ -61,15 +61,6 @@ public class CBurning : ThingComponent
         if (Thing.HasStat(StatType.Health))
         {
             Thing.Hurt(BurnDamage, showImpactFloater: false);
-
-            var offset = new Vector2(Game.Random.Float(-5f, 4f), Game.Random.Float(-5f, 4f));
-            var scale = Utils.Map(TimeElapsed, 0f, Lifetime, 0.8f, 0.25f, EasingType.QuadIn);
-            var opacity = Utils.Map(TimeElapsed, 0f, Lifetime, 0.75f, 0.4f);
-
-            //if (Thing.ContainingGridType == GridType.Arena)
-            //    RoguemojiGame.Instance.AddFloater(Globals.Icon(IconType.Burning), Thing.GridPos, Game.Random.Float(0.25f, 0.35f), Thing.CurrentLevelId, offset, offset, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.SineIn, fadeInTime: 0.025f, scale: scale, opacity: opacity, shakeAmount: 1f, parent: Thing);
-            //else if (Thing.ContainingGridType == GridType.Inventory)
-            //    RoguemojiGame.Instance.AddFloaterInventory(Thing.ContainingGridManager.OwningPlayer, Globals.Icon(IconType.Burning), Thing.GridPos, Game.Random.Float(0.25f, 0.35f), offset, offset, height: 0f, text: "", EasingType.SineIn, fadeInTime: 0.025f, scale: scale, opacity: opacity, shakeAmount: 1f, parent: Thing);
         }
 
         for(int x = -1; x <= 1; x++) 
@@ -96,10 +87,7 @@ public class CBurning : ThingComponent
                     var endOffset = new Vector2(0f, 0f);
                     var height = Game.Random.Float(5f, 30f);
 
-                    if(Thing.ContainingGridType == GridType.Arena)
-                        Thing.ContainingGridManager.AddFloater(Globals.Icon(IconType.Burning), gridPos, 0.25f, startOffset, endOffset, height: height, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.01f, scale: Game.Random.Float(0.5f, 0.8f), opacity: 0.3f, shakeAmount: 1f);
-                    else if(Thing.ContainingGridType == GridType.Inventory)
-                        RoguemojiGame.Instance.AddFloaterInventory(Thing.ContainingGridManager.OwningPlayer, Globals.Icon(IconType.Burning), gridPos, 0.25f, startOffset, endOffset, height: height, text: "", EasingType.QuadOut, fadeInTime: 0.01f, scale: Game.Random.Float(0.5f, 0.8f), opacity: 0.3f, shakeAmount: 1f, parent: null);
+                    Thing.ContainingGridManager.AddFloater(Globals.Icon(IconType.Burning), gridPos, 0.25f, startOffset, endOffset, height: height, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.01f, scale: Game.Random.Float(0.5f, 0.8f), opacity: 0.3f, shakeAmount: 1f);
                 }
                 else
                 {

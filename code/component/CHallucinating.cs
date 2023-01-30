@@ -52,12 +52,12 @@ public class CHallucinating : ThingComponent
         if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component))
             ((CIconPriority)component).RemoveIconPriority(IconId);
 
-        RoguemojiGame.Instance.RemoveFloater(Globals.Icon(IconType.Hallucination), Thing.CurrentLevelId, parent: Thing);
+        Thing.RemoveFloater(Globals.Icon(IconType.Hallucination));
     }
 
     public override void OnThingDestroyed()
     {
-        RoguemojiGame.Instance.RemoveFloater(Globals.Icon(IconType.Hallucination), Thing.CurrentLevelId, parent: Thing);
+        Thing.RemoveFloater(Globals.Icon(IconType.Hallucination));
     }
 
     public override void OnThingDied()

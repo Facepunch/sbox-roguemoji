@@ -48,7 +48,7 @@ public class CSpeedIncrease : ThingComponent
         Thing.AdjustStat(StatType.Speed, -SpeedAmount);
 
         Thing.RemoveTrait(Trait);
-        RoguemojiGame.Instance.RemoveFloater(Thing.GetStatIcon(StatType.Speed), Thing.CurrentLevelId, parent: Thing);
+        Thing.RemoveFloater(Thing.GetStatIcon(StatType.Speed));
 
         if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component))
             ((CIconPriority)component).RemoveIconPriority(IconId);
@@ -56,7 +56,7 @@ public class CSpeedIncrease : ThingComponent
 
     public override void OnThingDestroyed()
     {
-        RoguemojiGame.Instance.RemoveFloater(Thing.GetStatIcon(StatType.Speed), Thing.CurrentLevelId, parent: Thing);
+        Thing.RemoveFloater(Thing.GetStatIcon(StatType.Speed));
     }
 
     public override void OnThingDied()

@@ -457,66 +457,6 @@ public partial class RoguemojiGame : GameManager
         return thing;
     }
 
-    public void AddFloaterInventory(RoguemojiPlayer player, string icon, IntVector gridPos, float time, Vector2 offsetStart, Vector2 offsetEnd, float height = 0f, string text = "", 
-        EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, float shakeAmount = 0f, Thing parent = null)
-    {
-        AddFloaterClient(To.Single(player), icon, gridPos.x, gridPos.y, time, offsetStart, offsetEnd, height, text, requireSight: false, alwaysShowWhenAdjacent: false, offsetEasingType, fadeInTime, scale, opacity, shakeAmount, GridType.Inventory, (parent != null) ? parent.NetworkIdent : -1);
-    }
-
-    public void AddFloater(string icon, IntVector gridPos, float time, LevelId levelId, Vector2 offsetStart, Vector2 offsetEnd, float height = 0f, string text = "", bool requireSight = true, bool alwaysShowWhenAdjacent = false, 
-                        EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, float shakeAmount = 0f, Thing parent = null)
-    {
-		foreach(var player in Players)
-		{
-			if (player.CurrentLevelId == levelId)
-            {
-                AddFloaterClient(To.Single(player), icon, gridPos.x, gridPos.y, time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, shakeAmount, GridType.Arena, (parent != null) ? parent.NetworkIdent : -1);
-            }
-		}
-    }
-
-    [ClientRpc]
-    public void AddFloaterClient(string icon, int x, int y, float time, Vector2 offsetStart, Vector2 offsetEnd, float height = 0f, string text = "", bool requireSight = true, bool alwaysShowWhenAdjacent = false, 
-                                EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, float shakeAmount = 0f, GridType gridType = GridType.Arena, int parentIdent = -1)
-    {
-        Thing parent = (parentIdent == -1) ? null : Entity.FindByIndex(parentIdent) as Thing;
-        Hud.Instance.AddFloater(icon, new IntVector(x, y), time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, shakeAmount, gridType, parent);
-    }
-
-    public void RemoveFloater(string icon, LevelId levelId, Thing parent = null)
-    {
-        foreach (var player in Players)
-        {
-            if (player.CurrentLevelId == levelId)
-                RemoveFloaterClient(To.Single(player), icon, (parent != null) ? parent.NetworkIdent : -1);
-        }
-    }
-
-    [ClientRpc]
-    public void RemoveFloaterClient(string icon, int parentIdent = -1)
-    {
-        Thing parent = (parentIdent == -1) ? null : Entity.FindByIndex(parentIdent) as Thing;
-        Hud.Instance.RemoveFloater(icon, parent);
-    }
-
-    public void RemoveFloaters(LevelId levelId, Thing parent = null)
-    {
-        foreach (var player in Players)
-        {
-            if (player.CurrentLevelId == levelId)
-                RemoveFloatersClient(To.Single(player), (parent != null) ? parent.NetworkIdent : -1);
-        }
-    }
-
-    [ClientRpc]
-    public void RemoveFloatersClient(int parentIdent = -1)
-    {
-        Thing parent = (parentIdent == -1) ? null : Entity.FindByIndex(parentIdent) as Thing;
-
-        if(parent != null)
-            Hud.Instance.RemoveFloaters(parent);
-    }
-
     public void RevealScroll(ScrollType scrollType, IntVector gridPos, LevelId levelId)
     {
         foreach (var player in Players)

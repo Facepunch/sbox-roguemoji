@@ -55,12 +55,12 @@ public class CStunned : ThingComponent
         if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component2))
             ((CIconPriority)component2).RemoveIconPriority(IconId);
 
-        RoguemojiGame.Instance.RemoveFloater(Globals.Icon(IconType.Stunned), Thing.CurrentLevelId, parent: Thing);
+        Thing.RemoveFloater(Globals.Icon(IconType.Stunned));
     }
 
     public override void OnThingDestroyed()
     {
-        RoguemojiGame.Instance.RemoveFloater(Globals.Icon(IconType.Stunned), Thing.CurrentLevelId, parent: Thing);
+        Thing.RemoveFloater(Globals.Icon(IconType.Stunned));
     }
 
     public override void OnThingDied()

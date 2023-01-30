@@ -95,7 +95,7 @@ public class CPoisoned : ThingComponent
     public override void OnRemove()
     {
         Thing.RemoveTrait(Trait);
-        RoguemojiGame.Instance.RemoveFloater(Globals.Icon(IconType.Poison), Thing.CurrentLevelId, parent: Thing);
+        Thing.RemoveFloater(Globals.Icon(IconType.Poison));
 
         if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component))
             ((CIconPriority)component).RemoveIconPriority(IconId);
@@ -103,7 +103,7 @@ public class CPoisoned : ThingComponent
 
     public override void OnThingDestroyed()
     {
-        RoguemojiGame.Instance.RemoveFloater(Globals.Icon(IconType.Poison), Thing.CurrentLevelId, parent: Thing);
+        Thing.RemoveFloater(Globals.Icon(IconType.Poison));
     }
 
     public override void OnThingDied()

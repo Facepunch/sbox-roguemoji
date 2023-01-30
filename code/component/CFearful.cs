@@ -34,7 +34,7 @@ public class CFearful : ThingComponent
 
     public override void OnRemove()
     {
-        RoguemojiGame.Instance.RemoveFloater("💧", Thing.CurrentLevelId, parent: Thing);
+        Thing.RemoveFloater("💧");
 
         if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component))
             ((CIconPriority)component).RemoveIconPriority(IconId);
@@ -42,7 +42,7 @@ public class CFearful : ThingComponent
 
     public override void OnThingDestroyed()
     {
-        RoguemojiGame.Instance.RemoveFloater("💧", Thing.CurrentLevelId, parent: Thing);
+        Thing.RemoveFloater("💧");
     }
 
     public static IntVector GetTargetRetreatPoint(IntVector startingPoint, IntVector avoidPoint, GridManager gridManager)
