@@ -120,7 +120,8 @@
             return base.BuildHash();
 
         var player = RoguemojiGame.Instance.LocalPlayer;
-        return HashCode.Combine(Thing.GetNearbyCellHash(), IsSelected(), player.StatHash, player.HallucinatingSeed);
+        var floaterHash = Thing.HasFloaters ? Game.Random.Int(0, 9999) : 0;
+        return HashCode.Combine(Thing.GetNearbyCellHash(), IsSelected(), player.StatHash, player.HallucinatingSeed, floaterHash);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

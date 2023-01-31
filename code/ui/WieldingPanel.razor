@@ -195,8 +195,6 @@
 
                 var opacity = Thing.GetFloaterOpacity(floater);
 
-                //Log.Info($"{floater.icon} pos: {pos}");
-
                 <div class="floater_draw" style="left: @(pos.x + offset.x)px; top: @(pos.y + offset.y - height)px; opacity: @(opacity); font-size: @(fontSize)px;">
                     @(Hud.GetHallucinationTextStr(floater.icon, HallucinationTextType.Icon))
 

@@ -32,7 +32,7 @@ public class CBurning : ThingComponent
         if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component2))
             IconId = ((CIconPriority)component2).AddIconPriority("🥵", (int)PlayerIconPriority.Sleeping);
 
-        thing.AddFloater(Globals.Icon(IconType.Burning), time: 0f, new Vector2(0f, -12f), Vector2.Zero, height: 0f, text: "", requireSight: true, 
+        thing.AddFloater(Globals.Icon(IconType.Burning), time: 0f, new Vector2(0f, -12f), new Vector2(0f, -12f), height: 0f, text: "", requireSight: true, 
             alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.25f, scale: 1f, opacity: 0.5f, shakeAmount: 1f, showOnInvisible: true);
     }
 

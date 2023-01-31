@@ -44,7 +44,12 @@
 
     @foreach (var thing in GetThings(player))
     {
-        <NearbyCell Thing=@thing />
+        <NearbyCell Thing=@thing>
+            @if(thing.HasFloaters)
+            {
+                <FloaterDisplayNearby Thing=@thing></FloaterDisplayNearby>
+            }
+        </NearbyCell>
     }
 </root>
 
@@ -78,9 +83,9 @@
         if (player == null)
             return 0;
 
-        var numThings = GetThings(player).ToList().Count;
+        var things = GetThings(player).ToList();
 
-        if(numThings < 5)
+        if(things.Count < 5)
         {
             Style.Overflow = OverflowMode.Hidden;
             ScrollOffset = Vector2.Zero;
@@ -90,7 +95,17 @@
             Style.Overflow = OverflowMode.Scroll;
         }
 
-        return HashCode.Combine(player.GridPos, numThings, player.InventoryGridManager.Things.Count);
+        var floaterHash = 0;
+        foreach(var thing in things)
+        {
+            if(thing.HasFloaters)
+            {
+                floaterHash = Game.Random.Int(0, 9999);
+                break;
+            }
+        }
+
+        return HashCode.Combine(player.GridPos, things.Count, player.InventoryGridManager.Things.Count, floaterHash);
     }
 
     public void FlickerCells()
