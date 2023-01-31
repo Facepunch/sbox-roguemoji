@@ -22,7 +22,10 @@
 }
 
 <root class="char_portrait @GetPlayerClass()">
-    @(Hud.GetHallucinationTextThing(player, player.DisplayIcon.Substring(player.CharSkip), HallucinationTextType.Icon))
+    
+    <span style="opacity:@(GetOpacity(player));">
+        @(Hud.GetHallucinationTextThing(player, player.DisplayIcon.Substring(player.CharSkip), HallucinationTextType.Icon))
+    </span>
 
     @if (player.HasFloaters)
     {
@@ -104,4 +107,6 @@
         var floaterHash = player.HasFloaters ? Game.Random.Int(0, 9999) : 0;
         return HashCode.Combine(player.GetInfoDisplayHash(), player.ActionRechargePercent, player.StatHash, player.ConfusionSeed, player.HallucinatingSeed, floaterHash);
     }
+
+    float GetOpacity(Thing thing) { return thing.Opacity * (thing.GetStatClamped(StatType.Invisible) > 0 ? 0.25f : 1f); }
 }
