@@ -181,6 +181,11 @@
                 }
             </div>
         }
+
+        @if(wieldedThing.HasFloaters)
+        {
+            <FloaterDisplayWielded WieldedThing=@wieldedThing></FloaterDisplayWielded>
+        }
     }
 
     @if (Thing.IsOnCooldown && Thing.ContainingGridType != GridType.Arena)
