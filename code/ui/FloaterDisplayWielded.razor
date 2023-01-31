@@ -55,8 +55,6 @@
 
                 var opacity = floater.time > 0f ? (floater.timeSinceStart < floater.fadeInTime ? Utils.Map(floater.timeSinceStart, 0f, floater.fadeInTime, 0f, floater.opacity, EasingType.SineIn) : Utils.Map(floater.timeSinceStart, floater.fadeInTime, floater.time, floater.opacity, 0f, floater.offsetEasingType)) : floater.opacity;
 
-                //Log.Info($"{floater.icon} pos: {pos}");
-
                 <div class="floater_draw" style="left: @(pos.x + offset.x)px; top: @(pos.y + offset.y - height)px; opacity: @(opacity); font-size: @(fontSize)px;">
                     @(Hud.GetHallucinationTextStr(floater.icon, HallucinationTextType.Icon))
 
