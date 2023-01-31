@@ -185,7 +185,8 @@
     protected override int BuildHash()
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
-        return HashCode.Combine(player.GetInfoDisplayHash(), player.ActionRechargePercent, player.StatHash, player.ConfusionSeed);
+        var floaterHash = player.HasFloaters ? Game.Random.Int(0, 9999) : 0;
+        return HashCode.Combine(player.GetInfoDisplayHash(), player.ActionRechargePercent, player.StatHash, player.ConfusionSeed, floaterHash);
     }
 }
 

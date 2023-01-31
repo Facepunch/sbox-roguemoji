@@ -60,7 +60,7 @@
 
                     @if (!string.IsNullOrEmpty(floater.text))
                     {
-                        <div class="floater_text" style="top: @(13f * scale)px; font-size: @(fontSize * 0.72f);"> @(floater.text) </div>
+                        <div class="floater_text" style="top: @((13f / shrinkAmount) * scale)px; font-size: @(fontSize * 0.72f);"> @(floater.text) </div>
                     }
                 </div>
             }
