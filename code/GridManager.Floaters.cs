@@ -99,4 +99,11 @@ public partial class GridManager : Entity
                 Floaters.RemoveAt(i);
         }
     }
+
+    public static float GetFloaterOpacity(GridFloaterData floater)
+    {
+        return floater.elapsedTime < floater.fadeInTime
+            ? Utils.Map(floater.elapsedTime, 0f, floater.fadeInTime, 0f, floater.opacity, EasingType.SineIn)
+            : (floater.time > 0f ? Utils.Map(floater.elapsedTime, floater.fadeInTime, floater.time, floater.opacity, 0f, floater.offsetEasingType) : floater.opacity);
+    }
 }

@@ -34,7 +34,8 @@
                 offset += new Vector2(Game.Random.Float(-floater.shakeAmount, floater.shakeAmount), Game.Random.Float(-floater.shakeAmount, floater.shakeAmount));
 
             float height = floater.height > 0f ? Utils.MapReturn(floater.elapsedTime, 0f, floater.time, 0f, floater.height, EasingType.SineInOut) : 0f;
-            var opacity = floater.time > 0f ? (floater.elapsedTime < floater.fadeInTime ? Utils.Map(floater.elapsedTime, 0f, floater.fadeInTime, 0f, floater.opacity, EasingType.SineIn) : Utils.Map(floater.elapsedTime, floater.fadeInTime, floater.time, floater.opacity, 0f, floater.offsetEasingType)) : floater.opacity;
+
+            var opacity = GridManager.GetFloaterOpacity(floater);
 
             <div class="floater_draw" style="left: @(pos.x + offset.x); top: @(pos.y + offset.y - height); opacity: @(opacity); font-size: @(fontSize);">
                 @(Hud.GetHallucinationTextStr(floater.icon, HallucinationTextType.Icon))

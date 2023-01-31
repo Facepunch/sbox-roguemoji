@@ -33,7 +33,7 @@ public class CBurning : ThingComponent
             IconId = ((CIconPriority)component2).AddIconPriority("🥵", (int)PlayerIconPriority.Sleeping);
 
         thing.AddFloater(Globals.Icon(IconType.Burning), time: 0f, new Vector2(0f, -12f), Vector2.Zero, height: 0f, text: "", requireSight: true, 
-            alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.5f, scale: 1f, opacity: 0.5f, shakeAmount: 1f, showOnInvisible: true);
+            alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.25f, scale: 1f, opacity: 0.5f, shakeAmount: 1f, showOnInvisible: true);
     }
 
     public override void Update(float dt)

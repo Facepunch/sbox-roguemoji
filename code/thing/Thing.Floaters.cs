@@ -135,4 +135,11 @@ public partial class Thing : Entity
 
         return false;
     }
+
+    public static float GetFloaterOpacity(ThingFloaterData floater)
+    {
+        return floater.timeSinceStart < floater.fadeInTime
+            ? Utils.Map(floater.timeSinceStart, 0f, floater.fadeInTime, 0f, floater.opacity, EasingType.SineIn)
+            : (floater.time > 0f ? Utils.Map(floater.timeSinceStart, floater.fadeInTime, floater.time, floater.opacity, 0f, floater.offsetEasingType) : floater.opacity);
+    }
 }
