@@ -74,8 +74,10 @@ public partial class Hud : RootPanel
     public TimeSince TimeSinceStartDragging { get; private set; }
     public Vector2 DragStartPosition { get; private set; }
     private IntVector _dragStartPlayerGridPos;
+    private IntVector _dragStartGridPos;
+    private GridType _dragStartGridType;
 
-	public Vector2 GetMousePos() { return MousePosition / ScaleToScreen; }
+    public Vector2 GetMousePos() { return MousePosition / ScaleToScreen; }
 
     public List<FloaterData> Floaters { get; private set; } = new List<FloaterData>();
 
@@ -96,8 +98,15 @@ public partial class Hud : RootPanel
 
         var dt = Time.Delta;
 
-		// if dragging a nearby thing, stop when moving
-		if(IsDraggingThing && !_dragStartPlayerGridPos.Equals(RoguemojiGame.Instance.LocalPlayer.GridPos))
+        if (IsDraggingThing && (DraggedThing == null || !DraggedThing.IsValid))
+            StopDragging();
+
+        // if thing we are dragging moved, stop dragging it
+        if (IsDraggingThing && (!_dragStartGridPos.Equals(DraggedThing.GridPos) || !_dragStartGridType.Equals(DraggedThing.ContainingGridType)))
+            StopDragging();
+
+        // if dragging a nearby thing, stop dragging if you move
+        if (IsDraggingThing && (!_dragStartPlayerGridPos.Equals(RoguemojiGame.Instance.LocalPlayer.GridPos)))
 		{
 			if(DraggedThing != null && DraggedThing.ContainingGridType == GridType.Arena)
 				StopDragging();
@@ -204,6 +213,8 @@ public partial class Hud : RootPanel
 		DraggedPanel = panel;
         DraggedPanelType = draggedPanelType;
 		_dragStartPlayerGridPos = RoguemojiGame.Instance.LocalPlayer.GridPos;
+        _dragStartGridPos = thing.GridPos;
+        _dragStartGridType = thing.ContainingGridType;
         TimeSinceStartDragging = 0f;
         DragStartPosition = MousePosition;
 

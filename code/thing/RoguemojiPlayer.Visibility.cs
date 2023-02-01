@@ -19,7 +19,7 @@ public class SeenThingData
     public float opacity;
     public float wieldedOpacity;
     public bool isVisible;
-    public Thing thing;
+    public int networkIdent;
 }
 
 public enum PlayerVisionChangeReason { ChangedGridPos, IncreasedSightBlockAmount, DecreasedSightBlockAmount, ChangedInvisibleAmount }
@@ -70,19 +70,19 @@ public partial class RoguemojiPlayer : Thing
             if(!CanSeeAnyPartOfThing(thing))
                 continue;
 
-            bool isVisible = CanSeeThing(thing);
+            bool isVisible = CanPerceiveThing(thing);
 
             var seenData = new SeenThingData()
             {
                 icon = thing.DisplayIcon,
                 zIndex = thing.GetZPos(),
-                hasWieldedThing = thing.WieldedThing != null && CanSeeThing(thing.WieldedThing),
+                hasWieldedThing = thing.WieldedThing != null && CanPerceiveThing(thing.WieldedThing),
                 isSolid = thing.HasFlag(ThingFlags.Solid),
                 playerNum = thing.PlayerNum,
                 opacity = isVisible ? (thing.Opacity * (thing.GetStatClamped(StatType.Invisible) > 0 ? 0.5f : 1f)) : 1f, // opacity->1f when invisible (won't be rendered anyway) so opacity doesn't effect wielded thing
                 wieldedOpacity = thing.WieldedThing != null ? (thing.WieldedThing.Opacity * (thing.WieldedThing.GetStatClamped(StatType.Invisible) > 0 ? 0.5f : 1f)) : 0f,
                 isVisible = isVisible,
-                thing = thing,
+                networkIdent = thing.NetworkIdent,
             };
 
             if (thing.HasTattoo)
@@ -136,7 +136,45 @@ public partial class RoguemojiPlayer : Thing
 
     public void CheckForUnnecessarySeenThing(Thing thing)
     {
+        if (!SeenThings.ContainsKey(CurrentLevelId))
+            return;
 
+        var gridThings = SeenThings[CurrentLevelId];
+        foreach(KeyValuePair<IntVector, List<SeenThingData>> pair in gridThings)
+        {
+            var things = pair.Value;
+            for(int i = things.Count - 1; i >= 0; i--)
+            {
+                if(thing.Equals(things[i]))
+                {
+                    things.RemoveAt(i);
+                }
+            }
+        }
+    }
+
+    [ClientRpc]
+    public void CheckForUnnecessarySeenThings()
+    {
+        if (!SeenThings.ContainsKey(CurrentLevelId))
+            return;
+
+        var gridThings = SeenThings[CurrentLevelId];
+        foreach (KeyValuePair<IntVector, List<SeenThingData>> pair in gridThings)
+        {
+            var things = pair.Value;
+            for (int i = things.Count - 1; i >= 0; i--)
+            {
+                var data = things[i];
+                Thing thing = FindByIndex(data.networkIdent) as Thing;
+
+                if (thing == null)
+                    continue;
+
+                if (IsCellVisible(thing.GridPos) && CanPerceiveThing(thing))
+                    things.RemoveAt(i);
+            }
+        }
     }
 
     public bool IsCellVisible(IntVector gridPos)

@@ -46,7 +46,7 @@
     var player = RoguemojiGame.Instance.LocalPlayer;
 }
 
-<root class="cell_tooltip @GetEquipmentClass()" style="display:@(player.CanSeeThing(Thing) ? "flex" : "none");">
+<root class="cell_tooltip @GetEquipmentClass()" style="display:@(player.CanPerceiveThing(Thing) ? "flex" : "none");">
     @(Hud.GetConfusedText(Hud.GetHallucinationTextThing(Thing, Hud.GetTooltip(Thing), HallucinationTextType.Tooltip)))
 
     @if(Thing.ContainingGridType == GridType.Inventory)

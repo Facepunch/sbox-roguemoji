@@ -689,7 +689,7 @@ public partial class Thing : Entity
     }
 
     /// <summary> Whether the thing is invisible and we can see invisible. Does not consider range or line of sight. </summary>
-    public bool CanSeeThing(Thing thing)
+    public bool CanPerceiveThing(Thing thing)
     {
         if(thing.ThingWieldingThis == null)
         {
@@ -716,7 +716,7 @@ public partial class Thing : Entity
     /// <summary> Whether the thing is visible, or its wielded thing is visible (eg. an invisible thing carrying a non-invisible item) </summary>
     public bool CanSeeAnyPartOfThing(Thing thing)
     {
-        return CanSeeThing(thing) || (thing.WieldedThing != null && CanSeeThing(thing.WieldedThing));
+        return CanPerceiveThing(thing) || (thing.WieldedThing != null && CanPerceiveThing(thing.WieldedThing));
     }
 
     /// <summary> If conditionalGridPos is visible to player, declare that this thing has been noticed by them, so keep rendering it for moment even if it moves to a non-visible gridpos. </summary>

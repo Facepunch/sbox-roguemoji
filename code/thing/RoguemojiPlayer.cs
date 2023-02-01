@@ -274,7 +274,7 @@ public partial class RoguemojiPlayer : Thing
                 component.Update(dt);
         }
 
-        if(SelectedThing != null && !CanSeeThing(SelectedThing))
+        if(SelectedThing != null && !CanPerceiveThing(SelectedThing))
             SelectThing(null);
 
         //DebugText = "";
@@ -878,7 +878,7 @@ public partial class RoguemojiPlayer : Thing
         if (gridType == GridType.Arena)
         {
             var level = RoguemojiGame.Instance.GetLevel(CurrentLevelId);
-            var thing = level.GridManager.GetThingsAt(gridPos).WithAll(ThingFlags.Selectable).Where(x => CanSeeThing(x)).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+            var thing = level.GridManager.GetThingsAt(gridPos).WithAll(ThingFlags.Selectable).Where(x => CanPerceiveThing(x)).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 
             if (!visible && thing != null)
                 return;
@@ -939,6 +939,9 @@ public partial class RoguemojiPlayer : Thing
 
     public void InventoryThingDragged(Thing thing, PanelType destinationPanelType, IntVector targetGridPos, bool draggedWieldedThing)
     {
+        if (thing == null || !thing.IsValid)
+            return;
+
         if (destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.Nearby)// || destinationPanelType == PanelType.None)
         {
             MoveThingTo(thing, GridType.Arena, GridPos);
@@ -995,6 +998,9 @@ public partial class RoguemojiPlayer : Thing
 
     public void EquipmentThingDragged(Thing thing, PanelType destinationPanelType, IntVector targetGridPos)
     {
+        if (thing == null || !thing.IsValid)
+            return;
+
         if (destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.Nearby)// || destinationPanelType == PanelType.None)
         {
             MoveThingTo(thing, GridType.Arena, GridPos);
@@ -1018,6 +1024,9 @@ public partial class RoguemojiPlayer : Thing
 
     public void NearbyThingDragged(Thing thing, PanelType destinationPanelType, IntVector targetGridPos)
     {
+        if (thing == null || !thing.IsValid)
+            return;
+
         // dont allow dragging nearby thing from different cells, or if the thing has been picked up by someone else
         if (!GridPos.Equals(thing.GridPos) || thing.ContainingGridType == GridType.Inventory)
             return;

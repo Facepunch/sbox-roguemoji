@@ -124,8 +124,8 @@
     @foreach(Thing thing in GetThings())
     {
         var canSeeGridPos = player.IsGridPosOnCamera(thing.GridPos) && player.IsCellVisible(thing.GridPos);
-        var canSeeThing = (canSeeGridPos && player.CanSeeThing(thing)) || thing.TimeSinceLocalPlayerSaw < 0.25f;
-        var canSeeWieldedThing = canSeeGridPos && thing.WieldedThing != null && (player.CanSeeThing(thing.WieldedThing) || thing.WieldedThing.TimeSinceLocalPlayerSaw < 0.25f);
+        var canSeeThing = (canSeeGridPos && player.CanPerceiveThing(thing)) || thing.TimeSinceLocalPlayerSaw < 0.25f;
+        var canSeeWieldedThing = canSeeGridPos && thing.WieldedThing != null && (player.CanPerceiveThing(thing.WieldedThing) || thing.WieldedThing.TimeSinceLocalPlayerSaw < 0.25f);
 
         if ((canSeeThing || canSeeWieldedThing || thing.ShowFloaterOnInvisible() || (thing.WieldedThing != null && thing.WieldedThing.ShowFloaterOnInvisible())) && !thing.DontRender)
         {
@@ -215,7 +215,6 @@
                     <div class="aiming_cell" style="left: @(x * RoguemojiGame.CellSize + player.CameraPixelOffset.x + 1); top: @(y * RoguemojiGame.CellSize + player.CameraPixelOffset.y + 1); opacity: @(aimOpacity); transform: rotate(@(GetAimingAngle(dir)));">
                         @if (player.AimingType == AimingType.Direction)
                             @(GetArrowIcon(dir))
-
                     </div>
 
                     @if (player.AimingType == AimingType.TargetCell)

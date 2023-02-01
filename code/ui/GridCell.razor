@@ -121,7 +121,7 @@
     }
 
     <div class="@GetPlayerClass() @GetCooldownClass(Thing) @Hud.GetUnusableClass(Thing) @GetInventoryClass() @Hud.Instance.GetEquipmentHighlightClass(Thing)" style="opacity:@(GetOpacity());" @ref=IconPanel>
-        @if(player.CanSeeThing(Thing)) 
+        @if(player.CanPerceiveThing(Thing)) 
         {
             @(Hud.GetHallucinationTextThing(Thing, Thing.DisplayIcon.Substring(Thing.CharSkip), HallucinationTextType.Icon))
 
@@ -170,7 +170,7 @@
         var wieldedThing = Thing.WieldedThing;
         var wieldedOffset = Thing.WieldedThingOffset;
 
-        if(player.CanSeeThing(wieldedThing))
+        if (player.CanPerceiveThing(wieldedThing))
         {
             <div class="wielded_thing @GetCooldownClass(wieldedThing)" style="left:@(wieldedOffset.x)px; top:@(wieldedOffset.y)px; font-size:@(Thing.WieldedThingFontSize); opacity:@(GetOpacityWielded());">
                 @(Hud.GetHallucinationTextThing(wieldedThing, wieldedThing.DisplayIcon.Substring(wieldedThing.CharSkip), HallucinationTextType.Icon))
@@ -240,7 +240,7 @@
         var equipmentHighlightHash = Hud.Instance.GetContainingPanelType(Hud.Instance.MousePosition) == PanelType.EquipmentGrid ? 1 : 0;
         var statHash = HashCode.Combine(player.StatHash, Thing.StatHash);
         var identifiedHash = HashCode.Combine(Thing is Scroll scroll && player.IsScrollTypeIdentified(scroll.ScrollType) ? 1 : 0, Thing is Potion potion && player.IsPotionTypeIdentified(potion.PotionType) ? 1 : 0);
-        var playerCanSeeHash = player.CanSeeThing(Thing) ? 1 : 0;
+        var playerCanSeeHash = player.CanPerceiveThing(Thing) ? 1 : 0;
         var floaterHash = Thing.HasFloaters ? Game.Random.Int(0, 9999) : 0;
         return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, HashCode.Combine(cooldownHash, wieldedCooldownHash, equipmentHighlightHash, statHash, identifiedHash), 
                                 HashCode.Combine(player.ConfusionSeed, player.HallucinatingSeed), playerCanSeeHash, floaterHash);

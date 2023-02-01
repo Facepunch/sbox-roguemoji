@@ -53,7 +53,7 @@ public class CTargeting : ThingComponent
         if (other == null || other.Faction != TargetFaction || other.IsRemoved || other == Target || other.IsInTransit)
             return false;
 
-        if (!Thing.CanSeeThing(other))
+        if (!Thing.CanPerceiveThing(other))
             return false;
 
         int adjustedSight = Math.Max(Thing.GetStatClamped(StatType.Sight) - other.GetStatClamped(StatType.Stealth), 1);
@@ -92,7 +92,7 @@ public class CTargeting : ThingComponent
 
         foreach (var other in _potentialTargets)
         {
-            if (!Thing.CanSeeThing(other))
+            if (!Thing.CanPerceiveThing(other))
                 continue;
 
             int adjustedSight = Math.Max(sight - other.GetStatClamped(StatType.Stealth), 1);

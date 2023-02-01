@@ -99,7 +99,7 @@ public partial class Squirrel : Thing
             else
             {
                 int adjustedSight = Math.Max(GetStatClamped(StatType.Sight) - target.GetStatClamped(StatType.Stealth), 1);
-                bool canSeeTarget = CanSeeGridPos(target.GridPos, adjustedSight) && CanSeeThing(target);
+                bool canSeeTarget = CanSeeGridPos(target.GridPos, adjustedSight) && CanPerceiveThing(target);
                 bool isFearful = GetComponent<CFearful>(out var fearful);
 
                 //RoguemojiGame.Instance.DebugGridLine(GridPos, Targeting.Target.GridPos, canSeeTarget ? new Color(0f, 0f, 1f, 0.8f) : new Color(1f, 0f, 0f, 0.8f), 0.025f);

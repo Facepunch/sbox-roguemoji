@@ -35,7 +35,7 @@
     {
         if (wielder.ContainingGridType != GridType.Arena || !floater.requireSight || player.IsCellVisible(wielder.GridPos) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(player.GridPos, wielder.GridPos)))
         {
-            if (floater.showOnInvisible || player.CanSeeThing(WieldedThing) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(player.GridPos, wielder.GridPos)))
+            if (floater.showOnInvisible || player.CanPerceiveThing(WieldedThing) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(player.GridPos, wielder.GridPos)))
             {
                 Vector2 pos = new Vector2(-41f, -20f) + wielder.WieldedThingOffset + new Vector2(-9f, -5f);
 

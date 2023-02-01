@@ -24,8 +24,9 @@ public partial class GridManager : Entity
 
 	public HashSet<RoguemojiPlayer> ContainedPlayers = new HashSet<RoguemojiPlayer>();
 	public HashSet<RoguemojiPlayer> VisionChangedPlayers = new HashSet<RoguemojiPlayer>(); // players who need an update to their field of view
+    public HashSet<RoguemojiPlayer> CheckSeenThingsPlayers = new HashSet<RoguemojiPlayer>(); // players who need to check for unnecessary seen things
 
-	[Net] public LevelId LevelId { get; set; }
+    [Net] public LevelId LevelId { get; set; }
 
     public GridManager()
     {
@@ -55,7 +56,12 @@ public partial class GridManager : Entity
 				player.RefreshVisibility(To.Single(player));
 
 			VisionChangedPlayers.Clear();
-		}
+
+            foreach (var player in CheckSeenThingsPlayers)
+                player.CheckForUnnecessarySeenThings(To.Single(player));
+
+            CheckSeenThingsPlayers.Clear();
+        }
 	}
 
     public void UpdateClient(float dt)
@@ -173,6 +179,8 @@ public partial class GridManager : Entity
 				CheckPlayerVisionChange(thing, gridPos, PlayerVisionChangeReason.ChangedGridPos);
 
 			CheckAimingChange(gridPos);
+
+            CheckSeenThingVision(thing, gridPos);
         }
     }
 
@@ -214,7 +222,25 @@ public partial class GridManager : Entity
 		}
 	}
 
-	void CheckAimingChange(IntVector gridPos)
+    // something moved that a player might have seen. check whether their previously seen cells are showing an old position of that thing, and if so, remove it if we now see it
+    public void CheckSeenThingVision(Thing thing, IntVector gridPos)
+    {
+        foreach (var player in ContainedPlayers)
+        {
+            if (CheckSeenThingsPlayers.Contains(player))
+                continue;
+
+            var sight = player.GetStatClamped(StatType.Sight);
+
+            var dist = GetDistance(player.GridPos, gridPos);
+            if (dist > sight)
+                continue;
+
+            CheckSeenThingsPlayers.Add(player);
+        }
+    }
+
+    void CheckAimingChange(IntVector gridPos)
 	{
 		foreach(var player in ContainedPlayers)
 		{

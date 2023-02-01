@@ -27,7 +27,7 @@
     {
         if (Thing.ContainingGridType != GridType.Arena || !floater.requireSight || player.IsCellVisible(Thing.GridPos) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(player.GridPos, Thing.GridPos)))
         {
-            if (floater.showOnInvisible || player.CanSeeThing(Thing) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(player.GridPos, Thing.GridPos)))
+            if (floater.showOnInvisible || player.CanPerceiveThing(Thing) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(player.GridPos, Thing.GridPos)))
             {
                 var screenPos = Hud.Instance.GetScreenPosForGridPos(Thing.ContainingGridManager.GridType, Thing.GridPos, relative: true);
                 Vector2 pos = (screenPos / ScaleToScreen) + new Vector2(-RoguemojiGame.CellSize / 2, -RoguemojiGame.CellSize / 2);
