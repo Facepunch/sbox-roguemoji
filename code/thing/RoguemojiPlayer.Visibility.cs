@@ -18,6 +18,8 @@ public class SeenThingData
     public int playerNum;
     public float opacity;
     public float wieldedOpacity;
+    public bool isVisible;
+    public Thing thing;
 }
 
 public enum PlayerVisionChangeReason { ChangedGridPos, IncreasedSightBlockAmount, DecreasedSightBlockAmount, ChangedInvisibleAmount }
@@ -40,14 +42,16 @@ public partial class RoguemojiPlayer : Thing
             SeenThings.Add(CurrentLevelId, new Dictionary<IntVector, List<SeenThingData>>());
 
         _wasVisible.Clear();
-
         // add the visible cells before updating visibility
         foreach (var gridPos in VisibleCells)
             _wasVisible.Add(gridPos);
 
         ComputeVisibility(GridPos, rangeLimit: GetStatClamped(StatType.Sight));
 
-        foreach (var gridPos in _wasVisible.Except(VisibleCells))
+        foreach (var gridPos in VisibleCells.Except(_wasVisible)) // newly visible cells
+            ClearSeenThings(gridPos);
+
+        foreach (var gridPos in _wasVisible.Except(VisibleCells)) // newly non-visible cells
             SaveSeenData(gridPos);
     }
 
@@ -63,18 +67,22 @@ public partial class RoguemojiPlayer : Thing
         var things = ContainingGridManager.GetThingsAtClient(gridPos).OrderBy(x => x.GetZPos());
         foreach (var thing in things)
         {
-            if(!CanSeeThing(thing))
+            if(!CanSeeAnyPartOfThing(thing))
                 continue;
+
+            bool isVisible = CanSeeThing(thing);
 
             var seenData = new SeenThingData()
             {
                 icon = thing.DisplayIcon,
                 zIndex = thing.GetZPos(),
-                hasWieldedThing = thing.WieldedThing != null,
+                hasWieldedThing = thing.WieldedThing != null && CanSeeThing(thing.WieldedThing),
                 isSolid = thing.HasFlag(ThingFlags.Solid),
                 playerNum = thing.PlayerNum,
-                opacity = thing.Opacity * (thing.GetStatClamped(StatType.Invisible) > 0 ? 0.5f : 1f),
+                opacity = isVisible ? (thing.Opacity * (thing.GetStatClamped(StatType.Invisible) > 0 ? 0.5f : 1f)) : 1f, // opacity->1f when invisible (won't be rendered anyway) so opacity doesn't effect wielded thing
                 wieldedOpacity = thing.WieldedThing != null ? (thing.WieldedThing.Opacity * (thing.WieldedThing.GetStatClamped(StatType.Invisible) > 0 ? 0.5f : 1f)) : 0f,
+                isVisible = isVisible,
+                thing = thing,
             };
 
             if (thing.HasTattoo)
@@ -113,6 +121,22 @@ public partial class RoguemojiPlayer : Thing
 
             SeenThings[CurrentLevelId][gridPos].Add(seenData);
         }
+    }
+
+    void ClearSeenThings(IntVector gridPos)
+    {
+        if (!SeenThings.ContainsKey(CurrentLevelId))
+            return;
+
+        if (!SeenThings[CurrentLevelId].ContainsKey(gridPos))
+            return;
+
+        SeenThings[CurrentLevelId][gridPos].Clear();
+    }
+
+    public void CheckForUnnecessarySeenThing(Thing thing)
+    {
+
     }
 
     public bool IsCellVisible(IntVector gridPos)

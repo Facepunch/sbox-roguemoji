@@ -168,15 +168,18 @@
                         <div class="seen_icon @(seenData.isSolid ? "solid" : "") @(seenData.playerNum > 0 ? $"icon-player-{seenData.playerNum}" : "")" 
                             style="left: @(x * RoguemojiGame.CellSize + player.CameraPixelOffset.x); top: @(y * RoguemojiGame.CellSize + player.CameraPixelOffset.y); z-index:@(9999 + level.GridManager.GetIndex(gridPos) + seenData.zIndex); opacity:@(seenData.opacity);">
                             
-                            @(Hud.GetHallucinationTextStr(seenData.icon, HallucinationTextType.Icon))
-
-                            @if (seenData.tattooData != null)
+                            @if (seenData.isVisible)
                             {
-                                int fontSize = MathX.FloorToInt(29f * seenData.tattooData.Scale);
-                                var offset = seenData.tattooData.Offset;
-                                <div class="seen_tattoo" style="font-size: @(fontSize)px; left: @(offset.x - 1)px; top: @(offset.y - 4)px;">
-                                    @(seenData.tattooData.Icon)
-                                </div>
+                                @(Hud.GetHallucinationTextStr(seenData.icon, HallucinationTextType.Icon))
+
+                                @if (seenData.tattooData != null)
+                                {
+                                    int fontSize = MathX.FloorToInt(29f * seenData.tattooData.Scale);
+                                    var offset = seenData.tattooData.Offset;
+                                    <div class="seen_tattoo" style="font-size: @(fontSize)px; left: @(offset.x - 1)px; top: @(offset.y - 4)px;">
+                                        @(seenData.tattooData.Icon)
+                                    </div>
+                                }
                             }
 
                             @if (seenData.hasWieldedThing)

@@ -691,18 +691,32 @@ public partial class Thing : Entity
     /// <summary> Whether the thing is invisible and we can see invisible. Does not consider range or line of sight. </summary>
     public bool CanSeeThing(Thing thing)
     {
-        return
-            thing.GetStatClamped(StatType.Invisible) <= 0 ||
-            CanPerceiveThingArena(thing) ||
-            (thing.ThingWieldingThis != null && CanPerceiveThingArena(thing.ThingWieldingThis)) ||
-            ((thing.ContainingGridType == GridType.Equipment || thing.ContainingGridType == GridType.Inventory) && thing.ThingOwningThis == this) ||
-            WieldedThing == thing || 
-            thing == this;
+        if(thing.ThingWieldingThis == null)
+        {
+            return
+                thing.GetStatClamped(StatType.Invisible) <= 0 ||
+                (thing.ContainingGridType == GridType.Arena && (GridPos.Equals(thing.GridPos) || (GetStatClamped(StatType.Perception) > 0 && GridManager.GetDistance(GridPos, thing.GridPos) <= GetStatClamped(StatType.Perception)))) ||
+                ((thing.ContainingGridType == GridType.Equipment || thing.ContainingGridType == GridType.Inventory) && thing.ThingOwningThis == this) ||
+                WieldedThing == thing ||
+                thing == this;
+        }
+        else
+        {
+            var parent = thing.ThingWieldingThis;
+
+            return
+                thing.GetStatClamped(StatType.Invisible) <= 0 ||
+                (parent.ContainingGridType == GridType.Arena && (GridPos.Equals(parent.GridPos) || (GetStatClamped(StatType.Perception) > 0 && GridManager.GetDistance(GridPos, parent.GridPos) <= GetStatClamped(StatType.Perception)))) ||
+                ((thing.ContainingGridType == GridType.Equipment || thing.ContainingGridType == GridType.Inventory) && thing.ThingOwningThis == this) ||
+                WieldedThing == thing ||
+                thing == this;
+        }
     }
 
-    bool CanPerceiveThingArena(Thing thing)
+    /// <summary> Whether the thing is visible, or its wielded thing is visible (eg. an invisible thing carrying a non-invisible item) </summary>
+    public bool CanSeeAnyPartOfThing(Thing thing)
     {
-        return thing.ContainingGridType == GridType.Arena && (GridPos.Equals(thing.GridPos) || (GetStatClamped(StatType.Perception) > 0 && GridManager.GetDistance(GridPos, thing.GridPos) <= GetStatClamped(StatType.Perception)));
+        return CanSeeThing(thing) || (thing.WieldedThing != null && CanSeeThing(thing.WieldedThing));
     }
 
     /// <summary> If conditionalGridPos is visible to player, declare that this thing has been noticed by them, so keep rendering it for moment even if it moves to a non-visible gridpos. </summary>
