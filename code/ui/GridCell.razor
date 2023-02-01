@@ -163,6 +163,7 @@
                 <div class="grid_cell_stat_bar_overlay" style="width: @(durabilityPercent * 100f)%; background-color: @(Thing.GetStatColor(StatType.Durability));"></div>
             }
         }
+    </div>
 
     @if (Thing.WieldedThing != null)
     {
@@ -171,9 +172,7 @@
 
         if(player.CanSeeThing(wieldedThing))
         {
-                Log.Info($"gridcell wieldedOffset: {wieldedOffset}");
-
-                <div class="wielded_thing @GetCooldownClass(wieldedThing)" style="left:@(wieldedOffset.x)px; top:@(wieldedOffset.y)px; font-size:@(Thing.WieldedThingFontSize); opacity:@(GetOpacityWielded());">
+            <div class="wielded_thing @GetCooldownClass(wieldedThing)" style="left:@(wieldedOffset.x)px; top:@(wieldedOffset.y)px; font-size:@(Thing.WieldedThingFontSize); opacity:@(GetOpacityWielded());">
                 @(Hud.GetHallucinationTextThing(wieldedThing, wieldedThing.DisplayIcon.Substring(wieldedThing.CharSkip), HallucinationTextType.Icon))
 
                 @if (wieldedThing.HasTattoo)
