@@ -55,7 +55,7 @@ public class CProjectile : ThingComponent
 
     public override void OnMovedOntoBy(Thing thing)
     {
-        if(ShouldHit && TimeElapsed > 0f)
+        if(ShouldHit && TimeElapsed > 0f && thing.HasFlag(ThingFlags.Solid))
             Thing.HitOther(thing, Direction);
 
         Remove();

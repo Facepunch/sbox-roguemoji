@@ -75,7 +75,7 @@ public partial class GridManager : Entity
             //thing.DebugText = $"{thing.ContainingGridType}";
             
             // todo: only update if a component needs updating
-            if (thing.ShouldUpdate || thing.ThingComponents.Count > 0 || thing.IsOnCooldown)
+            if (thing.NeedsUpdate() || (thing.WieldedThing != null && thing.WieldedThing.NeedsUpdate()))
 				thing.Update(dt);
 		}
 	}

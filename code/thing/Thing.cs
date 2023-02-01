@@ -158,8 +158,13 @@ public partial class Thing : Entity
             HandleStamina(dt);
 
         // the wielded thing of NPCs has no ContainingGridManager, so must be updated manually (note: currently, if the wielded has ShouldUpdate=false, they will still not be getting updated)
-        if(WieldedThing != null && WieldedThing.ShouldUpdate && WieldedThing.ContainingGridType == GridType.None)
+        if (WieldedThing != null && WieldedThing.NeedsUpdate() && WieldedThing.ContainingGridType == GridType.None)
             WieldedThing.Update(dt);
+    }
+
+    public bool NeedsUpdate()
+    {
+        return ShouldUpdate || ThingComponents.Count > 0 || IsOnCooldown;
     }
 
     // todo: dont call this for everything
@@ -236,13 +241,13 @@ public partial class Thing : Entity
 
         var bumpingThing = hasWieldedThing ? WieldedThing : this;
 
-        if (target != null && !target.IsRemoved)
-            target.OnBumpedIntoBy(bumpingThing);
-
         bumpingThing.HitOther(target, direction);
 
         if (bumpingThing != null && !bumpingThing.IsRemoved)
             bumpingThing.OnBumpedIntoThing(target);
+
+        if (target != null && !target.IsRemoved)
+            target.OnBumpedIntoBy(bumpingThing);
 
         if (hasWieldedThing)
             OnWieldedThingBumpedInto(target);
@@ -688,10 +693,16 @@ public partial class Thing : Entity
     {
         return
             thing.GetStatClamped(StatType.Invisible) <= 0 ||
-            (thing.ContainingGridType == GridType.Arena && (GridPos.Equals(thing.GridPos) || (GetStatClamped(StatType.Perception) > 0 && GridManager.GetDistance(GridPos, thing.GridPos) <= GetStatClamped(StatType.Perception)))) ||
+            CanPerceiveThingArena(thing) ||
+            (thing.ThingWieldingThis != null && CanPerceiveThingArena(thing.ThingWieldingThis)) ||
             ((thing.ContainingGridType == GridType.Equipment || thing.ContainingGridType == GridType.Inventory) && thing.ThingOwningThis == this) ||
             WieldedThing == thing || 
             thing == this;
+    }
+
+    bool CanPerceiveThingArena(Thing thing)
+    {
+        return thing.ContainingGridType == GridType.Arena && (GridPos.Equals(thing.GridPos) || (GetStatClamped(StatType.Perception) > 0 && GridManager.GetDistance(GridPos, thing.GridPos) <= GetStatClamped(StatType.Perception)));
     }
 
     /// <summary> If conditionalGridPos is visible to player, declare that this thing has been noticed by them, so keep rendering it for moment even if it moves to a non-visible gridpos. </summary>
@@ -721,8 +732,6 @@ public partial class Thing : Entity
 
     public bool TryDropThingNearby(Thing thing)
     {
-        Log.Info($"TryDropThingNearby - thing: {thing.DisplayIcon} in inventory: {thing.ThingOwningThis} equals this?: {(thing.ThingOwningThis == this)} ");
-
         if (thing.ThingOwningThis != this)
             return false;
 

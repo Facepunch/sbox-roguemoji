@@ -63,9 +63,7 @@ public partial class TreeDeciduous : Thing
     {
         base.OnBumpedIntoBy(thing);
 
-        Log.Info($"tree - OnBumpedIntoBy - WieldedThing: {WieldedThing}");
-
-        if (WieldedThing != null)// && thing != WieldedThing)
+        if (WieldedThing != null && thing != WieldedThing)
         {
             TryDropThingNearby(WieldedThing);
         }

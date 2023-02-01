@@ -54,6 +54,8 @@ public class CInvisible : ThingComponent
 
     public override void OnBumpedIntoThing(Thing thing)
     {
+        Log.Info($"Invis - {Thing} OnBumpedIntoThing: {thing} TimeElapsed: {TimeElapsed}");
+
         if (TimeElapsed > 0f)
             Remove();
     }

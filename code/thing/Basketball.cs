@@ -18,8 +18,6 @@ public partial class Basketball : Thing
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable | ThingFlags.UseRequiresAiming;
 
-        SetTattoo("👁️", scale: 0.4f, offset: new Vector2(0f, 0f), offsetWielded: Vector2.Zero, offsetInfo: new Vector2(5f, 4f), offsetCharWielded: Vector2.Zero, offsetInfoWielded: Vector2.Zero);
-
         if (Game.IsServer)
         {
             EnergyCost = 3;
@@ -27,7 +25,7 @@ public partial class Basketball : Thing
 
             InitStat(StatType.Attack, 1);
 
-            AddTrait("", "🙌", $"When 🏀 hits and not caught, it disarms and bounces back", offset: new Vector2(0f, -1f), tattooIcon: "🏀", tattooOffset: new Vector2(0f, -12f), tattooScale: 0.65f);
+            AddTrait("", "🙌", $"When 🏀 hits, target catches if possible/Otherwise 🏀 disarms target and bounces back", offset: new Vector2(0f, -1f), tattooIcon: "🏀", tattooOffset: new Vector2(0f, -12f), tattooScale: 0.65f);
             AddTrait("", GetStatIcon(StatType.Energy), $"Ability costs {EnergyCost}{GetStatIcon(StatType.Energy)}", offset: new Vector2(0f, -3f), labelText: $"{EnergyCost}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
         }
@@ -77,8 +75,6 @@ public partial class Basketball : Thing
             moveDelay = p.MoveDelay;
             distance = p.TotalDistance - 1;
         }
-
-        Log.Info($"basketball - HitOther - target.WieldedThing: {target.WieldedThing}");
 
         if (target.HasFlag(ThingFlags.CanWieldThings))
         {
