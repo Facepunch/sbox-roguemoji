@@ -20,7 +20,7 @@ public partial class Squirrel : Thing
         IconDepth = (int)IconDepthLevel.Solid;
         ShouldUpdate = true;
 		Tooltip = "A squirrel";
-		Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanUseThings;
+		Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanWieldThings;
         PathfindMovementCost = 5f;
         Faction = FactionType.Enemy;
         CantSeeTargetLoseDelay = 5f;
@@ -34,6 +34,13 @@ public partial class Squirrel : Thing
             InitStat(StatType.Hearing, 3);
             InitStat(StatType.SightBlockAmount, 5);
             //InitStat(StatType.Smell, 3);
+        }
+        else
+        {
+            WieldedThingOffset = new Vector2(-3, 14f);
+            WieldedThingFontSize = 15;
+            InfoWieldedThingOffset = new Vector2(38f, 38f);
+            InfoWieldedThingFontSize = 30;
         }
     }
 
@@ -57,6 +64,8 @@ public partial class Squirrel : Thing
     public override void Update(float dt)
     {
         base.Update(dt);
+
+        //DebugText = WieldedThing == null ? "null" : WieldedThing.DisplayName;
 
         if (Targeting == null || IsInTransit || IsRemoved)
             return;

@@ -85,7 +85,7 @@ public partial class Cigarette : Thing
         var projectile = smoke.AddComponent<CProjectile>();
         projectile.Direction = direction;
         projectile.MoveDelay = 0.2f;
-        projectile.RemainingDistance = 2;
+        projectile.TotalDistance = 2;
         projectile.Thrower = user;
         projectile.ShouldHit = false;
 

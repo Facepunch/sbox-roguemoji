@@ -35,7 +35,7 @@ public abstract class ThingComponent
         TimeElapsed = 0f;
     }
 
-    public void Remove()
+    public virtual void Remove()
     {
         Thing.RemoveComponent(TypeLibrary.GetType(GetType()));
     }

@@ -181,12 +181,13 @@
                             @if (seenData.hasWieldedThing)
                             {
                                 var wieldedOffset = seenData.wieldedThingOffset;
+                                Log.Info($"seen wieldedOffset: {wieldedOffset}");
                                 <div class="seen_wielded" style="left:@(wieldedOffset.x)px; top:@(wieldedOffset.y)px; font-size:@(seenData.wieldedThingFontSize); opacity:@(seenData.wieldedOpacity);">
                                     @(Hud.GetHallucinationTextStr(seenData.wieldedThingIcon, HallucinationTextType.Icon))
 
                                     @if (seenData.wieldedThingTattooData != null)
                                     {
-                                        int fontSize = MathX.FloorToInt(18f * seenData.wieldedThingTattooData.Scale);
+                                        int fontSize = MathX.FloorToInt(seenData.wieldedThingFontSize * seenData.wieldedThingTattooData.Scale);
                                         var offset = seenData.wieldedThingTattooData.OffsetWielded;
                                         <div class="seen_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
                                             @(seenData.wieldedThingTattooData.Icon)

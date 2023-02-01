@@ -14,7 +14,7 @@ public partial class Golem : Thing
         Description = "Living rock that moves with mindless intent";
         Tooltip = "A golem";
         IconDepth = (int)IconDepthLevel.Solid;
-        Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanUseThings;
+        Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanWieldThings;
         PathfindMovementCost = 15f;
 
         if (Game.IsServer)

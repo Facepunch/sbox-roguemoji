@@ -95,7 +95,7 @@ public partial class RoguemojiPlayer : Thing
     {
         DisplayIcon = "😀";
         IconDepth = (int)IconDepthLevel.Player;
-        Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanUseThings;
+        Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanWieldThings;
         IsDead = false;
         //ActionDelay = TimeSinceAction = 0.5f;
         //IsActionReady = true;
@@ -190,7 +190,7 @@ public partial class RoguemojiPlayer : Thing
 
     void SpawnRandomInventoryThing(IntVector gridPos)
     {
-        int rand = Game.Random.Int(0, 28);
+        int rand = Game.Random.Int(0, 29);
         switch (rand)
         {
             //case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -240,6 +240,7 @@ public partial class RoguemojiPlayer : Thing
             case 26: InventoryGridManager.SpawnThing<PotionAmnesia>(gridPos); break;
             case 27: InventoryGridManager.SpawnThing<PotionBurning>(gridPos); break;
             case 28: InventoryGridManager.SpawnThing<AcademicCap>(gridPos); break;
+            case 29: InventoryGridManager.SpawnThing<Basketball>(gridPos); break;
         }
     }
 
@@ -619,14 +620,26 @@ public partial class RoguemojiPlayer : Thing
     public void PickUpTopItem()
     {
         var thing = ContainingGridManager.GetThingsAt(GridPos).WithAll(ThingFlags.CanBePickedUp).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+        TryPickUp(thing);
+    }
 
+    public bool TryPickUp(Thing thing, bool dontRequireAction = true)
+    {
         if (thing == null)
-            return;
+            return false;
 
         if (InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
-            MoveThingTo(thing, GridType.Inventory, emptyGridPos, wieldIfPossible: true);
-        else if(thing.HasFlag(ThingFlags.Equipment) && EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPosEquipment))
-            MoveThingTo(thing, GridType.Equipment, emptyGridPosEquipment);
+        {
+            MoveThingTo(thing, GridType.Inventory, emptyGridPos, dontRequireAction, wieldIfPossible: true);
+            return true;
+        }
+        else if (thing.HasFlag(ThingFlags.Equipment) && EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPosEquipment))
+        {
+            MoveThingTo(thing, GridType.Equipment, emptyGridPosEquipment, dontRequireAction);
+            return true;
+        }
+
+        return false;
     }
 
     public void ThrowWieldedThing(Direction direction)
@@ -644,7 +657,7 @@ public partial class RoguemojiPlayer : Thing
         var projectile = WieldedThing.AddComponent<CProjectile>();
         projectile.Direction = direction;
         projectile.MoveDelay = 0.1f;
-        projectile.RemainingDistance = 5;
+        projectile.TotalDistance = 5;
         projectile.Thrower = this;
 
         MoveThingTo(WieldedThing, GridType.Arena, GridPos);
@@ -752,7 +765,7 @@ public partial class RoguemojiPlayer : Thing
         var sourceGridType = thing.ContainingGridType;
         Sandbox.Diagnostics.Assert.True(sourceGridType != targetGridType);
 
-        var owningPlayer = thing.ContainingGridManager.OwningPlayer;
+        var owningPlayer = thing.ContainingGridManager?.OwningPlayer;
 
         RoguemojiGame.Instance.RefreshGridPanelClient(To.Single(this), gridType: sourceGridType);
         RoguemojiGame.Instance.RefreshGridPanelClient(To.Single(this), gridType: targetGridType);
@@ -790,15 +803,14 @@ public partial class RoguemojiPlayer : Thing
         if (sourceGridType == GridType.Equipment && owningPlayer != null)
             owningPlayer.UnequipThing(thing);
 
-        if (sourceGridType == GridType.Inventory)
-            thing.InInventoryOf = null;
-
         if (targetGridType == GridType.Arena)
         {
             if(thing == WieldedThing)
                 WieldThing(null, dontRequireAction: true);
 
             thing.CurrentLevelId = CurrentLevelId;
+
+            thing.ThingOwningThis = null;
         }
 
         if (targetGridType == GridType.Inventory)
@@ -806,11 +818,14 @@ public partial class RoguemojiPlayer : Thing
             if(wieldIfPossible && WieldedThing == null && !thing.HasFlag(ThingFlags.Equipment))
                 WieldThing(thing, dontRequireAction: true);
 
-            thing.InInventoryOf = this;
+            thing.ThingOwningThis = this;
         } 
 
         if (targetGridType == GridType.Equipment)
+        {
             targetGridManager.OwningPlayer.EquipThing(thing);
+            thing.ThingOwningThis = null;
+        }
 
         if (!dontRequireAction)
             Acting.PerformedAction();

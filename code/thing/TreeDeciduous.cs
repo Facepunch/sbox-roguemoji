@@ -16,7 +16,7 @@ public partial class TreeDeciduous : Thing
         Description = "A tall deciduous tree";
         Tooltip = "A tree";
         IconDepth = (int)IconDepthLevel.Solid;
-        Flags = ThingFlags.Solid | ThingFlags.Selectable;
+        Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanWieldThings;
 		PathfindMovementCost = 999f;
         HealthAmount = 400;
 
@@ -63,24 +63,11 @@ public partial class TreeDeciduous : Thing
     {
         base.OnBumpedIntoBy(thing);
 
-        if(WieldedThing != null)
+        Log.Info($"tree - OnBumpedIntoBy - WieldedThing: {WieldedThing}");
+
+        if (WieldedThing != null)// && thing != WieldedThing)
         {
-            if (ContainingGridManager.GetRandomEmptyAdjacentGridPos(GridPos, out var dropGridPos, allowNonSolid: true))
-            {
-                var droppedThing = WieldedThing;
-
-                ContainingGridManager.AddThing(droppedThing);
-                droppedThing.SetGridPos(dropGridPos);
-                droppedThing.VfxFly(GridPos, lifetime: 0.25f, heightY: 30f, progressEasingType: EasingType.Linear, heightEasingType: EasingType.SineInOut);
-
-                droppedThing.CanBeSeenByPlayerClient(GridPos);
-
-                var tempIconDepth = droppedThing.AddComponent<CTempIconDepth>();
-                tempIconDepth.Lifetime = 0.35f;
-                tempIconDepth.SetTempIconDepth((int)IconDepthLevel.Projectile);
-
-                WieldThing(null);
-            }
+            TryDropThingNearby(WieldedThing);
         }
         else
         {

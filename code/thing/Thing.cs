@@ -15,7 +15,7 @@ public enum ThingFlags
     Useable = (1 << 4),
     UseRequiresAiming = (1 << 5),
     AimTypeTargetCell = (1 << 6),
-    CanUseThings = (1 << 7),
+    CanWieldThings = (1 << 7),
     CanBePickedUp = (1 << 8),
     Exclusive = (1 << 9),
     DoesntBumpThings = (1 << 10),
@@ -76,7 +76,7 @@ public partial class Thing : Entity
     public int InfoWieldedThingFontSize { get; set; } // Client-only
 
     [Net] public IList<Thing> EquippedThings { get; private set; }
-    [Net] public Thing InInventoryOf { get; set; }
+    [Net] public Thing ThingOwningThis { get; set; } // in inventory, equipment, and/or wielding
 
     [Net] public float ActionRechargePercent { get; set; }
 
@@ -235,11 +235,14 @@ public partial class Thing : Entity
         bool hasWieldedThing = WieldedThing != null;
 
         var bumpingThing = hasWieldedThing ? WieldedThing : this;
-        bumpingThing.HitOther(target, direction);
-        bumpingThing.OnBumpedIntoThing(target);
 
-        if(target != null && !target.IsRemoved)
+        if (target != null && !target.IsRemoved)
             target.OnBumpedIntoBy(bumpingThing);
+
+        bumpingThing.HitOther(target, direction);
+
+        if (bumpingThing != null && !bumpingThing.IsRemoved)
+            bumpingThing.OnBumpedIntoThing(target);
 
         if (hasWieldedThing)
             OnWieldedThingBumpedInto(target);
@@ -539,7 +542,12 @@ public partial class Thing : Entity
 
     public void WieldAndRemoveFromGrid(Thing thing)
     {
+        //if (ThingWieldingThis != null)
+        //    ThingWieldingThis.WieldThing(null);
+
         WieldThing(thing);
+
+        thing.ThingOwningThis = this;
 
         if (thing.ContainingGridType != GridType.None)
             thing.ContainingGridManager.RemoveThing(thing);
@@ -589,7 +597,7 @@ public partial class Thing : Entity
         CurrentLevelId = LevelId.None;
         IsRemoved = false;
         EquippedThings.Clear();
-        InInventoryOf = null;
+        ThingOwningThis = null;
         WieldedThing = null;
         ThingWieldingThis = null;
         IsOnCooldown = false;
@@ -681,8 +689,7 @@ public partial class Thing : Entity
         return
             thing.GetStatClamped(StatType.Invisible) <= 0 ||
             (thing.ContainingGridType == GridType.Arena && (GridPos.Equals(thing.GridPos) || (GetStatClamped(StatType.Perception) > 0 && GridManager.GetDistance(GridPos, thing.GridPos) <= GetStatClamped(StatType.Perception)))) ||
-            thing.ContainingGridType == GridType.Equipment ||
-            (thing.ContainingGridType == GridType.Inventory && thing.InInventoryOf == this) ||
+            ((thing.ContainingGridType == GridType.Equipment || thing.ContainingGridType == GridType.Inventory) && thing.ThingOwningThis == this) ||
             WieldedThing == thing || 
             thing == this;
     }
@@ -710,5 +717,40 @@ public partial class Thing : Entity
             return GetStatClamped(StatType.Strength);
 
         return 0;
+    }
+
+    public bool TryDropThingNearby(Thing thing)
+    {
+        Log.Info($"TryDropThingNearby - thing: {thing.DisplayIcon} in inventory: {thing.ThingOwningThis} equals this?: {(thing.ThingOwningThis == this)} ");
+
+        if (thing.ThingOwningThis != this)
+            return false;
+
+        if (ContainingGridManager.GetRandomEmptyAdjacentGridPos(GridPos, out var dropGridPos, allowNonSolid: true))
+        {
+            if(thing.ContainingGridManager != null)
+            {
+                thing.ContainingGridManager.RemoveThing(thing);
+            }
+
+            ContainingGridManager.AddThing(thing);
+            thing.SetGridPos(dropGridPos);
+            thing.VfxFly(GridPos, lifetime: 0.25f, heightY: 30f, progressEasingType: EasingType.Linear, heightEasingType: EasingType.SineInOut);
+
+            thing.CanBeSeenByPlayerClient(GridPos);
+
+            var tempIconDepth = thing.AddComponent<CTempIconDepth>();
+            tempIconDepth.Lifetime = 0.35f;
+            tempIconDepth.SetTempIconDepth((int)IconDepthLevel.Projectile);
+
+            if(WieldedThing == thing)
+                WieldThing(null);
+
+            thing.ThingOwningThis = null;
+
+            return true;
+        }
+
+        return false;
     }
 }

@@ -223,9 +223,10 @@ public partial class RoguemojiGame : GameManager
 		Hud.MainPanel.LogPanel.WriteMessage(text, playerNum);
 	}
 
-    public void ChatMessage(string text, int playerNum)
+    [ConCmd.Server]
+    public static void ChatMessageCmd(string text, int playerNum)
     {
-        ChatMessageClient(text, playerNum);
+        RoguemojiGame.Instance.ChatMessageClient(text, playerNum);
     }
 
     [ClientRpc]
@@ -236,6 +237,8 @@ public partial class RoguemojiGame : GameManager
             ChatMessageQueue.Enqueue(new LogData(text, playerNum));
             return;
         }
+
+        Log.Info("ChatMessageClient: " + text + ", " + playerNum);
 
         Hud.MainPanel.ChatPanel.WriteMessage(text, playerNum);
     }
@@ -278,7 +281,7 @@ public partial class RoguemojiGame : GameManager
 
 		if (thing.ContainingGridType != GridType.Arena)
 		{
-			Log.Info("Trying to pick up " + thing.Name + " but it's no longer on the ground!");
+			Log.Info("Trying to pick up " + (thing?.Name ?? "null") + " but it's no longer on the ground!");
             return;
         }
 

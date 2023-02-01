@@ -72,8 +72,10 @@ public partial class GridManager : Entity
 
 			var thing = things[i];
 
-			// todo: only update if a component needs updating
-			if (thing.ShouldUpdate || thing.ThingComponents.Count > 0 || thing.IsOnCooldown)
+            //thing.DebugText = $"{thing.ContainingGridType}";
+            
+            // todo: only update if a component needs updating
+            if (thing.ShouldUpdate || thing.ThingComponents.Count > 0 || thing.IsOnCooldown)
 				thing.Update(dt);
 		}
 	}
@@ -90,13 +92,17 @@ public partial class GridManager : Entity
 
 		thing.OnSpawned();
 
+        if ((GridType == GridType.Inventory || GridType == GridType.Equipment) && OwningPlayer != null)
+            thing.ThingOwningThis = OwningPlayer;
+
         return thing;
     }
 
     public void AddThing(Thing thing)
 	{
 		Things.Add(thing);
-		thing.ContainingGridManager = this;
+
+        thing.ContainingGridManager = this;
 		thing.ContainingGridType = GridType;
 
         var player = thing as RoguemojiPlayer;
@@ -308,6 +314,23 @@ public partial class GridManager : Entity
             return Direction.LeftUp;
         else if (vec.x == 1 && vec.y == -1)
             return Direction.RightUp;
+
+        return Direction.None;
+    }
+
+    public static Direction GetOppositeDirection(Direction dir)
+    {
+        switch(dir)
+        {
+            case Direction.Left: return Direction.Right;
+            case Direction.Right: return Direction.Left;
+            case Direction.Down: return Direction.Up;
+            case Direction.Up: return Direction.Down;
+            case Direction.LeftDown: return Direction.RightUp;
+            case Direction.RightDown: return Direction.LeftUp;
+            case Direction.LeftUp: return Direction.RightDown;
+            case Direction.RightUp: return Direction.LeftDown;
+        }
 
         return Direction.None;
     }

@@ -44,6 +44,7 @@
         text-stroke-color: #000000;
         text-stroke-width: 2px;
         text-shadow: 0px 0px 0px #000000;
+        z-index: 0;
     }
 
     .cell_icon_cooldown {
@@ -53,6 +54,7 @@
     .wielded {
         background-color: #5555ff22;
         border-radius: 3px;
+        //filter: brightness(15.0);
     }
 
     .icon_equipment {
@@ -73,11 +75,12 @@
     .grid_cell_stat_bar {
         width: 100%;
         height: 2px;
-        background-color: #000000bb;
+        background-color: #000000cc;
         align-self: center;
         position: absolute;
         bottom: 0px;
         border-radius: 1px;
+        z-index: 1;
     }
 
     .grid_cell_stat_bar_overlay {
@@ -87,6 +90,7 @@
         position: absolute;
         align-self: center;
         transform-origin: left;
+        z-index: 1;
     }
 
     .grid_cell_cooldown_overlay {
@@ -159,7 +163,6 @@
                 <div class="grid_cell_stat_bar_overlay" style="width: @(durabilityPercent * 100f)%; background-color: @(Thing.GetStatColor(StatType.Durability));"></div>
             }
         }
-    </div>
 
     @if (Thing.WieldedThing != null)
     {
@@ -168,12 +171,14 @@
 
         if(player.CanSeeThing(wieldedThing))
         {
-            <div class="wielded_thing @GetCooldownClass(wieldedThing)" style="left:@(wieldedOffset.x)px; top:@(wieldedOffset.y)px; font-size:@(Thing.WieldedThingFontSize); opacity:@(GetOpacityWielded());">
+                Log.Info($"gridcell wieldedOffset: {wieldedOffset}");
+
+                <div class="wielded_thing @GetCooldownClass(wieldedThing)" style="left:@(wieldedOffset.x)px; top:@(wieldedOffset.y)px; font-size:@(Thing.WieldedThingFontSize); opacity:@(GetOpacityWielded());">
                 @(Hud.GetHallucinationTextThing(wieldedThing, wieldedThing.DisplayIcon.Substring(wieldedThing.CharSkip), HallucinationTextType.Icon))
 
                 @if (wieldedThing.HasTattoo)
                 {
-                    int fontSize = MathX.FloorToInt(18f * wieldedThing.TattooData.Scale);
+                    int fontSize = MathX.FloorToInt(Thing.WieldedThingFontSize * wieldedThing.TattooData.Scale);
                     var offset = wieldedThing.TattooData.OffsetWielded;
                     <div class="grid_cell_tattoo" style="font-size: @(fontSize)px; left: @(offset.x)px; top: @(offset.y)px;">
                         @(Hud.GetHallucinationTextThing(wieldedThing, Hud.GetTattooIcon(wieldedThing), HallucinationTextType.Icon, tattoo: true))
@@ -187,6 +192,7 @@
             <FloaterDisplayWielded WieldedThing=@wieldedThing></FloaterDisplayWielded>
         }
     }
+    </div>
 
     @if (Thing.IsOnCooldown && Thing.ContainingGridType != GridType.Arena)
     {
