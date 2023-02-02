@@ -22,6 +22,7 @@ public enum LevelId
 {
 	None,
 	Forest0, Forest1, Forest2, Forest3,
+    Test0,
 }
 
 public partial class RoguemojiGame : GameManager
@@ -71,7 +72,8 @@ public partial class RoguemojiGame : GameManager
 		if (Game.IsServer)
 		{
             Levels = new Dictionary<LevelId, Level>();
-            CreateLevel(LevelId.Forest0);
+            //CreateLevel(LevelId.Forest0);
+            CreateLevel(LevelId.Test0);
 
             Players = new List<RoguemojiPlayer>();
 
@@ -111,14 +113,14 @@ public partial class RoguemojiGame : GameManager
 			Level level = Levels[levelId];
 			level.Update(dt);
 		}
-	}
+    }
 
 	[Event.Tick.Client]
 	public void ClientTick()
 	{
         var dt = Time.Delta;
 
-		if (Hud.MainPanel.LogPanel != null)
+        if (Hud.MainPanel.LogPanel != null)
 		{
 			while (LogMessageQueue.Count > 0)
 			{
@@ -173,11 +175,14 @@ public partial class RoguemojiGame : GameManager
 	{
 		base.ClientJoined(client);
 
-		var level0 = Levels[LevelId.Forest0];
+        //var levelId = LevelId.Forest0;
+        var levelId = LevelId.Test0;
+
+        var level0 = Levels[levelId];
 
         level0.GridManager.GetRandomEmptyGridPos(out var gridPos);
         RoguemojiPlayer player = level0.GridManager.SpawnThing<RoguemojiPlayer>(gridPos);
-		player.CurrentLevelId = LevelId.Forest0;
+		player.CurrentLevelId = levelId;
 		player.PlayerNum = ++PlayerNum;
 		player.RecenterCamera();
 
@@ -237,8 +242,6 @@ public partial class RoguemojiGame : GameManager
             ChatMessageQueue.Enqueue(new LogData(text, playerNum));
             return;
         }
-
-        Log.Info("ChatMessageClient: " + text + ", " + playerNum);
 
         Hud.MainPanel.ChatPanel.WriteMessage(text, playerNum);
     }
@@ -393,10 +396,15 @@ public partial class RoguemojiGame : GameManager
 
         foreach (RoguemojiPlayer player in Players)
 		{
-			player.Restart();
+            Log.Info($"Restart - player: {player.PlayerNum}");
 
-			ChangeThingLevel(player, LevelId.Forest0);
-		}
+			player.Restart();
+            //player.RestartClient();
+            player.RestartClient(To.Everyone);
+
+            //ChangeThingLevel(player, LevelId.Forest0);
+            ChangeThingLevel(player, LevelId.Test0);
+        }
 
         Log.Info($"# Entities: {Entity.All.Count()}");
     }

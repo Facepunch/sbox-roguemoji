@@ -55,6 +55,7 @@ public partial class Level : Entity
             case LevelId.Forest0: width = 40; height = 25; break;
             case LevelId.Forest1: width = 30; height = 22; break;
             case LevelId.Forest2: width = 30; height = 22; break;
+            case LevelId.Test0: width = 41; height = 3; break;
             default: width = 0; height = 0;break;
         }
     }
@@ -66,6 +67,7 @@ public partial class Level : Entity
             case LevelId.Forest0: return "Forest 1";
             case LevelId.Forest1: return "Forest 2";
             case LevelId.Forest2: return "Cheese Fields";
+            case LevelId.Test0: return "Test0";
             default: return "???";
         }
     }
@@ -78,6 +80,7 @@ public partial class Level : Entity
             //case LevelId.Forest0: return odd ? "#083211" : "#082e10";
             case LevelId.Forest1: return odd ? "#051609" : "#041408";
             case LevelId.Forest2: return odd ? "#051609" : "#041408";
+            case LevelId.Test0: return odd ? "#051609" : "#041408";
             default: return "#000000";
         }
     }
@@ -161,6 +164,20 @@ public partial class Level : Entity
             {
                 if (GridManager.GetRandomEmptyGridPos(out var gridPos))
                     GridManager.SpawnThing<Door>(gridPos);
+            }
+        }
+        else if (levelId == LevelId.Test0)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
+                    GridManager.SpawnThing<TreeEvergreen>(gridPos);
+            }
+
+            for (int i = 0; i < 2; i++)
+            {
+                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
+                    GridManager.SpawnThing<TreeDeciduous>(gridPos);
             }
         }
     }

@@ -167,7 +167,7 @@ public partial class RoguemojiPlayer : Thing
 
         SetStartingValues();
 
-        RestartClient();
+        //RestartClient();
     }
 
     [ClientRpc]
@@ -175,6 +175,8 @@ public partial class RoguemojiPlayer : Thing
     {
         SeenCells.Clear();
         SeenThings.Clear();
+
+        Log.Info($"RestartClient - player {PlayerNum}");
 
         Floaters?.Clear();
         InventoryGridManager.Floaters.Clear();
@@ -502,10 +504,20 @@ public partial class RoguemojiPlayer : Thing
     {
         var currOffset = CameraGridOffset;
 
+        var gridW = ContainingGridManager.GridWidth;
+        var gridH = ContainingGridManager.GridHeight;
+        var screenW = RoguemojiGame.ArenaPanelWidth;
+        var screenH = RoguemojiGame.ArenaPanelHeight;
+
         CameraGridOffset = new IntVector(
-            Math.Clamp(offset.x, 0, ContainingGridManager.GridWidth - RoguemojiGame.ArenaPanelWidth),
-            Math.Clamp(offset.y, 0, ContainingGridManager.GridHeight - RoguemojiGame.ArenaPanelHeight)
+            gridW >= screenW ? Math.Clamp(offset.x, 0, ContainingGridManager.GridWidth - RoguemojiGame.ArenaPanelWidth) : -(screenW - gridW) / 2,
+            gridH >= screenH ? Math.Clamp(offset.y, 0, ContainingGridManager.GridHeight - RoguemojiGame.ArenaPanelHeight) : -(screenH - gridH) / 2
         );
+
+        //CameraGridOffset = new IntVector(
+        //    Math.Clamp(offset.x, 0, Math.Max(ContainingGridManager.GridWidth - RoguemojiGame.ArenaPanelWidth, 0)),
+        //    Math.Clamp(offset.y, 0, Math.Max(ContainingGridManager.GridHeight - RoguemojiGame.ArenaPanelHeight, 0))
+        //);
 
         return !CameraGridOffset.Equals(currOffset);
     }
@@ -606,6 +618,7 @@ public partial class RoguemojiPlayer : Thing
 
     public override void Destroy()
     {
+
         if (IsDead)
             return;
 
