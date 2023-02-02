@@ -525,8 +525,8 @@ public partial class GridManager : Entity
 	public bool GetRandomEmptyGridPos(out IntVector gridPos, bool allowNonSolid = false)
 	{
 		HashSet<int> gridIndexes = new();
-		for (int x = 4; x < GridWidth; x++)
-			for (int y = 4; y < GridHeight; y++)
+		for (int x = 0; x < GridWidth; x++)
+			for (int y = 0; y < GridHeight; y++)
 				gridIndexes.Add(GetIndex(x, y, GridWidth));
 
 		while(gridIndexes.Count > 0)

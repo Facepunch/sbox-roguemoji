@@ -156,7 +156,7 @@ public partial class Hud : RootPanel
     {
         base.OnMouseUp(e);
 
-		if(IsDraggingThing)
+        if (IsDraggingThing)
 		{
             var player = RoguemojiGame.Instance.LocalPlayer;
             PanelType destinationPanelType = GetContainingPanelType(MousePosition);
@@ -168,12 +168,10 @@ public partial class Hud : RootPanel
 				GridPanel gridPanel = GetGridPanel(gridType);
 				targetGridPos = gridPanel.GetGridPos(gridPanel.MousePosition);
 
-                
 				var gridManager = player.GetGridManager(gridType);
 				if (!gridManager.IsGridPosInBounds(targetGridPos)) 
 				{
-                    StopDragging();
-					return;
+                    destinationPanelType = PanelType.None;
                 }
 			}
 

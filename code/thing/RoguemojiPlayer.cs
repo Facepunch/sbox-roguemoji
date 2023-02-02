@@ -955,7 +955,7 @@ public partial class RoguemojiPlayer : Thing
         if (thing == null || !thing.IsValid)
             return;
 
-        if (destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.Nearby)// || destinationPanelType == PanelType.None)
+        if (destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.Nearby || destinationPanelType == PanelType.None)
         {
             MoveThingTo(thing, GridType.Arena, GridPos);
         }

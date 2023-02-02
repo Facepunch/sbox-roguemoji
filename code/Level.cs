@@ -55,7 +55,7 @@ public partial class Level : Entity
             case LevelId.Forest0: width = 40; height = 25; break;
             case LevelId.Forest1: width = 30; height = 22; break;
             case LevelId.Forest2: width = 30; height = 22; break;
-            case LevelId.Test0: width = 41; height = 3; break;
+            case LevelId.Test0: width = 9; height = 3; break;
             default: width = 0; height = 0;break;
         }
     }
