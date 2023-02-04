@@ -22,7 +22,7 @@ public partial class ScrollConfetti : Scroll
     {
         base.Use(user);
 
-        if(user is RoguemojiPlayer player)
+        if(user.Brain is RoguemojiPlayer player)
             user.AddComponent<CConfetti>();
 
         RoguemojiGame.Instance.RevealScroll(ScrollType, user.GridPos, user.CurrentLevelId);

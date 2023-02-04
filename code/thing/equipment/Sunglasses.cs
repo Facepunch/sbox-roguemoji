@@ -32,7 +32,7 @@ public partial class Sunglasses : Thing
         foreach(var pair in Stats)
             thing.AdjustStat(pair.Key, pair.Value.CurrentValue);
 
-        if(thing is RoguemojiPlayer player)
+        if(thing is Smiley smiley)
         {
             if (thing.GetComponent<CIconPriority>(out var component))
             {
@@ -47,7 +47,7 @@ public partial class Sunglasses : Thing
         foreach (var pair in Stats)
             thing.AdjustStat(pair.Key, -pair.Value.CurrentValue);
 
-        if (thing is RoguemojiPlayer player)
+        if (thing is Smiley smiley)
         {
             if (thing.GetComponent<CIconPriority>(out var component))
             {

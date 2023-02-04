@@ -25,6 +25,7 @@
 <root class="floater_display_cell">
     @{
         var player = RoguemojiGame.Instance.LocalPlayer;
+        var playerThing = player.ControlledThing;
         var wielder = WieldedThing.ThingWieldingThis;
 
         if (wielder == null)
@@ -33,9 +34,9 @@
 
     @foreach (var floater in WieldedThing.Floaters)
     {
-        if (wielder.ContainingGridType != GridType.Arena || !floater.requireSight || player.IsCellVisible(wielder.GridPos) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(player.GridPos, wielder.GridPos)))
+        if (wielder.ContainingGridType != GridType.Arena || !floater.requireSight || player.IsCellVisible(wielder.GridPos) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(playerThing.GridPos, wielder.GridPos)))
         {
-            if (floater.showOnInvisible || player.CanPerceiveThing(WieldedThing) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(player.GridPos, wielder.GridPos)))
+            if (floater.showOnInvisible || playerThing.CanPerceiveThing(WieldedThing) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(playerThing.GridPos, wielder.GridPos)))
             {
                 Vector2 pos = new Vector2(-41f, -20f) + wielder.WieldedThingOffset + new Vector2(-9f, -5f);
 

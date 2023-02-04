@@ -164,8 +164,8 @@ public partial class RoguemojiGame : GameManager
         _occupiedLevelIds.Clear();
         foreach (RoguemojiPlayer player in Players)
         {
-            if (player != null && player.IsValid)
-                _occupiedLevelIds.Add(player.CurrentLevelId);
+            if (player != null && player.IsValid && player.ControlledThing != null)
+                _occupiedLevelIds.Add(player.ControlledThing.CurrentLevelId);
         }
 
         return _occupiedLevelIds;
@@ -181,23 +181,34 @@ public partial class RoguemojiGame : GameManager
         var level0 = Levels[levelId];
 
         level0.GridManager.GetRandomEmptyGridPos(out var gridPos);
-        RoguemojiPlayer player = level0.GridManager.SpawnThing<RoguemojiPlayer>(gridPos);
-		player.CurrentLevelId = levelId;
-		player.PlayerNum = ++PlayerNum;
-		player.RecenterCamera();
+        //RoguemojiPlayer player = level0.GridManager.SpawnThing<RoguemojiPlayer>(gridPos);
+        var smiley = level0.GridManager.SpawnThing<Smiley>(gridPos);
 
-		client.Pawn = player;
+        RoguemojiPlayer player = new RoguemojiPlayer();
+        player.PlayerNum = ++PlayerNum;
+
+        player.ControlledThing = smiley;
+        smiley.Brain = player;
+
+        smiley.CurrentLevelId = levelId;
+        smiley.PlayerNum = player.PlayerNum;
+        
+        client.Pawn = player;
+
+        level0.GridManager.AddPlayer(player);
+
+        Players.Add(player);
+
+        player.RecenterCamera();
         player.RefreshVisibility(To.Single(player));
-
-		Players.Add(player);
     }
 
 	public override void ClientDisconnect(IClient client, NetworkDisconnectionReason reason)
 	{
 		var player = client.Pawn as RoguemojiPlayer;
 
-		var level = Levels[player.CurrentLevelId];
-		level.GridManager.RemoveThing(player);
+		var level = Levels[player.ControlledThing.CurrentLevelId];
+		level.GridManager.RemoveThing(player.ControlledThing);
 
 		// todo: drop or remove items in player's inventory
 
@@ -252,6 +263,13 @@ public partial class RoguemojiGame : GameManager
 		var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
 		player.GridCellClicked(new IntVector(x, y), gridType, rightClick, shift, doubleClick, visible);
 	}
+
+    [ConCmd.Server]
+    public static void ClickedNothing()
+    {
+        var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
+        player.ClickedNothing();
+    }
 
     [ConCmd.Server]
     public static void ConfirmAimingCmd(GridType gridType, int x, int y)
@@ -373,7 +391,7 @@ public partial class RoguemojiGame : GameManager
 			if (!player.IsValid)
 				continue;
 
-			int dist = (player.GridPos - gridPos).ManhattanLength;
+			int dist = (player.ControlledThing.GridPos - gridPos).ManhattanLength;
 			if(dist < closestDistance )
 			{
 				closestDistance = dist;
@@ -396,14 +414,28 @@ public partial class RoguemojiGame : GameManager
 
         foreach (RoguemojiPlayer player in Players)
 		{
-            Log.Info($"Restart - player: {player.PlayerNum}");
+            //Log.Info($"Restart - player: {player.PlayerNum}");
 
 			player.Restart();
             //player.RestartClient();
             player.RestartClient(To.Everyone);
 
+            //var levelId = LevelId.Forest0;
+            var levelId = LevelId.Test0;
+            var level0 = Levels[levelId];
+            level0.GridManager.GetRandomEmptyGridPos(out var gridPos);
+            var smiley = level0.GridManager.SpawnThing<Smiley>(gridPos);
+            player.ControlledThing = smiley;
+            smiley.Brain = player;
+            smiley.CurrentLevelId = levelId;
+            smiley.PlayerNum = player.PlayerNum;
+            player.RecenterCamera();
+            player.RefreshVisibility(To.Single(player));
+
+            level0.GridManager.AddPlayer(player);
+
             //ChangeThingLevel(player, LevelId.Forest0);
-            ChangeThingLevel(player, LevelId.Test0);
+            //ChangeThingLevel(player, LevelId.Test0);
         }
 
         Log.Info($"# Entities: {Entity.All.Count()}");
@@ -432,7 +464,7 @@ public partial class RoguemojiGame : GameManager
         gridManager.GetRandomEmptyGridPos(out var gridPos);
         thing.SetGridPos(gridPos);
 
-        if(thing is RoguemojiPlayer player)
+        if(thing.Brain is RoguemojiPlayer player)
         {
             player.RecenterCamera();
             ResetHudClient(To.Single(player));
@@ -472,7 +504,7 @@ public partial class RoguemojiGame : GameManager
     {
         foreach (var player in Players)
         {
-            if (player.CurrentLevelId == levelId)
+            if (player.ControlledThing.CurrentLevelId == levelId)
                 RevealScrollClient(To.Single(player), scrollType, gridPos);
         }
     }
@@ -498,7 +530,7 @@ public partial class RoguemojiGame : GameManager
     {
         foreach (var player in Players)
         {
-            if (player.CurrentLevelId == levelId)
+            if (player.ControlledThing.CurrentLevelId == levelId)
                 RevealPotionClient(To.Single(player), potionType, gridPos);
         }
     }

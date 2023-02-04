@@ -32,7 +32,7 @@ public partial class AppleGreen : Thing
         user.AdjustStat(StatType.Energy, EatEnergy);
         Destroy();
 
-        if (user is RoguemojiPlayer && user.GetComponent<CIconPriority>(out var component))
+        if (user is Smiley && user.GetComponent<CIconPriority>(out var component))
             ((CIconPriority)component).AddIconPriority("😋", (int)PlayerIconPriority.EatReaction, 1.0f);
 
         base.Use(user);

@@ -35,7 +35,7 @@ public partial class Joystick : Thing
         var energy = user.GetStatClamped(StatType.Energy);
         if (energy < EnergyCost && !ignoreResources)
         {
-            if (shouldLogMessage && user is RoguemojiPlayer player)
+            if (shouldLogMessage && user.Brain is RoguemojiPlayer player)
                 RoguemojiGame.Instance.LogPersonalMessage(player, $"You need {EnergyCost}{GetStatIcon(StatType.Energy)} to use {ChatDisplayIcons} but you only have {energy}{GetStatIcon(StatType.Energy)}");
 
             return false;
@@ -55,7 +55,7 @@ public partial class Joystick : Thing
         var startingGridPos = user.GridPos;
 
         var direction = GridManager.GetDirectionForIntVector(targetGridPos - startingGridPos);
-        var player = (RoguemojiPlayer)user;
+        var player = (RoguemojiPlayer)user.Brain;
         bool success = player != null
             ? player.TryMove(direction, shouldQueueAction: false, shouldAnimate: false) 
             : user.TryMove(direction, shouldAnimate: false);

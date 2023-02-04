@@ -38,7 +38,7 @@ public partial class BookOrganize : Thing
 
     public override bool CanBeUsedBy(Thing user, bool ignoreResources = false, bool shouldLogMessage = false)
     {
-        if (user is RoguemojiPlayer p && p.IsConfused)
+        if (user.Brain is RoguemojiPlayer p && p.IsConfused)
         {
             if (shouldLogMessage)
                 RoguemojiGame.Instance.LogPersonalMessage(p, $"{Globals.Icon(IconType.Confusion)}Too confused to read books!");
@@ -49,7 +49,7 @@ public partial class BookOrganize : Thing
         var intelligence = user.GetStatClamped(StatType.Intelligence);
         if (intelligence < ReqInt)
         {
-            if (shouldLogMessage && user is RoguemojiPlayer player)
+            if (shouldLogMessage && user.Brain is RoguemojiPlayer player)
                 RoguemojiGame.Instance.LogPersonalMessage(player, $"You need {ReqInt}{GetStatIcon(StatType.Intelligence)} to use {ChatDisplayIcons} but you only have {intelligence}{GetStatIcon(StatType.Intelligence)}");
 
             return false;
@@ -58,7 +58,7 @@ public partial class BookOrganize : Thing
         var mana = user.GetStatClamped(StatType.Mana);
         if(mana < ManaCost && !ignoreResources)
         {
-            if (shouldLogMessage && user is RoguemojiPlayer player)
+            if (shouldLogMessage && user.Brain is RoguemojiPlayer player)
                 RoguemojiGame.Instance.LogPersonalMessage(player, $"You need {ManaCost}{GetStatIcon(StatType.Mana)} to use {ChatDisplayIcons} but you only have {mana}{GetStatIcon(StatType.Mana)}");
 
             return false;
@@ -72,11 +72,11 @@ public partial class BookOrganize : Thing
         if (!user.TrySpendStat(StatType.Mana, ManaCost))
             return;
 
-        var player = user as RoguemojiPlayer;
+        var player = user.Brain as RoguemojiPlayer;
         if (player == null)
             return;
 
-        player.AddComponent<COrganize>();
+        player.ControlledThing.AddComponent<COrganize>();
 
         StartCooldown(CooldownTime);
 

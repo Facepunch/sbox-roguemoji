@@ -91,7 +91,7 @@
     {
         if (thing.HasFlag(ThingFlags.Useable))
         {
-            if (!thing.CanBeUsedBy(player, ignoreResources: true))
+            if (!thing.CanBeUsedBy(player.ControlledThing, ignoreResources: true))
                 return "unusable_item";
         }
 
@@ -106,7 +106,7 @@
         panel.Thing = Thing;
 
         var player = RoguemojiGame.Instance.LocalPlayer;
-        var topItem = player.ContainingGridManager.GetThingsAtClient(player.GridPos).WithAll(ThingFlags.CanBePickedUp).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+        var topItem = player.ControlledThing.ContainingGridManager.GetThingsAtClient(player.ControlledThing.GridPos).WithAll(ThingFlags.CanBePickedUp).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
         panel.IsNearby = true;
         panel.ShowPickUpKey = (Thing == topItem);
 
@@ -121,7 +121,7 @@
 
         var player = RoguemojiGame.Instance.LocalPlayer;
         var floaterHash = Thing.HasFloaters ? Game.Random.Int(0, 9999) : 0;
-        return HashCode.Combine(Thing.GetNearbyCellHash(), IsSelected(), player.StatHash, player.HallucinatingSeed, floaterHash);
+        return HashCode.Combine(Thing.GetNearbyCellHash(), IsSelected(), player.ControlledThing.StatHash, player.HallucinatingSeed, floaterHash);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

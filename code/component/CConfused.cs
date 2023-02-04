@@ -20,10 +20,10 @@ public class CConfused : ThingComponent
         Trait = thing.AddTrait("Confused", Globals.Icon(IconType.Confusion), $"Confused and woozy", offset: Vector2.Zero);
         thing.AddFloater(Globals.Icon(IconType.Confusion), time: 0f, new Vector2(15f, -16f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.4f, opacity: 0.4f);
 
-        if(Thing is RoguemojiPlayer player)
+        if(Thing.Brain is RoguemojiPlayer player)
             player.ConfusionSeed = Game.Random.Int(1, 999);
 
-        if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component))
+        if (thing is Smiley && thing.GetComponent<CIconPriority>(out var component))
             IconId = ((CIconPriority)component).AddIconPriority("😵", (int)PlayerIconPriority.Confused);
     }
 
@@ -46,10 +46,10 @@ public class CConfused : ThingComponent
         Thing.RemoveTrait(Trait);
         Thing.RemoveFloater(Globals.Icon(IconType.Confusion));
 
-        if (Thing is RoguemojiPlayer player)
+        if (Thing.Brain is RoguemojiPlayer player)
             player.ConfusionSeed = 0;
 
-        if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component))
+        if (Thing is Smiley && Thing.GetComponent<CIconPriority>(out var component))
             ((CIconPriority)component).RemoveIconPriority(IconId);
     }
 

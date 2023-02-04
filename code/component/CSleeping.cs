@@ -24,7 +24,7 @@ public class CSleeping : ThingComponent
         if (thing.GetComponent<CActing>(out var component))
             ((CActing)component).PreventAction();
 
-        if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component2))
+        if (thing is Smiley && thing.GetComponent<CIconPriority>(out var component2))
             IconId = ((CIconPriority)component2).AddIconPriority("😴", (int)PlayerIconPriority.Sleeping);
 
         thing.AddFloater(Globals.Icon(IconType.Sleeping), time: 0f, new Vector2(15f, -10f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.5f, opacity: 0.66f);
@@ -48,13 +48,13 @@ public class CSleeping : ThingComponent
     {
         Thing.RemoveTrait(Trait);
 
-        if (Thing is RoguemojiPlayer player)
+        if (Thing.Brain is RoguemojiPlayer player)
             player.ClearQueuedAction();
             
         if (Thing.GetComponent<CActing>(out var component))
             ((CActing)component).AllowAction();
 
-        if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component2))
+        if (Thing is Smiley && Thing.GetComponent<CIconPriority>(out var component2))
             ((CIconPriority)component2).RemoveIconPriority(IconId);
 
         Thing.RemoveFloater(Globals.Icon(IconType.Sleeping));

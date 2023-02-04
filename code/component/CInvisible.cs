@@ -24,7 +24,7 @@ public class CInvisible : ThingComponent
         else
             thing.AdjustStat(StatType.Invisible, 1);
 
-        if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component))
+        if (thing is Smiley && thing.GetComponent<CIconPriority>(out var component))
             IconId = ((CIconPriority)component).AddIconPriority("🤫", (int)PlayerIconPriority.Invisible);
     }
 
@@ -48,7 +48,7 @@ public class CInvisible : ThingComponent
 
         Thing.AdjustStat(StatType.Invisible, -1);
 
-        if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component))
+        if (Thing is Smiley && Thing.GetComponent<CIconPriority>(out var component))
             ((CIconPriority)component).RemoveIconPriority(IconId);
     }
 

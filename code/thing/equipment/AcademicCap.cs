@@ -26,7 +26,7 @@ public partial class AcademicCap : Thing
     {
         thing.AdjustStat(StatType.Intelligence, IntelligenceAmount);
 
-        if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component))
+        if (thing is Smiley && thing.GetComponent<CIconPriority>(out var component))
             ((CIconPriority)component).AddIconPriority("🤓", (int)PlayerIconPriority.AcademicCapNerd, 1.0f);
     }
 

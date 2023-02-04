@@ -33,7 +33,7 @@ public partial class GlassesOfPerception : Thing
         else
             thing.AdjustStat(StatType.Perception, Range);
 
-        if(thing is RoguemojiPlayer player)
+        if(thing is Smiley smiley)
         {
             if (thing.GetComponent<CIconPriority>(out var component))
             {
@@ -47,7 +47,7 @@ public partial class GlassesOfPerception : Thing
     {
         thing.AdjustStat(StatType.Perception, -Range);
 
-        if (thing is RoguemojiPlayer player)
+        if (thing is Smiley smiley)
         {
             if (thing.GetComponent<CIconPriority>(out var component))
             {

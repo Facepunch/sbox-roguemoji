@@ -36,6 +36,8 @@ public class TattooData
 
 public partial class Thing : Entity
 {
+    public ThingBrain Brain { get; set; }
+
     [Net] public IntVector GridPos { get; protected set; }
     [Net] public GridType ContainingGridType { get; set; }
     [Net] public GridManager ContainingGridManager { get; set; }
@@ -135,6 +137,9 @@ public partial class Thing : Entity
     public virtual void Update(float dt)
     {
         //DebugText = $"{IconDepth}";
+
+        if (Brain != null)
+            Brain.Update(dt);
 
         //DebugText = "Server Components (" + Components.Count + "):\n";
         for (int i = ThingComponents.Count - 1; i >= 0; i--)

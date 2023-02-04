@@ -38,7 +38,7 @@ public partial class ScrollTeleport : Scroll
 
             thing.SetGridPos(targetGridPos);
 
-            if (thing is RoguemojiPlayer player)
+            if (thing.Brain is RoguemojiPlayer player)
                 player.RecenterCamera();
         }
     }

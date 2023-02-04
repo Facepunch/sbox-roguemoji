@@ -26,10 +26,10 @@ public partial class ScrollOrganize : Scroll
 
         Destroy();
 
-        var player = user as RoguemojiPlayer;
+        var player = user.Brain as RoguemojiPlayer;
         if (player == null)
             return;
 
-        player.AddComponent<COrganize>();
+        player.ControlledThing.AddComponent<COrganize>();
     }
 }

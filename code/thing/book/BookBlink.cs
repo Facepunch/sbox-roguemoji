@@ -39,7 +39,7 @@ public partial class BookBlink : Book
 
     public override bool CanBeUsedBy(Thing user, bool ignoreResources = false, bool shouldLogMessage = false)
     {
-        if (user is RoguemojiPlayer p && p.IsConfused)
+        if (user.Brain is RoguemojiPlayer p && p.IsConfused)
         {
             if (shouldLogMessage)
                 RoguemojiGame.Instance.LogPersonalMessage(p, $"{Globals.Icon(IconType.Confusion)}Too confused to read books!");
@@ -50,7 +50,7 @@ public partial class BookBlink : Book
         var intelligence = user.GetStatClamped(StatType.Intelligence);
         if (intelligence < ReqInt)
         {
-            if (shouldLogMessage && user is RoguemojiPlayer player)
+            if (shouldLogMessage && user.Brain is RoguemojiPlayer player)
                 RoguemojiGame.Instance.LogPersonalMessage(player, $"You need {ReqInt}{GetStatIcon(StatType.Intelligence)} to use {ChatDisplayIcons} but you only have {intelligence}{GetStatIcon(StatType.Intelligence)}");
 
             return false;
@@ -59,7 +59,7 @@ public partial class BookBlink : Book
         var mana = user.GetStatClamped(StatType.Mana);
         if(mana < ManaCost && !ignoreResources)
         {
-            if(shouldLogMessage && user is RoguemojiPlayer player)
+            if(shouldLogMessage && user.Brain is RoguemojiPlayer player)
                 RoguemojiGame.Instance.LogPersonalMessage(player, $"You need {ManaCost}{GetStatIcon(StatType.Mana)} to use {ChatDisplayIcons} but you only have {mana}{GetStatIcon(StatType.Mana)}");
 
             return false;
@@ -87,7 +87,7 @@ public partial class BookBlink : Book
 
         user.SetGridPos(targetGridPos);
 
-        if (user is RoguemojiPlayer player)
+        if (user.Brain is RoguemojiPlayer player)
             player.RecenterCamera();
 
         StartCooldown(CooldownTime);

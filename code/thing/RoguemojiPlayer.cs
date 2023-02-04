@@ -8,12 +8,9 @@ namespace Roguemoji;
 public enum AimingSource { Throwing, UsingWieldedItem }
 public enum AimingType { Direction, TargetCell }
 
-public partial class RoguemojiPlayer : Thing
+public partial class RoguemojiPlayer : ThingBrain
 {
-    public CActing Acting { get; private set; }
-
-    public CIconPriority IconPriority { get; private set; }
-
+    [Net] public int PlayerNum { get; set; }
     [Net] public IntVector CameraGridOffset { get; set; }
     public Vector2 CameraPixelOffset { get; set; } // Client-only
     public float CameraFade { get; set; } // Client-only
@@ -47,11 +44,6 @@ public partial class RoguemojiPlayer : Thing
 
     public RoguemojiPlayer()
 	{
-        ShouldUpdate = true;
-		DisplayName = "Player";
-		Tooltip = "";
-        PathfindMovementCost = 10f;
-
         if (Game.IsServer)
         {
 			InventoryGridManager = new();
@@ -74,39 +66,17 @@ public partial class RoguemojiPlayer : Thing
             SeenCells = new Dictionary<LevelId, HashSet<IntVector>>();
             SeenThings = new Dictionary<LevelId, Dictionary<IntVector, List<SeenThingData>>>();
             AimingCells = new HashSet<IntVector>();
-
-            WieldedThingOffset = new Vector2(20f, 17f);
-            WieldedThingFontSize = 18;
-            InfoWieldedThingOffset = new Vector2(38f, 38f);
-            InfoWieldedThingFontSize = 32;
         }
 	}
 
-    public override void Spawn()
-    {
-        base.Spawn();
-
-        Acting = AddComponent<CActing>();
-        IconPriority = AddComponent<CIconPriority>();
-        IconPriority.SetDefaultIcon("😀");
-    }
-
     void SetStartingValues()
     {
-        DisplayIcon = "😀";
-        IconDepth = (int)IconDepthLevel.Player;
-        Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanWieldThings;
         IsDead = false;
-        //ActionDelay = TimeSinceAction = 0.5f;
-        //IsActionReady = true;
         QueuedAction = null;
         QueuedActionName = "";
         IsAiming = false;
         SelectedThing = null;
-        Faction = FactionType.Player;
         CameraFade = 0f;
-        IsInTransit = false;
-        FloaterNum = 0;
         ConfusionSeed = 0;
         HallucinatingSeed = 0;
 
@@ -120,26 +90,6 @@ public partial class RoguemojiPlayer : Thing
         foreach (int i in Enum.GetValues(typeof(PotionType)))
             IdentifiedPotionTypes.Add((PotionType)i);
         // -----------------
-
-        ClearStats();
-        InitStat(StatType.Health, 10, 0, 10);
-        InitStat(StatType.Energy, 0, 0, 0);
-        InitStat(StatType.Mana, 0, 0, 0);
-        InitStat(StatType.Strength, 1);
-        InitStat(StatType.Speed, 13);
-        InitStat(StatType.Intelligence, 4);
-        InitStat(StatType.Stamina, 4);
-        InitStat(StatType.Stealth, 0, -999, 999);
-        InitStat(StatType.Charisma, 3);
-        InitStat(StatType.Sight, 7, min: 0); // setting this will RefreshVisibility for the player
-        InitStat(StatType.Hearing, 3);
-        InitStat(StatType.SightBlockAmount, 10);
-        //InitStat(StatType.Smell, 1);
-        FinishInitStats();
-
-        StaminaTimer = StaminaDelay;
-
-        ClearTraits();
 
         InventoryGridManager.Restart();
         InventoryGridManager.SetWidth(RoguemojiGame.InventoryWidth);
@@ -155,18 +105,9 @@ public partial class RoguemojiPlayer : Thing
         RoguemojiGame.Instance.RefreshNearbyPanelClient();
     }
 
-    public override void Restart()
+    public void Restart()
     {
-        base.Restart();
-
-        ThingComponents.Clear();
-        Acting = AddComponent<CActing>();
-        Acting.IsActionReady = false;
-        IconPriority = AddComponent<CIconPriority>();
-        IconPriority.SetDefaultIcon("😀");
-
         SetStartingValues();
-
         //RestartClient();
     }
 
@@ -176,9 +117,6 @@ public partial class RoguemojiPlayer : Thing
         SeenCells.Clear();
         SeenThings.Clear();
 
-        Log.Info($"RestartClient - player {PlayerNum}");
-
-        Floaters?.Clear();
         InventoryGridManager.Floaters.Clear();
         EquipmentGridManager.Floaters.Clear();
     }
@@ -250,8 +188,8 @@ public partial class RoguemojiPlayer : Thing
     {
         base.OnClientActive(client);
 
-		DisplayName = Client.Name;
-		Tooltip = Client.Name;
+        //DisplayName = Client.Name;
+        //Tooltip = Client.Name;
 	}
 
     public override void Update(float dt)
@@ -261,8 +199,6 @@ public partial class RoguemojiPlayer : Thing
         //RoguemojiGame.Instance.DebugGridCell(GridPos + new IntVector(0, -1), new Color(1f, 0f, 0f, 0.3f), 0.05f);
         //RoguemojiGame.Instance.DebugGridLine(GridPos + new IntVector(0, -1), new IntVector(3, 2), new Color(1f, 0f, 0f, 0.3f), 0.05f, GridType.Arena, GridType.Inventory);
         //RoguemojiGame.Instance.DebugGridCell(new IntVector(3, 2), new Color(1f, 0f, 0f, 0.3f), 0.05f, GridType.Inventory);
-
-        //DebugText = $"{Acting.ActionDelay}";
 
         InventoryGridManager.Update(dt);
         EquipmentGridManager.Update(dt);
@@ -276,24 +212,28 @@ public partial class RoguemojiPlayer : Thing
                 component.Update(dt);
         }
 
-        if(SelectedThing != null && !CanPerceiveThing(SelectedThing))
+        if (ControlledThing == null)
+            return;
+
+        if (SelectedThing != null && !ControlledThing.CanPerceiveThing(SelectedThing))
             SelectThing(null);
 
-        //DebugText = "";
-        //if (QueuedAction != null)
-        //    DebugText = QueuedActionName;
-
-        //DebugText = $"{IsInTransit}";
+        ControlledThing.DebugText = "...";
+        if (QueuedAction != null)
+            ControlledThing.DebugText = QueuedActionName;
     }
 
 	public override void Simulate(IClient cl )
 	{
 		if(Game.IsServer)
 		{
+            if (ControlledThing == null)
+                return;
+
             if (Input.Pressed(InputButton.View)) 
                 CharacterHotkeyPressed();
 
-            if (!IsDead && !IsInTransit)
+            if (!IsDead && !ControlledThing.IsInTransit)
             {
                 if (!IsAiming)
                 {
@@ -381,7 +321,7 @@ public partial class RoguemojiPlayer : Thing
 
         if (thing != null && Input.Down(InputButton.Run))
         {
-            MoveThingTo(thing, GridType.Arena, GridPos);
+            MoveThingTo(thing, GridType.Arena, ControlledThing.GridPos);
         }
         else
         {
@@ -394,17 +334,22 @@ public partial class RoguemojiPlayer : Thing
 
     public override void OnWieldThing(Thing thing) 
     {
-        base.OnWieldThing(thing);
-
         RoguemojiGame.Instance.FlickerWieldingPanel();
     }
 
-    public override bool TryMove(Direction direction, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
+    public bool TryMove(Direction direction, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
 	{
-        if (IsInTransit)
+        if (ControlledThing.IsInTransit)
             return false;
 
-        if (!Acting.IsActionReady && !dontRequireAction)
+        CActing acting = null;
+        if (ControlledThing.GetComponent<CActing>(out var component))
+            acting = (CActing)component;
+
+        if (acting == null)
+            return false;
+
+        if (!acting.IsActionReady && !dontRequireAction)
         {
             if(shouldQueueAction)
             {
@@ -418,58 +363,52 @@ public partial class RoguemojiPlayer : Thing
         if(IsConfused && Game.Random.Int(0, 2) == 0)
             direction = GridManager.GetRandomDirection(cardinalOnly: false);
 
-        var oldLevelId = CurrentLevelId;
+        var oldLevelId = ControlledThing.CurrentLevelId;
 
-        var success = base.TryMove(direction, shouldAnimate: false, shouldQueueAction: false);
-		if (success)
+        //var success = base.TryMove(direction, shouldAnimate: false, shouldQueueAction: false);
+        var success = ControlledThing.TryMove(direction, shouldAnimate: false, shouldQueueAction: false);
+        if (success)
 		{
-            var switchedLevel = oldLevelId != CurrentLevelId;
+            var switchedLevel = oldLevelId != ControlledThing.CurrentLevelId;
             var movedCamera = RecenterCamera(shouldAnimate: !switchedLevel);
 
             if(shouldAnimate && !switchedLevel)
-                VfxSlide(direction, 0.1f, RoguemojiGame.CellSize);
+                ControlledThing.VfxSlide(direction, 0.1f, RoguemojiGame.CellSize);
             //VfxSlide(direction, movedCamera ? 0.1f : 0.2f, RoguemojiGame.CellSize);
 
-            if(Game.Random.Int(0, 5) == 0)
-                IconPriority.AddIconPriority(Utils.GetRandomIcon("😄", "🙂"), (int)PlayerIconPriority.Move, 1.0f);
+            //if(Game.Random.Int(0, 5) == 0)
+            //    IconPriority.AddIconPriority(Utils.GetRandomIcon("😄", "🙂"), (int)PlayerIconPriority.Move, 1.0f);
         }
         else 
 		{
-            IconPriority.AddIconPriority("😠", (int)PlayerIconPriority.Attack, 0.4f);
+            //IconPriority.AddIconPriority("😠", (int)PlayerIconPriority.Attack, 0.4f);
         }
 
-        if(!dontRequireAction)
-            Acting.PerformedAction();
+        //if(!dontRequireAction)
+        //    acting.PerformedAction();
 
 		return success;
 	}
 
-    public override void BumpInto(Thing other, Direction direction)
-    {
-        base.BumpInto(other, direction);
+    //public override void BumpInto(Thing other, Direction direction)
+    //{
+    //    base.BumpInto(other, direction);
 
-        //if(other is Hole)
-        //{
-        //    if(CurrentLevelId == LevelId.Forest0)
-        //        RoguemojiGame.Instance.SetPlayerLevel(this, LevelId.Forest1);
-        //    else if (CurrentLevelId == LevelId.Forest1)
-        //        RoguemojiGame.Instance.SetPlayerLevel(this, LevelId.Forest2);
-        //}
-        if(other is Door)
-        {
-            if (CurrentLevelId == LevelId.Forest1)
-                RoguemojiGame.Instance.ChangeThingLevel(this, LevelId.Forest0);
-            else if (CurrentLevelId == LevelId.Forest2)
-                RoguemojiGame.Instance.ChangeThingLevel(this, LevelId.Forest1);
-        }
-    }
-
-    public override void SetGridPos(IntVector gridPos)
-	{
-		base.SetGridPos(gridPos);
-
-        RoguemojiGame.Instance.FlickerNearbyPanelCellsClient();
-    }
+    //    //if(other is Hole)
+    //    //{
+    //    //    if(CurrentLevelId == LevelId.Forest0)
+    //    //        RoguemojiGame.Instance.SetPlayerLevel(this, LevelId.Forest1);
+    //    //    else if (CurrentLevelId == LevelId.Forest1)
+    //    //        RoguemojiGame.Instance.SetPlayerLevel(this, LevelId.Forest2);
+    //    //}
+    //    if(other is Door)
+    //    {
+    //        if (Smiley.CurrentLevelId == LevelId.Forest1)
+    //            RoguemojiGame.Instance.ChangeThingLevel(Smiley, LevelId.Forest0);
+    //        else if (Smiley.CurrentLevelId == LevelId.Forest2)
+    //            RoguemojiGame.Instance.ChangeThingLevel(Smiley, LevelId.Forest1);
+    //    }
+    //}
 
 	public void SelectThing(Thing thing)
 	{
@@ -487,7 +426,7 @@ public partial class RoguemojiPlayer : Thing
     {
         var middleCell = new IntVector(MathX.FloorToInt((float)RoguemojiGame.ArenaPanelWidth / 2f), MathX.FloorToInt((float)RoguemojiGame.ArenaPanelHeight / 2f));
         var oldCamGridOffset = CameraGridOffset;
-        var movedCamera = SetCameraGridOffset(GridPos - middleCell);
+        var movedCamera = SetCameraGridOffset(ControlledThing.GridPos - middleCell);
 
         if(movedCamera && shouldAnimate)
         {
@@ -504,14 +443,16 @@ public partial class RoguemojiPlayer : Thing
     {
         var currOffset = CameraGridOffset;
 
-        var gridW = ContainingGridManager.GridWidth;
-        var gridH = ContainingGridManager.GridHeight;
+        var gridManager = ControlledThing.ContainingGridManager;
+
+        var gridW = gridManager.GridWidth;
+        var gridH = gridManager.GridHeight;
         var screenW = RoguemojiGame.ArenaPanelWidth;
         var screenH = RoguemojiGame.ArenaPanelHeight;
 
         CameraGridOffset = new IntVector(
-            gridW >= screenW ? Math.Clamp(offset.x, 0, ContainingGridManager.GridWidth - RoguemojiGame.ArenaPanelWidth) : -(screenW - gridW) / 2,
-            gridH >= screenH ? Math.Clamp(offset.y, 0, ContainingGridManager.GridHeight - RoguemojiGame.ArenaPanelHeight) : -(screenH - gridH) / 2
+            gridW >= screenW ? Math.Clamp(offset.x, 0, gridManager.GridWidth - RoguemojiGame.ArenaPanelWidth) : -(screenW - gridW) / 2,
+            gridH >= screenH ? Math.Clamp(offset.y, 0, gridManager.GridHeight - RoguemojiGame.ArenaPanelHeight) : -(screenH - gridH) / 2
         );
 
         //CameraGridOffset = new IntVector(
@@ -606,80 +547,79 @@ public partial class RoguemojiPlayer : Thing
         fade.ShouldFadeOut = shouldFadeOut;
     }
 
-    public override void TakeDamageFrom(Thing thing)
-    {
-        if (IsDead)
-            return;
+    //public override void TakeDamageFrom(Thing thing)
+    //{
+    //    if (IsDead)
+    //        return;
 
-        base.TakeDamageFrom(thing);
+    //    base.TakeDamageFrom(thing);
+    //}
 
-        IconPriority.AddIconPriority(Utils.GetRandomIcon("😲", "😲", "😧", "😨") , (int)PlayerIconPriority.TakeDamage, 1.0f);
-    }
+    //public override void Destroy()
+    //{
+    //    //if (IsDead)
+    //    //    return;
 
-    public override void Destroy()
-    {
+    //    //IsDead = true;
+    //    //StopAiming();
 
-        if (IsDead)
-            return;
-
-        IsDead = true;
-        StopAiming();
-
-        IconPriority.AddIconPriority("💀", (int)PlayerIconPriority.Dead);
-
-        OnDied();
-    }
+    //    //OnDied();
+    //}
 
     public void PickUpTopItem()
     {
-        var thing = ContainingGridManager.GetThingsAt(GridPos).WithAll(ThingFlags.CanBePickedUp).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
-        TryPickUp(thing);
+        //var thing = ContainingGridManager.GetThingsAt(GridPos).WithAll(ThingFlags.CanBePickedUp).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+        //TryPickUp(thing);
     }
 
     public bool TryPickUp(Thing thing, bool dontRequireAction = true)
     {
-        if (thing == null)
-            return false;
+        //if (thing == null)
+        //    return false;
 
-        if (InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
-        {
-            MoveThingTo(thing, GridType.Inventory, emptyGridPos, dontRequireAction, wieldIfPossible: true);
-            return true;
-        }
-        else if (thing.HasFlag(ThingFlags.Equipment) && EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPosEquipment))
-        {
-            MoveThingTo(thing, GridType.Equipment, emptyGridPosEquipment, dontRequireAction);
-            return true;
-        }
+        //if (InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
+        //{
+        //    MoveThingTo(thing, GridType.Inventory, emptyGridPos, dontRequireAction, wieldIfPossible: true);
+        //    return true;
+        //}
+        //else if (thing.HasFlag(ThingFlags.Equipment) && EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPosEquipment))
+        //{
+        //    MoveThingTo(thing, GridType.Equipment, emptyGridPosEquipment, dontRequireAction);
+        //    return true;
+        //}
 
         return false;
     }
 
     public void ThrowWieldedThing(Direction direction)
     {
-        if (!Acting.IsActionReady)
+        CActing acting = null;
+        if (ControlledThing.GetComponent<CActing>(out var component))
+            acting = (CActing)component;
+
+        if (!acting.IsActionReady)
         {
-            QueuedAction = new ThrowThingAction(WieldedThing, direction);
+            QueuedAction = new ThrowThingAction(ControlledThing.WieldedThing, direction);
             QueuedActionName = QueuedAction.ToString();
             return;
         }
 
-        if (WieldedThing == null || direction == Direction.None)
+        if (ControlledThing.WieldedThing == null || direction == Direction.None)
             return;
 
-        var projectile = WieldedThing.AddComponent<CProjectile>();
+        var projectile = ControlledThing.WieldedThing.AddComponent<CProjectile>();
         projectile.Direction = direction;
         projectile.MoveDelay = 0.1f;
         projectile.TotalDistance = 5;
-        projectile.Thrower = this;
+        projectile.Thrower = ControlledThing;
 
-        MoveThingTo(WieldedThing, GridType.Arena, GridPos);
+        MoveThingTo(ControlledThing.WieldedThing, GridType.Arena, ControlledThing.GridPos);
     }
 
     public void DropWieldedItem()
     {
-        if (WieldedThing != null)
-            MoveThingTo(WieldedThing, GridType.Arena, GridPos);
+        if (ControlledThing.WieldedThing != null)
+            MoveThingTo(ControlledThing.WieldedThing, GridType.Arena, ControlledThing.GridPos);
     }
 
     void TryEquipThing(Thing thing)
@@ -690,85 +630,92 @@ public partial class RoguemojiPlayer : Thing
 
     void SelectWieldedItem()
     {
-        if (WieldedThing != null)
-            SelectThing(WieldedThing);
+        if (ControlledThing.WieldedThing != null)
+            SelectThing(ControlledThing.WieldedThing);
     }
 
-    public override void UseWieldedThing()
+    public void UseWieldedThing()
     {
-        if (WieldedThing == null)
+        Thing wieldedThing = ControlledThing.WieldedThing;
+        if (wieldedThing == null)
+            return;
+
+        if (!wieldedThing.HasFlag(ThingFlags.Useable))
+            return;
+
+        if (wieldedThing.IsOnCooldown)
+            return;
+
+        if (!wieldedThing.CanBeUsedBy(ControlledThing, shouldLogMessage: true))
+            return;
+
+        if (wieldedThing.HasFlag(ThingFlags.UseRequiresAiming))
         {
-            //if (SelectedThing != null && IsInInventory(SelectedThing))
-            //{
-            //    if (SelectedThing.HasFlag(ThingFlags.Equipment))
-            //        TryEquipThing(SelectedThing);
-            //    else
-            //        WieldThing(SelectedThing);
-            //}
-
-            return;
-        }
-
-        if (!WieldedThing.HasFlag(ThingFlags.Useable))
-            return;
-
-        if (WieldedThing.IsOnCooldown)
-            return;
-            
-        if(!WieldedThing.CanBeUsedBy(this, shouldLogMessage: true))
-            return;
-
-        if (WieldedThing.HasFlag(ThingFlags.UseRequiresAiming))
-        {
-            AimingType aimingType = WieldedThing.HasFlag(ThingFlags.AimTypeTargetCell) ? AimingType.TargetCell : AimingType.Direction;
-            StartAiming(AimingSource.UsingWieldedItem, aimingType, WieldedThing.AimingGridType);
+            AimingType aimingType = wieldedThing.HasFlag(ThingFlags.AimTypeTargetCell) ? AimingType.TargetCell : AimingType.Direction;
+            StartAiming(AimingSource.UsingWieldedItem, aimingType, wieldedThing.AimingGridType);
         }
         else
         {
-            if (!Acting.IsActionReady)
+            CActing acting = null;
+            if (ControlledThing.GetComponent<CActing>(out var component))
+                acting = (CActing)component;
+
+            if (!acting.IsActionReady)
             {
                 QueuedAction = new UseWieldedThingAction();
                 QueuedActionName = QueuedAction.ToString();
                 return;
             }
 
-            WieldedThing.Use(this);
+            wieldedThing.Use(ControlledThing);
         }
     }
 
-    public override void UseWieldedThing(Direction direction)
+    public void UseWieldedThing(Direction direction)
     {
-        if (!Acting.IsActionReady)
+        CActing acting = null;
+        if (ControlledThing.GetComponent<CActing>(out var component))
+            acting = (CActing)component;
+
+        if (!acting.IsActionReady)
         {
             QueuedAction = new UseWieldedThingDirectionAction(direction);
             QueuedActionName = QueuedAction.ToString();
             return;
         }
 
-        base.UseWieldedThing(direction);
+        ControlledThing.UseWieldedThing(direction);
     }
 
-    public override void UseWieldedThing(GridType gridType, IntVector targetGridPos)
+    public void UseWieldedThing(GridType gridType, IntVector targetGridPos)
     {
-        if (!Acting.IsActionReady)
+        CActing acting = null;
+        if (ControlledThing.GetComponent<CActing>(out var component))
+            acting = (CActing)component;
+
+        if (!acting.IsActionReady)
         {
             QueuedAction = new UseWieldedThingTargetAction(gridType, targetGridPos);
             QueuedActionName = QueuedAction.ToString();
             return;
         }
 
-        base.UseWieldedThing(gridType, targetGridPos);
+        ControlledThing.UseWieldedThing(gridType, targetGridPos);
     }
 
     public void MoveThingTo(Thing thing, GridType targetGridType, IntVector targetGridPos, bool dontRequireAction = false, bool wieldIfPossible = false)
     {
-        if (IsDead) 
+        if (IsDead)
             return;
 
         if (IsAiming)
             StopAiming();
 
-        if (!Acting.IsActionReady && !dontRequireAction)
+        CActing acting = null;
+        if (ControlledThing.GetComponent<CActing>(out var component))
+            acting = (CActing)component;
+
+        if (!acting.IsActionReady && !dontRequireAction)
         {
             QueuedAction = new MoveThingAction(thing, targetGridType, targetGridPos, thing.ContainingGridType, thing.GridPos, wieldIfPossible);
             QueuedActionName = QueuedAction.ToString();
@@ -783,7 +730,7 @@ public partial class RoguemojiPlayer : Thing
         RoguemojiGame.Instance.RefreshGridPanelClient(To.Single(this), gridType: sourceGridType);
         RoguemojiGame.Instance.RefreshGridPanelClient(To.Single(this), gridType: targetGridType);
 
-        if(targetGridType == GridType.Arena || sourceGridType == GridType.Arena)
+        if (targetGridType == GridType.Arena || sourceGridType == GridType.Arena)
         {
             RoguemojiGame.Instance.RefreshNearbyPanelClient(To.Single(this));
             RoguemojiGame.Instance.FlickerNearbyPanelCellsClient(To.Single(this));
@@ -800,12 +747,12 @@ public partial class RoguemojiPlayer : Thing
 
         if (existingInvEquipItem != null)
         {
-            if(sourceGridType == GridType.Equipment && targetGridType == GridType.Inventory && !existingInvEquipItem.HasFlag(ThingFlags.Equipment))
+            if (sourceGridType == GridType.Equipment && targetGridType == GridType.Inventory && !existingInvEquipItem.HasFlag(ThingFlags.Equipment))
             {
                 if (InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
                     SwapGridThingPos(existingInvEquipItem, GridType.Inventory, emptyGridPos);
                 else
-                    MoveThingTo(existingInvEquipItem, GridType.Arena, GridPos, dontRequireAction: true);
+                    MoveThingTo(existingInvEquipItem, GridType.Arena, ControlledThing.GridPos, dontRequireAction: true);
             }
             else
             {
@@ -814,55 +761,59 @@ public partial class RoguemojiPlayer : Thing
         }
 
         if (sourceGridType == GridType.Equipment && owningPlayer != null)
-            owningPlayer.UnequipThing(thing);
+            owningPlayer.ControlledThing.UnequipThing(thing);
 
         if (targetGridType == GridType.Arena)
         {
-            if(thing == WieldedThing)
+            if (thing == ControlledThing.WieldedThing)
                 WieldThing(null, dontRequireAction: true);
 
-            thing.CurrentLevelId = CurrentLevelId;
+            thing.CurrentLevelId = ControlledThing.CurrentLevelId;
 
             thing.ThingOwningThis = null;
         }
 
         if (targetGridType == GridType.Inventory)
         {
-            if(wieldIfPossible && WieldedThing == null && !thing.HasFlag(ThingFlags.Equipment))
+            if (wieldIfPossible && ControlledThing.WieldedThing == null && !thing.HasFlag(ThingFlags.Equipment))
                 WieldThing(thing, dontRequireAction: true);
 
-            thing.ThingOwningThis = this;
-        } 
+            thing.ThingOwningThis = ControlledThing;
+        }
 
         if (targetGridType == GridType.Equipment)
         {
-            targetGridManager.OwningPlayer.EquipThing(thing);
-            thing.ThingOwningThis = null;
+            targetGridManager.OwningPlayer.ControlledThing.EquipThing(thing);
+            thing.ThingOwningThis = ControlledThing;
         }
 
         if (!dontRequireAction)
-            Acting.PerformedAction();
+            acting.PerformedAction();
     }
 
     public void WieldThing(Thing thing, bool dontRequireAction = false)
     {
-        if (IsDead || WieldedThing == thing)
+        if (IsDead || ControlledThing.WieldedThing == thing)
             return;
 
         if (IsAiming)
             StopAiming();
 
-        if (!Acting.IsActionReady && !dontRequireAction)
+        CActing acting = null;
+        if (ControlledThing.GetComponent<CActing>(out var component))
+            acting = (CActing)component;
+
+        if (!acting.IsActionReady && !dontRequireAction)
         {
             QueuedAction = new WieldThingAction(thing);
             QueuedActionName = QueuedAction.ToString();
             return;
         }
 
-        base.WieldThing(thing);
+        ControlledThing.WieldThing(thing);
 
         if (!dontRequireAction)
-            Acting.PerformedAction();
+            acting.PerformedAction();
     }
 
     public void SwapGridThingPos(Thing thing, GridType gridType, IntVector targetGridPos)
@@ -890,8 +841,15 @@ public partial class RoguemojiPlayer : Thing
     {
         if (gridType == GridType.Arena)
         {
-            var level = RoguemojiGame.Instance.GetLevel(CurrentLevelId);
-            var thing = level.GridManager.GetThingsAt(gridPos).WithAll(ThingFlags.Selectable).Where(x => CanPerceiveThing(x)).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+            var level = RoguemojiGame.Instance.GetLevel(ControlledThing.CurrentLevelId);
+
+            if(!level.GridManager.IsGridPosInBounds(gridPos))
+            {
+                SelectThing(null);
+                return;
+            }
+
+            var thing = level.GridManager.GetThingsAt(gridPos).WithAll(ThingFlags.Selectable).Where(x => ControlledThing.CanPerceiveThing(x)).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 
             if (!visible && thing != null)
                 return;
@@ -913,7 +871,7 @@ public partial class RoguemojiPlayer : Thing
             else if (!rightClick)
             {
                 if (thing != null && shift)
-                    MoveThingTo(thing, GridType.Arena, GridPos);
+                    MoveThingTo(thing, GridType.Arena, ControlledThing.GridPos);
                 else
                     SelectThing(thing);
             }
@@ -925,7 +883,7 @@ public partial class RoguemojiPlayer : Thing
             if (!rightClick)
             {
                 if (thing != null && shift)
-                    MoveThingTo(thing, GridType.Arena, GridPos);
+                    MoveThingTo(thing, GridType.Arena, ControlledThing.GridPos);
                 else
                     SelectThing(thing);
             }
@@ -935,6 +893,11 @@ public partial class RoguemojiPlayer : Thing
                     MoveThingTo(thing, GridType.Inventory, emptyGridPos);
             }
         }
+    }
+
+    public void ClickedNothing()
+    {
+        SelectThing(null);
     }
 
     public void NearbyThingClicked(Thing thing, bool rightClick, bool shift, bool doubleClick)
@@ -957,11 +920,11 @@ public partial class RoguemojiPlayer : Thing
 
         if (destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.Nearby || destinationPanelType == PanelType.None)
         {
-            MoveThingTo(thing, GridType.Arena, GridPos);
+            MoveThingTo(thing, GridType.Arena, ControlledThing.GridPos);
         }
         else if (destinationPanelType == PanelType.InventoryGrid)
         {
-            if(draggedWieldedThing)
+            if (draggedWieldedThing)
             {
                 if (thing.GridPos.Equals(targetGridPos))
                 {
@@ -991,7 +954,7 @@ public partial class RoguemojiPlayer : Thing
         }
         else if (destinationPanelType == PanelType.Wielding)
         {
-            if (WieldedThing == thing)
+            if (ControlledThing.WieldedThing == thing)
                 SelectThing(thing);
             else if (!thing.HasFlag(ThingFlags.Equipment))
                 WieldThing(thing);
@@ -1016,7 +979,7 @@ public partial class RoguemojiPlayer : Thing
 
         if (destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.Nearby)// || destinationPanelType == PanelType.None)
         {
-            MoveThingTo(thing, GridType.Arena, GridPos);
+            MoveThingTo(thing, GridType.Arena, ControlledThing.GridPos);
         }
         else if (destinationPanelType == PanelType.InventoryGrid)
         {
@@ -1041,7 +1004,7 @@ public partial class RoguemojiPlayer : Thing
             return;
 
         // dont allow dragging nearby thing from different cells, or if the thing has been picked up by someone else
-        if (!GridPos.Equals(thing.GridPos) || thing.ContainingGridType == GridType.Inventory)
+        if (!ControlledThing.GridPos.Equals(thing.GridPos) || thing.ContainingGridType == GridType.Inventory)
             return;
 
         if (destinationPanelType == PanelType.InventoryGrid)
@@ -1082,25 +1045,25 @@ public partial class RoguemojiPlayer : Thing
 
     public void WieldingClicked(bool rightClick, bool shift)
     {
-        if (WieldedThing == null)
+        if (ControlledThing.WieldedThing == null)
             return;
 
         if (rightClick)
             WieldThing(null);
         else if (shift)
-            MoveThingTo(WieldedThing, GridType.Arena, GridPos);
+            MoveThingTo(ControlledThing.WieldedThing, GridType.Arena, ControlledThing.GridPos);
         else
-            SelectThing(WieldedThing);
+            SelectThing(ControlledThing.WieldedThing);
     }
 
     public void PlayerIconClicked(bool rightClick, bool shift)
     {
-        SelectThing(this);
+        SelectThing(ControlledThing);
     }
 
     public void CharacterHotkeyPressed()
     {
-        SelectThing(this);
+        SelectThing(ControlledThing);
     }
 
     public GridManager GetGridManager(GridType gridType)
@@ -1108,7 +1071,7 @@ public partial class RoguemojiPlayer : Thing
         switch (gridType)
         {
             case GridType.Arena:
-                return ContainingGridManager;
+                return ControlledThing.ContainingGridManager;
             case GridType.Inventory:
                 return InventoryGridManager;
             case GridType.Equipment:
@@ -1124,24 +1087,11 @@ public partial class RoguemojiPlayer : Thing
         {
             RefreshVisibility(To.Single(this));
         }
-
-        base.OnChangedStat(statType, changeCurrent, changeMin, changeMax);
-    }
-
-    void FinishInitStats()
-    {
-        var mana = GetStat(StatType.Mana);
-        if (mana != null)
-            mana.CurrentValue = mana.MaxValue;
-
-        var energy = GetStat(StatType.Energy);
-        if (energy != null)
-            energy.CurrentValue = energy.MaxValue;
     }
 
     public void StartAimingThrow()
     {
-        if (WieldedThing == null)
+        if (ControlledThing.WieldedThing == null)
             return;
 
         StartAiming(AimingSource.Throwing, AimingType.Direction, GridType.Arena);
@@ -1167,8 +1117,8 @@ public partial class RoguemojiPlayer : Thing
         }
         else if(aimingSource == AimingSource.UsingWieldedItem && aimingType == AimingType.TargetCell)
         {
-            if(WieldedThing != null)
-                AimTargetCellsClient(To.Single(this), WieldedThing.NetworkIdent);
+            if(ControlledThing.WieldedThing != null)
+                AimTargetCellsClient(To.Single(this), ControlledThing.WieldedThing.NetworkIdent);
             else
                 StopAiming();
         }
@@ -1181,17 +1131,17 @@ public partial class RoguemojiPlayer : Thing
 
         foreach (var dir in GridManager.GetCardinalDirections())
         {
-            IntVector gridPos = GridPos + GridManager.GetIntVectorForDirection(dir);
+            IntVector gridPos = ControlledThing.GridPos + GridManager.GetIntVectorForDirection(dir);
             AimingCells.Add(gridPos);
         }
     }
 
     public void RefreshWieldedThingTargetAiming()
     {
-        if (WieldedThing == null || !IsAiming || AimingSource != AimingSource.UsingWieldedItem || AimingType != AimingType.TargetCell)
+        if (ControlledThing.WieldedThing == null || !IsAiming || AimingSource != AimingSource.UsingWieldedItem || AimingType != AimingType.TargetCell)
             return;
 
-        AimTargetCellsClient(To.Single(this), WieldedThing.NetworkIdent);
+        AimTargetCellsClient(To.Single(this), ControlledThing.WieldedThing.NetworkIdent);
     }
 
     [ClientRpc]
@@ -1199,7 +1149,7 @@ public partial class RoguemojiPlayer : Thing
     {
         AimingCells.Clear();
 
-        Thing usedThing = FindByIndex(networkIdent) as Thing;
+        Thing usedThing = Entity.FindByIndex(networkIdent) as Thing;
         var aimingCells = usedThing.GetAimingTargetCellsClient();
 
         foreach (IntVector gridPos in aimingCells)
@@ -1229,7 +1179,7 @@ public partial class RoguemojiPlayer : Thing
 
         if(AimingType == AimingType.Direction)
         {
-            var direction = GridManager.GetDirectionForIntVector(gridPos - GridPos);
+            var direction = GridManager.GetDirectionForIntVector(gridPos - ControlledThing.GridPos);
             ConfirmAiming(direction);
         }
         else if(AimingType == AimingType.TargetCell && AimingSource == AimingSource.UsingWieldedItem)
@@ -1248,14 +1198,13 @@ public partial class RoguemojiPlayer : Thing
     {
         base.OnChangedGridPos();
 
-        //ContainingGridManager.AddFloater("🅰️", GridPos, 0f, Vector2.Zero, Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true,
-        //                EasingType.QuadOut, fadeInTime: 0f, 1f, opacity: 0.6f);
-
         RefreshVisibility(To.Single(this));
-        ContainingGridManager.PlayerChangedGridPos(this);
+        //ContainingGridManager.PlayerChangedGridPos(this);
 
         if(IsAiming)
             RefreshWieldedThingTargetAiming();
+
+        RoguemojiGame.Instance.FlickerNearbyPanelCellsClient();
     }
 
     public bool IsInInventory(Thing thing)
@@ -1268,7 +1217,7 @@ public partial class RoguemojiPlayer : Thing
         if (!IdentifiedScrollTypes.Contains(scrollType))
         {
             IdentifiedScrollTypes.Add(scrollType);
-            AddFloater(Globals.Icon(IconType.Identified), 1f, new Vector2(-1f, -10f), new Vector2(-1f, -30f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.5f, scale: 0.8f, opacity: 0.66f);
+            ControlledThing.AddFloater(Globals.Icon(IconType.Identified), 1f, new Vector2(-1f, -10f), new Vector2(-1f, -30f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.5f, scale: 0.8f, opacity: 0.66f);
             RoguemojiGame.Instance.LogMessageClient(To.Single(this), $"{Globals.Icon(IconType.Identified)}Identified 📜{RoguemojiGame.Instance.GetUnidentifiedScrollIcon(scrollType)} as {Scroll.GetDisplayName(scrollType)}{Scroll.GetChatDisplayIcons(scrollType)}", playerNum: 0);
         }
     }
@@ -1283,7 +1232,7 @@ public partial class RoguemojiPlayer : Thing
         if (!IdentifiedPotionTypes.Contains(potionType))
         {
             IdentifiedPotionTypes.Add(potionType);
-            AddFloater(Globals.Icon(IconType.Identified), 1f, new Vector2(0f, -10f), new Vector2(0, -30f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.5f, scale: 0.8f, opacity: 0.66f);
+            ControlledThing.AddFloater(Globals.Icon(IconType.Identified), 1f, new Vector2(0f, -10f), new Vector2(0, -30f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.5f, scale: 0.8f, opacity: 0.66f);
             RoguemojiGame.Instance.LogMessageClient(To.Single(this), $"{Globals.Icon(IconType.Identified)}Identified 🧉{RoguemojiGame.Instance.GetUnidentifiedPotionIcon(potionType)} as {Potion.GetDisplayName(potionType)}{Potion.GetChatDisplayIcons(potionType)}", playerNum: 0);
         }
     }
@@ -1388,7 +1337,7 @@ public class ThrowThingAction : IQueuedAction
 
     public void Execute(RoguemojiPlayer player)
     {
-        if (Thing == null || Thing != player.WieldedThing)
+        if (Thing == null || Thing != player.ControlledThing.WieldedThing)
             return;
 
         player.ThrowWieldedThing(Direction);

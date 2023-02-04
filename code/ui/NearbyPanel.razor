@@ -25,14 +25,14 @@
     }
 </style>
 
-<root class="nearby" style="background-color:@(Player.ContainingGridManager.GetNearbyBgColor(Player.GridPos));">
+<root class="nearby" style="background-color:@(Player.ControlledThing.ContainingGridManager.GetNearbyBgColor(Player.ControlledThing.GridPos));">
     <div class="nearby_bg"></div> 
 
     @{
         RoguemojiPlayer player = Player;
     }
 
-    @if (player?.ContainingGridManager?.GetThingsAtClient(player.GridPos) == null)
+    @if (player?.ControlledThing.ContainingGridManager?.GetThingsAtClient(player.ControlledThing.GridPos) == null)
     {
         return;
     }
@@ -62,7 +62,7 @@
 
     IEnumerable<Thing> GetThings(RoguemojiPlayer player)
     {
-        return player.ContainingGridManager.GetThingsAtClient(player.GridPos).WithAll(ThingFlags.CanBePickedUp).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos());
+        return player.ControlledThing.ContainingGridManager.GetThingsAtClient(player.ControlledThing.GridPos).WithAll(ThingFlags.CanBePickedUp).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos());
     }
 
     public override void Tick()
@@ -105,7 +105,7 @@
             }
         }
 
-        return HashCode.Combine(player.GridPos, things.Count, player.InventoryGridManager.Things.Count, floaterHash);
+        return HashCode.Combine(player.ControlledThing.GridPos, things.Count, player.InventoryGridManager.Things.Count, floaterHash);
     }
 
     public void FlickerCells()

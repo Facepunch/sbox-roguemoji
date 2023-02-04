@@ -6,8 +6,6 @@ public partial class TreeEvergreen : Thing
 {
     public int HealthAmount { get; set; }
 
-    private float _timer;
-
     public TreeEvergreen()
     {
         DisplayIcon = "🌲";

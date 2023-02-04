@@ -34,7 +34,7 @@ public class CBlinded : ThingComponent
 
         thing.AddFloater(Globals.Icon(IconType.Blindness), time: 0f, new Vector2(-14f, -4f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.4f, opacity: 0.35f);
 
-        if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component))
+        if (thing is Smiley && thing.GetComponent<CIconPriority>(out var component))
             IconId = ((CIconPriority)component).AddIconPriority("😑", (int)PlayerIconPriority.Blinded);
     }
 
@@ -97,7 +97,7 @@ public class CBlinded : ThingComponent
         Thing.RemoveTrait(Trait);
         Thing.RemoveFloater(Globals.Icon(IconType.Blindness));
 
-        if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component))
+        if (Thing is Smiley && Thing.GetComponent<CIconPriority>(out var component))
             ((CIconPriority)component).RemoveIconPriority(IconId);
     }
 

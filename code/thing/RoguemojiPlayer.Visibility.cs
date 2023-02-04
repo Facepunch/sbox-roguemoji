@@ -24,7 +24,7 @@ public class SeenThingData
 
 public enum PlayerVisionChangeReason { ChangedGridPos, IncreasedSightBlockAmount, DecreasedSightBlockAmount, ChangedInvisibleAmount }
 
-public partial class RoguemojiPlayer : Thing
+public partial class RoguemojiPlayer : ThingBrain
 {
     public HashSet<IntVector> VisibleCells { get; set; } // Client-only
     public Dictionary<LevelId, HashSet<IntVector>> SeenCells { get; set; } // Client-only
@@ -35,18 +35,18 @@ public partial class RoguemojiPlayer : Thing
     [ClientRpc]
     public void RefreshVisibility()
     {
-        if (!SeenCells.ContainsKey(CurrentLevelId))
-            SeenCells.Add(CurrentLevelId, new HashSet<IntVector>());
+        if (!SeenCells.ContainsKey(ControlledThing.CurrentLevelId))
+            SeenCells.Add(ControlledThing.CurrentLevelId, new HashSet<IntVector>());
 
-        if (!SeenThings.ContainsKey(CurrentLevelId))
-            SeenThings.Add(CurrentLevelId, new Dictionary<IntVector, List<SeenThingData>>());
+        if (!SeenThings.ContainsKey(ControlledThing.CurrentLevelId))
+            SeenThings.Add(ControlledThing.CurrentLevelId, new Dictionary<IntVector, List<SeenThingData>>());
 
         _wasVisible.Clear();
         // add the visible cells before updating visibility
         foreach (var gridPos in VisibleCells)
             _wasVisible.Add(gridPos);
 
-        ComputeVisibility(GridPos, rangeLimit: GetStatClamped(StatType.Sight));
+        ComputeVisibility(ControlledThing.GridPos, rangeLimit: ControlledThing.GetStatClamped(StatType.Sight));
 
         foreach (var gridPos in VisibleCells.Except(_wasVisible)) // newly visible cells
             ClearSeenThings(gridPos);
@@ -57,26 +57,26 @@ public partial class RoguemojiPlayer : Thing
 
     void SaveSeenData(IntVector gridPos)
     {
-        SeenCells[CurrentLevelId].Add(gridPos);
+        SeenCells[ControlledThing.CurrentLevelId].Add(gridPos);
 
-        if (!SeenThings[CurrentLevelId].ContainsKey(gridPos))
-            SeenThings[CurrentLevelId][gridPos] = new List<SeenThingData>();
+        if (!SeenThings[ControlledThing.CurrentLevelId].ContainsKey(gridPos))
+            SeenThings[ControlledThing.CurrentLevelId][gridPos] = new List<SeenThingData>();
 
-        SeenThings[CurrentLevelId][gridPos].Clear();
+        SeenThings[ControlledThing.CurrentLevelId][gridPos].Clear();
 
-        var things = ContainingGridManager.GetThingsAtClient(gridPos).OrderBy(x => x.GetZPos());
+        var things = ControlledThing.ContainingGridManager.GetThingsAtClient(gridPos).OrderBy(x => x.GetZPos());
         foreach (var thing in things)
         {
-            if(!CanSeeAnyPartOfThing(thing))
+            if(!ControlledThing.CanSeeAnyPartOfThing(thing))
                 continue;
 
-            bool isVisible = CanPerceiveThing(thing);
+            bool isVisible = ControlledThing.CanPerceiveThing(thing);
 
             var seenData = new SeenThingData()
             {
                 icon = thing.DisplayIcon,
                 zIndex = thing.GetZPos(),
-                hasWieldedThing = thing.WieldedThing != null && CanPerceiveThing(thing.WieldedThing),
+                hasWieldedThing = thing.WieldedThing != null && ControlledThing.CanPerceiveThing(thing.WieldedThing),
                 isSolid = thing.HasFlag(ThingFlags.Solid),
                 playerNum = thing.PlayerNum,
                 opacity = isVisible ? (thing.Opacity * (thing.GetStatClamped(StatType.Invisible) > 0 ? 0.5f : 1f)) : 1f, // opacity->1f when invisible (won't be rendered anyway) so opacity doesn't effect wielded thing
@@ -119,27 +119,27 @@ public partial class RoguemojiPlayer : Thing
                 seenData.wieldedThingFontSize = thing.WieldedThingFontSize;
             }
 
-            SeenThings[CurrentLevelId][gridPos].Add(seenData);
+            SeenThings[ControlledThing.CurrentLevelId][gridPos].Add(seenData);
         }
     }
 
     void ClearSeenThings(IntVector gridPos)
     {
-        if (!SeenThings.ContainsKey(CurrentLevelId))
+        if (!SeenThings.ContainsKey(ControlledThing.CurrentLevelId))
             return;
 
-        if (!SeenThings[CurrentLevelId].ContainsKey(gridPos))
+        if (!SeenThings[ControlledThing.CurrentLevelId].ContainsKey(gridPos))
             return;
 
-        SeenThings[CurrentLevelId][gridPos].Clear();
+        SeenThings[ControlledThing.CurrentLevelId][gridPos].Clear();
     }
 
     public void CheckForUnnecessarySeenThing(Thing thing)
     {
-        if (!SeenThings.ContainsKey(CurrentLevelId))
+        if (!SeenThings.ContainsKey(ControlledThing.CurrentLevelId))
             return;
 
-        var gridThings = SeenThings[CurrentLevelId];
+        var gridThings = SeenThings[ControlledThing.CurrentLevelId];
         foreach(KeyValuePair<IntVector, List<SeenThingData>> pair in gridThings)
         {
             var things = pair.Value;
@@ -156,10 +156,10 @@ public partial class RoguemojiPlayer : Thing
     [ClientRpc]
     public void CheckForUnnecessarySeenThings()
     {
-        if (!SeenThings.ContainsKey(CurrentLevelId))
+        if (!SeenThings.ContainsKey(ControlledThing.CurrentLevelId))
             return;
 
-        var gridThings = SeenThings[CurrentLevelId];
+        var gridThings = SeenThings[ControlledThing.CurrentLevelId];
         foreach (KeyValuePair<IntVector, List<SeenThingData>> pair in gridThings)
         {
             var things = pair.Value;
@@ -171,7 +171,7 @@ public partial class RoguemojiPlayer : Thing
                 if (thing == null)
                     continue;
 
-                if (IsCellVisible(thing.GridPos) && CanPerceiveThing(thing))
+                if (IsCellVisible(thing.GridPos) && ControlledThing.CanPerceiveThing(thing))
                     things.RemoveAt(i);
             }
         }
@@ -184,13 +184,13 @@ public partial class RoguemojiPlayer : Thing
 
     public bool IsCellSeen(IntVector gridPos)
     {
-        return SeenCells.ContainsKey(CurrentLevelId) && SeenCells[CurrentLevelId].Contains(gridPos);
+        return SeenCells.ContainsKey(ControlledThing.CurrentLevelId) && SeenCells[ControlledThing.CurrentLevelId].Contains(gridPos);
     }
 
     public List<SeenThingData> GetSeenThings(IntVector gridPos)
     {
-        if(SeenThings[CurrentLevelId].ContainsKey(gridPos))
-            return SeenThings[CurrentLevelId][gridPos];
+        if(SeenThings[ControlledThing.CurrentLevelId].ContainsKey(gridPos))
+            return SeenThings[ControlledThing.CurrentLevelId][gridPos];
 
         return null;
     }
@@ -199,7 +199,7 @@ public partial class RoguemojiPlayer : Thing
     {
         IntVector gridPos = new IntVector(x, y);
 
-        if (!ContainingGridManager.IsGridPosInBounds(gridPos))
+        if (!ControlledThing.ContainingGridManager.IsGridPosInBounds(gridPos))
             return;
 
         VisibleCells.Add(gridPos);
@@ -380,6 +380,6 @@ public partial class RoguemojiPlayer : Thing
     {
         Game.AssertClient();
 
-        return ContainingGridManager.GetThingsAtClient(new IntVector(x, y)).Where(x => x.GetStatClamped(StatType.SightBlockAmount) >= GetStatClamped(StatType.Sight)).Where(x => x.GetStatClamped(StatType.Invisible) <= 0).Count() > 0;
+        return ControlledThing.ContainingGridManager.GetThingsAtClient(new IntVector(x, y)).Where(x => x.GetStatClamped(StatType.SightBlockAmount) >= ControlledThing.GetStatClamped(StatType.Sight)).Where(x => x.GetStatClamped(StatType.Invisible) <= 0).Count() > 0;
     }
 }

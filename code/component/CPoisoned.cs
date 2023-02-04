@@ -27,7 +27,7 @@ public class CPoisoned : ThingComponent
 
         thing.AddFloater(Globals.Icon(IconType.Poison), time: 0f, new Vector2(-14f, -14f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.5f, opacity: 0.25f);
 
-        if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component))
+        if (thing is Smiley && thing.GetComponent<CIconPriority>(out var component))
             IconId = ((CIconPriority)component).AddIconPriority("🤒", (int)PlayerIconPriority.Poisoned);
     }
 
@@ -97,7 +97,7 @@ public class CPoisoned : ThingComponent
         Thing.RemoveTrait(Trait);
         Thing.RemoveFloater(Globals.Icon(IconType.Poison));
 
-        if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component))
+        if (Thing is Smiley && Thing.GetComponent<CIconPriority>(out var component))
             ((CIconPriority)component).RemoveIconPriority(IconId);
     }
 

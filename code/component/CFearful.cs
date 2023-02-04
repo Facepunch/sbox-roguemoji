@@ -19,7 +19,7 @@ public class CFearful : ThingComponent
 
         Trait = thing.AddTrait("Fearful", Globals.Icon(IconType.Fear), $"Terrified of something", offset: Vector2.Zero);
 
-        if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component))
+        if (thing is Smiley && thing.GetComponent<CIconPriority>(out var component))
             IconId = ((CIconPriority)component).AddIconPriority("😱", (int)PlayerIconPriority.Fearful);
 
         thing.AddFloater("💧", time: 0f, new Vector2(10f, -10f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.65f);
@@ -41,7 +41,7 @@ public class CFearful : ThingComponent
     {
         Thing.RemoveFloater("💧");
 
-        if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component))
+        if (Thing is Smiley && Thing.GetComponent<CIconPriority>(out var component))
             ((CIconPriority)component).RemoveIconPriority(IconId);
 
         Thing.RemoveTrait(Trait);

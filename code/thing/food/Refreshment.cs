@@ -27,7 +27,7 @@ public partial class Refreshment : Thing
     {
         Destroy();
 
-        if(user is RoguemojiPlayer player)
+        if(user.Brain is RoguemojiPlayer player)
         {
             foreach(var thing in player.InventoryGridManager.GetAllThings())
             {
@@ -36,7 +36,7 @@ public partial class Refreshment : Thing
             }
         }
 
-        if (user is RoguemojiPlayer && user.GetComponent<CIconPriority>(out var component))
+        if (user is Smiley && user.GetComponent<CIconPriority>(out var component))
             ((CIconPriority)component).AddIconPriority("😙", (int)PlayerIconPriority.EatReaction, 1.0f);
 
         base.Use(user);

@@ -24,16 +24,16 @@ public partial class Hole : Thing
     {
         base.OnMovedOntoBy(thing);
 
-        if (thing is RoguemojiPlayer player)
-            SwallowThing(player);
+        if (thing.Brain is RoguemojiPlayer player)
+            SwallowThing(thing);
     }
 
     public override void OnMovedOntoThing(Thing thing)
     {
         base.OnMovedOntoThing(thing);
 
-        if (thing is RoguemojiPlayer player)
-            SwallowThing(player);
+        if (thing.Brain is RoguemojiPlayer player)
+            SwallowThing(thing);
     }
 
     void SwallowThing(Thing thing)

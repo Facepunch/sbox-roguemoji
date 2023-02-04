@@ -23,11 +23,11 @@ public class COrganize : ThingComponent
         if (thing.GetComponent<CActing>(out var component))
             ((CActing)component).PreventAction();
 
-        var player = thing as RoguemojiPlayer;
+        var player = thing.Brain as RoguemojiPlayer;
         if (player == null)
             return;
 
-        if (player.GetComponent<CIconPriority>(out var component2))
+        if (thing is Smiley smiley && smiley.GetComponent<CIconPriority>(out var component2))
             IconId = ((CIconPriority)component2).AddIconPriority("🧐", (int)PlayerIconPriority.Organize);
 
         _orderedItems = player.InventoryGridManager.GetAllThings().Where(x => !IsInHotbar(x)).OrderBy(x => x.GetType().Name).ToList();
@@ -43,7 +43,7 @@ public class COrganize : ThingComponent
     {
         base.Update(dt);
 
-        var player = Thing as RoguemojiPlayer;
+        var player = Thing.Brain as RoguemojiPlayer;
         if(player == null)
         {
             Remove();
@@ -79,13 +79,13 @@ public class COrganize : ThingComponent
 
     public override void OnRemove()
     {
-        if (Thing is RoguemojiPlayer player)
+        if (Thing.Brain is RoguemojiPlayer player)
             player.ClearQueuedAction();
             
         if (Thing.GetComponent<CActing>(out var component))
             ((CActing)component).AllowAction();
 
-        if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component2))
+        if (Thing is Smiley && Thing.GetComponent<CIconPriority>(out var component2))
         {
             var iconPriority = ((CIconPriority)component2);
             iconPriority.RemoveIconPriority(IconId);

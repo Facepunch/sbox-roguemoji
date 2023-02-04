@@ -118,10 +118,11 @@
 <root class="icon @GetWieldedClass() @GetSolidClass()">
     @{
         var player = RoguemojiGame.Instance.LocalPlayer;
+        var playerThing = player.ControlledThing;
     }
 
     <div class="@GetPlayerClass() @GetCooldownClass(Thing) @Hud.GetUnusableClass(Thing) @GetInventoryClass() @Hud.Instance.GetEquipmentHighlightClass(Thing)" style="opacity:@(GetOpacity());" @ref=IconPanel>
-        @if(player.CanPerceiveThing(Thing)) 
+        @if (playerThing.CanPerceiveThing(Thing))
         {
             @(Hud.GetHallucinationTextThing(Thing, Thing.DisplayIcon.Substring(Thing.CharSkip), HallucinationTextType.Icon))
 
@@ -170,7 +171,7 @@
         var wieldedThing = Thing.WieldedThing;
         var wieldedOffset = Thing.WieldedThingOffset;
 
-        if (player.CanPerceiveThing(wieldedThing))
+        if (playerThing.CanPerceiveThing(wieldedThing))
         {
             <div class="wielded_thing @GetCooldownClass(wieldedThing)" style="left:@(wieldedOffset.x)px; top:@(wieldedOffset.y)px; font-size:@(Thing.WieldedThingFontSize); opacity:@(GetOpacityWielded());">
                 @(Hud.GetHallucinationTextThing(wieldedThing, wieldedThing.DisplayIcon.Substring(wieldedThing.CharSkip), HallucinationTextType.Icon))
@@ -212,7 +213,7 @@
     string GetPlayerClass()     { return Thing.PlayerNum > 0 ? $"icon-player-{Thing.PlayerNum}" : ""; }
     string GetSolidClass()      { return Thing.HasFlag(ThingFlags.Solid) ? "solid" : ""; }
     string GetWieldedClass()    { return IsWielded() ? "wielded" : ""; }
-    bool IsWielded()            { return Thing == RoguemojiGame.Instance.LocalPlayer?.WieldedThing; }
+    bool IsWielded()            { return Thing == RoguemojiGame.Instance.LocalPlayer?.ControlledThing.WieldedThing; }
     string GetEquipmentClass()  { return Thing.HasFlag(ThingFlags.Equipment) ? "icon_equipment" : ""; }
     string GetInventoryClass()  { return Thing.ContainingGridType == GridType.Inventory ? "is_in_inventory" : ""; }
     string GetCooldownClass(Thing thing)    { return thing.IsOnCooldown && thing.ContainingGridType != GridType.Arena ? "cell_icon_cooldown" : ""; }
@@ -234,13 +235,14 @@
             return base.BuildHash();
 
         var player = RoguemojiGame.Instance.LocalPlayer;
+        var playerThing = player.ControlledThing;
         var cooldownHash = Thing.IsOnCooldown ? Thing.CooldownProgressPercent : 0f;
         var wieldedThing = Thing.WieldedThing;
         var wieldedCooldownHash = wieldedThing != null && wieldedThing.IsOnCooldown ? wieldedThing.CooldownProgressPercent : 0f;
         var equipmentHighlightHash = Hud.Instance.GetContainingPanelType(Hud.Instance.MousePosition) == PanelType.EquipmentGrid ? 1 : 0;
-        var statHash = HashCode.Combine(player.StatHash, Thing.StatHash);
+        var statHash = HashCode.Combine(playerThing.StatHash, Thing.StatHash);
         var identifiedHash = HashCode.Combine(Thing is Scroll scroll && player.IsScrollTypeIdentified(scroll.ScrollType) ? 1 : 0, Thing is Potion potion && player.IsPotionTypeIdentified(potion.PotionType) ? 1 : 0);
-        var playerCanSeeHash = player.CanPerceiveThing(Thing) ? 1 : 0;
+        var playerCanSeeHash = playerThing.CanPerceiveThing(Thing) ? 1 : 0;
         var floaterHash = Thing.HasFloaters ? Game.Random.Int(0, 9999) : 0;
         return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, HashCode.Combine(cooldownHash, wieldedCooldownHash, equipmentHighlightHash, statHash, identifiedHash), 
                                 HashCode.Combine(player.ConfusionSeed, player.HallucinatingSeed), playerCanSeeHash, floaterHash);

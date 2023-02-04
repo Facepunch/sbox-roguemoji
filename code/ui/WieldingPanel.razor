@@ -133,7 +133,7 @@
 
 @{
     var player = RoguemojiGame.Instance.LocalPlayer;
-    var wieldedThing = player.WieldedThing;
+    var wieldedThing = player.ControlledThing.WieldedThing;
 }
 
 <root class="wielding @GetWieldingClass(wieldedThing)" style="border-color: @(wieldedThing == null || !wieldedThing.HasFlag(ThingFlags.Useable) ? "#303030" : "#777777");">
@@ -217,7 +217,7 @@
     }
 
     @{
-        var attackDamage = player.GetAttackDamage(checkWielded: true);
+        var attackDamage = player.ControlledThing.GetAttackDamage(checkWielded: true);
     }
 
     <div class="attack_container">
@@ -241,16 +241,16 @@
     {
         var panel = Hud.Instance.AddChild<WieldingTooltip>();
         var player = RoguemojiGame.Instance.LocalPlayer;
-        panel.Thing = player.WieldedThing;
+        panel.Thing = player.ControlledThing.WieldedThing;
         return panel;
     }
 
     protected override int BuildHash()
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
-        var wieldedThing = player.WieldedThing;
+        var wieldedThing = player.ControlledThing.WieldedThing;
         var cooldownHash = (wieldedThing != null && wieldedThing.IsOnCooldown) ? wieldedThing.CooldownProgressPercent : 0f;
-        var statHash = HashCode.Combine(player.StatHash, wieldedThing?.StatHash ?? 0);
+        var statHash = HashCode.Combine(player.ControlledThing.StatHash, wieldedThing?.StatHash ?? 0);
         var floaterHash = (wieldedThing != null && wieldedThing.HasFloaters) ? Game.Random.Int(0, 9999) : 0;
         return HashCode.Combine(wieldedThing?.NetworkIdent ?? 0, cooldownHash, statHash, player.HallucinatingSeed, floaterHash);
     }
@@ -260,7 +260,7 @@
         base.OnAfterTreeRender(firstTime);
 
         var player = RoguemojiGame.Instance.LocalPlayer;
-        var wieldedThing = player.WieldedThing;
+        var wieldedThing = player.ControlledThing.WieldedThing;
         Tooltip = "x";
     }
 
@@ -272,13 +272,13 @@
         bool shift = Input.Down(InputButton.Run);
 
         var player = RoguemojiGame.Instance.LocalPlayer;
-        if (player == null || player.WieldedThing == null)
+        if (player == null || player.ControlledThing.WieldedThing == null)
             return;
 
         if(shift || rightClick)
             Hud.Instance.WieldingClicked(rightClick, shift);
         else
-            Hud.Instance.StartDragging(player.WieldedThing, this, rightClick, PanelType.Wielding);
+            Hud.Instance.StartDragging(player.ControlledThing.WieldedThing, this, rightClick, PanelType.Wielding);
 
         Hud.Instance.UnfocusChatbox();
     }

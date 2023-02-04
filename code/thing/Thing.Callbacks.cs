@@ -8,7 +8,12 @@ namespace Roguemoji;
 public partial class Thing : Entity
 {
     /// <summary> Thing may be null. </summary>
-    public virtual void OnWieldThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnWieldThing(thing); } }
+    public virtual void OnWieldThing(Thing thing) 
+    { 
+        foreach (var component in ThingComponents) { component.Value.OnWieldThing(thing); }
+        Brain?.OnWieldThing(thing);
+
+    }
     public virtual void OnNoLongerWieldingThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnNoLongerWieldingThing(thing); } }
       
     public virtual void OnWieldedBy(Thing thing)
@@ -62,6 +67,8 @@ public partial class Thing : Entity
 
         foreach (var component in ThingComponents)
             component.Value.OnChangedStat(statType, changeCurrent, changeMin, changeMax);
+
+        Brain?.OnChangedStat(statType, changeCurrent, changeMin, changeMax);
     }
 
     public virtual void OnSpawned() { }
@@ -69,14 +76,22 @@ public partial class Thing : Entity
     public virtual void OnUnequipThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnUnequipThing(thing); } }
     public virtual void OnEquippedTo(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnEquippedTo(thing); } }
     public virtual void OnUnequippedFrom(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnUnequippedFrom(thing); } }
-    public virtual void OnActionRecharged() { foreach (var component in ThingComponents) { component.Value.OnActionRecharged(); } }
+    public virtual void OnActionRecharged() 
+    { 
+        foreach (var component in ThingComponents) { component.Value.OnActionRecharged(); }
+        Brain?.OnActionRecharged();
+    }
     public virtual void OnWieldedThingBumpedInto(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnWieldedThingBumpedInto(thing); } }
     public virtual void OnBumpedIntoThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoThing(thing); } }
     public virtual void OnBumpedIntoBy(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoBy(thing); } } // thing may be null
     public virtual void OnBumpedOutOfBounds(Direction dir) { foreach (var component in ThingComponents) { component.Value.OnBumpedOutOfBounds(dir); } }
     public virtual void OnMovedOntoThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnMovedOntoThing(thing); } }
     public virtual void OnMovedOntoBy(Thing thing) { for(int i = ThingComponents.Count - 1; i >= 0; i--) ThingComponents.ElementAt(i).Value.OnMovedOntoBy(thing); } // todo: System.InvalidOperationException: Collection was modified
-    public virtual void OnChangedGridPos() { foreach (var component in ThingComponents) { component.Value.OnChangedGridPos(); } }
+    public virtual void OnChangedGridPos() 
+    { 
+        foreach (var component in ThingComponents) { component.Value.OnChangedGridPos(); }
+        Brain?.OnChangedGridPos();
+    }
     public virtual void OnAddComponent(TypeDescription type) { foreach (var component in ThingComponents) { component.Value.OnAddComponent(type); } }
     public virtual void OnRemoveComponent(TypeDescription type) { foreach (var component in ThingComponents) { component.Value.OnRemoveComponent(type); } }
     public virtual void OnCooldownStart() { foreach (var component in ThingComponents) { component.Value.OnCooldownStart(); } }

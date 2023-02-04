@@ -138,6 +138,7 @@
 
     @{
         var player = RoguemojiGame.Instance.LocalPlayer;
+        var playerThing = player.ControlledThing;
     }
 
     <div class="column">
@@ -148,11 +149,11 @@
         <CharacterPortrait class="char_icon" @ref=CharPortrait></CharacterPortrait>
 
         <div class="input_recharge_bar">
-            <div class="input_recharge_bar_overlay" style="width: @Utils.Map(player.ActionRechargePercent, 0f, 1f, 0f, 100f, EasingType.SineInOut)%; opacity: @Utils.Map(player.ActionRechargePercent, 0f, 1f, 0.25f, 1f, EasingType.ExpoIn);"></div>
+            <div class="input_recharge_bar_overlay" style="width: @Utils.Map(playerThing.ActionRechargePercent, 0f, 1f, 0f, 100f, EasingType.SineInOut)%; opacity: @Utils.Map(playerThing.ActionRechargePercent, 0f, 1f, 0.25f, 1f, EasingType.ExpoIn);"></div>
         </div>
 
         <div class="char_stat_display">
-            @foreach (var pair in player.Stats)
+            @foreach (var pair in playerThing.Stats)
             {
                 var statType = pair.Key;
                 if (Thing.ShouldShowOnCharacterPanel(statType))
@@ -185,8 +186,9 @@
     protected override int BuildHash()
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
-        var floaterHash = player.HasFloaters ? Game.Random.Int(0, 9999) : 0;
-        return HashCode.Combine(player.GetInfoDisplayHash(), player.ActionRechargePercent, player.StatHash, player.ConfusionSeed, floaterHash);
+        var playerThing = player.ControlledThing;
+        var floaterHash = playerThing.HasFloaters ? Game.Random.Int(0, 9999) : 0;
+        return HashCode.Combine(playerThing.GetInfoDisplayHash(), playerThing.ActionRechargePercent, playerThing.StatHash, player.ConfusionSeed, floaterHash);
     }
 }
 

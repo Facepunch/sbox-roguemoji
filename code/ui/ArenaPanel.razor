@@ -113,7 +113,8 @@
     
     @{
         var player = RoguemojiGame.Instance.LocalPlayer;
-        var level = RoguemojiGame.Instance.GetLevel(player.CurrentLevelId);
+        var playerThing = player.ControlledThing;
+        var level = RoguemojiGame.Instance.GetLevel(playerThing.CurrentLevelId);
     }
 
     @if (level?.GridManager?.Things == null)
@@ -124,8 +125,8 @@
     @foreach(Thing thing in GetThings())
     {
         var canSeeGridPos = player.IsGridPosOnCamera(thing.GridPos) && player.IsCellVisible(thing.GridPos);
-        var canSeeThing = (canSeeGridPos && player.CanPerceiveThing(thing)) || thing.TimeSinceLocalPlayerSaw < 0.25f;
-        var canSeeWieldedThing = canSeeGridPos && thing.WieldedThing != null && (player.CanPerceiveThing(thing.WieldedThing) || thing.WieldedThing.TimeSinceLocalPlayerSaw < 0.25f);
+        var canSeeThing = (canSeeGridPos && playerThing.CanPerceiveThing(thing)) || thing.TimeSinceLocalPlayerSaw < 0.25f;
+        var canSeeWieldedThing = canSeeGridPos && thing.WieldedThing != null && (playerThing.CanPerceiveThing(thing.WieldedThing) || thing.WieldedThing.TimeSinceLocalPlayerSaw < 0.25f);
 
         if ((canSeeThing || canSeeWieldedThing || thing.ShowFloaterOnInvisible() || (thing.WieldedThing != null && thing.WieldedThing.ShowFloaterOnInvisible())) && !thing.DontRender)
         {
@@ -161,7 +162,7 @@
             {
                 if(player.IsCellSeen(gridPos))
                 {
-                    <div class="greyed_out" style="left: @(x * RoguemojiGame.CellSize + player.CameraPixelOffset.x); top: @(y * RoguemojiGame.CellSize + player.CameraPixelOffset.y); background-color:@(player.ContainingGridManager.GetNearbyBgColor(gridPos));"></div>
+                    <div class="greyed_out" style="left: @(x * RoguemojiGame.CellSize + player.CameraPixelOffset.x); top: @(y * RoguemojiGame.CellSize + player.CameraPixelOffset.y); background-color:@(playerThing.ContainingGridManager.GetNearbyBgColor(gridPos));"></div>
 
                     @foreach(var seenData in player.GetSeenThings(gridPos))
                     {
@@ -211,7 +212,7 @@
                 if (player.IsAiming && player.AimingGridType == GridType.Arena && player.AimingCells.Contains(gridPos))
                 {
                     var aimOpacity = 0.4f + MathF.Sin(Time.Now * 16f) * 0.3f;
-                    var dir = GridManager.GetDirectionForIntVector(gridPos - player.GridPos);
+                    var dir = GridManager.GetDirectionForIntVector(gridPos - playerThing.GridPos);
                     <div class="aiming_cell" style="left: @(x * RoguemojiGame.CellSize + player.CameraPixelOffset.x + 1); top: @(y * RoguemojiGame.CellSize + player.CameraPixelOffset.y + 1); opacity: @(aimOpacity); transform: rotate(@(GetAimingAngle(dir)));">
                         @if (player.AimingType == AimingType.Direction)
                             @(GetArrowIcon(dir))
@@ -278,7 +279,7 @@
     protected override IList<Thing> GetThings()
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
-        return RoguemojiGame.Instance.GetLevel(player.CurrentLevelId).GridManager?.Things ?? new List<Thing>();
+        return RoguemojiGame.Instance.GetLevel(player.ControlledThing.CurrentLevelId).GridManager?.Things ?? new List<Thing>();
     }
 
     public override void Tick()
@@ -300,19 +301,16 @@
         bool visible = player.IsCellVisible(gridPos);
         bool rightClick = e.Button == "mouseright";
 
-        if (player.ContainingGridManager.IsGridPosInBounds(gridPos))
+        if(player.IsAiming && player.AimingGridType == GridType.Arena && player.AimingCells.Contains(gridPos) && visible)
         {
-            if(player.IsAiming && player.AimingGridType == GridType.Arena && player.AimingCells.Contains(gridPos) && visible)
-            {
-                if (rightClick)
-                    RoguemojiGame.StopAimingCmd();
-                else
-                    RoguemojiGame.ConfirmAimingCmd(GridType.Arena, gridPos.x, gridPos.y);
-            }
+            if (rightClick)
+                RoguemojiGame.StopAimingCmd();
             else
-            {
-                Hud.Instance.GridCellClicked(gridPos, GridType.Arena, rightClick, shift: Input.Down(InputButton.Run), doubleClick: false, visible);
-            }
+                RoguemojiGame.ConfirmAimingCmd(GridType.Arena, gridPos.x, gridPos.y);
+        }
+        else
+        {
+            Hud.Instance.GridCellClicked(gridPos, GridType.Arena, rightClick, shift: Input.Down(InputButton.Run), doubleClick: false, visible);
         }
 
         Hud.Instance.UnfocusChatbox();

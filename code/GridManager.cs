@@ -99,7 +99,7 @@ public partial class GridManager : Entity
 		thing.OnSpawned();
 
         if ((GridType == GridType.Inventory || GridType == GridType.Equipment) && OwningPlayer != null)
-            thing.ThingOwningThis = OwningPlayer;
+            thing.ThingOwningThis = OwningPlayer.ControlledThing;
 
         return thing;
     }
@@ -111,8 +111,8 @@ public partial class GridManager : Entity
         thing.ContainingGridManager = this;
 		thing.ContainingGridType = GridType;
 
-        var player = thing as RoguemojiPlayer;
-		if (player != null)
+        var player = thing.Brain as RoguemojiPlayer;
+        if (player != null)
             AddPlayer(player);
     }
 
@@ -124,7 +124,7 @@ public partial class GridManager : Entity
 		thing.ContainingGridManager = null;
 		thing.ContainingGridType = GridType.None;
 
-        var player = thing as RoguemojiPlayer;
+        var player = thing.Brain as RoguemojiPlayer;
         if (player != null)
             RemovePlayer(player);
     }
@@ -203,18 +203,18 @@ public partial class GridManager : Entity
 
 	public void CheckPlayerVisionChange(Thing thing, IntVector gridPos, PlayerVisionChangeReason reason)
 	{
-		foreach(var player in ContainedPlayers)
+        foreach (var player in ContainedPlayers)
 		{
-            if (VisionChangedPlayers.Contains(player) || thing == player)
+            if (VisionChangedPlayers.Contains(player) || thing == player.ControlledThing)
                 continue;
 
-			var sight = player.GetStatClamped(StatType.Sight);
+            var sight = player.ControlledThing.GetStatClamped(StatType.Sight);
 
             // if thing doesn't block our sight, we can ignore it, unless it lowered its SightBlockAmount (as it might previously have been blocking us)
             if (thing.GetStatClamped(StatType.SightBlockAmount) < sight && reason != PlayerVisionChangeReason.DecreasedSightBlockAmount)
 				continue;
 
-			var dist = GetDistance(player.GridPos, gridPos);
+			var dist = GetDistance(player.ControlledThing.GridPos, gridPos);
 			if (dist > sight)
 				continue;
 
@@ -230,9 +230,9 @@ public partial class GridManager : Entity
             if (CheckSeenThingsPlayers.Contains(player))
                 continue;
 
-            var sight = player.GetStatClamped(StatType.Sight);
+            var sight = player.ControlledThing.GetStatClamped(StatType.Sight);
 
-            var dist = GetDistance(player.GridPos, gridPos);
+            var dist = GetDistance(player.ControlledThing.GridPos, gridPos);
             if (dist > sight)
                 continue;
 
@@ -244,9 +244,9 @@ public partial class GridManager : Entity
 	{
 		foreach(var player in ContainedPlayers)
 		{
-			if(player.IsAiming && player.AimingSource == AimingSource.UsingWieldedItem && player.AimingType == AimingType.TargetCell && player.WieldedThing != null)
+			if(player.IsAiming && player.AimingSource == AimingSource.UsingWieldedItem && player.AimingType == AimingType.TargetCell && player.ControlledThing.WieldedThing != null)
 			{
-				if (player.WieldedThing.IsPotentialAimingTargetCell(gridPos))
+				if (player.ControlledThing.WieldedThing.IsPotentialAimingTargetCell(gridPos))
 					player.RefreshWieldedThingTargetAiming();
 			}
 		}
@@ -654,8 +654,8 @@ public partial class GridManager : Entity
 	{
         foreach (var thing in Things)
         {
-            if (thing is not RoguemojiPlayer)
-                thing.CleanUpAndDelete();
+            //if (thing is not RoguemojiPlayer)
+            thing.CleanUpAndDelete();
         }
 
 		Things.Clear();
@@ -667,12 +667,14 @@ public partial class GridManager : Entity
 
     public void AddPlayer(RoguemojiPlayer player)
 	{
-		ContainedPlayers.Add(player);
+        if(!ContainedPlayers.Contains(player))
+		    ContainedPlayers.Add(player);
 	}
 
 	public void RemovePlayer(RoguemojiPlayer player)
 	{
-		ContainedPlayers.Remove(player);
+        if (ContainedPlayers.Contains(player))
+            ContainedPlayers.Remove(player);
 	}
 
 	public void SetWidth(int width)
@@ -696,7 +698,7 @@ public partial class GridManager : Entity
 						for(int i = things.Count - 1; i >= 0; i--)
 						{
 							var thing = things[i];
-                            OwningPlayer.MoveThingTo(thing, GridType.Arena, OwningPlayer.GridPos, dontRequireAction: true);
+                            OwningPlayer.MoveThingTo(thing, GridType.Arena, OwningPlayer.ControlledThing.GridPos, dontRequireAction: true);
                         }
 					}
 				}

@@ -17,12 +17,12 @@ public class CExitingLevel : ThingComponent
         ShouldUpdate = true;
         Lifetime = 0.5f;
 
-        if(thing is RoguemojiPlayer player)
+        if(thing.Brain is RoguemojiPlayer player)
             player.VfxFadeCamera(lifetime: 0.45f, shouldFadeOut: true);
 
         thing.VfxScale(0.45f, 1f, 0.5f);
 
-        if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component))
+        if (thing is Smiley && thing.GetComponent<CIconPriority>(out var component))
             IconId = ((CIconPriority)component).AddIconPriority("😮", (int)PlayerIconPriority.ExitLevel);
 
         Thing.IsInTransit = true;
@@ -36,8 +36,8 @@ public class CExitingLevel : ThingComponent
 
         if(TimeElapsed > Lifetime)
         {
-            if (Thing is RoguemojiPlayer player)
-                RoguemojiGame.Instance.ChangeThingLevel(player, TargetLevelId, shouldAnimateFall: true);
+            if (Thing.Brain is RoguemojiPlayer player)
+                RoguemojiGame.Instance.ChangeThingLevel(Thing, TargetLevelId, shouldAnimateFall: true);
 
             Thing.AddComponent<CEnteringLevel>();
 
@@ -47,7 +47,7 @@ public class CExitingLevel : ThingComponent
 
     public override void OnRemove()
     {
-        if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component))
+        if (Thing is Smiley && Thing.GetComponent<CIconPriority>(out var component))
             ((CIconPriority)component).RemoveIconPriority(IconId);
     }
 }

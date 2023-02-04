@@ -50,7 +50,7 @@
         base.OnAfterTreeRender(firstTime);
 
         Input.AddEventListener("onsubmit", () => Submit());
-        Input.AddEventListener("onblur", () => Blur());
+        Input.AddEventListener("onblur", () => Blurred());
         Input.AddEventListener("onclick", () => Click());
         Input.AcceptsFocus = true;
         Input.AllowEmojiReplace = true;
@@ -90,7 +90,9 @@
         if (player == null)
             return;
 
-        RoguemojiGame.ChatMessageCmd(player.DisplayIcon + "(" + player.DisplayName + ") says: \"" + msg + "\"", player.PlayerNum);
+        var playerThing = player.ControlledThing;
+
+        RoguemojiGame.ChatMessageCmd(playerThing.DisplayIcon + "(" + playerThing.DisplayName + ") says: \"" + msg + "\"", playerThing.PlayerNum);
     }
 
     public void Unfocus()
@@ -99,7 +101,7 @@
             Close();
     }
 
-    void Blur()
+    void Blurred()
     {
         //Input.Text = DefaultText;
         Close();

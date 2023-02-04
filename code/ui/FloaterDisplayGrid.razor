@@ -16,11 +16,12 @@
 <root class="floater_display">
     @{
         var player = RoguemojiGame.Instance.LocalPlayer;
+        var playerThing = player.ControlledThing;
     }
 
     @foreach (var floater in GridManager.Floaters)
     {
-        if (GridManager.GridType != GridType.Arena || !floater.requireSight || player.IsCellVisible(floater.gridPos) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(player.GridPos, floater.gridPos)))
+        if (GridManager.GridType != GridType.Arena || !floater.requireSight || player.IsCellVisible(floater.gridPos) || (floater.alwaysShowWhenAdjacent && GridManager.IsAdjacent(playerThing.GridPos, floater.gridPos)))
         {
             var screenPos = Hud.Instance.GetScreenPosForGridPos(GridManager.GridType, floater.gridPos, relative: true);
             Vector2 pos = (screenPos / ScaleToScreen) + new Vector2(-RoguemojiGame.CellSize / 2, -RoguemojiGame.CellSize / 2);

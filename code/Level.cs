@@ -179,6 +179,12 @@ public partial class Level : Entity
                 if (GridManager.GetRandomEmptyGridPos(out var gridPos))
                     GridManager.SpawnThing<TreeDeciduous>(gridPos);
             }
+
+            for (int i = 0; i < 1; i++)
+            {
+                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
+                    GridManager.SpawnThing<Smiley>(gridPos);
+            }
         }
     }
 }

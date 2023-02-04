@@ -41,7 +41,7 @@ public partial class PotionAmnesia : Potion
 
     public override void ApplyEffectToThing(Thing thing)
     {
-        if (thing is RoguemojiPlayer player)
+        if (thing.Brain is RoguemojiPlayer player)
         {
             player.IdentifiedScrollTypes.Clear();
             player.IdentifiedPotionTypes.Clear();

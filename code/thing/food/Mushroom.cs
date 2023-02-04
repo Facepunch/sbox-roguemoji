@@ -32,7 +32,7 @@ public partial class Mushroom : Thing
                 user.AddSideFloater(GetStatIcon(StatType.Health), text: $"+{amountRecovered}");
                 user.AdjustStat(StatType.Health, amount);
 
-                if (user is RoguemojiPlayer && user.GetComponent<CIconPriority>(out var c))
+                if (user is Smiley && user.GetComponent<CIconPriority>(out var c))
                     ((CIconPriority)c).AddIconPriority("😋", (int)PlayerIconPriority.EatReaction, 0.5f);
 
                 break;
@@ -41,7 +41,7 @@ public partial class Mushroom : Thing
                 poison.Lifetime = 60f;
                 user.AddSideFloater(Globals.Icon(IconType.Poison));
 
-                if (user is RoguemojiPlayer && user.GetComponent<CIconPriority>(out var c2))
+                if (user is Smiley && user.GetComponent<CIconPriority>(out var c2))
                     ((CIconPriority)c2).AddIconPriority("🤢", (int)PlayerIconPriority.EatReaction, 0.5f);
 
                 break;

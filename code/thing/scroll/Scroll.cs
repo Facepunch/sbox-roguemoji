@@ -58,7 +58,7 @@ public partial class Scroll : Thing
 
     public override bool CanBeUsedBy(Thing user, bool ignoreResources = false, bool shouldLogMessage = false)
     {
-        if (user is RoguemojiPlayer player && player.IsConfused)
+        if (user.Brain is RoguemojiPlayer player && player.IsConfused)
         {
             if (shouldLogMessage)
                 RoguemojiGame.Instance.LogPersonalMessage(player, $"{Globals.Icon(IconType.Confusion)}Too confused to read scrolls!");
@@ -91,7 +91,7 @@ public partial class Scroll : Thing
     {
         RoguemojiGame.Instance.RevealScroll(ScrollType, user.GridPos, user.CurrentLevelId);
 
-        if (user is RoguemojiPlayer player)
+        if (user.Brain is RoguemojiPlayer player)
             player.InventoryGridManager.AddFloater(Globals.Icon(IconType.SacrificeScroll), GridPos, 0.3f, new Vector2(0f, 0f), new Vector2(0, 0f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.04f, scale: 1f, opacity: 0.9f);
     }
 
@@ -147,7 +147,7 @@ public partial class Scroll : Thing
     {
         HashSet<IntVector> aimingCells = new HashSet<IntVector>();
 
-        var player = thingWieldingThis as RoguemojiPlayer;
+        var player = thingWieldingThis.Brain as RoguemojiPlayer;
         if(player == null)
             return aimingCells;
 
@@ -170,7 +170,7 @@ public partial class Scroll : Thing
 
     public static bool IsPotentialInventoryAimingCell(IntVector gridPos, Thing thingWieldingThis)
     {
-        var player = thingWieldingThis as RoguemojiPlayer;
+        var player = thingWieldingThis.Brain as RoguemojiPlayer;
         if (player == null)
             return false;
 

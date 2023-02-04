@@ -20,7 +20,7 @@ public class CConfetti : ThingComponent
         if (thing.GetComponent<CActing>(out var component))
             ((CActing)component).PreventAction();
 
-        if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component2))
+        if (thing is Smiley && thing.GetComponent<CIconPriority>(out var component2))
             IconId = ((CIconPriority)component2).AddIconPriority("🥳", (int)PlayerIconPriority.Confetti);
     }
 
@@ -28,7 +28,7 @@ public class CConfetti : ThingComponent
     {
         base.Update(dt);
 
-        var player = Thing as RoguemojiPlayer;
+        var player = Thing.Brain as RoguemojiPlayer;
         if(player == null)
         {
             Remove();
@@ -40,12 +40,12 @@ public class CConfetti : ThingComponent
         {
             if(player.InventoryGridManager.Things.Count > 0)
             {
-                if (player.ContainingGridManager.GetRandomEmptyGridPosWithinRange(player.GridPos, out var emptyGridPos, _dropRange, allowNonSolid: true))
+                if (Thing.ContainingGridManager.GetRandomEmptyGridPosWithinRange(Thing.GridPos, out var emptyGridPos, _dropRange, allowNonSolid: true))
                     DropItem(player, player.InventoryGridManager.Things[0], emptyGridPos);
             }
             else if (player.EquipmentGridManager.Things.Count > 0)
             {
-                if (player.ContainingGridManager.GetRandomEmptyGridPosWithinRange(player.GridPos, out var emptyGridPos, _dropRange, allowNonSolid: true))
+                if (Thing.ContainingGridManager.GetRandomEmptyGridPosWithinRange(Thing.GridPos, out var emptyGridPos, _dropRange, allowNonSolid: true))
                     DropItem(player, player.EquipmentGridManager.Things[0], emptyGridPos);
             }
             else
@@ -63,9 +63,9 @@ public class CConfetti : ThingComponent
         player.MoveThingTo(item, GridType.Arena, gridPos, dontRequireAction: true);
 
         var time = Game.Random.Float(0.3f, 0.4f);
-        item.VfxFly(player.GridPos, lifetime: time, heightY: Game.Random.Float(20f, 55f), progressEasingType: EasingType.Linear, heightEasingType: EasingType.QuadInOut);
+        item.VfxFly(player.ControlledThing.GridPos, lifetime: time, heightY: Game.Random.Float(20f, 55f), progressEasingType: EasingType.Linear, heightEasingType: EasingType.QuadInOut);
 
-        item.CanBeSeenByPlayerClient(player.GridPos);
+        item.CanBeSeenByPlayerClient(player.ControlledThing.GridPos);
 
         var tempIconDepth = item.AddComponent<CTempIconDepth>();
         tempIconDepth.Lifetime = time;
@@ -74,13 +74,13 @@ public class CConfetti : ThingComponent
 
     public override void OnRemove()
     {
-        if (Thing is RoguemojiPlayer player)
+        if (Thing.Brain is RoguemojiPlayer player)
             player.ClearQueuedAction();
             
         if (Thing.GetComponent<CActing>(out var component))
             ((CActing)component).AllowAction();
 
-        if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component2))
+        if (Thing is Smiley && Thing.GetComponent<CIconPriority>(out var component2))
         {
             var iconPriority = ((CIconPriority)component2);
             iconPriority.RemoveIconPriority(IconId);

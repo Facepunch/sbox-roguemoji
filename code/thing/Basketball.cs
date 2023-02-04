@@ -16,7 +16,7 @@ public partial class Basketball : Thing
         Description = "Bounces back unless it's caught";
         Tooltip = "A basketball";
         IconDepth = (int)IconDepthLevel.Normal;
-        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable | ThingFlags.UseRequiresAiming;
+        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
 
         if (Game.IsServer)
         {
@@ -80,7 +80,7 @@ public partial class Basketball : Thing
         {
             if(target.WieldedThing == null)
             {
-                if(target is RoguemojiPlayer player)
+                if(target.Brain is RoguemojiPlayer player)
                 {
                     if(!player.TryPickUp(this))
                     {

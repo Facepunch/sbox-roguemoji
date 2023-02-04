@@ -106,7 +106,7 @@ public partial class Hud : RootPanel
             StopDragging();
 
         // if dragging a nearby thing, stop dragging if you move
-        if (IsDraggingThing && (!_dragStartPlayerGridPos.Equals(RoguemojiGame.Instance.LocalPlayer.GridPos)))
+        if (IsDraggingThing && (!_dragStartPlayerGridPos.Equals(RoguemojiGame.Instance.LocalPlayer.ControlledThing.GridPos)))
 		{
 			if(DraggedThing != null && DraggedThing.ContainingGridType == GridType.Arena)
 				StopDragging();
@@ -201,6 +201,14 @@ public partial class Hud : RootPanel
 
             StopDragging();
 		}
+        else
+        {
+            PanelType panelType = GetContainingPanelType(MousePosition);
+            if(panelType == PanelType.None)
+            {
+                RoguemojiGame.ClickedNothing();
+            }
+        }
     }
 
 	public void StartDragging(Thing thing, Panel panel, bool rightClick, PanelType draggedPanelType)
@@ -210,7 +218,7 @@ public partial class Hud : RootPanel
 		DraggedThing = thing;
 		DraggedPanel = panel;
         DraggedPanelType = draggedPanelType;
-		_dragStartPlayerGridPos = RoguemojiGame.Instance.LocalPlayer.GridPos;
+		_dragStartPlayerGridPos = RoguemojiGame.Instance.LocalPlayer.ControlledThing.GridPos;
         _dragStartGridPos = thing.GridPos;
         _dragStartGridType = thing.ContainingGridType;
         TimeSinceStartDragging = 0f;
@@ -356,7 +364,7 @@ public partial class Hud : RootPanel
         if (thing != null && thing.HasFlag(ThingFlags.Useable) && gridManager.GridType == GridType.Inventory)
         {
             var owningPlayer = gridManager.OwningPlayer;
-            if (owningPlayer != null && !thing.CanBeUsedBy(owningPlayer, ignoreResources: true))
+            if (owningPlayer != null && !thing.CanBeUsedBy(owningPlayer.ControlledThing, ignoreResources: true))
                 return "unusable_item";
         }
 

@@ -29,7 +29,7 @@ public class CBurning : ThingComponent
 
         Trait = thing.AddTrait("Burning", Globals.Icon(IconType.Burning), $"Being consumed by fire", offset: Vector2.Zero);
 
-        if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component2))
+        if (thing is Smiley && thing.GetComponent<CIconPriority>(out var component2))
             IconId = ((CIconPriority)component2).AddIconPriority("🥵", (int)PlayerIconPriority.Sleeping);
 
         thing.AddFloater(Globals.Icon(IconType.Burning), time: 0f, new Vector2(0f, -12f), new Vector2(0f, -12f), height: 0f, text: "", requireSight: true, 
@@ -116,7 +116,7 @@ public class CBurning : ThingComponent
     {
         Thing.RemoveTrait(Trait);
 
-        if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component))
+        if (Thing is Smiley && Thing.GetComponent<CIconPriority>(out var component))
             ((CIconPriority)component).RemoveIconPriority(IconId);
 
         Thing.RemoveFloater(Globals.Icon(IconType.Burning));

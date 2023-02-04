@@ -41,7 +41,7 @@ public partial class ScrollBlink : Scroll
 
         user.SetGridPos(targetGridPos);
 
-        if (user is RoguemojiPlayer player)
+        if (user.Brain is RoguemojiPlayer player)
             player.RecenterCamera();
 
         RoguemojiGame.Instance.RevealScroll(ScrollType, user.GridPos, user.CurrentLevelId);

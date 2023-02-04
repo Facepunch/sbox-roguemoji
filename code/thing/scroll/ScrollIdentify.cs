@@ -25,7 +25,7 @@ public partial class ScrollIdentify : Scroll
     {
         base.Use(user, gridType, targetGridPos);
 
-        var player = user as RoguemojiPlayer;
+        var player = user.Brain as RoguemojiPlayer;
         if (player == null)
             return;
 

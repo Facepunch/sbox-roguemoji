@@ -38,7 +38,7 @@ public partial class RugbyBall : Thing
         var energy = user.GetStatClamped(StatType.Energy);
         if (energy < EnergyCost && !ignoreResources)
         {
-            if (shouldLogMessage && user is RoguemojiPlayer player)
+            if (shouldLogMessage && user.Brain is RoguemojiPlayer player)
                 RoguemojiGame.Instance.LogPersonalMessage(player, $"You need {EnergyCost}{GetStatIcon(StatType.Energy)} to use {ChatDisplayIcons} but you only have {energy}{GetStatIcon(StatType.Energy)}");
 
             return false;
@@ -89,7 +89,7 @@ public class CRugbyCharge : ThingComponent
         if (thing.GetComponent<CActing>(out var component))
             ((CActing)component).PreventAction();
 
-        if (thing is RoguemojiPlayer && thing.GetComponent<CIconPriority>(out var component2))
+        if (thing is Smiley && thing.GetComponent<CIconPriority>(out var component2))
             IconId = ((CIconPriority)component2).AddIconPriority("😤", (int)PlayerIconPriority.RugbyCharge);
     }
 
@@ -169,7 +169,7 @@ public class CRugbyCharge : ThingComponent
         if (Thing.GetComponent<CActing>(out var component))
             ((CActing)component).AllowAction();
 
-        if (Thing is RoguemojiPlayer && Thing.GetComponent<CIconPriority>(out var component2))
+        if (Thing is Smiley && Thing.GetComponent<CIconPriority>(out var component2))
             ((CIconPriority)component2).RemoveIconPriority(IconId);
     }
 

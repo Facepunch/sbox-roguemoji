@@ -30,7 +30,7 @@ public partial class Peach : Thing
         user.AdjustStat(StatType.Charisma, EatCharisma);
         Destroy();
 
-        if (user is RoguemojiPlayer && user.GetComponent<CIconPriority>(out var component))
+        if (user is Smiley && user.GetComponent<CIconPriority>(out var component))
             ((CIconPriority)component).AddIconPriority("🤤", (int)PlayerIconPriority.EatReaction, 1.0f);
 
         base.Use(user);

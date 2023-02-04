@@ -41,11 +41,11 @@ public class CTargeting : ThingComponent
 
     public override void OnPlayerChangedGridPos(RoguemojiPlayer player)
     {
-        if (Thing == player)
+        if (Thing.Brain == player)
             return;
 
-        if (EvaluateTarget(player))
-            SetTarget(player);
+        if (EvaluateTarget(player.ControlledThing))
+            SetTarget(player.ControlledThing);
     }
 
     public bool EvaluateTarget(Thing other)
