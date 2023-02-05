@@ -38,7 +38,7 @@ public partial class ScrollTelekinesis : Scroll
         if (targetThing.HasFlag(ThingFlags.Solid))
         {
             Direction pullDirection = GridManager.GetDirectionForIntVector(GridManager.GetIntVectorForSlope(targetGridPos, user.GridPos));
-            targetThing.TryMove(pullDirection, dontRequireAction: true);
+            targetThing.TryMove(pullDirection, out bool switchedLevel, dontRequireAction: true);
 
             if (targetThing.GetComponent<CActing>(out var c))
                 ((CActing)c).PerformedAction();

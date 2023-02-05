@@ -192,15 +192,17 @@ public partial class Thing : Entity
             HandleFloaters(dt);
 
         //DrawDebugText(ContainingGridManager?.Name.ToString() ?? "null");
-        //DrawDebugText($"{DisplayName}{GetZPos()}");
+        //DrawDebugText($"{GridPos}");
 
         //if(HasStat(StatType.Health))
         //    DrawDebugText($"{GetStat(StatType.Health).CurrentValue}");
     }
 
-    public virtual bool TryMove(Direction direction, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
+    public virtual bool TryMove(Direction direction, out bool switchedLevel, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
     {
         Sandbox.Diagnostics.Assert.True(ContainingGridType != GridType.None);
+
+        switchedLevel = false;
 
         if (IsInTransit)
             return false;
@@ -240,7 +242,7 @@ public partial class Thing : Entity
 
         SetGridPos(newGridPos);
 
-        var switchedLevel = oldLevelId != CurrentLevelId;
+        switchedLevel = oldLevelId != CurrentLevelId;
         if (shouldAnimate && !switchedLevel)
         {
             VfxSlide(direction, 0.15f, RoguemojiGame.CellSize);
@@ -510,7 +512,7 @@ public partial class Thing : Entity
 
     public void DrawDebugText(string text)
     {
-        DrawDebugText(text, new Color(1f, 1f, 1f, 0.5f));
+        DrawDebugText(text, new Color(1f, 1f, 1f, 0.7f));
     }
 
     public void SetIcon(string icon)

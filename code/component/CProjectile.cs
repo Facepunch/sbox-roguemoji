@@ -36,7 +36,7 @@ public class CProjectile : ThingComponent
         {
             TimeSinceMove = 0f;
 
-            if (Thing.TryMove(Direction, shouldAnimate: false))
+            if (Thing.TryMove(Direction, out bool switchedLevel, shouldAnimate: false))
             {
                 CurrentDistance++;
                 if (CurrentDistance >= TotalDistance)

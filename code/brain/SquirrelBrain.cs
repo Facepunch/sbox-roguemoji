@@ -107,7 +107,7 @@ public partial class SquirrelBrain : ThingBrain
         if (path != null && path.Count > 0 && !path[0].Equals(ControlledThing.GridPos))
         {
             var dir = GridManager.GetDirectionForIntVector(path[0] - ControlledThing.GridPos);
-            ControlledThing.TryMove(dir);
+            ControlledThing.TryMove(dir, out bool switchedLevel);
         }
 
         if (ControlledThing.GetComponent<CActing>(out var component))

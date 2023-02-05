@@ -361,7 +361,12 @@ public partial class RoguemojiPlayer : ThingBrain
         //if(IsConfused && Game.Random.Int(0, 2) == 0)
         //    direction = GridManager.GetRandomDirection(cardinalOnly: false);
 
-        return ControlledThing.TryMove(direction, shouldAnimate, shouldQueueAction: false, dontRequireAction);
+        bool success = ControlledThing.TryMove(direction, out bool switchedLevel, shouldAnimate, shouldQueueAction: false, dontRequireAction);
+
+        if(success && !switchedLevel)
+            RecenterCamera(shouldAnimate: true);
+
+        return success;
 	}
 
     //public override void BumpInto(Thing other, Direction direction)
@@ -516,25 +521,6 @@ public partial class RoguemojiPlayer : ThingBrain
         fade.ShouldFadeOut = shouldFadeOut;
     }
 
-    //public override void TakeDamageFrom(Thing thing)
-    //{
-    //    if (IsDead)
-    //        return;
-
-    //    base.TakeDamageFrom(thing);
-    //}
-
-    //public override void Destroy()
-    //{
-    //    //if (IsDead)
-    //    //    return;
-
-    //    //IsDead = true;
-    //    //StopAiming();
-
-    //    //OnDied();
-    //}
-
     public override void OnDestroyed()
     {
         base.OnDestroyed();
@@ -542,6 +528,8 @@ public partial class RoguemojiPlayer : ThingBrain
         StopAiming();
 
         var ghost = ControlledThing.ContainingGridManager.SpawnThing<Ghost>(ControlledThing.GridPos);
+
+        Log.Info($"Player OnDestroyed - ControlledThing.GridPos: {ControlledThing.GridPos}");
         ghost.Brain = this;
         ControlThing(ghost);
         ghost.PlayerNum = PlayerNum;

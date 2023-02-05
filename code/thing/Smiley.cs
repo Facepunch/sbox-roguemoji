@@ -39,6 +39,14 @@ public partial class Smiley : Thing
         IconPriority.SetDefaultIcon("😀");
     }
 
+    //[Event.Tick.Client]
+    //public virtual void ClientTick()
+    //{
+    //    base.ClientTick();
+
+    //    DrawDebugText($"{GridPos}");
+    //}
+
     void SetStartingValues()
     {
         DisplayIcon = "😀";
@@ -72,12 +80,14 @@ public partial class Smiley : Thing
     }
 
 
-    public override bool TryMove(Direction direction, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
-	{
+    public override bool TryMove(Direction direction, out bool switchedLevel, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
+    {
+        switchedLevel = false;
+
         if (IsInTransit)
             return false;
 
-        var success = base.TryMove(direction, shouldAnimate, shouldQueueAction: false, dontRequireAction);
+        var success = base.TryMove(direction, out switchedLevel, shouldAnimate, shouldQueueAction: false, dontRequireAction);
 		if (success)
 		{
             if(Game.Random.Int(0, 5) == 0)

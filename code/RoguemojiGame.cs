@@ -425,14 +425,18 @@ public partial class RoguemojiGame : GameManager
             var level0 = Levels[levelId];
             level0.GridManager.GetRandomEmptyGridPos(out var gridPos);
             var smiley = level0.GridManager.SpawnThing<Smiley>(gridPos);
-            //player.ControlThing(smiley);
-            //smiley.Brain = player;
+            player.ControlThing(smiley);
+            smiley.Brain = player;
             //smiley.CurrentLevelId = levelId;
             smiley.PlayerNum = player.PlayerNum;
 
             level0.GridManager.AddPlayer(player);
 
-            ChangeThingLevel(smiley, LevelId.Forest0);
+            player.RecenterCamera();
+            player.RefreshVisibility();
+            ResetHudClient(To.Single(player));
+
+            //ChangeThingLevel(smiley, LevelId.Forest0);
             //ChangeThingLevel(player, LevelId.Test0);
 
             //player.RecenterCamera();

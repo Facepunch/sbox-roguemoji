@@ -38,6 +38,14 @@ public partial class Ghost : Thing
         Acting = AddComponent<CActing>();
     }
 
+    //[Event.Tick.Client]
+    //public virtual void ClientTick()
+    //{
+    //    base.ClientTick();
+
+    //    DrawDebugText($"{GridPos}");
+    //}
+
     void SetStartingValues()
     {
         DisplayIcon = "👻";
@@ -61,12 +69,14 @@ public partial class Ghost : Thing
         ClearTraits();
     }
 
-    public override bool TryMove(Direction direction, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
+    public override bool TryMove(Direction direction, out bool switchedLevel, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
 	{
+        switchedLevel = false;
+
         if (IsInTransit)
             return false;
 
-        var success = base.TryMove(direction, shouldAnimate, shouldQueueAction: false, dontRequireAction);
+        var success = base.TryMove(direction, out switchedLevel, shouldAnimate, shouldQueueAction: false, dontRequireAction);
 
         if(!dontRequireAction)
             Acting.PerformedAction();

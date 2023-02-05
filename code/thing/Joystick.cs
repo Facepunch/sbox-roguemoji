@@ -58,7 +58,7 @@ public partial class Joystick : Thing
         var player = (RoguemojiPlayer)user.Brain;
         bool success = player != null
             ? player.TryMove(direction, shouldQueueAction: false, shouldAnimate: false) 
-            : user.TryMove(direction, shouldAnimate: false);
+            : user.TryMove(direction, out bool switchedLevel, shouldAnimate: false);
 
         if(success)
         {
