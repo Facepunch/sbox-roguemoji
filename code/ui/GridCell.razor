@@ -135,7 +135,7 @@
                 </div>
             }
 
-            @if(Thing.HasStat(StatType.Health))
+            @if(Thing.HasStat(StatType.Health) && Thing.HasFlag(ThingFlags.Solid))
             {
                 int hp = Thing.GetStatClamped(StatType.Health);
                 int hpMax = Thing.GetStatMax(StatType.Health);
@@ -151,7 +151,7 @@
             }
         }
 
-        @if (Thing.HasStat(StatType.Durability) && Thing.ContainingGridType != GridType.Arena)
+        @if (Thing.HasStat(StatType.Durability) && Thing.HasFlag(ThingFlags.Solid))
         {
             int durability = Thing.GetStatClamped(StatType.Durability);
             int durabilityMax = Thing.GetStatMax(StatType.Durability);
@@ -213,7 +213,7 @@
     string GetPlayerClass()     { return Thing.PlayerNum > 0 ? $"icon-player-{Thing.PlayerNum}" : ""; }
     string GetSolidClass()      { return Thing.HasFlag(ThingFlags.Solid) ? "solid" : ""; }
     string GetWieldedClass()    { return IsWielded() ? "wielded" : ""; }
-    bool IsWielded()            { return Thing == RoguemojiGame.Instance.LocalPlayer?.ControlledThing.WieldedThing; }
+    bool IsWielded()            { return Thing == RoguemojiGame.Instance.LocalPlayer?.ControlledThing?.WieldedThing; }
     string GetEquipmentClass()  { return Thing.HasFlag(ThingFlags.Equipment) ? "icon_equipment" : ""; }
     string GetInventoryClass()  { return Thing.ContainingGridType == GridType.Inventory ? "is_in_inventory" : ""; }
     string GetCooldownClass(Thing thing)    { return thing.IsOnCooldown && thing.ContainingGridType != GridType.Arena ? "cell_icon_cooldown" : ""; }
@@ -240,9 +240,9 @@
         var wieldedThing = Thing.WieldedThing;
         var wieldedCooldownHash = wieldedThing != null && wieldedThing.IsOnCooldown ? wieldedThing.CooldownProgressPercent : 0f;
         var equipmentHighlightHash = Hud.Instance.GetContainingPanelType(Hud.Instance.MousePosition) == PanelType.EquipmentGrid ? 1 : 0;
-        var statHash = HashCode.Combine(playerThing.StatHash, Thing.StatHash);
+        var statHash = HashCode.Combine(playerThing?.StatHash ?? 0, Thing.StatHash);
         var identifiedHash = HashCode.Combine(Thing is Scroll scroll && player.IsScrollTypeIdentified(scroll.ScrollType) ? 1 : 0, Thing is Potion potion && player.IsPotionTypeIdentified(potion.PotionType) ? 1 : 0);
-        var playerCanSeeHash = playerThing.CanPerceiveThing(Thing) ? 1 : 0;
+        var playerCanSeeHash = (playerThing?.CanPerceiveThing(Thing) ?? false) ? 1 : 0;
         var floaterHash = Thing.HasFloaters ? Game.Random.Int(0, 9999) : 0;
         return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, HashCode.Combine(cooldownHash, wieldedCooldownHash, equipmentHighlightHash, statHash, identifiedHash), 
                                 HashCode.Combine(player.ConfusionSeed, player.HallucinatingSeed), playerCanSeeHash, floaterHash);

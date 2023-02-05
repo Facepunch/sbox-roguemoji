@@ -32,8 +32,13 @@ public partial class RoguemojiPlayer : ThingBrain
 
     private HashSet<IntVector> _wasVisible = new HashSet<IntVector>();
 
-    [ClientRpc]
     public void RefreshVisibility()
+    {
+        RefreshVisibilityClient(To.Single(this));
+    }
+
+    [ClientRpc]
+    void RefreshVisibilityClient()
     {
         if (!SeenCells.ContainsKey(ControlledThing.CurrentLevelId))
             SeenCells.Add(ControlledThing.CurrentLevelId, new HashSet<IntVector>());
@@ -205,14 +210,9 @@ public partial class RoguemojiPlayer : ThingBrain
         VisibleCells.Add(gridPos);
     }
 
-    public void ClearCellVisibility()
-    {
-        VisibleCells.Clear();
-    }
-
     public void ComputeVisibility(IntVector origin, int rangeLimit)
     {
-        ClearCellVisibility();
+        VisibleCells.Clear();
 
         SetCellVisible(origin.x, origin.y);
         for (uint octant = 0; octant < 8; octant++) 

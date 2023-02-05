@@ -21,7 +21,7 @@ public enum ThingFlags
     DoesntBumpThings = (1 << 10),
 }
 
-public enum FactionType { Neutral, Player, Enemy }
+public enum FactionType { Neutral, Player, Enemy, Ghost, }
 
 public class TattooData
 {
@@ -43,9 +43,9 @@ public partial class Thing : Entity
     [Net] public GridManager ContainingGridManager { get; set; }
 
     [Net] public string DisplayIcon { get; protected set; }
-    [Net] public string DisplayName { get; protected set; }
+    [Net] public string DisplayName { get; set; }
     [Net] public string Description { get; protected set; }
-    [Net] public string Tooltip { get; protected set; }
+    [Net] public string Tooltip { get; set; }
     public virtual string ChatDisplayIcons => DisplayIcon;
 
     public bool ShouldUpdate { get; set; }
@@ -169,7 +169,7 @@ public partial class Thing : Entity
 
     public bool NeedsUpdate()
     {
-        return ShouldUpdate || ThingComponents.Count > 0 || IsOnCooldown;
+        return ShouldUpdate || ThingComponents.Count > 0 || IsOnCooldown || Brain != null;
     }
 
     // todo: dont call this for everything
@@ -208,8 +208,16 @@ public partial class Thing : Entity
         if (direction == Direction.None)
             return true;
 
+        if (HasComponent<CConfused>() && Game.Random.Int(0, 2) == 0)
+        {
+            Direction oldDir = direction;
+            direction = GridManager.GetRandomDirection(cardinalOnly: false);
+        }
+
         IntVector vec = GridManager.GetIntVectorForDirection(direction);
         IntVector newGridPos = GridPos + vec;
+
+        var oldLevelId = CurrentLevelId;
 
         if (!ContainingGridManager.IsGridPosInBounds(newGridPos))
         {
@@ -232,8 +240,11 @@ public partial class Thing : Entity
 
         SetGridPos(newGridPos);
 
-        if (shouldAnimate)
-            VfxSlide(direction, 0.2f, RoguemojiGame.CellSize);
+        var switchedLevel = oldLevelId != CurrentLevelId;
+        if (shouldAnimate && !switchedLevel)
+        {
+            VfxSlide(direction, 0.15f, RoguemojiGame.CellSize);
+        }
 
         return true;
     }
@@ -272,6 +283,8 @@ public partial class Thing : Entity
     {
         //if (!HasStat(StatType.Health))
         //    return;
+
+        OnTakeDamageFrom(thing);
 
         Hurt(thing.GetAttackDamage(), showImpactFloater: true);
     }

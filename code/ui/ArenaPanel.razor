@@ -114,6 +114,10 @@
     @{
         var player = RoguemojiGame.Instance.LocalPlayer;
         var playerThing = player.ControlledThing;
+
+        if (playerThing == null)
+            return;
+
         var level = RoguemojiGame.Instance.GetLevel(playerThing.CurrentLevelId);
     }
 

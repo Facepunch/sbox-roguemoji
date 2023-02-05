@@ -12,7 +12,7 @@ public enum VerbType { Use, Read }
 public enum HallucinationTextType { Icon, Name, Tooltip, Description }
 public enum PlayerIconPriority { Default, Move, ExitLevel, EnterLevel, AcademicCapNerd, SpeedIncrease, Invisible, GlassesOfPerception, Sunglasses, Organize, Confetti, Blinded, Poisoned, Attack, Confused, Fearful, 
     Hallucinating, Sleeping, EatReaction, TakeDamage, Stunned, RugbyCharge, Dead }
-public enum IconDepthLevel { Puddle = 0, Hole = 1, Normal = 2, Solid = 5, Player = 6, Projectile = 8, Effect = 9 }
+public enum IconDepthLevel { Puddle = 0, Hole = 1, Normal = 2, Solid = 5, Player = 6, Ghost = 7, Projectile = 8, Effect = 9 }
 
 public struct HallucinationData
 {

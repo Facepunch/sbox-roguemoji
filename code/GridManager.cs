@@ -53,9 +53,9 @@ public partial class GridManager : Entity
 		if(GridType == GridType.Arena)
 		{
 			foreach (var player in VisionChangedPlayers)
-				player.RefreshVisibility(To.Single(player));
+				player.RefreshVisibility();
 
-			VisionChangedPlayers.Clear();
+            VisionChangedPlayers.Clear();
 
             foreach (var player in CheckSeenThingsPlayers)
                 player.CheckForUnnecessarySeenThings(To.Single(player));

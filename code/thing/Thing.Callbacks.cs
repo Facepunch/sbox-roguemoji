@@ -96,9 +96,31 @@ public partial class Thing : Entity
     public virtual void OnRemoveComponent(TypeDescription type) { foreach (var component in ThingComponents) { component.Value.OnRemoveComponent(type); } }
     public virtual void OnCooldownStart() { foreach (var component in ThingComponents) { component.Value.OnCooldownStart(); } }
     public virtual void OnCooldownFinish() { foreach (var component in ThingComponents) { component.Value.OnCooldownFinish(); } }
-    public virtual void OnFindTarget(Thing target) { foreach (var component in ThingComponents) { component.Value.OnFindTarget(target); } }
-    public virtual void OnLoseTarget() { foreach (var component in ThingComponents) { component.Value.OnLoseTarget(); } }
+    public virtual void OnFindTarget(Thing target) 
+    { 
+        foreach (var component in ThingComponents) { component.Value.OnFindTarget(target); }
+        Brain?.OnFindTarget(target);
+    }
+    public virtual void OnLoseTarget() 
+    { 
+        foreach (var component in ThingComponents) { component.Value.OnLoseTarget(); }
+        Brain?.OnLoseTarget();
+    }
     public virtual void OnPlayerChangedGridPos(RoguemojiPlayer player) { foreach (var component in ThingComponents) { component.Value.OnPlayerChangedGridPos(player); } }
-    public virtual void OnDestroyed() { foreach (var component in ThingComponents) { component.Value.OnThingDestroyed(); } }
+    public virtual void OnTakeDamageFrom(Thing thing)
+    {
+        foreach (var component in ThingComponents) { component.Value.OnTakeDamageFrom(thing); }
+        Brain?.OnTakeDamageFrom(thing);
+    }
+    public virtual void OnHurt(int amount) 
+    { 
+        foreach (var component in ThingComponents) { component.Value.OnHurt(amount); }
+        Brain?.OnHurt(amount);
+    }
+    public virtual void OnDestroyed() 
+    { 
+        foreach (var component in ThingComponents) { component.Value.OnThingDestroyed(); }
+        Brain?.OnDestroyed();
+    }
     public virtual void OnDied() { foreach (var component in ThingComponents) { component.Value.OnThingDied(); } }
 }

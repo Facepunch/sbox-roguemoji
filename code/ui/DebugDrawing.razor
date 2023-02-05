@@ -88,7 +88,7 @@
             var pos = Hud.Instance.GetScreenPosForGridPos(cell.gridType, cell.gridPos);
             GraphicsX.Circle(pos, 18f / ScaleFromScreen, 15f / ScaleFromScreen, cell.color);
         }
-        
+
     }
 
     public void GridLine(IntVector a, IntVector b, Color color, float time, GridType gridTypeA = GridType.Arena, GridType gridTypeB = GridType.Arena)
@@ -101,5 +101,11 @@
     public void GridCell(IntVector gridPos, Color color, float time, GridType gridType = GridType.Arena)
     {
         DebugGridCells.Add(new DebugGridCellData(gridPos, color, time, gridType));
+    }
+
+    public void Restart()
+    {
+        DebugLines.Clear();
+        DebugGridCells.Clear();
     }
 }

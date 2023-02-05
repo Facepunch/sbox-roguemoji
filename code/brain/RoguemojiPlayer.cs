@@ -114,6 +114,7 @@ public partial class RoguemojiPlayer : ThingBrain
     [ClientRpc]
     public void RestartClient()
     {
+        VisibleCells.Clear();
         SeenCells.Clear();
         SeenThings.Clear();
 
@@ -218,9 +219,9 @@ public partial class RoguemojiPlayer : ThingBrain
         if (SelectedThing != null && !ControlledThing.CanPerceiveThing(SelectedThing))
             SelectThing(null);
 
-        ControlledThing.DebugText = "...";
-        if (QueuedAction != null)
-            ControlledThing.DebugText = QueuedActionName;
+        //ControlledThing.DebugText = "...";
+        //if (QueuedAction != null)
+        //    ControlledThing.DebugText = QueuedActionName;
     }
 
 	public override void Simulate(IClient cl )
@@ -339,9 +340,6 @@ public partial class RoguemojiPlayer : ThingBrain
 
     public bool TryMove(Direction direction, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
 	{
-        if (ControlledThing.IsInTransit)
-            return false;
-
         CActing acting = null;
         if (ControlledThing.GetComponent<CActing>(out var component))
             acting = (CActing)component;
@@ -360,34 +358,10 @@ public partial class RoguemojiPlayer : ThingBrain
             return false;
         }
 
-        if(IsConfused && Game.Random.Int(0, 2) == 0)
-            direction = GridManager.GetRandomDirection(cardinalOnly: false);
+        //if(IsConfused && Game.Random.Int(0, 2) == 0)
+        //    direction = GridManager.GetRandomDirection(cardinalOnly: false);
 
-        var oldLevelId = ControlledThing.CurrentLevelId;
-
-        //var success = base.TryMove(direction, shouldAnimate: false, shouldQueueAction: false);
-        var success = ControlledThing.TryMove(direction, shouldAnimate: false, shouldQueueAction: false);
-        if (success)
-		{
-            var switchedLevel = oldLevelId != ControlledThing.CurrentLevelId;
-            var movedCamera = RecenterCamera(shouldAnimate: !switchedLevel);
-
-            if(shouldAnimate && !switchedLevel)
-                ControlledThing.VfxSlide(direction, 0.1f, RoguemojiGame.CellSize);
-            //VfxSlide(direction, movedCamera ? 0.1f : 0.2f, RoguemojiGame.CellSize);
-
-            //if(Game.Random.Int(0, 5) == 0)
-            //    IconPriority.AddIconPriority(Utils.GetRandomIcon("😄", "🙂"), (int)PlayerIconPriority.Move, 1.0f);
-        }
-        else 
-		{
-            //IconPriority.AddIconPriority("😠", (int)PlayerIconPriority.Attack, 0.4f);
-        }
-
-        //if(!dontRequireAction)
-        //    acting.PerformedAction();
-
-		return success;
+        return ControlledThing.TryMove(direction, shouldAnimate, shouldQueueAction: false, dontRequireAction);
 	}
 
     //public override void BumpInto(Thing other, Direction direction)
@@ -454,11 +428,6 @@ public partial class RoguemojiPlayer : ThingBrain
             gridW >= screenW ? Math.Clamp(offset.x, 0, gridManager.GridWidth - RoguemojiGame.ArenaPanelWidth) : -(screenW - gridW) / 2,
             gridH >= screenH ? Math.Clamp(offset.y, 0, gridManager.GridHeight - RoguemojiGame.ArenaPanelHeight) : -(screenH - gridH) / 2
         );
-
-        //CameraGridOffset = new IntVector(
-        //    Math.Clamp(offset.x, 0, Math.Max(ContainingGridManager.GridWidth - RoguemojiGame.ArenaPanelWidth, 0)),
-        //    Math.Clamp(offset.y, 0, Math.Max(ContainingGridManager.GridHeight - RoguemojiGame.ArenaPanelHeight, 0))
-        //);
 
         return !CameraGridOffset.Equals(currOffset);
     }
@@ -566,27 +535,41 @@ public partial class RoguemojiPlayer : ThingBrain
     //    //OnDied();
     //}
 
+    public override void OnDestroyed()
+    {
+        base.OnDestroyed();
+
+        StopAiming();
+
+        var ghost = ControlledThing.ContainingGridManager.SpawnThing<Ghost>(ControlledThing.GridPos);
+        ghost.Brain = this;
+        ControlThing(ghost);
+        ghost.PlayerNum = PlayerNum;
+        ghost.DisplayName = $"Ghost of {Client.Name}";
+        ghost.Tooltip = $"ghost of {Client.Name}";
+    }
+
     public void PickUpTopItem()
     {
-        //var thing = ContainingGridManager.GetThingsAt(GridPos).WithAll(ThingFlags.CanBePickedUp).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
-        //TryPickUp(thing);
+        var thing = ControlledThing.ContainingGridManager.GetThingsAt(ControlledThing.GridPos).WithAll(ThingFlags.CanBePickedUp).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+        TryPickUp(thing);
     }
 
     public bool TryPickUp(Thing thing, bool dontRequireAction = true)
     {
-        //if (thing == null)
-        //    return false;
+        if (thing == null)
+            return false;
 
-        //if (InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
-        //{
-        //    MoveThingTo(thing, GridType.Inventory, emptyGridPos, dontRequireAction, wieldIfPossible: true);
-        //    return true;
-        //}
-        //else if (thing.HasFlag(ThingFlags.Equipment) && EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPosEquipment))
-        //{
-        //    MoveThingTo(thing, GridType.Equipment, emptyGridPosEquipment, dontRequireAction);
-        //    return true;
-        //}
+        if (InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
+        {
+            MoveThingTo(thing, GridType.Inventory, emptyGridPos, dontRequireAction, wieldIfPossible: true);
+            return true;
+        }
+        else if (thing.HasFlag(ThingFlags.Equipment) && EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPosEquipment))
+        {
+            MoveThingTo(thing, GridType.Equipment, emptyGridPosEquipment, dontRequireAction);
+            return true;
+        }
 
         return false;
     }
@@ -839,6 +822,9 @@ public partial class RoguemojiPlayer : ThingBrain
 
     public void GridCellClicked(IntVector gridPos, GridType gridType, bool rightClick, bool shift, bool doubleClick, bool visible = true)
     {
+        if (ControlledThing == null)
+            return;
+
         if (gridType == GridType.Arena)
         {
             var level = RoguemojiGame.Instance.GetLevel(ControlledThing.CurrentLevelId);
@@ -1085,7 +1071,7 @@ public partial class RoguemojiPlayer : ThingBrain
     {
         if (statType == StatType.Sight)
         {
-            RefreshVisibility(To.Single(this));
+            RefreshVisibility();
         }
     }
 
@@ -1198,8 +1184,8 @@ public partial class RoguemojiPlayer : ThingBrain
     {
         base.OnChangedGridPos();
 
-        RefreshVisibility(To.Single(this));
-        //ContainingGridManager.PlayerChangedGridPos(this);
+        RefreshVisibility();
+        ControlledThing.ContainingGridManager.PlayerChangedGridPos(this);
 
         if(IsAiming)
             RefreshWieldedThingTargetAiming();

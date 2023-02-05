@@ -77,19 +77,9 @@ public partial class Smiley : Thing
         if (IsInTransit)
             return false;
 
-        //if(IsConfused && Game.Random.Int(0, 2) == 0)
-        //    direction = GridManager.GetRandomDirection(cardinalOnly: false);
-
-        var oldLevelId = CurrentLevelId;
-
-        var success = base.TryMove(direction, shouldAnimate: false, shouldQueueAction: false);
+        var success = base.TryMove(direction, shouldAnimate, shouldQueueAction: false, dontRequireAction);
 		if (success)
 		{
-            var switchedLevel = oldLevelId != CurrentLevelId;
-
-            if(shouldAnimate && !switchedLevel)
-                VfxSlide(direction, 0.1f, RoguemojiGame.CellSize);
-
             if(Game.Random.Int(0, 5) == 0)
                 IconPriority.AddIconPriority(Utils.GetRandomIcon("😄", "🙂"), (int)PlayerIconPriority.Move, 1.0f);
         }
@@ -124,18 +114,18 @@ public partial class Smiley : Thing
         IconPriority.AddIconPriority(Utils.GetRandomIcon("😲", "😲", "😧", "😨") , (int)PlayerIconPriority.TakeDamage, 1.0f);
     }
 
-    public override void Destroy()
-    {
-        IconPriority.AddIconPriority("💀", (int)PlayerIconPriority.Dead);
+    //public override void Destroy()
+    //{
+    //    IconPriority.AddIconPriority("💀", (int)PlayerIconPriority.Dead);
 
-        OnDied();
-    }
+    //    OnDied();
+    //}
 
-    public void PickUpTopItem()
-    {
-        var thing = ContainingGridManager.GetThingsAt(GridPos).WithAll(ThingFlags.CanBePickedUp).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
-        TryPickUp(thing);
-    }
+    //public void PickUpTopItem()
+    //{
+    //    var thing = ContainingGridManager.GetThingsAt(GridPos).WithAll(ThingFlags.CanBePickedUp).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+    //    TryPickUp(thing);
+    //}
 
     public bool TryPickUp(Thing thing, bool dontRequireAction = true)
     {
@@ -145,31 +135,31 @@ public partial class Smiley : Thing
         return false;
     }
 
-    public void ThrowWieldedThing(Direction direction)
-    {
-        if (WieldedThing == null || direction == Direction.None)
-            return;
+    //public void ThrowWieldedThing(Direction direction)
+    //{
+    //    if (WieldedThing == null || direction == Direction.None)
+    //        return;
 
-        var projectile = WieldedThing.AddComponent<CProjectile>();
-        projectile.Direction = direction;
-        projectile.MoveDelay = 0.1f;
-        projectile.TotalDistance = 5;
-        projectile.Thrower = this;
+    //    var projectile = WieldedThing.AddComponent<CProjectile>();
+    //    projectile.Direction = direction;
+    //    projectile.MoveDelay = 0.1f;
+    //    projectile.TotalDistance = 5;
+    //    projectile.Thrower = this;
 
-        MoveThingTo(WieldedThing, GridType.Arena, GridPos);
-    }
+    //    MoveThingTo(WieldedThing, GridType.Arena, GridPos);
+    //}
 
-    public void DropWieldedItem()
-    {
-        if (WieldedThing != null)
-            MoveThingTo(WieldedThing, GridType.Arena, GridPos);
-    }
+    //public void DropWieldedItem()
+    //{
+    //    if (WieldedThing != null)
+    //        MoveThingTo(WieldedThing, GridType.Arena, GridPos);
+    //}
 
-    void TryEquipThing(Thing thing)
-    {
-        //if (EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
-        //    MoveThingTo(thing, GridType.Equipment, emptyGridPos);
-    }
+    //void TryEquipThing(Thing thing)
+    //{
+    //    //if (EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
+    //    //    MoveThingTo(thing, GridType.Equipment, emptyGridPos);
+    //}
 
     public override void UseWieldedThing()
     {
@@ -211,13 +201,13 @@ public partial class Smiley : Thing
         
     }
 
-    public void WieldThing(Thing thing, bool dontRequireAction = false)
-    {
-        base.WieldThing(thing);
+    //public void WieldThing(Thing thing, bool dontRequireAction = false)
+    //{
+    //    base.WieldThing(thing);
 
-        if (!dontRequireAction)
-            Acting.PerformedAction();
-    }
+    //    if (!dontRequireAction)
+    //        Acting.PerformedAction();
+    //}
 
     void FinishInitStats()
     {
@@ -230,28 +220,28 @@ public partial class Smiley : Thing
             energy.CurrentValue = energy.MaxValue;
     }
 
-    public void StartAimingThrow()
-    {
-        if (WieldedThing == null)
-            return;
+    //public void StartAimingThrow()
+    //{
+    //    if (WieldedThing == null)
+    //        return;
 
-        //StartAiming(AimingSource.Throwing, AimingType.Direction, GridType.Arena);
-        //RoguemojiGame.Instance.LogMessageClient(To.Single(this), "Press WASD to throw or F to cancel", playerNum: 0);
-    }
+    //    //StartAiming(AimingSource.Throwing, AimingType.Direction, GridType.Arena);
+    //    //RoguemojiGame.Instance.LogMessageClient(To.Single(this), "Press WASD to throw or F to cancel", playerNum: 0);
+    //}
 
-    public void ConfirmAiming(Direction direction)
-    {
+    //public void ConfirmAiming(Direction direction)
+    //{
         
-    }
+    //}
 
-    public void ConfirmAiming(GridType gridType, IntVector gridPos)
-    {
+    //public void ConfirmAiming(GridType gridType, IntVector gridPos)
+    //{
 
-    }
+    //}
 
-    public bool IsInInventory(Thing thing)
-    {
-        //return thing.ContainingGridManager.GridType == GridType.Inventory && thing.ContainingGridManager.OwningPlayer == this;
-        return false;
-    }
+    //public bool IsInInventory(Thing thing)
+    //{
+    //    //return thing.ContainingGridManager.GridType == GridType.Inventory && thing.ContainingGridManager.OwningPlayer == this;
+    //    return false;
+    //}
 }

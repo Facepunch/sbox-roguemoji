@@ -64,6 +64,8 @@ public abstract class ThingComponent
     public virtual void OnFindTarget(Thing target) { }
     public virtual void OnLoseTarget() { }
     public virtual void OnPlayerChangedGridPos(RoguemojiPlayer player) { }
+    public virtual void OnTakeDamageFrom(Thing thing) { }
+    public virtual void OnHurt(int amount) { }
     public virtual void OnRemove() { }
     public virtual void OnThingDestroyed() { }
     public virtual void OnThingDied() { }

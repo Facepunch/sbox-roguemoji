@@ -482,5 +482,6 @@ public partial class Hud : RootPanel
         Floaters.Clear();
         StopDragging();
         MainPanel.Chatbox.Restart();
+        DebugDrawing.Restart();
     }
 }

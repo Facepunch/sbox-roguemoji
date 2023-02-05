@@ -72,8 +72,8 @@ public partial class RoguemojiGame : GameManager
 		if (Game.IsServer)
 		{
             Levels = new Dictionary<LevelId, Level>();
-            //CreateLevel(LevelId.Forest0);
-            CreateLevel(LevelId.Test0);
+            CreateLevel(LevelId.Forest0);
+            //CreateLevel(LevelId.Test0);
 
             Players = new List<RoguemojiPlayer>();
 
@@ -175,8 +175,8 @@ public partial class RoguemojiGame : GameManager
 	{
 		base.ClientJoined(client);
 
-        //var levelId = LevelId.Forest0;
-        var levelId = LevelId.Test0;
+        var levelId = LevelId.Forest0;
+        //var levelId = LevelId.Test0;
 
         var level0 = Levels[levelId];
 
@@ -187,10 +187,10 @@ public partial class RoguemojiGame : GameManager
         RoguemojiPlayer player = new RoguemojiPlayer();
         player.PlayerNum = ++PlayerNum;
 
-        player.ControlledThing = smiley;
+        player.ControlThing(smiley);
         smiley.Brain = player;
 
-        smiley.CurrentLevelId = levelId;
+        //smiley.CurrentLevelId = levelId;
         smiley.PlayerNum = player.PlayerNum;
         
         client.Pawn = player;
@@ -200,7 +200,7 @@ public partial class RoguemojiGame : GameManager
         Players.Add(player);
 
         player.RecenterCamera();
-        player.RefreshVisibility(To.Single(player));
+        player.RefreshVisibility();
     }
 
 	public override void ClientDisconnect(IClient client, NetworkDisconnectionReason reason)
@@ -417,25 +417,26 @@ public partial class RoguemojiGame : GameManager
             //Log.Info($"Restart - player: {player.PlayerNum}");
 
 			player.Restart();
-            //player.RestartClient();
-            player.RestartClient(To.Everyone);
+            player.RestartClient();
+            //player.RestartClient(To.Everyone);
 
-            //var levelId = LevelId.Forest0;
-            var levelId = LevelId.Test0;
+            var levelId = LevelId.Forest0;
+            //var levelId = LevelId.Test0;
             var level0 = Levels[levelId];
             level0.GridManager.GetRandomEmptyGridPos(out var gridPos);
             var smiley = level0.GridManager.SpawnThing<Smiley>(gridPos);
-            player.ControlledThing = smiley;
-            smiley.Brain = player;
-            smiley.CurrentLevelId = levelId;
+            //player.ControlThing(smiley);
+            //smiley.Brain = player;
+            //smiley.CurrentLevelId = levelId;
             smiley.PlayerNum = player.PlayerNum;
-            player.RecenterCamera();
-            player.RefreshVisibility(To.Single(player));
 
             level0.GridManager.AddPlayer(player);
 
-            //ChangeThingLevel(player, LevelId.Forest0);
+            ChangeThingLevel(smiley, LevelId.Forest0);
             //ChangeThingLevel(player, LevelId.Test0);
+
+            //player.RecenterCamera();
+            //player.RefreshVisibility();
         }
 
         Log.Info($"# Entities: {Entity.All.Count()}");

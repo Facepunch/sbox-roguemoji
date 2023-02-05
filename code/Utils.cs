@@ -398,7 +398,7 @@ public static class Utils
     {
         char[] characters = input.ToCharArray();
 
-        int mixedCounter = 1;
+        int mixedCounter = 2;
 
         Random rng = new Random(seed);
         for (int i = 0; i < characters.Length - 1; i++)
@@ -410,7 +410,7 @@ public static class Utils
             char temp = characters[i];
             characters[i] = characters[randomIndex];
             characters[randomIndex] = temp;
-            mixedCounter += mixedCounter + 5;
+            mixedCounter += mixedCounter + 6;
         }
 
         return new string(characters);

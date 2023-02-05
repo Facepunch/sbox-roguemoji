@@ -62,6 +62,9 @@
 
     IEnumerable<Thing> GetThings(RoguemojiPlayer player)
     {
+        if (player.ControlledThing == null)
+            return new List<Thing>();
+
         return player.ControlledThing.ContainingGridManager.GetThingsAtClient(player.ControlledThing.GridPos).WithAll(ThingFlags.CanBePickedUp).WithNone(ThingFlags.Solid).OrderByDescending(x => x.GetZPos());
     }
 
@@ -80,7 +83,7 @@
     protected override int BuildHash()
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
-        if (player == null)
+        if (player == null || player.ControlledThing == null)
             return 0;
 
         var things = GetThings(player).ToList();

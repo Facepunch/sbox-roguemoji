@@ -134,6 +134,17 @@ public partial class Level : Entity
                 if (GridManager.GetRandomEmptyGridPos(out var gridPos))
                     GridManager.SpawnThing<Squirrel>(gridPos);
             }
+
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    if (GridManager.GetRandomEmptyGridPos(out var gridPos))
+            //    {
+            //        var smiley = GridManager.SpawnThing<Smiley>(gridPos);
+            //        smiley.AddComponent<CTargeting>();
+            //        smiley.Brain = new SquirrelBrain();
+            //        smiley.Brain.ControlThing(smiley);
+            //    }
+            //}
         }
         else if(levelId == LevelId.Forest1)
         {

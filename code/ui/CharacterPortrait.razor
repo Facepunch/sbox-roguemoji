@@ -106,6 +106,10 @@
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
         var playerThing = player.ControlledThing;
+
+        if (playerThing == null)
+            return 0;
+
         var floaterHash = playerThing.HasFloaters ? Game.Random.Int(0, 9999) : 0;
         return HashCode.Combine(playerThing.GetInfoDisplayHash(), playerThing.ActionRechargePercent, playerThing.StatHash, player.ConfusionSeed, player.HallucinatingSeed, floaterHash);
     }
