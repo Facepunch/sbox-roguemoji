@@ -20,8 +20,6 @@ public partial class RoguemojiPlayer : ThingBrain
 
     [Net] public Thing SelectedThing { get; private set; }
 
-    [Net] public bool IsDead { get; set; }
-
     public Dictionary<TypeDescription, PlayerComponent> PlayerComponents = new Dictionary<TypeDescription, PlayerComponent>();
 
     public IQueuedAction QueuedAction { get; private set; }
@@ -71,7 +69,6 @@ public partial class RoguemojiPlayer : ThingBrain
 
     void SetStartingValues()
     {
-        IsDead = false;
         QueuedAction = null;
         QueuedActionName = "";
         IsAiming = false;
@@ -234,7 +231,7 @@ public partial class RoguemojiPlayer : ThingBrain
             if (Input.Pressed(InputButton.View)) 
                 CharacterHotkeyPressed();
 
-            if (!IsDead && !ControlledThing.IsInTransit)
+            if (!ControlledThing.IsInTransit)
             {
                 if (!IsAiming)
                 {
@@ -340,6 +337,9 @@ public partial class RoguemojiPlayer : ThingBrain
 
     public bool TryMove(Direction direction, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
 	{
+        if (ControlledThing.IsInTransit)
+            return false;
+
         CActing acting = null;
         if (ControlledThing.GetComponent<CActing>(out var component))
             acting = (CActing)component;
@@ -676,9 +676,6 @@ public partial class RoguemojiPlayer : ThingBrain
 
     public void MoveThingTo(Thing thing, GridType targetGridType, IntVector targetGridPos, bool dontRequireAction = false, bool wieldIfPossible = false)
     {
-        if (IsDead)
-            return;
-
         if (IsAiming)
             StopAiming();
 
@@ -764,7 +761,7 @@ public partial class RoguemojiPlayer : ThingBrain
 
     public void WieldThing(Thing thing, bool dontRequireAction = false)
     {
-        if (IsDead || ControlledThing.WieldedThing == thing)
+        if (ControlledThing.WieldedThing == thing)
             return;
 
         if (IsAiming)
@@ -789,7 +786,7 @@ public partial class RoguemojiPlayer : ThingBrain
 
     public void SwapGridThingPos(Thing thing, GridType gridType, IntVector targetGridPos)
     {
-        if (IsDead || gridType == GridType.Arena)
+        if (gridType == GridType.Arena)
             return;
 
         var gridManager = GetGridManager(gridType);
