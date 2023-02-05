@@ -526,10 +526,10 @@ public partial class RoguemojiPlayer : ThingBrain
         base.OnDestroyed();
 
         StopAiming();
+        DropAllItems();
 
         var ghost = ControlledThing.ContainingGridManager.SpawnThing<Ghost>(ControlledThing.GridPos);
 
-        Log.Info($"Player OnDestroyed - ControlledThing.GridPos: {ControlledThing.GridPos}");
         ghost.Brain = this;
         ControlThing(ghost);
         ghost.PlayerNum = PlayerNum;
@@ -1214,6 +1214,30 @@ public partial class RoguemojiPlayer : ThingBrain
     public bool IsPotionTypeIdentified(PotionType potionType)
     {
         return IdentifiedPotionTypes.Contains(potionType);
+    }
+
+    public void DropAllItems()
+    {
+        int RANGE = 1;
+
+        while(InventoryGridManager.Things.Count > 0)
+        {
+            if (Game.Random.Int(0, 1) == 0 && ControlledThing.ContainingGridManager.GetRandomEmptyGridPosWithinRange(ControlledThing.GridPos, out var emptyGridPos, RANGE, allowNonSolid: true))
+                MoveThingTo(InventoryGridManager.Things[0], GridType.Arena, emptyGridPos, dontRequireAction: true);
+            else
+                MoveThingTo(InventoryGridManager.Things[0], GridType.Arena, ControlledThing.GridPos, dontRequireAction: true);
+        }
+            
+
+        while (EquipmentGridManager.Things.Count > 0)
+        {
+            if (Game.Random.Int(0, 1) == 0 && ControlledThing.ContainingGridManager.GetRandomEmptyGridPosWithinRange(ControlledThing.GridPos, out var emptyGridPos, RANGE, allowNonSolid: true))
+                MoveThingTo(EquipmentGridManager.Things[0], GridType.Arena, emptyGridPos, dontRequireAction: true);
+            else
+                MoveThingTo(EquipmentGridManager.Things[0], GridType.Arena, ControlledThing.GridPos, dontRequireAction: true);
+        }
+
+        DropWieldedItem();
     }
 }
 
