@@ -15,6 +15,7 @@ public partial class Telescope : Thing
         Tooltip = "A telescope";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
+        Flammability = 9;
 
         if (Game.IsServer)
         {

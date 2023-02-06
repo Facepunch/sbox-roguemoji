@@ -16,6 +16,7 @@ public partial class PuddleBlood : Thing
         IconDepth = (int)IconDepthLevel.Normal;
         ShouldUpdate = true;
         Flags = ThingFlags.Selectable;
+        Flammability = 0;
     }
 
     // todo: make splashing noise when you move onto it

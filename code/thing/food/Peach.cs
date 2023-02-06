@@ -15,6 +15,7 @@ public partial class Peach : Thing
         Tooltip = "A peach";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
+        Flammability = 13;
 
         if (Game.IsServer)
         {

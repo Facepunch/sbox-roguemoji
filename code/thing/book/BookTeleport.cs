@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Roguemoji;
-public partial class BookTeleport : Thing
+public partial class BookTeleport : Book
 {
     [Net] public int ManaCost { get; private set; }
     [Net] public int ReqInt { get; private set; }
@@ -14,12 +14,9 @@ public partial class BookTeleport : Thing
 
     public BookTeleport()
 	{
-		DisplayIcon = "📘";
         DisplayName = "Book of Teleport";
         Description = "Teleport to a random place on the current floor";
         Tooltip = "A book of Teleport";
-        IconDepth = (int)IconDepthLevel.Normal;
-        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         SetTattoo(Globals.Icon(IconType.Teleport), scale: 0.5f, offset: new Vector2(0.5f, -4f), offsetWielded: new Vector2(0f, 0f), offsetInfo: new Vector2(1f, -1f), offsetCharWielded: new Vector2(2.5f, -6f), offsetInfoWielded: new Vector2(-1f, -2f));
 

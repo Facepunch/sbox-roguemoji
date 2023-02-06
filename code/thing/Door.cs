@@ -12,6 +12,7 @@ public partial class Door : Thing
         Tooltip = "A door";
         Flags = ThingFlags.Solid | ThingFlags.Selectable;
         PathfindMovementCost = 15f;
+        Flammability = 0;
 
         if (Game.IsServer)
         {

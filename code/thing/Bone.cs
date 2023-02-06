@@ -11,6 +11,7 @@ public partial class Bone : Thing
         IconDepth = (int)IconDepthLevel.Normal;
 		Tooltip = "A bone";
 		Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
+        Flammability = 8;
 
         if (Game.IsServer)
         {

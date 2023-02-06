@@ -26,6 +26,7 @@
         //filter: blur(5px);
         //transform-origin: 0% 50%;
         font-family: W10Emoji;
+        //filter: brightness(25.0);
     }
 
     .is_in_inventory {
@@ -54,7 +55,6 @@
     .wielded {
         background-color: #5555ff22;
         border-radius: 3px;
-        //filter: brightness(15.0);
     }
 
     .icon_equipment {
@@ -115,7 +115,7 @@
     }
 </style>
 
-<root class="icon @GetWieldedClass() @GetSolidClass()">
+<root class="icon @GetWieldedClass() @GetSolidClass()" style="filter: brightness(@(Thing.IgnitionAmount > 0 ? Utils.Map(Thing.IgnitionAmount, 0, Globals.IGNITION_MAX, 1.0f, Globals.IGNITION_BRIGHTNESS_MAX, EasingType.QuadIn) : 1.0f));">
     @{
         var player = RoguemojiGame.Instance.LocalPlayer;
         var playerThing = player.ControlledThing;
@@ -244,8 +244,8 @@
         var identifiedHash = HashCode.Combine(Thing is Scroll scroll && player.IsScrollTypeIdentified(scroll.ScrollType) ? 1 : 0, Thing is Potion potion && player.IsPotionTypeIdentified(potion.PotionType) ? 1 : 0);
         var playerCanSeeHash = (playerThing?.CanPerceiveThing(Thing) ?? false) ? 1 : 0;
         var floaterHash = Thing.HasFloaters ? Game.Random.Int(0, 9999) : 0;
-        return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, HashCode.Combine(cooldownHash, wieldedCooldownHash, equipmentHighlightHash, statHash, identifiedHash), 
-                                HashCode.Combine(player.ConfusionSeed, player.HallucinatingSeed), playerCanSeeHash, floaterHash);
+        return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, HashCode.Combine(cooldownHash, wieldedCooldownHash, equipmentHighlightHash, statHash, identifiedHash),
+                                HashCode.Combine(player.ConfusionSeed, player.HallucinatingSeed, playerCanSeeHash, floaterHash, Thing.IgnitionAmount));
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

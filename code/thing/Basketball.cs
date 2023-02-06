@@ -17,6 +17,7 @@ public partial class Basketball : Thing
         Tooltip = "A basketball";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
+        Flammability = 15;
 
         if (Game.IsServer)
         {

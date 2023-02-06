@@ -107,6 +107,10 @@ public partial class Thing : Entity
 
     public int FloaterNum { get; set; }
 
+    public int Flammability { get; set; }
+    [Net] public int IgnitionAmount { get; set; }
+    private float _ignitionCoolTimer;
+
     public virtual string AbilityName => "Ability";
 
     public Thing()
@@ -136,10 +140,21 @@ public partial class Thing : Entity
 
     public virtual void Update(float dt)
     {
-        //DebugText = $"{IconDepth}";
+        //DebugText = IgnitionAmount > 0 ? $"{IgnitionAmount}" : "";
 
         if (Brain != null)
             Brain.Update(dt);
+
+        // HANDLE IGNITION COOLING
+        if(IgnitionAmount > 0 && !HasComponent<CBurning>())
+        {
+            _ignitionCoolTimer += dt;
+            if(_ignitionCoolTimer > Globals.IGNITION_COOL_DELAY)
+            {
+                IgnitionAmount = Math.Max(IgnitionAmount - Globals.IGNITION_COOL_AMOUNT, 0);
+                _ignitionCoolTimer -= Globals.IGNITION_COOL_DELAY;
+            }
+        }
 
         //DebugText = "Server Components (" + Components.Count + "):\n";
         for (int i = ThingComponents.Count - 1; i >= 0; i--)
@@ -169,7 +184,7 @@ public partial class Thing : Entity
 
     public bool NeedsUpdate()
     {
-        return ShouldUpdate || ThingComponents.Count > 0 || IsOnCooldown || Brain != null;
+        return ShouldUpdate || ThingComponents.Count > 0 || IsOnCooldown || Brain != null || IgnitionAmount > 0;
     }
 
     // todo: dont call this for everything
@@ -194,8 +209,8 @@ public partial class Thing : Entity
         //DrawDebugText(ContainingGridManager?.Name.ToString() ?? "null");
         //DrawDebugText($"{GridPos}");
 
-        //if(HasStat(StatType.Health))
-        //    DrawDebugText($"{GetStat(StatType.Health).CurrentValue}");
+        //if(IgnitionAmount > 0)
+            //DrawDebugText($"{Flammability}");
     }
 
     public virtual bool TryMove(Direction direction, out bool switchedLevel, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
@@ -515,7 +530,7 @@ public partial class Thing : Entity
 
     public void DrawDebugText(string text)
     {
-        DrawDebugText(text, new Color(1f, 1f, 1f, 0.7f));
+        DrawDebugText(text, new Color(1f, 1f, 1f, 0.4f));
     }
 
     public void SetIcon(string icon)
@@ -633,6 +648,7 @@ public partial class Thing : Entity
         StaminaDelay = 0f;
         StatHash = 0;
         DontRender = false;
+        IgnitionAmount = 0;
     }
 
     public virtual GridType AimingGridType => GridType.Arena;

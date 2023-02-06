@@ -13,5 +13,6 @@ public partial class OilBarrel : Thing
         IconDepth = (int)IconDepthLevel.Solid;
         Flags = ThingFlags.Solid | ThingFlags.Selectable;
         PathfindMovementCost = 20f;
+        Flammability = 30;
     }
 }

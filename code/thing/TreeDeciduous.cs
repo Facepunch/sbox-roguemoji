@@ -19,6 +19,7 @@ public partial class TreeDeciduous : Thing
         Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanWieldThings;
 		PathfindMovementCost = 999f;
         HealthAmount = 400;
+        Flammability = 17;
 
         if (Game.IsServer)
         {
@@ -73,6 +74,8 @@ public partial class TreeDeciduous : Thing
             {
                 if (ContainingGridManager.GetRandomEmptyAdjacentGridPos(GridPos, out var dropGridPos, allowNonSolid: true))
                 {
+                    // todo: burning tree should drop a burning leaf
+
                     var leaf = ContainingGridManager.SpawnThing<Leaf>(dropGridPos);
                     leaf.SetIcon("🍃");
 

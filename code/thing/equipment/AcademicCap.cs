@@ -14,6 +14,7 @@ public partial class AcademicCap : Thing
         Tooltip = "An academic cap";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Equipment;
+        Flammability = 24;
 
         if (Game.IsServer)
         {

@@ -19,6 +19,7 @@ public partial class BowAndArrow : Thing
         Tooltip = "A longbow";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable | ThingFlags.UseRequiresAiming;
+        Flammability = 18;
 
         if (Game.IsServer)
         {

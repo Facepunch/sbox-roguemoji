@@ -13,6 +13,7 @@ public partial class Hole : Thing
         IconDepth = (int)IconDepthLevel.Hole;
         Flags = ThingFlags.Exclusive | ThingFlags.Selectable;
         PathfindMovementCost = 15f;
+        Flammability = 0;
 
         if (Game.IsClient)
         {

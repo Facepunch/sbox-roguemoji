@@ -19,6 +19,7 @@ public partial class Juicebox : Thing
         Tooltip = "A juicebox";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
+        Flammability = 16;
 
         if (Game.IsServer)
         {   

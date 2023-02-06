@@ -16,6 +16,7 @@ public partial class Golem : Thing
         IconDepth = (int)IconDepthLevel.Solid;
         Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanWieldThings;
         PathfindMovementCost = 15f;
+        Flammability = 0;
 
         if (Game.IsServer)
         {

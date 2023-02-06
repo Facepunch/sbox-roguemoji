@@ -15,6 +15,7 @@ public partial class Lemon : Thing
         Tooltip = "A lemon";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
+        Flammability = 13;
 
         if (Game.IsServer)
         {

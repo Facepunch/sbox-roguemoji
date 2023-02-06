@@ -14,6 +14,7 @@ public partial class Coat : Thing
         Tooltip = "A thick coat";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Equipment;
+        Flammability = 22;
 
         if (Game.IsServer)
         {

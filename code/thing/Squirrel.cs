@@ -18,6 +18,7 @@ public partial class Squirrel : Thing
 		Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanWieldThings;
         PathfindMovementCost = 5f;
         Faction = FactionType.Enemy;
+        Flammability = 13;
 
         if (Game.IsServer)
         {

@@ -16,6 +16,7 @@ public partial class Refreshment : Thing
         Tooltip = "A refreshment";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
+        Flammability = 13;
 
         if (Game.IsServer)
         {   

@@ -17,6 +17,7 @@ public partial class Ghost : Thing
 		DisplayName = "Ghost";
 		Tooltip = "";
         PathfindMovementCost = 0f;
+        Flammability = 0;
 
         if (Game.IsServer)
         {

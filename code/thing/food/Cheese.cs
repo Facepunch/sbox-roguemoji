@@ -15,6 +15,7 @@ public partial class Cheese : Thing
         Description = "Stinky and delicious";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
+        Flammability = 13;
 
         if (Game.IsServer)
         {

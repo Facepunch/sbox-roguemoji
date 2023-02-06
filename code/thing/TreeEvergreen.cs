@@ -16,6 +16,7 @@ public partial class TreeEvergreen : Thing
         Flags = ThingFlags.Solid | ThingFlags.Selectable;
         PathfindMovementCost = 999f;
         HealthAmount = 400;
+        Flammability = 17;
 
         if (Game.IsServer)
         {

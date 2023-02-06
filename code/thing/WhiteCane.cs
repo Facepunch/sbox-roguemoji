@@ -15,6 +15,7 @@ public partial class WhiteCane : Thing
         Tooltip = "A white cane";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
+        Flammability = 9;
 
         if (Game.IsServer)
         {

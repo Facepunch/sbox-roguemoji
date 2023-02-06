@@ -25,6 +25,7 @@ public partial class Cigarette : Thing
         Tooltip = "A cigarette";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
+        Flammability = 24;
 
         if (Game.IsServer)
         {

@@ -17,6 +17,7 @@ public partial class Potion : Thing
     {
         DisplayIcon = "🧉";
         IconDepth = (int)IconDepthLevel.Normal;
+        Flammability = 13;
 
         if (Game.IsServer)
         {

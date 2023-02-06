@@ -16,6 +16,7 @@ public partial class Sunglasses : Thing
         Tooltip = "A pair of sunglasses";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Equipment;
+        Flammability = 13;
 
         if (Game.IsServer)
         {

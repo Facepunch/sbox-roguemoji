@@ -12,5 +12,6 @@ public partial class Bouquet : Thing
         Tooltip = "A bouquet";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
+        Flammability = 18;
     }
 }

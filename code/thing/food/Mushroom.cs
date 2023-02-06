@@ -14,6 +14,7 @@ public partial class Mushroom : Thing
         Tooltip = "A mushroom";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
+        Flammability = 13;
 
         if (Game.IsServer)
         {

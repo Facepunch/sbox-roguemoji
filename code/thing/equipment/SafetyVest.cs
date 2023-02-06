@@ -16,6 +16,7 @@ public partial class SafetyVest : Thing
         Tooltip = "A safety vest";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Equipment;
+        Flammability = 13;
 
         if (Game.IsServer)
         {

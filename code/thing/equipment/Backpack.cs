@@ -12,6 +12,7 @@ public partial class Backpack : Thing
         IconDepth = (int)IconDepthLevel.Normal;
         Tooltip = "A backpack";
 		Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Equipment;
+        Flammability = 20;
     }
 
     public override void OnEquippedTo(Thing thing)

@@ -16,6 +16,7 @@ public partial class Smiley : Thing
 		DisplayName = "Smiley";
 		Tooltip = "";
         PathfindMovementCost = 10f;
+        Flammability = 13;
 
         if (Game.IsServer)
         {

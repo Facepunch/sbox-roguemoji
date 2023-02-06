@@ -12,5 +12,6 @@ public partial class Trumpet : Thing
         Tooltip = "A trumpet";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
+        Flammability = 7;
     }
 }

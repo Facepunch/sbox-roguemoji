@@ -19,6 +19,7 @@ public partial class RugbyBall : Thing
         Tooltip = "A rugby ball";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable | ThingFlags.UseRequiresAiming;
+        Flammability = 13;
 
         if (Game.IsServer)
         {

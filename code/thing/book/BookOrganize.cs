@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Roguemoji;
-public partial class BookOrganize : Thing
+public partial class BookOrganize : Book
 {
     [Net] public int ManaCost { get; private set; }
     [Net] public int ReqInt { get; private set; }
@@ -14,12 +14,9 @@ public partial class BookOrganize : Thing
 
     public BookOrganize()
 	{
-		DisplayIcon = "📘";
         DisplayName = "Book of Organize";
         Description = "Organizes the items below your hotbar";
         Tooltip = "A book of Organize";
-        IconDepth = (int)IconDepthLevel.Normal;
-        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         SetTattoo(Globals.Icon(IconType.Organize), scale: 0.5f, offset: new Vector2(0.5f, -4f), offsetWielded: new Vector2(0f, 0f), offsetInfo: new Vector2(1f, -1f), offsetCharWielded: new Vector2(2.5f, -6f), offsetInfoWielded: new Vector2(-1f, -2f));
 

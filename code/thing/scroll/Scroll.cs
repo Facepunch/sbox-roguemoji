@@ -16,6 +16,7 @@ public partial class Scroll : Thing
     {
         DisplayIcon = "📜";
         IconDepth = (int)IconDepthLevel.Normal;
+        Flammability = 30;
 
         if (Game.IsServer)
         {

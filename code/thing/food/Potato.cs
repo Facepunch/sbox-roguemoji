@@ -14,6 +14,7 @@ public partial class Potato : Thing
         Description = "Uncooked and hard as a rock";
         Tooltip = "A potato";
         IconDepth = (int)IconDepthLevel.Normal;
+        Flammability = 13;
 
         if (Game.IsServer)
         {

@@ -13,6 +13,7 @@ public partial class ProjectileArrow : Thing
         Description = "";
         Tooltip = "";
         IconDepth = (int)IconDepthLevel.Projectile;
+        Flammability = 0;
 
         if (Game.IsServer)
         {

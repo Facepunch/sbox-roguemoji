@@ -14,14 +14,19 @@ public class CBurning : ThingComponent
     public float BurnCountdown { get; set; }
     public float BurnDelayMin { get; set; }
     public float BurnDelayMax { get; set; }
+    public float SpreadTimer { get; set; }
+    public float SpreadDelay { get; set; }
     public int BurnDamage { get; set; }
 
     public override void Init(Thing thing)
     {
         base.Init(thing);
 
+        thing.IgnitionAmount = Globals.IGNITION_MAX;
+
         ShouldUpdate = true;
 
+        SpreadDelay = 0.25f;
         BurnDelayMin = 2f;
         BurnDelayMax = 3f;
         BurnCountdown = Game.Random.Float(BurnDelayMin, BurnDelayMax);
@@ -62,6 +67,13 @@ public class CBurning : ThingComponent
             Burn();
             BurnCountdown = Game.Random.Float(BurnDelayMin, BurnDelayMax);
         }
+
+        SpreadTimer += dt;
+        if(SpreadTimer > SpreadDelay)
+        {
+            Spread();
+            SpreadTimer = 0f;
+        }
     }
 
     void Burn()
@@ -70,8 +82,11 @@ public class CBurning : ThingComponent
         {
             Thing.Hurt(BurnDamage, showImpactFloater: false);
         }
+    }
 
-        for(int x = -1; x <= 1; x++) 
+    void Spread()
+    {
+        for (int x = -1; x <= 1; x++)
         {
             for (int y = -1; y <= 1; y++)
             {
@@ -89,22 +104,28 @@ public class CBurning : ThingComponent
 
                 var otherThings = Thing.ContainingGridManager.GetThingsAt(gridPos).ToList();
 
-                if(otherThings.Count == 0)
+                if (otherThings.Count == 0)
                 {
-                    var startOffset = -offset * 40f;
-                    var endOffset = new Vector2(0f, 0f);
-                    var height = Game.Random.Float(10f, 20f);
+                    //var startOffset = -offset * 40f;
+                    //var endOffset = new Vector2(0f, 0f);
+                    //var height = Game.Random.Float(10f, 20f);
 
-                    Thing.ContainingGridManager.AddFloater(Globals.Icon(IconType.Burning), gridPos, 0.15f, startOffset, endOffset, height: height, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.01f, scale: Game.Random.Float(0.6f, 0.75f), opacity: 0.5f, shakeAmount: 1f);
+                    //Thing.ContainingGridManager.AddFloater(Globals.Icon(IconType.Burning), gridPos, 0.15f, startOffset, endOffset, height: height, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.01f, scale: Game.Random.Float(0.6f, 0.75f), opacity: 0.5f, shakeAmount: 1f);
                 }
                 else
                 {
                     foreach (var other in otherThings)
                     {
-                        if(!other.HasComponent<CBurning>())
+                        if (other.Flammability > 0 && !other.HasComponent<CBurning>())
                         {
-                            var burning = other.AddComponent<CBurning>();
-                            burning.Lifetime = Math.Max(Lifetime, burning.Lifetime);
+                            other.IgnitionAmount += other.Flammability;
+                            if (other.IgnitionAmount >= Globals.IGNITION_MAX)
+                            {
+                                var burning = other.AddComponent<CBurning>();
+                                burning.Lifetime = Math.Max(Lifetime, burning.Lifetime);
+
+                                other.IgnitionAmount = Globals.IGNITION_MAX;
+                            }
                         }
                     }
                 }

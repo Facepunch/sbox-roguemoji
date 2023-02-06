@@ -8,4 +8,11 @@ public partial class Book : Thing
 {
     public override string AbilityName => "Read Book";
 
+    public Book()
+    {
+        DisplayIcon = "📘";
+        IconDepth = (int)IconDepthLevel.Normal;
+        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
+        Flammability = 26;
+    }
 }

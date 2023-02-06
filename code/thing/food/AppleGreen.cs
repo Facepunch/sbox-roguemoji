@@ -15,6 +15,7 @@ public partial class AppleGreen : Thing
         Tooltip = "A green apple";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
+        Flammability = 13;
 
         if (Game.IsServer)
         {
