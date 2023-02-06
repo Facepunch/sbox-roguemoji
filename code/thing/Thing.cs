@@ -441,6 +441,9 @@ public partial class Thing : Entity
         if (WieldedThing != null)
             WieldedThing.CleanUpAndDelete();
 
+        if (Brain != null && Brain is not RoguemojiPlayer)
+            Brain.Delete();
+
         ClearStats();
         ClearTraits();
         Delete();

@@ -42,6 +42,15 @@ public partial class Squirrel : Thing
     {
         base.Spawn();
 
+        
+
+        
+    }
+
+    public override void OnSpawned()
+    {
+        base.OnSpawned();
+
         Targeting = AddComponent<CTargeting>();
         Acting = AddComponent<CActing>();
         Acting.ActionDelay = CActing.CalculateActionDelay(GetStatClamped(StatType.Speed));

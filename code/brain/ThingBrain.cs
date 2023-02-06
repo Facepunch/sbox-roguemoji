@@ -12,6 +12,7 @@ public partial class ThingBrain : Entity
     public virtual void ControlThing(Thing thing)
     {
         ControlledThing = thing;
+        thing.Brain = this;
     }
 
     public virtual void Update(float dt)

@@ -141,8 +141,8 @@ public partial class Level : Entity
             //    {
             //        var smiley = GridManager.SpawnThing<Smiley>(gridPos);
             //        smiley.AddComponent<CTargeting>();
-            //        smiley.Brain = new SquirrelBrain();
-            //        smiley.Brain.ControlThing(smiley);
+            //        var brain = new SquirrelBrain();
+            //        brain.ControlThing(smiley);
             //    }
             //}
         }

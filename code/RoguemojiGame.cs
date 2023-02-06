@@ -188,7 +188,6 @@ public partial class RoguemojiGame : GameManager
         player.PlayerNum = ++PlayerNum;
 
         player.ControlThing(smiley);
-        smiley.Brain = player;
 
         //smiley.CurrentLevelId = levelId;
         smiley.PlayerNum = player.PlayerNum;
@@ -426,7 +425,6 @@ public partial class RoguemojiGame : GameManager
             level0.GridManager.GetRandomEmptyGridPos(out var gridPos);
             var smiley = level0.GridManager.SpawnThing<Smiley>(gridPos);
             player.ControlThing(smiley);
-            smiley.Brain = player;
             //smiley.CurrentLevelId = levelId;
             smiley.PlayerNum = player.PlayerNum;
 

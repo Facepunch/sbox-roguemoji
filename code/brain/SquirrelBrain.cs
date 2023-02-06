@@ -12,6 +12,12 @@ public partial class SquirrelBrain : ThingBrain
     public IntVector TargetLastSeenPos { get; set; }
     public IntVector WanderGridPos { get; set; }
 
+    public SquirrelBrain()
+    {
+        WanderGridPos = new IntVector(1, 1);
+        Log.Info($"{Name} SquirrelBrain - WanderGridPos: {WanderGridPos}");
+    }
+
     public override void ControlThing(Thing thing)
     {
         base.ControlThing(thing);
@@ -24,6 +30,9 @@ public partial class SquirrelBrain : ThingBrain
     {
         base.Update(dt);
 
+        //RoguemojiGame.Instance.DebugGridLine(ControlledThing.GridPos, TargetLastSeenPos, new Color(0f, 1f, 0f, 0.3f), 0.025f);
+
+        //ControlledThing.DebugText = $"{WanderGridPos}";
         //DebugText = WieldedThing == null ? "null" : WieldedThing.DisplayName;
         CActing acting = null;
         if (ControlledThing.GetComponent<CActing>(out var component))
@@ -38,7 +47,7 @@ public partial class SquirrelBrain : ThingBrain
 
         if (!targeting.HasTarget)
         {
-            //RoguemojiGame.Instance.DebugGridLine(GridPos, WanderGridPos, new Color(0.6f, 0f, 1f, 0.8f), 0.025f);
+            //RoguemojiGame.Instance.DebugGridLine(ControlledThing.GridPos, IntVector.Zero, new Color(0.6f, 0f, 1f, 0.8f), 0.025f);
 
             if (acting.IsActionReady && !ControlledThing.GridPos.Equals(WanderGridPos))
             {
@@ -68,7 +77,7 @@ public partial class SquirrelBrain : ThingBrain
                 bool canSeeTarget = ControlledThing.CanSeeGridPos(target.GridPos, adjustedSight) && ControlledThing.CanPerceiveThing(target);
                 bool isFearful = ControlledThing.GetComponent<CFearful>(out var fearful);
 
-                //RoguemojiGame.Instance.DebugGridLine(GridPos, targeting.Target.GridPos, canSeeTarget ? new Color(0f, 0f, 1f, 0.8f) : new Color(1f, 0f, 0f, 0.8f), 0.025f);
+                //RoguemojiGame.Instance.DebugGridLine(ControlledThing.GridPos, targeting.Target.GridPos, canSeeTarget ? new Color(0f, 0f, 1f, 0.8f) : new Color(1f, 0f, 0f, 0.8f), 0.025f);
 
                 if (acting.IsActionReady)
                 {
