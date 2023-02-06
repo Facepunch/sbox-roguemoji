@@ -110,7 +110,7 @@
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
         var floaterHash = player.EquipmentGridManager.Floaters.Count > 0 ? Game.Random.Int(0, 9999) : 0;
-        return HashCode.Combine(GetThings().Count, player.HallucinatingSeed, floaterHash);
+        return HashCode.Combine(GetThings().Count, player.HallucinatingSeed, floaterHash, player.EquipmentGridManager.ThingFloaterCounter);
     }
 
     string GetNothingEquippedIcon(int index)

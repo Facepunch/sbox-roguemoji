@@ -16,6 +16,7 @@ public partial class Axe : Thing
         Tooltip = "An axe";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
+        Flammability = 13;
 
         if (Game.IsServer)
         {

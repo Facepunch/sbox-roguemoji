@@ -28,6 +28,8 @@ public partial class GridManager : Entity
 
     [Net] public LevelId LevelId { get; set; }
 
+    [Net] public int ThingFloaterCounter { get; set; }
+
     public GridManager()
     {
         if (Game.IsClient)
@@ -663,6 +665,8 @@ public partial class GridManager : Entity
 		GridThings.Clear();
 		ContainedPlayers.Clear();
 		VisionChangedPlayers.Clear();
+
+        ThingFloaterCounter = 0;
     }
 
     public void AddPlayer(RoguemojiPlayer player)

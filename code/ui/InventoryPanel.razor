@@ -166,6 +166,6 @@
         var selectedThingHash = player.SelectedThing?.NetworkIdent ?? 0;
         var aimingHash = player.IsAiming && player.AimingGridType == GridType.Inventory ? Game.Random.Int(0, 9999) : 0;
         var floaterHash = player.InventoryGridManager.Floaters.Count > 0 ? Game.Random.Int(0, 9999) : 0;
-        return HashCode.Combine(GetThings().Count, gridWidthHash, selectedThingHash, aimingHash, floaterHash);
+        return HashCode.Combine(GetThings().Count, gridWidthHash, selectedThingHash, aimingHash, floaterHash, player.InventoryGridManager.ThingFloaterCounter);
     }
 }

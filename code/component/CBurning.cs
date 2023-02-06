@@ -39,6 +39,8 @@ public class CBurning : ThingComponent
 
         thing.AddFloater(Globals.Icon(IconType.Burning), time: 0f, new Vector2(0f, -12f), new Vector2(0f, -12f), height: 0f, text: "", requireSight: true, 
             alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.25f, scale: 1f, opacity: 0.5f, shakeAmount: 1f, showOnInvisible: true);
+
+        thing.ContainingGridManager.ThingFloaterCounter++;
     }
 
     public override void Update(float dt)
@@ -141,6 +143,7 @@ public class CBurning : ThingComponent
             ((CIconPriority)component).RemoveIconPriority(IconId);
 
         Thing.RemoveFloater(Globals.Icon(IconType.Burning));
+        Thing.ContainingGridManager.ThingFloaterCounter++;
     }
 
     public override void OnThingDied()
