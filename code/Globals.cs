@@ -33,7 +33,7 @@ public struct HallucinationData
 public static class Globals
 {
     public const int IGNITION_MAX = 100;
-    public const float IGNITION_BRIGHTNESS_MAX = 10.0f;
+    public const float IGNITION_BRIGHTNESS_MAX = 13.0f;
     public const float IGNITION_COOL_DELAY = 0.25f;
     public const int IGNITION_COOL_AMOUNT = 2;
 

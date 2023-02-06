@@ -484,4 +484,14 @@ public partial class Hud : RootPanel
         MainPanel.Chatbox.Restart();
         DebugDrawing.Restart();
     }
+
+    public static float GetOpacity(Thing thing)
+    {
+        return thing.Opacity * (thing.GetStatClamped(StatType.Invisible) > 0 ? 0.4f : 1f);
+    }
+
+    public static float GetBrightness(Thing thing) 
+    { 
+        return thing.IgnitionAmount > 0 ? Utils.Map(thing.IgnitionAmount, 0, Globals.IGNITION_MAX, 1.0f, Globals.IGNITION_BRIGHTNESS_MAX, EasingType.QuintIn) : 1.0f; 
+    }
 }

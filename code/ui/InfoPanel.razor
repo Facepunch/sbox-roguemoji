@@ -212,6 +212,7 @@
     protected override int BuildHash()
     {
         var player = RoguemojiGame.Instance.LocalPlayer;
-        return HashCode.Combine(SelectedThing?.GetInfoDisplayHash() ?? 0, player.ControlledThing.StatHash, player.ConfusionSeed, player.HallucinatingSeed, SelectedThing.StatHash, SelectedThing.TraitHash);
+        var floaterHash = SelectedThing.HasFloaters ? Game.Random.Int(0, 9999) : 0;
+        return HashCode.Combine(SelectedThing?.GetInfoDisplayHash() ?? 0, player.ControlledThing.StatHash, player.ConfusionSeed, player.HallucinatingSeed, SelectedThing.StatHash, SelectedThing.TraitHash, floaterHash);
     }
 }

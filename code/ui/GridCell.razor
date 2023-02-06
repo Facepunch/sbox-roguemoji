@@ -26,7 +26,6 @@
         //filter: blur(5px);
         //transform-origin: 0% 50%;
         font-family: W10Emoji;
-        //filter: brightness(25.0);
     }
 
     .is_in_inventory {
@@ -115,13 +114,15 @@
     }
 </style>
 
-<root class="icon @GetWieldedClass() @GetSolidClass()" style="filter: brightness(@(Thing.IgnitionAmount > 0 ? Utils.Map(Thing.IgnitionAmount, 0, Globals.IGNITION_MAX, 1.0f, Globals.IGNITION_BRIGHTNESS_MAX, EasingType.QuadIn) : 1.0f));">
+<root class="icon @GetWieldedClass() @GetSolidClass()">
     @{
         var player = RoguemojiGame.Instance.LocalPlayer;
         var playerThing = player.ControlledThing;
     }
 
-    <div class="@GetPlayerClass() @GetCooldownClass(Thing) @Hud.GetUnusableClass(Thing) @GetInventoryClass() @Hud.Instance.GetEquipmentHighlightClass(Thing)" style="opacity:@(GetOpacity());" @ref=IconPanel>
+    <div class="@GetPlayerClass() @GetCooldownClass(Thing) @Hud.GetUnusableClass(Thing) @GetInventoryClass() @Hud.Instance.GetEquipmentHighlightClass(Thing)" 
+        style="opacity:@(Hud.GetOpacity(Thing) * (Thing == Hud.Instance.DraggedThing ? 0.2f : 1f)); filter: brightness(@(Hud.GetBrightness(Thing)));" @ref=IconPanel>
+
         @if (playerThing.CanPerceiveThing(Thing))
         {
             @(Hud.GetHallucinationTextThing(Thing, Thing.DisplayIcon.Substring(Thing.CharSkip), HallucinationTextType.Icon))
@@ -173,7 +174,7 @@
 
         if (playerThing.CanPerceiveThing(wieldedThing))
         {
-            <div class="wielded_thing @GetCooldownClass(wieldedThing)" style="left:@(wieldedOffset.x)px; top:@(wieldedOffset.y)px; font-size:@(Thing.WieldedThingFontSize); opacity:@(GetOpacityWielded());">
+            <div class="wielded_thing @GetCooldownClass(wieldedThing)" style="left:@(wieldedOffset.x)px; top:@(wieldedOffset.y)px; font-size:@(Thing.WieldedThingFontSize); opacity:@(Hud.GetOpacity(Thing.WieldedThing)); filter: brightness(@(Hud.GetBrightness(Thing.WieldedThing)));">
                 @(Hud.GetHallucinationTextThing(wieldedThing, wieldedThing.DisplayIcon.Substring(wieldedThing.CharSkip), HallucinationTextType.Icon))
 
                 @if (wieldedThing.HasTattoo)
@@ -218,9 +219,6 @@
     string GetInventoryClass()  { return Thing.ContainingGridType == GridType.Inventory ? "is_in_inventory" : ""; }
     string GetCooldownClass(Thing thing)    { return thing.IsOnCooldown && thing.ContainingGridType != GridType.Arena ? "cell_icon_cooldown" : ""; }
 
-    float GetOpacity()          { return Thing.Opacity * (Thing.GetStatClamped(StatType.Invisible) > 0 ? 0.25f : 1f) * (Thing == Hud.Instance.DraggedThing ? 0.2f : 1f); }
-    float GetOpacityWielded()   { return Thing.WieldedThing.Opacity * (Thing.WieldedThing.GetStatClamped(StatType.Invisible) > 0 ? 0.25f : 1f); }
-
     protected override Panel CreateTooltipPanel()
     {
         var panel = Hud.Instance.AddChild<CellTooltip>();
@@ -244,8 +242,9 @@
         var identifiedHash = HashCode.Combine(Thing is Scroll scroll && player.IsScrollTypeIdentified(scroll.ScrollType) ? 1 : 0, Thing is Potion potion && player.IsPotionTypeIdentified(potion.PotionType) ? 1 : 0);
         var playerCanSeeHash = (playerThing?.CanPerceiveThing(Thing) ?? false) ? 1 : 0;
         var floaterHash = Thing.HasFloaters ? Game.Random.Int(0, 9999) : 0;
+        var ignitionHash = Thing.IgnitionAmount + (wieldedThing?.IgnitionAmount ?? 0);
         return HashCode.Combine(Thing.GetHashCode(), IsWielded(), Thing.NetworkIdent, HashCode.Combine(cooldownHash, wieldedCooldownHash, equipmentHighlightHash, statHash, identifiedHash),
-                                HashCode.Combine(player.ConfusionSeed, player.HallucinatingSeed, playerCanSeeHash, floaterHash, Thing.IgnitionAmount));
+                            HashCode.Combine(player.ConfusionSeed, player.HallucinatingSeed, playerCanSeeHash, floaterHash, ignitionHash));
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

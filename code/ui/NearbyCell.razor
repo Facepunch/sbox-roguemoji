@@ -47,7 +47,7 @@
     }
 </style>
 
-<root class="nearby_icon @GetSelectedClass() @GetUnusableClass(Thing, RoguemojiGame.Instance.LocalPlayer)" style="opacity:@(GetOpacity());">
+<root class="nearby_icon @GetSelectedClass() @GetUnusableClass(Thing, RoguemojiGame.Instance.LocalPlayer)" style="opacity:@(Hud.GetOpacity(Thing)); filter: brightness(@(Hud.GetBrightness(Thing)));">
     <div class="@GetPlayerClass() @GetDraggingClass()" @ref=IconPanel>
         @(Hud.GetHallucinationTextThing(Thing, Thing.DisplayIcon, HallucinationTextType.Icon))
 
@@ -98,8 +98,6 @@
         return "";
     }
 
-    float GetOpacity() { return Thing.Opacity * (Thing.GetStatClamped(StatType.Invisible) > 0 ? 0.25f : 1f); }
-
     protected override Panel CreateTooltipPanel()
     {
         var panel = Hud.Instance.AddChild<CellTooltip>();
@@ -121,7 +119,7 @@
 
         var player = RoguemojiGame.Instance.LocalPlayer;
         var floaterHash = Thing.HasFloaters ? Game.Random.Int(0, 9999) : 0;
-        return HashCode.Combine(Thing.GetNearbyCellHash(), IsSelected(), player.ControlledThing.StatHash, player.HallucinatingSeed, floaterHash);
+        return HashCode.Combine(Thing.GetNearbyCellHash(), IsSelected(), player.ControlledThing.StatHash, player.HallucinatingSeed, floaterHash, Thing.IgnitionAmount);
     }
 
     protected override void OnAfterTreeRender(bool firstTime)

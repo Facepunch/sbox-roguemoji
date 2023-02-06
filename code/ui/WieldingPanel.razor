@@ -145,7 +145,7 @@
     }
     else
     {
-        <div class="@GetCooldownClass(wieldedThing) @Hud.GetUnusableClass(wieldedThing)" style="opacity:@(GetOpacity(wieldedThing));">
+        <div class="@GetCooldownClass(wieldedThing) @Hud.GetUnusableClass(wieldedThing)" style="opacity:@(Hud.GetOpacity(wieldedThing)); filter: brightness(@(Hud.GetBrightness(wieldedThing)));">
             @(Hud.GetHallucinationTextThing(wieldedThing, wieldedThing.DisplayIcon.Substring(wieldedThing.CharSkip), HallucinationTextType.Icon))
 
             @if(wieldedThing.HasTattoo)
@@ -235,7 +235,6 @@
 {
     string GetWieldingClass(Thing thing) { return thing != null ? "is_wielding_something" : "not_wielding_anything"; }
     string GetCooldownClass(Thing thing) { return thing != null && thing.IsOnCooldown ? "wielding_cooldown" : ""; }
-    float GetOpacity(Thing thing) { return thing.Opacity * (thing.GetStatClamped(StatType.Invisible) > 0 ? 0.25f : 1f); }
 
     protected override Panel CreateTooltipPanel()
     {
