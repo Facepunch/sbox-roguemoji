@@ -120,8 +120,8 @@
         var playerThing = player.ControlledThing;
     }
 
-    <div class="@GetPlayerClass() @GetCooldownClass(Thing) @Hud.GetUnusableClass(Thing) @GetInventoryClass() @Hud.Instance.GetEquipmentHighlightClass(Thing)" 
-        style="opacity:@(Hud.GetOpacity(Thing) * (Thing == Hud.Instance.DraggedThing ? 0.2f : 1f)); filter: brightness(@(Hud.GetBrightness(Thing)));" @ref=IconPanel>
+    <div class="@GetPlayerClass() @GetCooldownClass(Thing) @Hud.GetUnusableClass(Thing) @GetInventoryClass() @Hud.Instance.GetEquipmentHighlightClass(Thing)"
+         style="opacity:@(Hud.GetOpacity(Thing) * (Thing == Hud.Instance.DraggedThing ? 0.2f : 1f)); @(Hud.GetBrightness(Thing))" @ref=IconPanel>
 
         @if (playerThing.CanPerceiveThing(Thing))
         {
@@ -174,7 +174,7 @@
 
         if (playerThing.CanPerceiveThing(wieldedThing))
         {
-            <div class="wielded_thing @GetCooldownClass(wieldedThing)" style="left:@(wieldedOffset.x)px; top:@(wieldedOffset.y)px; font-size:@(Thing.WieldedThingFontSize); opacity:@(Hud.GetOpacity(Thing.WieldedThing)); filter: brightness(@(Hud.GetBrightness(Thing.WieldedThing)));">
+            <div class="wielded_thing @GetCooldownClass(wieldedThing)" style="left:@(wieldedOffset.x)px; top:@(wieldedOffset.y)px; font-size:@(Thing.WieldedThingFontSize); opacity:@(Hud.GetOpacity(Thing.WieldedThing)); @(Hud.GetBrightness(Thing.WieldedThing))">
                 @(Hud.GetHallucinationTextThing(wieldedThing, wieldedThing.DisplayIcon.Substring(wieldedThing.CharSkip), HallucinationTextType.Icon))
 
                 @if (wieldedThing.HasTattoo)

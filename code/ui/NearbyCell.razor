@@ -47,7 +47,7 @@
     }
 </style>
 
-<root class="nearby_icon @GetSelectedClass() @GetUnusableClass(Thing, RoguemojiGame.Instance.LocalPlayer)" style="opacity:@(Hud.GetOpacity(Thing)); filter: brightness(@(Hud.GetBrightness(Thing)));">
+<root class="nearby_icon @GetSelectedClass() @GetUnusableClass(Thing, RoguemojiGame.Instance.LocalPlayer)" style="opacity:@(Hud.GetOpacity(Thing)); @(Hud.GetBrightness(Thing))">
     <div class="@GetPlayerClass() @GetDraggingClass()" @ref=IconPanel>
         @(Hud.GetHallucinationTextThing(Thing, Thing.DisplayIcon, HallucinationTextType.Icon))
 

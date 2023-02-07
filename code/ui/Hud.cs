@@ -2,9 +2,7 @@
 using Sandbox.UI;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.SymbolStore;
-using static Roguemoji.DebugDrawing;
+
 namespace Roguemoji;
 
 public enum PanelType { None, ArenaGrid, InventoryGrid, EquipmentGrid, Wielding, CharPortrait, Log, Nearby, Info, Character, Stats, ChatPanel, Chatbox, LevelLabel };
@@ -490,8 +488,20 @@ public partial class Hud : RootPanel
         return thing.Opacity * (thing.GetStatClamped(StatType.Invisible) > 0 ? 0.4f : 1f);
     }
 
-    public static float GetBrightness(Thing thing) 
-    { 
-        return thing.IgnitionAmount > 0 ? Utils.Map(thing.IgnitionAmount, 0, Globals.IGNITION_MAX, 1.0f, Globals.IGNITION_BRIGHTNESS_MAX, EasingType.QuintIn) : 1.0f; 
+    public static string GetBrightness(Thing thing) 
+    {
+        return "";
+
+        //var color = Color.Lerp(new Color(1f, 1f, 1f, 0f), new Color(1f, 0f, 0f, 0.5f), Utils.Map(thing.IgnitionAmount, 0, Globals.IGNITION_MAX, 0f, 1f, EasingType.QuintIn));
+        //return thing.IgnitionAmount > 0 && thing.IgnitionAmount < Globals.IGNITION_MAX
+        //    ? $"background-color: {color.Hex}; border-radius: 10px;"
+        //    : $"background-color: #00000000; border-radius: 0px;";
+
+        //var color = Color.Lerp(new Color(1f, 1f, 1f, 0f), new Color(1f, 0f, 0f, 1f), Utils.Map(thing.IgnitionAmount, 0, Globals.IGNITION_MAX, 0f, 1f, EasingType.QuintIn));
+        //return thing.IgnitionAmount > 0
+        //    ? $"text-decoration: overline 4px {color.Hex} wavy; text-decoration-skip-ink: none;"
+        //    : "text-decoration: 0px;";
+
+        //return thing.IgnitionAmount > 0 ? $"filter: brightness({Utils.Map(thing.IgnitionAmount, 0, Globals.IGNITION_MAX, 1.0f, Globals.IGNITION_BRIGHTNESS_MAX, EasingType.QuintIn)});" : "filter: none;"; 
     }
 }

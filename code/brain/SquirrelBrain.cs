@@ -15,7 +15,6 @@ public partial class SquirrelBrain : ThingBrain
     public SquirrelBrain()
     {
         WanderGridPos = new IntVector(1, 1);
-        Log.Info($"{Name} SquirrelBrain - WanderGridPos: {WanderGridPos}");
     }
 
     public override void ControlThing(Thing thing)

@@ -14,8 +14,9 @@ public class CBurning : ThingComponent
     public float BurnCountdown { get; set; }
     public float BurnDelayMin { get; set; }
     public float BurnDelayMax { get; set; }
-    public float SpreadTimer { get; set; }
-    public float SpreadDelay { get; set; }
+    public float SpreadCountdown { get; set; }
+    public float SpreadDelayMin { get; set; }
+    public float SpreadDelayMax { get; set; }
     public int BurnDamage { get; set; }
 
     public override void Init(Thing thing)
@@ -26,11 +27,14 @@ public class CBurning : ThingComponent
 
         ShouldUpdate = true;
 
-        SpreadDelay = 0.25f;
         BurnDelayMin = 2f;
         BurnDelayMax = 3f;
         BurnCountdown = Game.Random.Float(BurnDelayMin, BurnDelayMax);
         BurnDamage = 1;
+
+        SpreadDelayMin = 0.25f;
+        SpreadDelayMax = 0.35f;
+        SpreadCountdown = Game.Random.Float(SpreadDelayMin, SpreadDelayMax);
 
         Trait = thing.AddTrait("Burning", Globals.Icon(IconType.Burning), $"Being consumed by fire", offset: Vector2.Zero);
 
@@ -70,11 +74,11 @@ public class CBurning : ThingComponent
             BurnCountdown = Game.Random.Float(BurnDelayMin, BurnDelayMax);
         }
 
-        SpreadTimer += dt;
-        if(SpreadTimer > SpreadDelay)
+        SpreadCountdown -= dt;
+        if(SpreadCountdown < 0f)
         {
             Spread();
-            SpreadTimer = 0f;
+            SpreadCountdown = Game.Random.Float(SpreadDelayMin, SpreadDelayMax);
         }
     }
 
@@ -108,11 +112,18 @@ public class CBurning : ThingComponent
 
                 if (otherThings.Count == 0)
                 {
-                    //var startOffset = -offset * 40f;
-                    //var endOffset = new Vector2(0f, 0f);
-                    //var height = Game.Random.Float(10f, 20f);
+                    if(Game.Random.Int(0, 5) == 0)
+                    {
+                        var startOffset = new Vector2(Game.Random.Float(-15f, 15f), Game.Random.Float(-15f, 15f));
+                        var endOffset = startOffset + new Vector2(0f, Game.Random.Float(-15f, 0f));
+                        var time = Game.Random.Float(0.25f, 0.35f);
+                        var scale = Game.Random.Float(0.3f, 0.45f);
+                        var opacity = Game.Random.Float(0.25f, 0.5f);
+                        var shakeAmount = Game.Random.Float(0.1f, 0.4f);
+                        var fadeInTime = Game.Random.Float(0.015f, 0.2f);
 
-                    //Thing.ContainingGridManager.AddFloater(Globals.Icon(IconType.Burning), gridPos, 0.15f, startOffset, endOffset, height: height, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.01f, scale: Game.Random.Float(0.6f, 0.75f), opacity: 0.5f, shakeAmount: 1f);
+                        Thing.ContainingGridManager.AddFloater(Globals.Icon(IconType.Burning), gridPos, time, startOffset, endOffset, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: fadeInTime, scale: scale, opacity: opacity, shakeAmount: shakeAmount);
+                    }
                 }
                 else
                 {
@@ -127,6 +138,17 @@ public class CBurning : ThingComponent
                                 burning.Lifetime = Math.Max(Lifetime, burning.Lifetime);
 
                                 other.IgnitionAmount = Globals.IGNITION_MAX;
+                            }
+                            else
+                            {
+                                var startOffset = new Vector2(Game.Random.Float(-15f, 15f), Game.Random.Float(-15f, 15f));
+                                var endOffset = startOffset + new Vector2(0f, Game.Random.Float(-15f, 0f));
+                                var time = Utils.Map(other.IgnitionAmount, 0, Globals.IGNITION_MAX, 0.25f, 1.25f, EasingType.Linear) * Game.Random.Float(0.9f, 1.2f);
+                                var scale = Utils.Map(other.IgnitionAmount, 0, Globals.IGNITION_MAX, 0.4f, 0.75f, EasingType.QuadIn);
+                                var opacity = Utils.Map(other.IgnitionAmount, 0, Globals.IGNITION_MAX, 0.33f, 1f, EasingType.QuadIn);
+                                var shakeAmount = Utils.Map(other.IgnitionAmount, 0, Globals.IGNITION_MAX, 0.1f, 1f, EasingType.Linear);
+
+                                other.AddFloater(Globals.Icon(IconType.Burning), time, startOffset, endOffset, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.025f, scale: scale, opacity: opacity, shakeAmount: shakeAmount);
                             }
                         }
                     }

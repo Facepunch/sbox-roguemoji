@@ -209,8 +209,8 @@ public partial class Thing : Entity
         //DrawDebugText(ContainingGridManager?.Name.ToString() ?? "null");
         //DrawDebugText($"{GridPos}");
 
-        //if(IgnitionAmount > 0)
-            //DrawDebugText($"{Flammability}");
+        //if (IgnitionAmount > 0)
+        //    DrawDebugText($"{IgnitionAmount}");
     }
 
     public virtual bool TryMove(Direction direction, out bool switchedLevel, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)

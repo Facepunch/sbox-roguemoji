@@ -24,7 +24,7 @@
 
 <root class="char_portrait @GetPlayerClass()">
     
-    <span style="opacity:@(Hud.GetOpacity(playerThing)); filter: brightness(@(Hud.GetBrightness(playerThing)));">
+    <span style="opacity:@(Hud.GetOpacity(playerThing)); @(Hud.GetBrightness(playerThing))">
         @(Hud.GetHallucinationTextThing(playerThing, playerThing.DisplayIcon.Substring(playerThing.CharSkip), HallucinationTextType.Icon))
     </span>
 

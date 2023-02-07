@@ -145,7 +145,7 @@
     }
     else
     {
-        <div class="@GetCooldownClass(wieldedThing) @Hud.GetUnusableClass(wieldedThing)" style="opacity:@(Hud.GetOpacity(wieldedThing)); filter: brightness(@(Hud.GetBrightness(wieldedThing)));">
+        <div class="@GetCooldownClass(wieldedThing) @Hud.GetUnusableClass(wieldedThing)" style="opacity:@(Hud.GetOpacity(wieldedThing)); @(Hud.GetBrightness(wieldedThing))">
             @(Hud.GetHallucinationTextThing(wieldedThing, wieldedThing.DisplayIcon.Substring(wieldedThing.CharSkip), HallucinationTextType.Icon))
 
             @if(wieldedThing.HasTattoo)
