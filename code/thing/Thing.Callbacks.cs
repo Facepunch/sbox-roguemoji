@@ -92,6 +92,11 @@ public partial class Thing : Entity
         foreach (var component in ThingComponents) { component.Value.OnChangedGridPos(); }
         Brain?.OnChangedGridPos();
     }
+    public virtual void OnMove(Direction direction)
+    {
+        foreach (var component in ThingComponents) { component.Value.OnMove(direction); }
+        Brain?.OnMove(direction);
+    }
     public virtual void OnAddComponent(TypeDescription type) { foreach (var component in ThingComponents) { component.Value.OnAddComponent(type); } }
     public virtual void OnRemoveComponent(TypeDescription type) { foreach (var component in ThingComponents) { component.Value.OnRemoveComponent(type); } }
     public virtual void OnCooldownStart() { foreach (var component in ThingComponents) { component.Value.OnCooldownStart(); } }

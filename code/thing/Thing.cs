@@ -263,6 +263,8 @@ public partial class Thing : Entity
             VfxSlide(direction, 0.15f, RoguemojiGame.CellSize);
         }
 
+        OnMove(direction);
+
         return true;
     }
 
@@ -301,9 +303,9 @@ public partial class Thing : Entity
         //if (!HasStat(StatType.Health))
         //    return;
 
-        OnTakeDamageFrom(thing);
-
         Hurt(thing.GetAttackDamage(), showImpactFloater: true);
+
+        OnTakeDamageFrom(thing);
     }
 
     public virtual void Hurt(int amount, bool showImpactFloater = true)

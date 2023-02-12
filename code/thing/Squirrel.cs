@@ -43,9 +43,6 @@ public partial class Squirrel : Thing
     {
         base.Spawn();
 
-        
-
-        
     }
 
     public override void OnSpawned()
@@ -78,5 +75,12 @@ public partial class Squirrel : Thing
             ContainingGridManager.SpawnThing<Bone>(GridPos);
 
         base.Destroy();
+    }
+
+    public override void OnMove(Direction direction)
+    {
+        base.OnMove(direction);
+
+        RoguemojiGame.Instance.PlaySfxArena("footstep_grass", GridPos, CurrentLevelId, 1f, 1f, maxDist: 5);
     }
 }
