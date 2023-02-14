@@ -1,0 +1,12 @@
+{
+  "UI": false,
+  "Volume": "1.00,1.00,0",
+  "Pitch": "1.00,1.00,1",
+  "Decibels": 110,
+  "SelectionMode": "Forward",
+  "Sounds": [
+    "sounds/click.vsnd"
+  ],
+  "MaximumDistance": 2777.795,
+  "MinimumDistance": 138.88976
+}

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.ConstrainedExecution;
 using Sandbox;
 
 namespace Roguemoji;
@@ -729,7 +728,7 @@ public partial class GridManager : Entity
 	public string GetNearbyBgColor(IntVector gridPos)
 	{
         var level = RoguemojiGame.Instance.GetLevel(LevelId);
-        return Utils.IsOdd(gridPos) ? level.BgColorOdd : level.BgColorEven;
+        return Level.GetLevelBgColor(level.SurfaceType, Utils.IsOdd(gridPos));
 	}
 
     public bool HasLineOfSight(IntVector gridPosA, IntVector gridPosB, int sight, out IntVector collisionCell)

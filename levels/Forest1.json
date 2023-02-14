@@ -2,9 +2,7 @@
   "Name": "Forest 1",
   "Width": 40,
   "Height": 25,
-  "WalkSound": "footstep_grass",
-  "BgColorEven": "#07270e",
-  "BgColorOdd": "#082b0f",
+  "SurfaceType": "Grass",
   "Things": {
     "OilBarrel": [
       { "x": 39, "y": 24 },

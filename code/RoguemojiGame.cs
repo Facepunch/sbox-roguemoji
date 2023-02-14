@@ -88,22 +88,22 @@ public partial class RoguemojiGame : GameManager
                 "viscous", "sludgy", "pale", "filmy", "rusty", "chunky", "creamy", "hazy", "silky", "foggy", "pulpy", "dark", "oily", "opaque", "shiny", "frothy", "wavy" };
             UnidentifiedPotionNames.Shuffle();
 
-            var levelData = FileSystem.Mounted.ReadJson<LevelData>("levels/Forest1.json");
-            Log.Info($"{levelData.Name} {levelData.Width} {levelData.Height} {levelData.WalkSound}");
+            //var levelData = FileSystem.Mounted.ReadJson<LevelData>("levels/Forest1.json");
+            //Log.Info($"{levelData.Name} {levelData.Width} {levelData.Height} {levelData.SurfaceType}");
 
-            foreach (var thing in levelData.Things)
-            {
-                var list = thing.Value;
-                foreach(var t2 in list)
-                {
-                    Log.Info(thing.Key + ": " + t2);
-                }
-            }
+            //foreach (var thing in levelData.Things)
+            //{
+            //    var list = thing.Value;
+            //    foreach(var t2 in list)
+            //    {
+            //        Log.Info(thing.Key + ": " + t2);
+            //    }
+            //}
 
-            foreach (var thing in levelData.RandomThings)
-            {
-                Log.Info(thing.Key + ": " + thing.Value);
-            }
+            //foreach (var thing in levelData.RandomThings)
+            //{
+            //    Log.Info(thing.Key + ": " + thing.Value);
+            //}
         }
 
 		if (Game.IsClient)
@@ -116,23 +116,24 @@ public partial class RoguemojiGame : GameManager
             //    Name = "Test Level",
             //    Width = 21,
             //    Height = 17,
-            //    Things = new Dictionary<string, List<IntVector>>() 
-            //    { 
-            //        { 
-            //            "Trumpet", 
-            //            new List<IntVector>() 
-            //            { 
-            //                new IntVector(10, 10), 
-            //                new IntVector(10, 10) 
-            //            } 
-            //        }, 
-            //        { 
-            //            "TreeDeciduous", 
-            //            new List<IntVector>() 
-            //            { 
-            //                new IntVector(2, 1) 
-            //            } 
-            //        }, 
+            //    SurfaceType = SurfaceType.Grass,
+            //    Things = new Dictionary<string, List<IntVector>>()
+            //    {
+            //        {
+            //            "Trumpet",
+            //            new List<IntVector>()
+            //            {
+            //                new IntVector(10, 10),
+            //                new IntVector(10, 10)
+            //            }
+            //        },
+            //        {
+            //            "TreeDeciduous",
+            //            new List<IntVector>()
+            //            {
+            //                new IntVector(2, 1)
+            //            }
+            //        },
             //    },
             //    RandomThings = new Dictionary<string, int>() { { "Bone", 5 }, { "Squirrel", 3 } },
             //};

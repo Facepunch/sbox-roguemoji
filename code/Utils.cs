@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using Sandbox;
+using System.Text.Json;
 
 namespace Roguemoji;
 
@@ -45,6 +46,24 @@ public struct AStarEdge<T>
 
 public static class Utils
 {
+    public static T ReadJsonCustom<T>(this BaseFileSystem fs, string filename, T defaultValue = default(T))
+    {
+        string text = fs.ReadAllText(filename);
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return defaultValue;
+        }
+
+        JsonSerializerOptions options = new JsonSerializerOptions
+        {
+            ReadCommentHandling = JsonCommentHandling.Skip,
+            PropertyNameCaseInsensitive = true,
+            AllowTrailingCommas = true,
+            Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter() },
+        };
+        return JsonSerializer.Deserialize<T>(text, options);
+    }
+
     public static IEnumerable<Thing> WithAll(this IEnumerable<Thing> list, ThingFlags flags)
     {
         return list.Where(x => (x.Flags & flags) == flags);

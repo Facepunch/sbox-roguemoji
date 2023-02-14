@@ -19,17 +19,13 @@ public partial class Level : Entity
 
     public LevelData LevelData { get; private set; }
 
-    public SurfaceType SurfaceType { get; private set; }
-
-    [Net] public string BgColorEven { get; private set; }
-    [Net] public string BgColorOdd { get; private set; }
-    public string WalkSound { get; private set; }
+    [Net] public SurfaceType SurfaceType { get; private set; }
 
     public void Init(LevelId levelId)
     {
         LevelId = levelId;
 
-        LevelData = FileSystem.Mounted.ReadJson<LevelData>($"levels/{levelId}.json");
+        LevelData = FileSystem.Mounted.ReadJsonCustom<LevelData>($"levels/{levelId}.json");
 
         if(LevelData == null)
         {
@@ -42,9 +38,7 @@ public partial class Level : Entity
         GridManager.LevelId = LevelId;
 
         LevelName = LevelData.Name;
-        BgColorEven = LevelData.BgColorEven;
-        BgColorOdd = LevelData.BgColorOdd;
-        WalkSound = LevelData.WalkSound;
+        SurfaceType = LevelData.SurfaceType;
 
         Transmit = TransmitType.Always;
 
@@ -65,6 +59,15 @@ public partial class Level : Entity
     {
         GridManager.Restart();
         SpawnStartingThings();
+    }
+
+    public static string GetLevelBgColor(SurfaceType surfaceType, bool odd)
+    {
+        switch (surfaceType)
+        {
+            case SurfaceType.Grass: return odd ? "#082b0f" : "#07270e";
+            default: return "#000000";
+        }
     }
 
     void SpawnStartingThings()

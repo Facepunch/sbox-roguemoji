@@ -2,9 +2,7 @@
   "Name": "Test0",
   "Width": 9,
   "Height": 3,
-  "WalkSound": "footstep_grass",
-  "BgColorEven": "#07270e",
-  "BgColorOdd": "#082b0f",
+  "SurfaceType": 1,
   "RandomThings": {
     "TreeEvergreen": 2,
     "TreeDeciduous": 2,

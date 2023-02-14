@@ -76,11 +76,4 @@ public partial class Squirrel : Thing
 
         base.Destroy();
     }
-
-    public override void OnMove(Direction direction)
-    {
-        base.OnMove(direction);
-
-        RoguemojiGame.Instance.PlaySfxArena("footstep_grass", GridPos, CurrentLevelId);
-    }
 }

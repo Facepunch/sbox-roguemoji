@@ -9,8 +9,6 @@ public partial class TreeDeciduous : Thing
 
     public int HealthAmount { get; set; }
 
-    public override string GetHitSound(Thing hittingThing) { return "deciduous_tree_hit"; }
-
     public TreeDeciduous()
 	{
 		DisplayIcon = "🌳";
@@ -93,5 +91,18 @@ public partial class TreeDeciduous : Thing
                 }
             }
         }
+    }
+
+    public override void GetSound(SoundActionType actionType, SurfaceType surfaceType, out string sfxName, out int loudness)
+    {
+        switch (actionType)
+        {
+            case SoundActionType.GetHit:
+                sfxName = "deciduous_tree_hit";
+                loudness = 3;
+                return;
+        }
+
+        base.GetSound(actionType, surfaceType, out sfxName, out loudness);
     }
 }

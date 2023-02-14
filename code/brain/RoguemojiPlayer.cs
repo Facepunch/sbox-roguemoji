@@ -333,7 +333,7 @@ public partial class RoguemojiPlayer : ThingBrain
 
         if (thing != null && Input.Down(InputButton.Run))
         {
-            MoveThingTo(thing, GridType.Arena, ControlledThing.GridPos);
+            MoveThingTo(thing, GridType.Arena, ControlledThing.GridPos, playSfx: true);
         }
         else
         {
@@ -403,7 +403,7 @@ public partial class RoguemojiPlayer : ThingBrain
     //    }
     //}
 
-	public void SelectThing(Thing thing)
+	public void SelectThing(Thing thing, bool playSfx = false)
 	{
 		if (SelectedThing == thing)
 			return;
@@ -412,6 +412,13 @@ public partial class RoguemojiPlayer : ThingBrain
 			SelectedThing.RefreshGridPanelClient();
 
 		SelectedThing = thing;
+
+        if (playSfx && thing != null)
+        {
+            thing.GetSound(SoundActionType.Select, SurfaceType.None, out string sfxName, out int loudness);
+            //RoguemojiGame.Instance.PlaySfxArena(sfxName, ControlledThing.GridPos, ControlledThing.CurrentLevelId, loudness);
+            PlaySfxUI(sfxName);
+        }
 	}
 
     /// <summary>Returns true if offset changed.</summary>
@@ -601,7 +608,9 @@ public partial class RoguemojiPlayer : ThingBrain
     public void DropWieldedItem()
     {
         if (ControlledThing.WieldedThing != null)
-            MoveThingTo(ControlledThing.WieldedThing, GridType.Arena, ControlledThing.GridPos);
+        {
+            MoveThingTo(ControlledThing.WieldedThing, GridType.Arena, ControlledThing.GridPos, playSfx: true);
+        }
     }
 
     void TryEquipThing(Thing thing)
@@ -613,7 +622,7 @@ public partial class RoguemojiPlayer : ThingBrain
     void SelectWieldedItem()
     {
         if (ControlledThing.WieldedThing != null)
-            SelectThing(ControlledThing.WieldedThing);
+            SelectThing(ControlledThing.WieldedThing, playSfx: true);
     }
 
     public void UseWieldedThing()
@@ -685,7 +694,7 @@ public partial class RoguemojiPlayer : ThingBrain
         ControlledThing.UseWieldedThing(gridType, targetGridPos);
     }
 
-    public void MoveThingTo(Thing thing, GridType targetGridType, IntVector targetGridPos, bool dontRequireAction = false, bool wieldIfPossible = false)
+    public void MoveThingTo(Thing thing, GridType targetGridType, IntVector targetGridPos, bool dontRequireAction = false, bool wieldIfPossible = false, bool playSfx = false)
     {
         if (IsAiming)
             StopAiming();
@@ -696,7 +705,7 @@ public partial class RoguemojiPlayer : ThingBrain
 
         if (!acting.IsActionReady && !dontRequireAction)
         {
-            QueuedAction = new MoveThingAction(thing, targetGridType, targetGridPos, thing.ContainingGridType, thing.GridPos, wieldIfPossible);
+            QueuedAction = new MoveThingAction(thing, targetGridType, targetGridPos, thing.ContainingGridType, thing.GridPos, wieldIfPossible, playSfx);
             QueuedActionName = QueuedAction.ToString();
             return;
         }
@@ -750,6 +759,9 @@ public partial class RoguemojiPlayer : ThingBrain
             thing.CurrentLevelId = ControlledThing.CurrentLevelId;
 
             thing.ThingOwningThis = null;
+
+            if (playSfx)
+                thing.PlaySfx(SoundActionType.Drop);
         }
 
         if (targetGridType == GridType.Inventory)
@@ -837,7 +849,7 @@ public partial class RoguemojiPlayer : ThingBrain
                 return;
 
             if (!rightClick)
-                SelectThing(thing);
+                SelectThing(thing, playSfx: true);
         }
         else if (gridType == GridType.Inventory)
         {
@@ -853,7 +865,7 @@ public partial class RoguemojiPlayer : ThingBrain
             else if (!rightClick)
             {
                 if (thing != null && shift)
-                    MoveThingTo(thing, GridType.Arena, ControlledThing.GridPos);
+                    MoveThingTo(thing, GridType.Arena, ControlledThing.GridPos, playSfx: true);
                 else
                     SelectThing(thing);
             }
@@ -865,9 +877,9 @@ public partial class RoguemojiPlayer : ThingBrain
             if (!rightClick)
             {
                 if (thing != null && shift)
-                    MoveThingTo(thing, GridType.Arena, ControlledThing.GridPos);
+                    MoveThingTo(thing, GridType.Arena, ControlledThing.GridPos, playSfx: true);
                 else
-                    SelectThing(thing);
+                    SelectThing(thing, playSfx: true);
             }
             else
             {
@@ -891,7 +903,7 @@ public partial class RoguemojiPlayer : ThingBrain
         }
         else
         {
-            SelectThing(thing);
+            SelectThing(thing, playSfx: true);
         }
     }
 
@@ -902,7 +914,7 @@ public partial class RoguemojiPlayer : ThingBrain
 
         if (destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.Nearby || destinationPanelType == PanelType.None)
         {
-            MoveThingTo(thing, GridType.Arena, ControlledThing.GridPos);
+            MoveThingTo(thing, GridType.Arena, ControlledThing.GridPos, playSfx: true);
         }
         else if (destinationPanelType == PanelType.InventoryGrid)
         {
@@ -924,7 +936,7 @@ public partial class RoguemojiPlayer : ThingBrain
                 if (!thing.GridPos.Equals(targetGridPos))
                     SwapGridThingPos(thing, GridType.Inventory, targetGridPos);
                 else
-                    SelectThing(thing);
+                    SelectThing(thing, playSfx: true);
             }
         }
         else if (destinationPanelType == PanelType.EquipmentGrid)
@@ -937,7 +949,7 @@ public partial class RoguemojiPlayer : ThingBrain
         else if (destinationPanelType == PanelType.Wielding)
         {
             if (ControlledThing.WieldedThing == thing)
-                SelectThing(thing);
+                SelectThing(thing, playSfx: true);
             else if (!thing.HasFlag(ThingFlags.Equipment))
                 WieldThing(thing);
         }
@@ -950,7 +962,7 @@ public partial class RoguemojiPlayer : ThingBrain
         }
         else if (destinationPanelType == PanelType.Info)
         {
-            SelectThing(thing);
+            SelectThing(thing, playSfx: true);
         }
     }
 
@@ -961,7 +973,7 @@ public partial class RoguemojiPlayer : ThingBrain
 
         if (destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.Nearby)// || destinationPanelType == PanelType.None)
         {
-            MoveThingTo(thing, GridType.Arena, ControlledThing.GridPos);
+            MoveThingTo(thing, GridType.Arena, ControlledThing.GridPos, playSfx: true);
         }
         else if (destinationPanelType == PanelType.InventoryGrid)
         {
@@ -972,11 +984,11 @@ public partial class RoguemojiPlayer : ThingBrain
             if (!thing.GridPos.Equals(targetGridPos))
                 SwapGridThingPos(thing, GridType.Equipment, targetGridPos);
             else
-                SelectThing(thing);
+                SelectThing(thing, playSfx: true);
         }
         else if (destinationPanelType == PanelType.Info)
         {
-            SelectThing(thing);
+            SelectThing(thing, playSfx: true);
         }
     }
 
@@ -1002,7 +1014,7 @@ public partial class RoguemojiPlayer : ThingBrain
         }
         else if (destinationPanelType == PanelType.Nearby)
         {
-            SelectThing(thing);
+            SelectThing(thing, playSfx: true);
         }
         else if (destinationPanelType == PanelType.Wielding)
         {
@@ -1021,7 +1033,7 @@ public partial class RoguemojiPlayer : ThingBrain
         }
         else if (destinationPanelType == PanelType.Info)
         {
-            SelectThing(thing);
+            SelectThing(thing, playSfx: true);
         }
     }
 
@@ -1035,17 +1047,17 @@ public partial class RoguemojiPlayer : ThingBrain
         else if (shift)
             MoveThingTo(ControlledThing.WieldedThing, GridType.Arena, ControlledThing.GridPos);
         else
-            SelectThing(ControlledThing.WieldedThing);
+            SelectThing(ControlledThing.WieldedThing, playSfx: true);
     }
 
     public void PlayerIconClicked(bool rightClick, bool shift)
     {
-        SelectThing(ControlledThing);
+        SelectThing(ControlledThing, playSfx: true);
     }
 
     public void CharacterHotkeyPressed()
     {
-        SelectThing(ControlledThing);
+        SelectThing(ControlledThing, playSfx: true);
     }
 
     public GridManager GetGridManager(GridType gridType)
@@ -1236,7 +1248,6 @@ public partial class RoguemojiPlayer : ThingBrain
                 MoveThingTo(InventoryGridManager.Things[0], GridType.Arena, ControlledThing.GridPos, dontRequireAction: true);
         }
             
-
         while (EquipmentGridManager.Things.Count > 0)
         {
             if (Game.Random.Int(0, 1) == 0 && ControlledThing.ContainingGridManager.GetRandomEmptyGridPosWithinRange(ControlledThing.GridPos, out var emptyGridPos, RANGE, allowNonSolid: true))
@@ -1246,6 +1257,14 @@ public partial class RoguemojiPlayer : ThingBrain
         }
 
         DropWieldedItem();
+    }
+
+    public void PlaySfxUI(string name, float volume = 1f, float pitch = 1f)
+    {
+        //var sound = Sound.FromScreen(To.Single(Client), name, x: 0.5f, y: 0.5f);
+        var sound = Sound.FromWorld(To.Single(Client), name, Vector3.Zero);
+        sound.SetPitch(pitch);
+        sound.SetVolume(volume);
     }
 }
 
@@ -1282,8 +1301,9 @@ public class MoveThingAction : IQueuedAction
     public GridType SourceGridType { get; set; }
     public IntVector SourceGridPos { get; set; }
     public bool WieldIfPossible { get; set; }
+    public bool PlaySfx { get; set; }
 
-    public MoveThingAction(Thing thing, GridType targetGridType, IntVector targetGridPos, GridType sourceGridType, IntVector sourceGridPos, bool wieldIfPossible = false)
+    public MoveThingAction(Thing thing, GridType targetGridType, IntVector targetGridPos, GridType sourceGridType, IntVector sourceGridPos, bool wieldIfPossible = false, bool playSfx = false)
     {
         Thing = thing;
         TargetGridType = targetGridType;
@@ -1291,6 +1311,7 @@ public class MoveThingAction : IQueuedAction
         SourceGridType = sourceGridType;
         SourceGridPos = sourceGridPos;
         WieldIfPossible = wieldIfPossible;
+        PlaySfx = playSfx;
     }
 
     public void Execute(RoguemojiPlayer player)
@@ -1298,7 +1319,7 @@ public class MoveThingAction : IQueuedAction
         if (Thing.ContainingGridType != SourceGridType || !Thing.GridPos.Equals(SourceGridPos))
             return;
 
-        player.MoveThingTo(Thing, TargetGridType, TargetGridPos, wieldIfPossible: WieldIfPossible);
+        player.MoveThingTo(Thing, TargetGridType, TargetGridPos, wieldIfPossible: WieldIfPossible, playSfx: PlaySfx);
     }
 
     public override string ToString()

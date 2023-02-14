@@ -118,13 +118,6 @@ public partial class Smiley : Thing
         }
     }
 
-    public override void OnMove(Direction direction)
-    {
-        base.OnMove(direction);
-
-        RoguemojiGame.Instance.PlaySfxArena("footstep_grass", GridPos, CurrentLevelId);
-    }
-
     public override void TakeDamageFrom(Thing thing)
     {
         base.TakeDamageFrom(thing);

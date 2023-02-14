@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using Sandbox.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -265,9 +266,8 @@ public partial class Thing : Entity
 
         OnMove(direction);
 
-        //var moveSound = GetMoveSound();
-        //if (!string.IsNullOrEmpty(moveSound))
-        //    RoguemojiGame.Instance.PlaySfxArena(moveSound, GridPos, CurrentLevelId, loudness: GetHitSoundLoudness(hittingThing));
+        if(HasFlag(ThingFlags.Solid))
+            PlaySfx(SoundActionType.Move);
 
         return true;
     }
@@ -305,10 +305,7 @@ public partial class Thing : Entity
     {
         TakeDamageFrom(hittingThing);
         VfxShake(0.2f, 4f);
-
-        var hitSound = GetHitSound(hittingThing);
-        if(!string.IsNullOrEmpty(hitSound))
-            RoguemojiGame.Instance.PlaySfxArena(hitSound, GridPos, CurrentLevelId, loudness: GetHitSoundLoudness(hittingThing));
+        PlaySfx(SoundActionType.GetHit);
     }
 
     public virtual void TakeDamageFrom(Thing thing)
@@ -812,6 +809,7 @@ public partial class Thing : Entity
 
             ContainingGridManager.AddThing(thing);
             thing.SetGridPos(dropGridPos);
+            thing.PlaySfx(SoundActionType.Drop);
             thing.VfxFly(GridPos, lifetime: 0.25f, heightY: 30f, progressEasingType: EasingType.Linear, heightEasingType: EasingType.SineInOut);
 
             thing.CanBeSeenByPlayerClient(GridPos);
@@ -829,30 +827,5 @@ public partial class Thing : Entity
         }
 
         return false;
-    }
-
-    public virtual string GetHitSound(Thing hittingThing) { return "impact"; }
-    public virtual int GetHitSoundLoudness(Thing hittingThing) { return 0; }
-
-    public virtual string GetMoveSound(SurfaceType surfaceType)
-    {
-        switch(surfaceType)
-        {
-            case SurfaceType.Grass:
-                return "";
-        }
-
-        return "";
-    }
-
-    public virtual int GetMoveSoundLoudness(SurfaceType surfaceType)
-    {
-        switch (surfaceType)
-        {
-            case SurfaceType.Grass:
-                return 0;
-        }
-
-        return 0;
     }
 }
