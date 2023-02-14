@@ -265,6 +265,10 @@ public partial class Thing : Entity
 
         OnMove(direction);
 
+        //var moveSound = GetMoveSound();
+        //if (!string.IsNullOrEmpty(moveSound))
+        //    RoguemojiGame.Instance.PlaySfxArena(moveSound, GridPos, CurrentLevelId, loudness: GetHitSoundLoudness(hittingThing));
+
         return true;
     }
 
@@ -294,8 +298,17 @@ public partial class Thing : Entity
         //if (shouldUse && HasFlag(ThingFlags.Useable) && target.CanUseThing(this))
         //    Use(target);
 
-        target.TakeDamageFrom(this);
-        target.VfxShake(0.2f, 4f);
+        target.HitBy(this, direction);
+    }
+
+    public virtual void HitBy(Thing hittingThing, Direction direction)
+    {
+        TakeDamageFrom(hittingThing);
+        VfxShake(0.2f, 4f);
+
+        var hitSound = GetHitSound(hittingThing);
+        if(!string.IsNullOrEmpty(hitSound))
+            RoguemojiGame.Instance.PlaySfxArena(hitSound, GridPos, CurrentLevelId, loudness: GetHitSoundLoudness(hittingThing));
     }
 
     public virtual void TakeDamageFrom(Thing thing)
@@ -816,5 +829,30 @@ public partial class Thing : Entity
         }
 
         return false;
+    }
+
+    public virtual string GetHitSound(Thing hittingThing) { return "impact"; }
+    public virtual int GetHitSoundLoudness(Thing hittingThing) { return 0; }
+
+    public virtual string GetMoveSound(SurfaceType surfaceType)
+    {
+        switch(surfaceType)
+        {
+            case SurfaceType.Grass:
+                return "";
+        }
+
+        return "";
+    }
+
+    public virtual int GetMoveSoundLoudness(SurfaceType surfaceType)
+    {
+        switch (surfaceType)
+        {
+            case SurfaceType.Grass:
+                return 0;
+        }
+
+        return 0;
     }
 }

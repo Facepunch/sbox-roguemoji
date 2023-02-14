@@ -41,7 +41,7 @@ public partial class Hole : Thing
     {
         thing.RemoveComponent<VfxSlide>();
 
-        var nextLevelId = (CurrentLevelId == LevelId.Forest0) ? LevelId.Forest1 : LevelId.Forest2;
+        var nextLevelId = (CurrentLevelId == LevelId.Forest1) ? LevelId.Forest2 : LevelId.Forest3;
 
         var exitingLevel = thing.AddComponent<CExitingLevel>();
         exitingLevel.TargetLevelId = nextLevelId;

@@ -33,4 +33,14 @@ public partial class Leaf : Thing
         if (type == TypeLibrary.GetType(typeof(CProjectile)) || type == TypeLibrary.GetType(typeof(CTempIconDepth)))
             SetIcon("🍂");
     }
+
+    public override void OnMovedOntoBy(Thing thing)
+    {
+        base.OnMovedOntoBy(thing);
+
+        if(thing.HasFlag(ThingFlags.Solid))
+        {
+            RoguemojiGame.Instance.PlaySfxArena("footstep_dry_leaves", GridPos, CurrentLevelId, loudness: 2);
+        }
+    }
 }

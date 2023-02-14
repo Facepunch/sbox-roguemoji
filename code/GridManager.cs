@@ -106,6 +106,22 @@ public partial class GridManager : Entity
         return thing;
     }
 
+    public void SpawnThing(TypeDescription type, IntVector gridPos)
+    {
+        Game.AssertServer();
+
+        var thing = TypeLibrary.Create<Thing>(type.TargetType);
+        AddThing(thing);
+
+        thing.SetGridPos(gridPos);
+        thing.CurrentLevelId = LevelId;
+
+        thing.OnSpawned();
+
+        if ((GridType == GridType.Inventory || GridType == GridType.Equipment) && OwningPlayer != null)
+            thing.ThingOwningThis = OwningPlayer.ControlledThing;
+    }
+
     public void AddThing(Thing thing)
 	{
 		Things.Add(thing);
@@ -712,7 +728,8 @@ public partial class GridManager : Entity
 
 	public string GetNearbyBgColor(IntVector gridPos)
 	{
-		return Level.GetLevelBgColor(LevelId, Utils.IsOdd(gridPos));
+        var level = RoguemojiGame.Instance.GetLevel(LevelId);
+        return Utils.IsOdd(gridPos) ? level.BgColorOdd : level.BgColorEven;
 	}
 
     public bool HasLineOfSight(IntVector gridPosA, IntVector gridPosB, int sight, out IntVector collisionCell)

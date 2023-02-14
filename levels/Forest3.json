@@ -1,0 +1,12 @@
+{
+  "Name": "Cheese Fields",
+  "Width": 30,
+  "Height": 22,
+  "WalkSound": "footstep_grass",
+  "BgColorEven": "#07270e",
+  "BgColorOdd": "#082b0f",
+  "RandomThings": {
+    "Door": 1,
+    "Cheese": 25,
+  },
+}

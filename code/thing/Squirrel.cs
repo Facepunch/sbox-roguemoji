@@ -81,6 +81,6 @@ public partial class Squirrel : Thing
     {
         base.OnMove(direction);
 
-        RoguemojiGame.Instance.PlaySfxArena("footstep_grass", GridPos, CurrentLevelId, 1f, 1f, maxDist: 5);
+        RoguemojiGame.Instance.PlaySfxArena("footstep_grass", GridPos, CurrentLevelId);
     }
 }

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using Sandbox;
 
 namespace Roguemoji;
@@ -14,22 +17,38 @@ public partial class Level : Entity
 
     [Net] public string LevelName { get; private set; }
 
+    public LevelData LevelData { get; private set; }
+
+    public SurfaceType SurfaceType { get; private set; }
+
+    [Net] public string BgColorEven { get; private set; }
+    [Net] public string BgColorOdd { get; private set; }
+    public string WalkSound { get; private set; }
+
     public void Init(LevelId levelId)
     {
         LevelId = levelId;
 
-        GetLevelSize(levelId, out var width, out var height);
+        LevelData = FileSystem.Mounted.ReadJson<LevelData>($"levels/{levelId}.json");
+
+        if(LevelData == null)
+        {
+            Log.Error($"Level {levelId} not loaded!");
+        }
 
         GridManager = new();
-        GridManager.Init(width, height);
+        GridManager.Init(LevelData.Width, LevelData.Height);
         GridManager.GridType = GridType.Arena;
         GridManager.LevelId = LevelId;
 
-        LevelName = GetLevelName(levelId);
+        LevelName = LevelData.Name;
+        BgColorEven = LevelData.BgColorEven;
+        BgColorOdd = LevelData.BgColorOdd;
+        WalkSound = LevelData.WalkSound;
 
         Transmit = TransmitType.Always;
 
-        SpawnStartingThings(levelId);
+        SpawnStartingThings();
     }
 
     public void Update(float dt)
@@ -45,156 +64,33 @@ public partial class Level : Entity
     public void Restart()
     {
         GridManager.Restart();
-        SpawnStartingThings(LevelId);
+        SpawnStartingThings();
     }
 
-    void GetLevelSize(LevelId levelId, out int width, out int height)
+    void SpawnStartingThings()
     {
-        switch (levelId)
+        if (LevelData.Things != null)
         {
-            case LevelId.Forest0: width = 40; height = 25; break;
-            case LevelId.Forest1: width = 30; height = 22; break;
-            case LevelId.Forest2: width = 30; height = 22; break;
-            case LevelId.Test0: width = 9; height = 3; break;
-            default: width = 0; height = 0;break;
-        }
-    }
-
-    string GetLevelName(LevelId levelId)
-    {
-        switch (levelId)
-        {
-            case LevelId.Forest0: return "Forest 1";
-            case LevelId.Forest1: return "Forest 2";
-            case LevelId.Forest2: return "Cheese Fields";
-            case LevelId.Test0: return "Test0";
-            default: return "???";
-        }
-    }
-
-    public static string GetLevelBgColor(LevelId levelId, bool odd)
-    {
-        switch (levelId)
-        {
-            case LevelId.Forest0: return odd ? "#082b0f" : "#07270e";
-            //case LevelId.Forest0: return odd ? "#083211" : "#082e10";
-            case LevelId.Forest1: return odd ? "#051609" : "#041408";
-            case LevelId.Forest2: return odd ? "#051609" : "#041408";
-            case LevelId.Test0: return odd ? "#051609" : "#041408";
-            default: return "#000000";
-        }
-    }
-
-    void SpawnStartingThings(LevelId levelId)
-    {
-        if(levelId == LevelId.Forest0)
-        {
-            GridManager.SpawnThing<OilBarrel>(new IntVector(GridManager.GridWidth - 1, GridManager.GridHeight - 1));
-            GridManager.SpawnThing<OilBarrel>(new IntVector(GridManager.GridWidth - 2, GridManager.GridHeight - 1));
-            GridManager.SpawnThing<OilBarrel>(new IntVector(GridManager.GridWidth - 1, GridManager.GridHeight - 2));
-            GridManager.SpawnThing<OilBarrel>(new IntVector(GridManager.GridWidth - 2, GridManager.GridHeight - 2));
-
-            //for (int x = 0; x < GridManager.GridWidth; x++)
-            //{
-            //    GridManager.SpawnThing<OilBarrel>(new IntVector(x, 0));
-            //    GridManager.SpawnThing<OilBarrel>(new IntVector(x, GridManager.GridHeight - 1));
-            //}
-
-            //for (int y = 1; y < GridManager.GridHeight - 1; y++)
-            //{
-            //    GridManager.SpawnThing<OilBarrel>(new IntVector(0, y));
-            //    GridManager.SpawnThing<OilBarrel>(new IntVector(GridManager.GridWidth - 1, y));
-            //}
-
-            //GridManager.SpawnThing<Golem>(new IntVector(10, 10));
-            GridManager.SpawnThing<Leaf>(new IntVector(9, 10));
-            GridManager.SpawnThing<Leaf>(new IntVector(21, 19));
-
-            //GridManager.SpawnThing<Hole>(new IntVector(2, 2));
-
+            foreach (var pair in LevelData.Things)
             {
-                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
-                    GridManager.SpawnThing<Hole>(gridPos);
-            }
+                var type = TypeLibrary.GetType<Thing>(pair.Key);
 
-            for (int i = 0; i < 50; i++)
-            {
-                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
-                    GridManager.SpawnThing<TreeEvergreen>(gridPos);
-            }
-
-            for (int i = 0; i < 50; i++)
-            {
-                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
-                    GridManager.SpawnThing<TreeDeciduous>(gridPos);
-            }
-
-            for (int i = 0; i < 6; i++)
-            {
-                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
-                    GridManager.SpawnThing<Squirrel>(gridPos);
-            }
-
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    if (GridManager.GetRandomEmptyGridPos(out var gridPos))
-            //    {
-            //        var smiley = GridManager.SpawnThing<Smiley>(gridPos);
-            //        smiley.AddComponent<CTargeting>();
-            //        var brain = new SquirrelBrain();
-            //        brain.ControlThing(smiley);
-            //    }
-            //}
-        }
-        else if(levelId == LevelId.Forest1)
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
-                    GridManager.SpawnThing<Squirrel>(gridPos);
-            }
-
-            {
-                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
-                    GridManager.SpawnThing<Hole>(gridPos);
-            }
-
-            {
-                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
-                    GridManager.SpawnThing<Door>(gridPos);
+                foreach (var gridPos in pair.Value)
+                    GridManager.SpawnThing(type, gridPos);
             }
         }
-        else if (levelId == LevelId.Forest2)
+
+        if (LevelData.RandomThings != null)
         {
-            for (int i = 0; i < 25; i++)
+            foreach (var pair in LevelData.RandomThings)
             {
-                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
-                    GridManager.SpawnThing<Cheese>(gridPos);
-            }
+                var type = TypeLibrary.GetType<Thing>(pair.Key);
 
-            {
-                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
-                    GridManager.SpawnThing<Door>(gridPos);
-            }
-        }
-        else if (levelId == LevelId.Test0)
-        {
-            for (int i = 0; i < 2; i++)
-            {
-                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
-                    GridManager.SpawnThing<TreeEvergreen>(gridPos);
-            }
-
-            for (int i = 0; i < 2; i++)
-            {
-                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
-                    GridManager.SpawnThing<TreeDeciduous>(gridPos);
-            }
-
-            for (int i = 0; i < 1; i++)
-            {
-                if (GridManager.GetRandomEmptyGridPos(out var gridPos))
-                    GridManager.SpawnThing<Smiley>(gridPos);
+                for (int i = 0; i < pair.Value; i++)
+                {
+                    if (GridManager.GetRandomEmptyGridPos(out var gridPos))
+                        GridManager.SpawnThing(type, gridPos);
+                }
             }
         }
     }

@@ -70,7 +70,7 @@ public partial class Smiley : Thing
         InitStat(StatType.Stealth, 0, -999, 999);
         InitStat(StatType.Charisma, 3);
         InitStat(StatType.Sight, 7, min: 0); // setting this will RefreshVisibility for the player
-        InitStat(StatType.Hearing, 3);
+        InitStat(StatType.Hearing, 5);
         InitStat(StatType.SightBlockAmount, 10);
         //InitStat(StatType.Smell, 1);
         FinishInitStats();
@@ -111,10 +111,10 @@ public partial class Smiley : Thing
 
         if(other is Door)
         {
-            if (CurrentLevelId == LevelId.Forest1)
-                RoguemojiGame.Instance.ChangeThingLevel(this, LevelId.Forest0);
-            else if (CurrentLevelId == LevelId.Forest2)
+            if (CurrentLevelId == LevelId.Forest2)
                 RoguemojiGame.Instance.ChangeThingLevel(this, LevelId.Forest1);
+            else if (CurrentLevelId == LevelId.Forest3)
+                RoguemojiGame.Instance.ChangeThingLevel(this, LevelId.Forest2);
         }
     }
 
@@ -122,7 +122,7 @@ public partial class Smiley : Thing
     {
         base.OnMove(direction);
 
-        RoguemojiGame.Instance.PlaySfxArena("footstep_grass", GridPos, CurrentLevelId, 1f, 1f, maxDist: 5);
+        RoguemojiGame.Instance.PlaySfxArena("footstep_grass", GridPos, CurrentLevelId);
     }
 
     public override void TakeDamageFrom(Thing thing)

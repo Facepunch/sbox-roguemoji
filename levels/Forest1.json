@@ -1,0 +1,26 @@
+{
+  "Name": "Forest 1",
+  "Width": 40,
+  "Height": 25,
+  "WalkSound": "footstep_grass",
+  "BgColorEven": "#07270e",
+  "BgColorOdd": "#082b0f",
+  "Things": {
+    "OilBarrel": [
+      { "x": 39, "y": 24 },
+      { "x": 38, "y": 24 },
+      { "x": 39, "y": 23 },
+      { "x": 38, "y": 23 },
+    ],
+    "Leaf": [
+      { "x": 9, "y": 10 },
+      { "x": 21, "y": 19 },
+    ],
+  },
+  "RandomThings": {
+    "Hole": 1,
+    "TreeEvergreen": 50,
+    "TreeDeciduous": 50,
+    "Squirrel": 6,
+  },
+}

@@ -9,7 +9,9 @@ public partial class TreeDeciduous : Thing
 
     public int HealthAmount { get; set; }
 
-	public TreeDeciduous()
+    public override string GetHitSound(Thing hittingThing) { return "deciduous_tree_hit"; }
+
+    public TreeDeciduous()
 	{
 		DisplayIcon = "🌳";
         DisplayName = "Tree";

@@ -21,7 +21,7 @@ public class PanelFlickerData
 public enum LevelId
 {
 	None,
-	Forest0, Forest1, Forest2, Forest3,
+	Forest1, Forest2, Forest3,
     Test0,
 }
 
@@ -72,7 +72,7 @@ public partial class RoguemojiGame : GameManager
 		if (Game.IsServer)
 		{
             Levels = new Dictionary<LevelId, Level>();
-            CreateLevel(LevelId.Forest0);
+            CreateLevel(LevelId.Forest1);
             //CreateLevel(LevelId.Test0);
 
             Players = new List<RoguemojiPlayer>();
@@ -87,12 +87,57 @@ public partial class RoguemojiGame : GameManager
             UnidentifiedPotionNames = new List<string>() { "cloudy", "misty", "murky", "sparkling", "fizzy", "bubbly", "smoky", "congealed", "chalky", "radiant", "milky", "thick", "pasty", "glossy", "dull", "dusty", "syrupy", "pungent", 
                 "viscous", "sludgy", "pale", "filmy", "rusty", "chunky", "creamy", "hazy", "silky", "foggy", "pulpy", "dark", "oily", "opaque", "shiny", "frothy", "wavy" };
             UnidentifiedPotionNames.Shuffle();
+
+            var levelData = FileSystem.Mounted.ReadJson<LevelData>("levels/Forest1.json");
+            Log.Info($"{levelData.Name} {levelData.Width} {levelData.Height} {levelData.WalkSound}");
+
+            foreach (var thing in levelData.Things)
+            {
+                var list = thing.Value;
+                foreach(var t2 in list)
+                {
+                    Log.Info(thing.Key + ": " + t2);
+                }
+            }
+
+            foreach (var thing in levelData.RandomThings)
+            {
+                Log.Info(thing.Key + ": " + thing.Value);
+            }
         }
 
 		if (Game.IsClient)
 		{
 			Hud = new Hud();
 			_panelsToFlicker = new List<PanelFlickerData>();
+
+            //var levelData = new LevelData()
+            //{
+            //    Name = "Test Level",
+            //    Width = 21,
+            //    Height = 17,
+            //    Things = new Dictionary<string, List<IntVector>>() 
+            //    { 
+            //        { 
+            //            "Trumpet", 
+            //            new List<IntVector>() 
+            //            { 
+            //                new IntVector(10, 10), 
+            //                new IntVector(10, 10) 
+            //            } 
+            //        }, 
+            //        { 
+            //            "TreeDeciduous", 
+            //            new List<IntVector>() 
+            //            { 
+            //                new IntVector(2, 1) 
+            //            } 
+            //        }, 
+            //    },
+            //    RandomThings = new Dictionary<string, int>() { { "Bone", 5 }, { "Squirrel", 3 } },
+            //};
+
+            //FileSystem.Data.WriteJson("test_level_data.json", levelData);
         }
 	}
 
@@ -177,7 +222,7 @@ public partial class RoguemojiGame : GameManager
 	{
 		base.ClientJoined(client);
 
-        var levelId = LevelId.Forest0;
+        var levelId = LevelId.Forest1;
         //var levelId = LevelId.Test0;
 
         var level0 = Levels[levelId];
@@ -188,12 +233,11 @@ public partial class RoguemojiGame : GameManager
 
         RoguemojiPlayer player = new RoguemojiPlayer();
         player.PlayerNum = ++PlayerNum;
-
         player.ControlThing(smiley);
 
-        //smiley.CurrentLevelId = levelId;
-        smiley.PlayerNum = player.PlayerNum;
-        
+        smiley.DisplayName = $"{client.Name}";
+        smiley.Tooltip = $"{client.Name}";
+
         client.Pawn = player;
 
         level0.GridManager.AddPlayer(player);
@@ -421,14 +465,12 @@ public partial class RoguemojiGame : GameManager
             player.RestartClient();
             //player.RestartClient(To.Everyone);
 
-            var levelId = LevelId.Forest0;
+            var levelId = LevelId.Forest1;
             //var levelId = LevelId.Test0;
             var level0 = Levels[levelId];
             level0.GridManager.GetRandomEmptyGridPos(out var gridPos);
             var smiley = level0.GridManager.SpawnThing<Smiley>(gridPos);
             player.ControlThing(smiley);
-            //smiley.CurrentLevelId = levelId;
-            smiley.PlayerNum = player.PlayerNum;
 
             level0.GridManager.AddPlayer(player);
 
@@ -579,7 +621,7 @@ public partial class RoguemojiGame : GameManager
         Hud.Instance.DebugDrawing.GridCell(gridPos, color, time, gridType);
     }
 
-    public void PlaySfxArena(string name, IntVector soundPos, LevelId levelId, float volume, float pitch, int maxDist)
+    public void PlaySfxArena(string name, IntVector soundPos, LevelId levelId, int loudness = 0, float volume = 1f, float pitch = 1f)
     {
         foreach (RoguemojiPlayer player in Players)
         {
@@ -589,6 +631,9 @@ public partial class RoguemojiGame : GameManager
                 continue;
 
             var playerPos = playerThing.GridPos;
+
+            int hearing = playerThing.GetStatClamped(StatType.Hearing);
+            int maxDist = loudness + hearing;
 
             var dist = Utils.GetDistance(soundPos, playerPos);
             if (dist > maxDist)

@@ -102,6 +102,19 @@ public partial class RoguemojiPlayer : ThingBrain
         RoguemojiGame.Instance.RefreshNearbyPanelClient();
     }
 
+    public override void ControlThing(Thing thing)
+    {
+        base.ControlThing(thing);
+
+        thing.PlayerNum = PlayerNum;
+
+        if (Client == null)
+            return;
+
+        thing.DisplayName = $"{Client.Name}";
+        thing.Tooltip = $"{Client.Name}";
+    }
+
     public void Restart()
     {
         SetStartingValues();
@@ -531,7 +544,6 @@ public partial class RoguemojiPlayer : ThingBrain
 
         var ghost = ControlledThing.ContainingGridManager.SpawnThing<Ghost>(ControlledThing.GridPos);
         ControlThing(ghost);
-        ghost.PlayerNum = PlayerNum;
         ghost.DisplayName = $"Ghost of {Client.Name}";
         ghost.Tooltip = $"ghost of {Client.Name}";
     }

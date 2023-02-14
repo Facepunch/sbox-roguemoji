@@ -37,6 +37,8 @@ public partial class Axe : Thing
         {
             target.VfxShake(0.25f, 6f);
             target.Hurt(TreeAttackAmount);
+
+            RoguemojiGame.Instance.PlaySfxArena("tree_hit_by_axe", target.GridPos, target.CurrentLevelId, loudness: 3);
         }
         else
         {

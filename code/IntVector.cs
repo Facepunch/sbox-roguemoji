@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using Sandbox;
 
 namespace Roguemoji;
@@ -157,47 +158,47 @@ public struct IntVector : IEquatable<IntVector>
 	/// <summary>
 	/// Horizontal component.
 	/// </summary>
-	public int x;
+	public int x { get; set; }
 
 	/// <summary>
 	/// Vertical component.
 	/// </summary>
-	public int y;
+	public int y { get; set; }
 
 	/// <summary>
 	/// Floating point magnitude of the vector.
 	/// </summary>
-	public float Length { get { return (float)MathF.Sqrt( x * x + y * y ); } }
+	[JsonIgnore] public float Length { get { return (float)MathF.Sqrt( x * x + y * y ); } }
 
-	/// <summary>
-	/// Magnitude of the vector in Taxicab geometry.
-	/// </summary>
-	public int ManhattanLength { get { return (int)MathF.Abs( x ) + (int)MathF.Abs( y ); } }
+    /// <summary>
+    /// Magnitude of the vector in Taxicab geometry.
+    /// </summary>
+    [JsonIgnore] public int ManhattanLength { get { return (int)MathF.Abs( x ) + (int)MathF.Abs( y ); } }
 
-	/// <summary>
-	/// Sum of each component squared.
-	/// </summary>
-	public int LengthSquared { get { return x * x + y * y; } }
+    /// <summary>
+    /// Sum of each component squared.
+    /// </summary>
+    [JsonIgnore] public int LengthSquared { get { return x * x + y * y; } }
 
-	/// <summary>
-	/// Gets a normalized vector in the same direction as this one.
-	/// </summary>
-	public Vector2 Normalized { get { return LengthSquared >= float.Epsilon ? this / Length : Zero; } }
+    /// <summary>
+    /// Gets a normalized vector in the same direction as this one.
+    /// </summary>
+    [JsonIgnore] public Vector2 Normalized { get { return LengthSquared >= float.Epsilon ? this / Length : Zero; } }
 
 	/// <summary>
 	/// Gets a vector equal to this one rotated counter-clockwise by 90 degrees.
 	/// </summary>
-	public IntVector Left { get { return new IntVector( -y, x ); } }
+	//public IntVector Left { get { return new IntVector( -y, x ); } }
 
-	/// <summary>
-	/// Gets a vector equal to this one rotated clockwise 90 degrees.
-	/// </summary>
-	public IntVector Right { get { return new IntVector( y, -x ); } }
+	///// <summary>
+	///// Gets a vector equal to this one rotated clockwise 90 degrees.
+	///// </summary>
+	//public IntVector Right { get { return new IntVector( y, -x ); } }
 
-	/// <summary>
-	/// Gets a vector equal to this one rotated 180 degrees.
-	/// </summary>
-	public IntVector Back { get { return -this; } }
+	///// <summary>
+	///// Gets a vector equal to this one rotated 180 degrees.
+	///// </summary>
+	//public IntVector Back { get { return -this; } }
 
 	/// <summary>
 	/// Constructs a vector from the given X and Y components.

@@ -1,12 +1,12 @@
 {
   "UI": true,
-  "Volume": "0.40,0.40,0",
-  "Pitch": "0.80,0.90,1",
+  "Volume": "1.00,1.00,0",
+  "Pitch": "1.00,1.00,0",
   "Decibels": 70,
   "SelectionMode": "Random",
   "Sounds": [
-    "sounds/footstep_grass_1.vsnd",
-    "sounds/footstep_grass_2.vsnd"
+    "sounds/dry_leaves_1.vsnd",
+    "sounds/dry_leaves_2.vsnd"
   ],
   "MaximumDistance": 1143.9335,
   "MinimumDistance": 57.196674

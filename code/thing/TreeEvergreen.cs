@@ -6,6 +6,8 @@ public partial class TreeEvergreen : Thing
 {
     public int HealthAmount { get; set; }
 
+    public override string GetHitSound(Thing hittingThing) { return "evergreen_tree_hit"; }
+
     public TreeEvergreen()
     {
         DisplayIcon = "🌲";

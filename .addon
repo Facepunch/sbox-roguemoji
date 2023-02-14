@@ -8,7 +8,9 @@
   "HasAssets": true,
   "AssetsPath": "",
   "ResourcePaths": [
-    "/fonts/*"
+    "/fonts/*",
+    "/sounds/*",
+    "/levels/*"
   ],
   "HasCode": true,
   "CodePath": "/code/",
@@ -22,6 +24,7 @@
     "PerMapRanking": false,
     "LeaderboardType": "None",
     "ProjectTemplate": null,
-    "ParentPackage": ""
+    "ParentPackage": "",
+    "CsProjName": ""
   }
 }
