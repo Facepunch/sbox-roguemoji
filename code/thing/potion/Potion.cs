@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public enum PotionType { Health, Mana, Energy, Poison, Blindness, Sleeping, Confusion, Hallucination, Speed, Medicine, Mutation, Invisibility, Amnesia, Burning, }
+public enum PotionType { Health, Mana, Energy, Poison, Blindness, Sleeping, Confusion, Hallucination, Speed, Medicine, Mutation, Invisibility, Amnesia, Burning, Water }
 public partial class Potion : Thing
 {
     [Net] public PotionType PotionType { get; protected set; }
@@ -44,6 +44,7 @@ public partial class Potion : Thing
             case PotionType.Invisibility: return "Invisibility Potion";
             case PotionType.Amnesia: return "Amnesia Potion";
             case PotionType.Burning: return "Burning Potion";
+            case PotionType.Water: return "Water Potion";
         }
 
         return "";
@@ -66,7 +67,7 @@ public partial class Potion : Thing
             case PotionType.Mutation: return $"🧉{Globals.Icon(IconType.Mutation)}";
             case PotionType.Invisibility: return $"🧉{Globals.Icon(IconType.Invisible)}";
             case PotionType.Amnesia: return $"🧉{Globals.Icon(IconType.Amnesia)}";
-            case PotionType.Burning: return $"🧉{Globals.Icon(IconType.Burning)}";
+            case PotionType.Burning: return $"🧉{Globals.Icon(IconType.Water)}";
         }
 
         return "🧉";
@@ -119,7 +120,7 @@ public partial class Potion : Thing
                     gridManager.AddFloater(SplashIcon, gridPos, Game.Random.Float(0.7f, 0.9f), new Vector2(0f, 0f), new Vector2(0f, Game.Random.Float(-10f, -15f)), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true,
                         EasingType.QuadOut, fadeInTime: Game.Random.Float(0.01f, 0.05f), scale: Game.Random.Float(0.75f, 0.9f), opacity: 0.4f);
 
-                    ApplyEffectToGridPos(gridPos);
+                    ApplyEffectToGridPos(gridManager, gridPos);
 
                     foreach (var thing in gridManager.GetThingsAt(gridPos))
                         ApplyEffectToThing(thing);
@@ -133,5 +134,5 @@ public partial class Potion : Thing
     }
 
     public virtual void ApplyEffectToThing(Thing thing) { }
-    public virtual void ApplyEffectToGridPos(IntVector gridPos) { }
+    public virtual void ApplyEffectToGridPos(GridManager gridManager, IntVector gridPos) { }
 }

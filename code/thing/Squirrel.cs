@@ -69,7 +69,10 @@ public partial class Squirrel : Thing
     {
         // todo: dont spawn blood if burned to death
         if(!ContainingGridManager.DoesGridPosContainThingType<PuddleBlood>(GridPos))
+        {
+            ContainingGridManager.RemovePuddles(GridPos);
             ContainingGridManager.SpawnThing<PuddleBlood>(GridPos);
+        }
 
         if (Game.Random.Float(0f, 1f) < 0.5f)
             ContainingGridManager.SpawnThing<Bone>(GridPos);

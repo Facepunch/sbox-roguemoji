@@ -218,6 +218,28 @@ public partial class GridManager : Entity
         }
     }
 
+    public void RemovePuddles(IntVector gridPos)
+    {
+        var things = GetThingsAt(gridPos).ToList();
+        for(int i = things.Count - 1; i >= 0; i--)
+        {
+            var thing = things[i];
+            if(thing is PuddleWater || thing is PuddleBlood)
+                thing.Destroy();
+        }
+    }
+
+    public bool ShouldCellPutOutFire(IntVector gridPos)
+    {
+        foreach(var thing in GetThingsAt(gridPos))
+        {
+            if (thing is PuddleWater || thing is PuddleBlood)
+                return true;
+        }
+
+        return false;
+    }
+
 	public void CheckPlayerVisionChange(Thing thing, IntVector gridPos, PlayerVisionChangeReason reason)
 	{
         foreach (var player in ContainedPlayers)

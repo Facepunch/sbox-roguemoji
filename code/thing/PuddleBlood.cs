@@ -41,4 +41,18 @@ public partial class PuddleBlood : Thing
             ShouldUpdate = false;
         }
     }
+
+    public override void OnMovedOntoBy(Thing thing)
+    {
+        base.OnMovedOntoBy(thing);
+
+        PuddleWater.MakeWet(thing);
+    }
+
+    public override void OnMovedOntoThing(Thing thing)
+    {
+        base.OnMovedOntoThing(thing);
+
+        PuddleWater.MakeWet(thing);
+    }
 }

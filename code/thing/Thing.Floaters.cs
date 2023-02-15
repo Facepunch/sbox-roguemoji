@@ -48,7 +48,7 @@ public struct ThingFloaterData
 
 public partial class Thing : Entity
 {
-    public bool HasFloaters => Floaters != null && Floaters.Count > 0;
+    public bool HasFloaters => Floaters != null && Floaters.Count > 0; // Client-only
     public List<ThingFloaterData> Floaters { get; private set; } // Client-only
 
     public void HandleFloaters(float dt)
@@ -91,12 +91,18 @@ public partial class Thing : Entity
         if (!HasFloaters)
             return;
 
+        //Log.Info($"{DisplayIcon} RemoveFloaterClient - Floaters.Count: {Floaters.Count}");
+
         for (int i = Floaters.Count - 1; i >= 0; i--)
         {
             var floater = Floaters[i];
+            //Log.Info($"{i}: {floater.icon}");
+
             if (floater.icon.Equals(icon))
                 Floaters.RemoveAt(i);
         }
+
+        //Log.Info($"{DisplayIcon} RemoveFloaterClient - Floaters.Count: {Floaters.Count}");
     }
 
     [ClientRpc]

@@ -108,6 +108,9 @@ public class CBurning : ThingComponent
                 if (Thing.ContainingGridManager == null || !Thing.ContainingGridManager.IsGridPosInBounds(gridPos))
                     continue;
 
+                if (Thing.ContainingGridManager.ShouldCellPutOutFire(gridPos))
+                    continue;
+
                 var otherThings = Thing.ContainingGridManager.GetThingsAt(gridPos).ToList();
 
                 if (otherThings.Count == 0)
