@@ -11,9 +11,12 @@ public partial class Thing : Entity
 
     public void PlaySfx(SoundActionType actionType)
     {
-        GetSound(actionType, RoguemojiGame.Instance.GetLevel(CurrentLevelId).SurfaceType, out string sfxName, out int loudness);
+        var gridPos = ThingWieldingThis?.GridPos ?? GridPos;
+        var levelId = ThingWieldingThis?.CurrentLevelId ?? CurrentLevelId;
+
+        GetSound(actionType, RoguemojiGame.Instance.GetLevel(levelId).SurfaceType, out string sfxName, out int loudness);
         if (!string.IsNullOrEmpty(sfxName))
-            RoguemojiGame.Instance.PlaySfxArena(sfxName, GridPos, CurrentLevelId, loudness);
+            RoguemojiGame.Instance.PlaySfxArena(sfxName, gridPos, levelId, loudness);
     }
 
     public virtual void GetSound(SoundActionType actionType, SurfaceType surfaceType, out string sfxName, out int loudness)
@@ -32,19 +35,23 @@ public partial class Thing : Entity
                             case SurfaceType.Grass: sfxName = "footstep_grass"; break;
                         }
                         break;
-                    case SoundActionType.GetHit:
-                        sfxName = "impact";
-                        loudness = 1;
-                        break;
                     case SoundActionType.Drop:
                         switch (surfaceType)
                         {
                             case SurfaceType.Grass: sfxName = "drop_grass"; break;
                         }
                         break;
-                    case SoundActionType.Select:
-                        sfxName = "click";
-                        loudness = 0;
+                    case SoundActionType.GetHit:
+                        sfxName = "impact";
+                        loudness = 1;
+                        break;
+                    case SoundActionType.Throw:
+                        sfxName = "throw";
+                        loudness = 1;
+                        break;
+                    case SoundActionType.Wield:
+                        sfxName = "wield";
+                        loudness = 1;
                         break;
                 }
                 break;

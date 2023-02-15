@@ -5,7 +5,7 @@
   "Decibels": 110,
   "SelectionMode": "Forward",
   "Sounds": [
-    "sounds/click.vsnd"
+    "sounds/click_b.vsnd"
   ],
   "MaximumDistance": 2777.795,
   "MinimumDistance": 138.88976

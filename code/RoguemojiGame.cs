@@ -204,7 +204,7 @@ public partial class RoguemojiGame : GameManager
             level.UpdateClient(dt);
         }
 
-        Sound.Listener = new Transform(Vector3.Zero);
+        //Sound.Listener = new Transform(Vector3.Zero);
     }
 
     HashSet<LevelId> GetOccupiedLevels()

@@ -2,7 +2,7 @@
   "Name": "Test0",
   "Width": 9,
   "Height": 3,
-  "SurfaceType": 1,
+  "SurfaceType": "Grass",
   "RandomThings": {
     "TreeEvergreen": 2,
     "TreeDeciduous": 2,

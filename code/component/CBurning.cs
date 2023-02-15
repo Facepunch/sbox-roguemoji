@@ -112,7 +112,7 @@ public class CBurning : ThingComponent
 
                 if (otherThings.Count == 0)
                 {
-                    if(Game.Random.Int(0, 5) == 0)
+                    if(Game.Random.Int(0, 10) == 0)
                     {
                         var startOffset = new Vector2(Game.Random.Float(-15f, 15f), Game.Random.Float(-15f, 15f));
                         var endOffset = startOffset + new Vector2(0f, Game.Random.Float(-15f, 0f));
@@ -127,6 +127,7 @@ public class CBurning : ThingComponent
                 }
                 else
                 {
+                    bool hasMadeFloater = false;
                     foreach (var other in otherThings)
                     {
                         if (other.Flammability > 0 && !other.HasComponent<CBurning>())
@@ -139,7 +140,7 @@ public class CBurning : ThingComponent
 
                                 other.IgnitionAmount = Globals.IGNITION_MAX;
                             }
-                            else
+                            else if(!hasMadeFloater)
                             {
                                 var startOffset = new Vector2(Game.Random.Float(-15f, 15f), Game.Random.Float(-15f, 15f));
                                 var endOffset = startOffset + new Vector2(0f, Game.Random.Float(-15f, 0f));
@@ -149,6 +150,7 @@ public class CBurning : ThingComponent
                                 var shakeAmount = Utils.Map(other.IgnitionAmount, 0, Globals.IGNITION_MAX, 0.1f, 1f, EasingType.Linear);
 
                                 other.AddFloater(Globals.Icon(IconType.Burning), time, startOffset, endOffset, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.025f, scale: scale, opacity: opacity, shakeAmount: shakeAmount);
+                                hasMadeFloater = true;
                             }
                         }
                     }
