@@ -58,8 +58,8 @@ public partial class Joystick : Thing
         var direction = GridManager.GetDirectionForIntVector(targetGridPos - startingGridPos);
         var player = (RoguemojiPlayer)user.Brain;
         bool success = player != null
-            ? player.TryMove(direction, shouldQueueAction: false, shouldAnimate: false) 
-            : user.TryMove(direction, out bool switchedLevel, shouldAnimate: false);
+            ? player.TryMove(direction, shouldQueueAction: false, shouldAnimate: false, dontRequireAction: true) 
+            : user.TryMove(direction, out bool switchedLevel, shouldAnimate: false, dontRequireAction: true);
 
         if(success)
         {

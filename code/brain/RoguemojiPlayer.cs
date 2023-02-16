@@ -378,7 +378,7 @@ public partial class RoguemojiPlayer : ThingBrain
 
         bool success = ControlledThing.TryMove(direction, out bool switchedLevel, shouldAnimate, shouldQueueAction: false, dontRequireAction);
 
-        if(success && !switchedLevel)
+        if (success && !switchedLevel)
             RecenterCamera(shouldAnimate: true);
 
         return success;
@@ -549,6 +549,10 @@ public partial class RoguemojiPlayer : ThingBrain
 
         StopAiming();
         DropAllItems();
+        QueuedAction = null;
+
+        ConfusionSeed = 0;
+        HallucinatingSeed = 0;
 
         var ghost = ControlledThing.ContainingGridManager.SpawnThing<Ghost>(ControlledThing.GridPos);
         ControlThing(ghost);

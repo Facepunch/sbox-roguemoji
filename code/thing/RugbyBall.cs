@@ -116,7 +116,12 @@ public class CRugbyCharge : ThingComponent
 
             var oldPos = Thing.GridPos;
 
-            if (Thing.TryMove(Direction, out bool switchedLevel, dontRequireAction: true))
+            var player = Thing.Brain != null ? (RoguemojiPlayer)Thing.Brain : null;
+            bool success = player != null
+                ? player.TryMove(Direction, dontRequireAction: true)
+                : Thing.TryMove(Direction, out bool switchedLevel, dontRequireAction: true);
+
+            if (success)
             {
                 RemainingDistance--;
                 if (RemainingDistance <= 0)

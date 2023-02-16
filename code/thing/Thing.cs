@@ -37,7 +37,7 @@ public class TattooData
 
 public partial class Thing : Entity
 {
-    public ThingBrain Brain { get; set; }
+    [Net] public ThingBrain Brain { get; set; }
 
     [Net] public IntVector GridPos { get; protected set; }
     [Net] public GridType ContainingGridType { get; set; }
