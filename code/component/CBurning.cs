@@ -32,8 +32,8 @@ public class CBurning : ThingComponent
         BurnCountdown = Game.Random.Float(BurnDelayMin, BurnDelayMax);
         BurnDamage = 1;
 
-        SpreadDelayMin = 0.25f;
-        SpreadDelayMax = 0.35f;
+        SpreadDelayMin = 0.35f;
+        SpreadDelayMax = 0.45f;
         SpreadCountdown = Game.Random.Float(SpreadDelayMin, SpreadDelayMax);
 
         Trait = thing.AddTrait("Burning", Globals.Icon(IconType.Burning), $"Being consumed by fire", offset: Vector2.Zero);
@@ -108,14 +108,13 @@ public class CBurning : ThingComponent
                 if (Thing.ContainingGridManager == null || !Thing.ContainingGridManager.IsGridPosInBounds(gridPos))
                     continue;
 
-                if (Thing.ContainingGridManager.ShouldCellPutOutFire(gridPos))
-                    continue;
+                bool shouldCellPutOutFire = Thing.ContainingGridManager.ShouldCellPutOutFire(gridPos);
 
                 var otherThings = Thing.ContainingGridManager.GetThingsAt(gridPos).ToList();
 
                 if (otherThings.Count == 0)
                 {
-                    if(Game.Random.Int(0, 10) == 0)
+                    if(!shouldCellPutOutFire && Game.Random.Int(0, 10) == 0)
                     {
                         var startOffset = new Vector2(Game.Random.Float(-15f, 15f), Game.Random.Float(-15f, 15f));
                         var endOffset = startOffset + new Vector2(0f, Game.Random.Float(-15f, 0f));
@@ -133,9 +132,9 @@ public class CBurning : ThingComponent
                     bool hasMadeFloater = false;
                     foreach (var other in otherThings)
                     {
-                        if (other.Flammability > 0 && !other.HasComponent<CBurning>())
+                        if (!shouldCellPutOutFire && other.Flammability > 0 && !other.HasComponent<CBurning>())
                         {
-                            other.IgnitionAmount += other.Flammability;
+                            other.IgnitionAmount += MathX.FloorToInt(other.Flammability * 1.333f);
                             if (other.IgnitionAmount >= Globals.IGNITION_MAX)
                             {
                                 var burning = other.AddComponent<CBurning>();
@@ -153,6 +152,26 @@ public class CBurning : ThingComponent
                                 var shakeAmount = Utils.Map(other.IgnitionAmount, 0, Globals.IGNITION_MAX, 0.1f, 1f, EasingType.Linear);
 
                                 other.AddFloater(Globals.Icon(IconType.Burning), time, startOffset, endOffset, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.025f, scale: scale, opacity: opacity, shakeAmount: shakeAmount);
+                                hasMadeFloater = true;
+                            }
+                        }
+                        else if(other is PuddleWater puddle)
+                        {
+                            puddle.IgnitionAmount += 9;
+                            if (puddle.IgnitionAmount >= Globals.IGNITION_MAX)
+                            {
+                                puddle.Destroy();
+                            }
+                            else if (!hasMadeFloater)
+                            {
+                                var startOffset = new Vector2(Game.Random.Float(-15f, 15f), Game.Random.Float(-15f, 15f));
+                                var endOffset = startOffset + new Vector2(0f, Game.Random.Float(-15f, 0f));
+                                var time = Utils.Map(puddle.IgnitionAmount, 0, Globals.IGNITION_MAX, 0.25f, 1.25f, EasingType.Linear) * Game.Random.Float(0.9f, 1.2f);
+                                var scale = Utils.Map(puddle.IgnitionAmount, 0, Globals.IGNITION_MAX, 0.4f, 0.75f, EasingType.QuadIn);
+                                var opacity = Utils.Map(puddle.IgnitionAmount, 0, Globals.IGNITION_MAX, 0.33f, 1f, EasingType.QuadIn);
+                                var shakeAmount = Utils.Map(puddle.IgnitionAmount, 0, Globals.IGNITION_MAX, 0.1f, 1f, EasingType.Linear);
+
+                                puddle.AddFloater("☁️", time, startOffset, endOffset, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.025f, scale: scale, opacity: opacity, shakeAmount: shakeAmount);
                                 hasMadeFloater = true;
                             }
                         }

@@ -28,7 +28,7 @@ public partial class ScrollSentience : Scroll
     {
         base.Use(user, gridType, targetGridPos);
 
-        var thing = user.ContainingGridManager.GetThingsAt(targetGridPos).Where(x => x.Brain == null).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+        var thing = user.ContainingGridManager.GetThingsAt(targetGridPos).Where(x => x.Brain == null).Where(x => ScrollSentience.CanGainSentience(x)).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 
         if(thing != null)
         {
@@ -45,7 +45,10 @@ public partial class ScrollSentience : Scroll
             if (!thing.HasFlag(ThingFlags.Solid))
                 thing.Flags = thing.Flags | ThingFlags.Solid;
 
-            if(!thing.HasComponent<CTargeting>())
+            if (!thing.HasFlag(ThingFlags.CanWieldThings))
+                thing.Flags = thing.Flags | ThingFlags.CanWieldThings;
+
+            if (!thing.HasComponent<CTargeting>())
                 thing.AddComponent<CTargeting>();
 
             if (!thing.HasComponent<CActing>())
@@ -83,5 +86,13 @@ public partial class ScrollSentience : Scroll
 
         int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 1, 10);
         return Scroll.IsPotentialArenaAimingCell(gridPos, radius, ThingWieldingThis);
+    }
+
+    public static bool CanGainSentience(Thing thing)
+    {
+        if (thing is Hole)
+            return false;
+
+        return true;
     }
 }

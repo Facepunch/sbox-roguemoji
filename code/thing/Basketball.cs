@@ -6,9 +6,6 @@ using System.Linq;
 namespace Roguemoji;
 public partial class Basketball : Thing
 {
-    [Net] public int EnergyCost { get; private set; }
-    public float CooldownTime { get; private set; }
-
     public Basketball()
 	{
 		DisplayIcon = "🏀";
@@ -21,14 +18,9 @@ public partial class Basketball : Thing
 
         if (Game.IsServer)
         {
-            EnergyCost = 3;
-            CooldownTime = 3f;
-
             InitStat(StatType.Attack, 1);
 
             AddTrait("", "🙌", $"When 🏀 hits, target catches if possible/Otherwise 🏀 disarms target and bounces back", offset: new Vector2(0f, -1f), tattooIcon: "🏀", tattooOffset: new Vector2(0f, -12f), tattooScale: 0.65f);
-            AddTrait("", GetStatIcon(StatType.Energy), $"Ability costs {EnergyCost}{GetStatIcon(StatType.Energy)}", offset: new Vector2(0f, -3f), labelText: $"{EnergyCost}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
-            AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
         }
     }
     

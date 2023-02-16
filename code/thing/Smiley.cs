@@ -22,13 +22,6 @@ public partial class Smiley : Thing
         {
             SetStartingValues();
         }
-        else
-        {
-            WieldedThingOffset = new Vector2(20f, 17f);
-            WieldedThingFontSize = 18;
-            InfoWieldedThingOffset = new Vector2(38f, 38f);
-            InfoWieldedThingFontSize = 32;
-        }
 	}
 
     public override void Spawn()
