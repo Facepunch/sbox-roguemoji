@@ -218,14 +218,25 @@ public partial class GridManager : Entity
         }
     }
 
-    public void RemovePuddles(IntVector gridPos)
+    public bool HasPuddle(IntVector gridPos)
     {
-        var things = GetThingsAt(gridPos).ToList();
+        return GetThingsAt(gridPos).WithAll(ThingFlags.Puddle).Count() > 0;
+    }
+
+    public void RemovePuddles(IntVector gridPos, bool fadeOut = false)
+    {
+        var things = GetThingsAt(gridPos).WithAll(ThingFlags.Puddle).ToList();
         for(int i = things.Count - 1; i >= 0; i--)
         {
             var thing = things[i];
-            if(thing is PuddleWater || thing is PuddleBlood)
-                thing.Destroy();
+
+            if(fadeOut)
+            {
+                AddFloater(icon: thing.DisplayIcon, gridPos: thing.GridPos, time: 0.4f, offsetStart: new Vector2(0f, 0f), offsetEnd: new Vector2(0f, 0f),
+                    height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0f, scale: 1f, opacity: 1f, shakeAmount: 0f);
+            }
+
+            thing.Destroy();
         }
     }
 

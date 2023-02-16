@@ -20,6 +20,7 @@ public enum ThingFlags
     CanBePickedUp = (1 << 8),
     Exclusive = (1 << 9),
     DoesntBumpThings = (1 << 10),
+    Puddle = (1 << 11),
 }
 
 public enum FactionType { Neutral, Player, Enemy, Ghost, }

@@ -16,7 +16,7 @@ public partial class PuddleWater : Thing
         Tooltip = "A puddle of water";
         IconDepth = (int)IconDepthLevel.Normal;
         ShouldUpdate = true;
-        Flags = ThingFlags.Selectable;
+        Flags = ThingFlags.Selectable | ThingFlags.Puddle;
         Flammability = 0;
     }
 

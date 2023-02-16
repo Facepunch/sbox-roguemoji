@@ -61,6 +61,10 @@ public class CBurning : ThingComponent
                 Thing.ContainingGridManager.AddFloater(Globals.Icon(IconType.Burning), Thing.GridPos, 0.5f, new Vector2(0f, -12f), new Vector2(0, -18f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadIn, fadeInTime: 0.04f, scale: 1f, opacity: 0.6f, shakeAmount: 1f);
                 Thing.Destroy();
             }
+            else
+            {
+                Thing.IgnitionAmount = 0;
+            }
 
             return;
         }
@@ -96,9 +100,6 @@ public class CBurning : ThingComponent
         {
             for (int y = -1; y <= 1; y++)
             {
-                //if (x == 0 && y == 0)
-                //    continue;
-
                 var offset = new IntVector(x, y);
                 if (offset.ManhattanLength > 1)
                     continue;
