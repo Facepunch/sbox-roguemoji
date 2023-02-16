@@ -96,8 +96,8 @@ public class CBurning : ThingComponent
         {
             for (int y = -1; y <= 1; y++)
             {
-                if (x == 0 && y == 0)
-                    continue;
+                //if (x == 0 && y == 0)
+                //    continue;
 
                 var offset = new IntVector(x, y);
                 if (offset.ManhattanLength > 1)
@@ -114,7 +114,7 @@ public class CBurning : ThingComponent
 
                 if (otherThings.Count == 0)
                 {
-                    if(!shouldCellPutOutFire && Game.Random.Int(0, 10) == 0)
+                    if(!shouldCellPutOutFire && Game.Random.Int(0, 10) == 0 && offset.ManhattanLength > 0)
                     {
                         var startOffset = new Vector2(Game.Random.Float(-15f, 15f), Game.Random.Float(-15f, 15f));
                         var endOffset = startOffset + new Vector2(0f, Game.Random.Float(-15f, 0f));
@@ -132,9 +132,14 @@ public class CBurning : ThingComponent
                     bool hasMadeFloater = false;
                     foreach (var other in otherThings)
                     {
+                        if (other == Thing)
+                            continue;
+
                         if (!shouldCellPutOutFire && other.Flammability > 0 && !other.HasComponent<CBurning>())
                         {
-                            other.IgnitionAmount += MathX.FloorToInt(other.Flammability * 1.333f);
+                            float ADJUST_SPREAD_SPEED = 1.333f;
+                            float proximityFactor = (offset.ManhattanLength == 0) ? 1.4f : 1f;
+                            other.IgnitionAmount += MathX.FloorToInt(other.Flammability * proximityFactor * ADJUST_SPREAD_SPEED);
                             if (other.IgnitionAmount >= Globals.IGNITION_MAX)
                             {
                                 var burning = other.AddComponent<CBurning>();

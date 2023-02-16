@@ -46,7 +46,8 @@ public partial class PotionWater : Potion
 
     public override void ApplyEffectToThing(Thing thing)
     {
-        
+        if (thing is Smiley && thing.GetComponent<CIconPriority>(out var component))
+            ((CIconPriority)component).AddIconPriority("😅", (int)PlayerIconPriority.WaterWet, 1.0f);
     }
 
     public override void ApplyEffectToGridPos(GridManager gridManager, IntVector gridPos)

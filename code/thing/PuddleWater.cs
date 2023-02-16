@@ -71,6 +71,8 @@ public partial class PuddleWater : Thing
         if (burning != null && projectile == null)
             burning.Remove();
 
+        thing.IgnitionAmount = 0;
+
         var player = thing.Brain as RoguemojiPlayer;
         if (player == null)
             return;
@@ -81,6 +83,7 @@ public partial class PuddleWater : Thing
             {
                 var itemBurning = (CBurning)itemComponent;
                 itemBurning.Remove();
+                item.IgnitionAmount = 0;
             }
         }
     }
