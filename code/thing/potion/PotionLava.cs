@@ -4,24 +4,24 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Roguemoji;
-public partial class PotionWater : Potion
+public partial class PotionLava : Potion
 {
     public override string SplashIcon => Globals.Icon(IconType.Water);
 
-    public PotionWater()
+    public PotionLava()
     {
-        PotionType = PotionType.Water;
+        PotionType = PotionType.Lava;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         DisplayName = Potion.GetDisplayName(PotionType);
-        Description = "Fresh clean water";
-        Tooltip = "A water potion";
+        Description = "Burning hot lava";
+        Tooltip = "A lava potion";
         
-        SetTattoo(Globals.Icon(IconType.Water));
+        SetTattoo(Globals.Icon(IconType.Lava));
 
         if (Game.IsServer)
         {
-            AddTrait("", Globals.Icon(IconType.Water), $"Puts out fires", offset: new Vector2(0f, 0f));
+            AddTrait("", Globals.Icon(IconType.Lava), $"Burning lava", offset: new Vector2(0f, 0f));
         }
     }
 
@@ -41,16 +41,19 @@ public partial class PotionWater : Potion
 
     public override void ApplyEffectToThing(Thing thing)
     {
-        if (thing is Smiley && thing.GetComponent<CIconPriority>(out var component))
-            ((CIconPriority)component).AddIconPriority("😅", (int)PlayerIconPriority.WaterWet, 1.0f);
+        //if (!thing.ContainingGridManager.ShouldCellPutOutFire(thing.GridPos) && thing.Flammability > 0)
+        //{
+        //    var burning = thing.AddComponent<CBurning>();
+        //    burning.Lifetime = 30f;
+        //}
     }
 
     public override void ApplyEffectToGridPos(GridManager gridManager, IntVector gridPos)
     {
-        if (!gridManager.DoesGridPosContainThingType<PuddleWater>(gridPos))
+        if (!gridManager.DoesGridPosContainThingType<PuddleLava>(gridPos))
         {
             gridManager.RemovePuddles(gridPos);
-            gridManager.SpawnThing<PuddleWater>(gridPos);
+            gridManager.SpawnThing<PuddleLava>(gridPos);
         }
     }
 }

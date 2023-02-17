@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public enum PotionType { Health, Mana, Energy, Poison, Blindness, Sleeping, Confusion, Hallucination, Speed, Medicine, Mutation, Invisibility, Amnesia, Burning, Water }
+public enum PotionType { Health, Mana, Energy, Poison, Blindness, Sleeping, Confusion, Hallucination, Speed, Medicine, Mutation, Invisibility, Amnesia, Burning, Water, Lava }
 public partial class Potion : Thing
 {
     [Net] public PotionType PotionType { get; protected set; }
@@ -45,6 +45,7 @@ public partial class Potion : Thing
             case PotionType.Amnesia: return "Amnesia Potion";
             case PotionType.Burning: return "Burning Potion";
             case PotionType.Water: return "Water Potion";
+            case PotionType.Lava: return "Lava Potion";
         }
 
         return "";
@@ -68,6 +69,7 @@ public partial class Potion : Thing
             case PotionType.Invisibility: return $"🧉{Globals.Icon(IconType.Invisible)}";
             case PotionType.Amnesia: return $"🧉{Globals.Icon(IconType.Amnesia)}";
             case PotionType.Burning: return $"🧉{Globals.Icon(IconType.Water)}";
+            case PotionType.Lava: return $"🧉{Globals.Icon(IconType.Lava)}";
         }
 
         return "🧉";
@@ -83,13 +85,6 @@ public partial class Potion : Thing
     {
         SetTattoo(icon, scale: 0.475f, offset: new Vector2(-0.858505f, 6f), offsetWielded: new Vector2(-1.5f, 6f), offsetInfo: new Vector2(-3.5f, 16f), offsetCharWielded: new Vector2(0f, 8f), offsetInfoWielded: new Vector2(-4.75f, 6.25f));
     }
-
-    //public override void OnBumpedIntoThing(Thing thing)
-    //{
-    //    base.OnBumpedIntoThing(thing);
-
-    //    Break(thing.GridPos);
-    //}
 
     public override void OnBumpedOutOfBounds(Direction dir)
     {

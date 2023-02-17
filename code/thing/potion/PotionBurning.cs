@@ -40,7 +40,7 @@ public partial class PotionBurning : Potion
 
     public override void ApplyEffectToThing(Thing thing)
     {
-        if(!thing.ContainingGridManager.ShouldCellPutOutFire(thing.GridPos))
+        if(!thing.ContainingGridManager.ShouldCellPutOutFire(thing.GridPos) && thing.Flammability > 0)
         {
             var burning = thing.AddComponent<CBurning>();
             burning.Lifetime = 30f;

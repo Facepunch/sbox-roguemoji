@@ -15,7 +15,7 @@ public partial class PuddleBlood : Thing
         Tooltip = "A puddle of blood";
         IconDepth = (int)IconDepthLevel.Normal;
         ShouldUpdate = true;
-        Flags = ThingFlags.Selectable;
+        Flags = ThingFlags.Selectable | ThingFlags.Puddle;
         Flammability = 0;
     }
 
@@ -46,13 +46,13 @@ public partial class PuddleBlood : Thing
     {
         base.OnMovedOntoBy(thing);
 
-        PuddleWater.MakeWet(thing);
+        PuddleWater.DouseFire(thing);
     }
 
     public override void OnMovedOntoThing(Thing thing)
     {
         base.OnMovedOntoThing(thing);
 
-        PuddleWater.MakeWet(thing);
+        PuddleWater.DouseFire(thing);
     }
 }

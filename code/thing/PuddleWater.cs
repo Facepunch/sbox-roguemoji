@@ -48,17 +48,17 @@ public partial class PuddleWater : Thing
         base.OnMovedOntoBy(thing);
 
         // todo: wet component?
-        MakeWet(thing);
+        DouseFire(thing);
     }
 
     public override void OnMovedOntoThing(Thing thing)
     {
         base.OnMovedOntoThing(thing);
 
-        MakeWet(thing);
+        DouseFire(thing);
     }
 
-    public static void MakeWet(Thing thing)
+    public static void DouseFire(Thing thing)
     {
         CBurning burning = null;
         if (thing.GetComponent<CBurning>(out var component))
