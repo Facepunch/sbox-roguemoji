@@ -5,7 +5,11 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public enum PotionType { Health, Mana, Energy, Poison, Blindness, Sleeping, Confusion, Hallucination, Speed, Medicine, Mutation, Invisibility, Amnesia, Burning, Water, Lava }
+public enum PotionType {
+    /* unknown: */ Health, Mana, Energy, Poison, Blindness, Sleeping, Confusion, Hallucination, Speed, Medicine, Mutation, Invisibility, Amnesia, Burning, 
+    /* starts identified: */ Water, Lava, Blood, Mud, Oil, Piss, ToxicSludge, Snow, Purple 
+} 
+
 public partial class Potion : Thing
 {
     [Net] public PotionType PotionType { get; protected set; }
@@ -22,7 +26,7 @@ public partial class Potion : Thing
         if (Game.IsServer)
         {
             AddTrait(AbilityName, "😋", $"Consume potion to cause an effect", offset: new Vector2(0f, -1f), tattooIcon: "🧉", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f), isAbility: true);
-            AddTrait("Fragile", "🧉", $"Potion breaks when it hits something", offset: new Vector2(0f, -1f), tattooIcon: "💥", tattooScale: 0.65f, tattooOffset: new Vector2(7f, 7f));
+            AddTrait("Fragile", "🧉", $"Full potions break when hitting something", offset: new Vector2(0f, -1f), tattooIcon: "💥", tattooScale: 0.65f, tattooOffset: new Vector2(7f, 7f));
         }
     }
 

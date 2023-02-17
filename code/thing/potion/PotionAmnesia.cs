@@ -43,8 +43,8 @@ public partial class PotionAmnesia : Potion
     {
         if (thing.Brain is RoguemojiPlayer player)
         {
-            player.IdentifiedScrollTypes.Clear();
-            player.IdentifiedPotionTypes.Clear();
+            player.ResetScrollKnowledge();
+            player.ResetPotionKnowledge(); 
             player.ClearVisionKnowledgeClient();
         }
 

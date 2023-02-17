@@ -3,22 +3,17 @@ using System;
 using System.Linq;
 
 namespace Roguemoji;
-public partial class PuddleWater : Thing
+public partial class PuddleWater : Puddle
 {
-    private float _elapsedTime;
-    private int _iconState;
-
 	public PuddleWater()
 	{
 		DisplayIcon = "💧";
         DisplayName = "Puddle of Water";
         Description = "The ground is covered in a layer of water";
         Tooltip = "A puddle of water";
-        IconDepth = (int)IconDepthLevel.Normal;
-        ShouldUpdate = true;
-        Flags = ThingFlags.Selectable | ThingFlags.Puddle;
         Flammability = 0;
         PathfindMovementCost = 0.5f;
+        LiquidType = PotionType.Water;
     }
 
     // todo: make splashing noise when you move onto it

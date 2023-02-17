@@ -2,14 +2,11 @@
 using System;
 
 namespace Roguemoji;
-public partial class PuddleLava : Thing
+public partial class PuddleLava : Puddle
 {
     public float FloaterCountdown { get; set; }
     public float FloaterDelayMin { get; set; }
     public float FloaterDelayMax { get; set; }
-
-    private float _elapsedTime;
-    private int _iconState;
 
 	public PuddleLava()
 	{
@@ -17,11 +14,9 @@ public partial class PuddleLava : Thing
         DisplayName = "Puddle of Lava";
         Description = "The ground is covered with burning lava";
         Tooltip = "A puddle of lava";
-        IconDepth = (int)IconDepthLevel.Normal;
-        ShouldUpdate = true;
-        Flags = ThingFlags.Selectable | ThingFlags.Puddle;
         Flammability = 0;
         PathfindMovementCost = 11f;
+        LiquidType = PotionType.Lava;
 
         FloaterDelayMin = 0.85f;
         FloaterDelayMax = 1.75f;

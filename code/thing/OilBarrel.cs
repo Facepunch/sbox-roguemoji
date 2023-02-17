@@ -19,6 +19,8 @@ public partial class OilBarrel : Thing
         PathfindMovementCost = 20f;
         Flammability = 30;
         RemainingOilAmount = 4;
+
+        //SetTattoo("⚫️", scale: 0.475f, offset: new Vector2(-0.858505f, 2f), offsetWielded: new Vector2(-1.5f, 6f), offsetInfo: new Vector2(-3.5f, 16f), offsetCharWielded: new Vector2(0f, 8f), offsetInfoWielded: new Vector2(-4.75f, 6.25f));
     }
 
     public override void OnBumpedIntoBy(Thing thing, Direction direction)

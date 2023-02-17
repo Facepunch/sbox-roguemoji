@@ -77,15 +77,17 @@ public partial class RoguemojiPlayer : ThingBrain
         ConfusionSeed = 0;
         HallucinatingSeed = 0;
 
-        IdentifiedScrollTypes.Clear();
-        IdentifiedPotionTypes.Clear();
+        ResetScrollKnowledge();
+        ResetPotionKnowledge();
 
         // -----------------
         foreach (int i in Enum.GetValues(typeof(ScrollType)))
-            IdentifiedScrollTypes.Add((ScrollType)i);
+            if(!IdentifiedScrollTypes.Contains((ScrollType)i))
+                IdentifiedScrollTypes.Add((ScrollType)i);
 
         foreach (int i in Enum.GetValues(typeof(PotionType)))
-            IdentifiedPotionTypes.Add((PotionType)i);
+            if (!IdentifiedPotionTypes.Contains((PotionType)i))
+                IdentifiedPotionTypes.Add((PotionType)i);
         // -----------------
 
         InventoryGridManager.Restart();
@@ -141,7 +143,7 @@ public partial class RoguemojiPlayer : ThingBrain
 
     void SpawnRandomInventoryThing(IntVector gridPos)
     {
-        int rand = Game.Random.Int(0, 32);
+        int rand = Game.Random.Int(0, 34);
         switch (rand)
         {
             //case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -195,6 +197,8 @@ public partial class RoguemojiPlayer : ThingBrain
             case 30: InventoryGridManager.SpawnThing<ScrollSentience>(gridPos); break;
             case 31: InventoryGridManager.SpawnThing<PotionWater>(gridPos); break;
             case 32: InventoryGridManager.SpawnThing<PotionLava>(gridPos); break;
+            case 33: InventoryGridManager.SpawnThing<EmptyPotion>(gridPos); break;
+            case 34: InventoryGridManager.SpawnThing<PotionMud>(gridPos); break;
         }
     }
 
@@ -1254,6 +1258,11 @@ public partial class RoguemojiPlayer : ThingBrain
         return IdentifiedScrollTypes.Contains(scrollType);
     }
 
+    public void ResetScrollKnowledge()
+    {
+        IdentifiedScrollTypes.Clear();
+    }
+
     public void IdentifyPotion(PotionType potionType)
     {
         if (!IdentifiedPotionTypes.Contains(potionType))
@@ -1267,6 +1276,20 @@ public partial class RoguemojiPlayer : ThingBrain
     public bool IsPotionTypeIdentified(PotionType potionType)
     {
         return IdentifiedPotionTypes.Contains(potionType);
+    }
+
+    public void ResetPotionKnowledge()
+    {
+        IdentifiedPotionTypes.Clear();
+        IdentifiedPotionTypes.Add(PotionType.Water);
+        IdentifiedPotionTypes.Add(PotionType.Lava);
+        IdentifiedPotionTypes.Add(PotionType.Blood);
+        IdentifiedPotionTypes.Add(PotionType.Mud);
+        IdentifiedPotionTypes.Add(PotionType.Oil);
+        IdentifiedPotionTypes.Add(PotionType.Piss);
+        IdentifiedPotionTypes.Add(PotionType.ToxicSludge);
+        IdentifiedPotionTypes.Add(PotionType.Snow);
+        IdentifiedPotionTypes.Add(PotionType.Purple);
     }
 
     public void DropAllItems()

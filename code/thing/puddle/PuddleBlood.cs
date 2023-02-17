@@ -2,22 +2,17 @@
 using System;
 
 namespace Roguemoji;
-public partial class PuddleBlood : Thing
+public partial class PuddleBlood : Puddle
 {
-    private float _elapsedTime;
-    private int _iconState;
-
 	public PuddleBlood()
 	{
 		DisplayIcon = "🩸";
         DisplayName = "Puddle of Blood";
         Description = "The ground is covered in a layer of blood";
         Tooltip = "A puddle of blood";
-        IconDepth = (int)IconDepthLevel.Normal;
-        ShouldUpdate = true;
-        Flags = ThingFlags.Selectable | ThingFlags.Puddle;
         Flammability = 0;
         PathfindMovementCost = 0.75f;
+        LiquidType = PotionType.Blood;
     }
 
     // todo: make splashing noise when you move onto it

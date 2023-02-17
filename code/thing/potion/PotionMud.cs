@@ -4,24 +4,24 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Roguemoji;
-public partial class PotionWater : Potion
+public partial class PotionMud : Potion
 {
-    public override string SplashIcon => Globals.Icon(IconType.Water);
+    public override string SplashIcon => Globals.Icon(IconType.Mud);
 
-    public PotionWater()
+    public PotionMud()
     {
-        PotionType = PotionType.Water;
+        PotionType = PotionType.Mud;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         DisplayName = Potion.GetDisplayName(PotionType);
-        Description = "Fresh clean water";
-        Tooltip = "A water potion";
+        Description = "Sticky wet mud";
+        Tooltip = "A mud potion";
         
-        SetTattoo(Globals.Icon(IconType.Water));
+        SetTattoo(Globals.Icon(IconType.Mud));
 
         if (Game.IsServer)
         {
-            AddTrait("", Globals.Icon(IconType.Water), $"Puts out fires", offset: new Vector2(0f, 0f));
+            AddTrait("", Globals.Icon(IconType.Mud), $"Full of sticky wet mud", offset: new Vector2(0f, 0f));
         }
     }
 
@@ -41,16 +41,18 @@ public partial class PotionWater : Potion
 
     public override void ApplyEffectToThing(Thing thing)
     {
+        PuddleWater.DouseFire(thing);
+
         if (thing is Smiley && thing.GetComponent<CIconPriority>(out var component))
-            ((CIconPriority)component).AddIconPriority("😅", (int)PlayerIconPriority.WaterWet, 1.0f);
+            ((CIconPriority)component).AddIconPriority("😔", (int)PlayerIconPriority.MudSad, 1.0f);
     }
 
     public override void ApplyEffectToGridPos(GridManager gridManager, IntVector gridPos)
     {
-        if (!gridManager.DoesGridPosContainThingType<PuddleWater>(gridPos))
+        if (!gridManager.DoesGridPosContainThingType<PuddleMud>(gridPos))
         {
             gridManager.RemovePuddles(gridPos);
-            gridManager.SpawnThing<PuddleWater>(gridPos);
+            gridManager.SpawnThing<PuddleMud>(gridPos);
         }
     }
 }
