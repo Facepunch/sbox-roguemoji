@@ -545,11 +545,8 @@ public partial class GridManager : Entity
     public float GetPathfindMovementCost(IntVector gridPos)
 	{
 		float movementCost = 0f;
-		var things = GetThingsAt(gridPos).WithAny(ThingFlags.Solid | ThingFlags.Exclusive);
-		foreach(var thing in things)
-		{
+		foreach(var thing in GetThingsAt(gridPos))
 			movementCost += thing.PathfindMovementCost;
-		}
 
 		return movementCost;
 	}

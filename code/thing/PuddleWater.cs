@@ -18,6 +18,7 @@ public partial class PuddleWater : Thing
         ShouldUpdate = true;
         Flags = ThingFlags.Selectable | ThingFlags.Puddle;
         Flammability = 0;
+        PathfindMovementCost = 0.5f;
     }
 
     // todo: make splashing noise when you move onto it

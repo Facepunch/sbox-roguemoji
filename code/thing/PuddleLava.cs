@@ -21,6 +21,7 @@ public partial class PuddleLava : Thing
         ShouldUpdate = true;
         Flags = ThingFlags.Selectable | ThingFlags.Puddle;
         Flammability = 0;
+        PathfindMovementCost = 11f;
 
         FloaterDelayMin = 0.85f;
         FloaterDelayMax = 1.75f;

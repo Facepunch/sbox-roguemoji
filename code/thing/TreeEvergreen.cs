@@ -14,7 +14,7 @@ public partial class TreeEvergreen : Thing
         Tooltip = "A tree";
         IconDepth = (int)IconDepthLevel.Solid;
         Flags = ThingFlags.Solid | ThingFlags.Selectable;
-        PathfindMovementCost = 999f;
+        PathfindMovementCost = 99f;
         HealthAmount = 400;
         Flammability = 17;
 
