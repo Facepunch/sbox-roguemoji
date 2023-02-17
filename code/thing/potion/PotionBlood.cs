@@ -4,24 +4,24 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Roguemoji;
-public partial class PotionMud : Potion
+public partial class PotionBlood : Potion
 {
-    public override string SplashIcon => Globals.Icon(IconType.Mud);
+    public override string SplashIcon => Globals.Icon(IconType.Blood);
 
-    public PotionMud()
+    public PotionBlood()
     {
-        PotionType = PotionType.Mud;
+        PotionType = PotionType.Blood;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         DisplayName = Potion.GetDisplayName(PotionType);
-        Description = "Sticky wet mud";
-        Tooltip = "A mud potion";
+        Description = "Fresh blood";
+        Tooltip = "A blood potion";
         
-        SetTattoo(Globals.Icon(IconType.Mud));
+        SetTattoo(Globals.Icon(IconType.Blood));
 
         if (Game.IsServer)
         {
-            AddTrait("", Globals.Icon(IconType.Mud), $"Full of sticky wet mud", offset: new Vector2(0f, 0f));
+            AddTrait("", Globals.Icon(IconType.Burning), $"Puts out fires in a gross way", offset: new Vector2(0f, 0f), tattooIcon: Globals.Icon(IconType.Blood), tattooScale: 0.95f, tattooOffset: new Vector2(8f, -6f));
         }
     }
 
@@ -41,18 +41,16 @@ public partial class PotionMud : Potion
 
     public override void ApplyEffectToThing(Thing thing)
     {
-        PuddleWater.DouseFire(thing);
-
         if (thing is Smiley && thing.GetComponent<CIconPriority>(out var component))
-            ((CIconPriority)component).AddIconPriority("😔", (int)PlayerIconPriority.MudSad, 1.0f);
+            ((CIconPriority)component).AddIconPriority("😲", (int)PlayerIconPriority.BloodWet, 1.0f);
     }
 
     public override void ApplyEffectToGridPos(GridManager gridManager, IntVector gridPos)
     {
-        if (!gridManager.DoesGridPosContainThingType<PuddleMud>(gridPos))
+        if (!gridManager.DoesGridPosContainThingType<PuddleBlood>(gridPos))
         {
             gridManager.RemovePuddles(gridPos, fadeOut: true);
-            gridManager.SpawnThing<PuddleMud>(gridPos);
+            gridManager.SpawnThing<PuddleBlood>(gridPos);
         }
     }
 }

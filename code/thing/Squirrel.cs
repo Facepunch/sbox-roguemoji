@@ -58,19 +58,12 @@ public partial class Squirrel : Thing
         Brain.ControlThing(this);
     }
 
-    //public override void ClientTick()
-    //{
-    //    base.ClientTick();
-
-    //    DrawDebugText($"{TimeSinceLocalPlayerSaw}");
-    //}
-
     public override void Destroy()
     {
         // todo: dont spawn blood if burned to death
         if(!ContainingGridManager.DoesGridPosContainThingType<PuddleBlood>(GridPos))
         {
-            ContainingGridManager.RemovePuddles(GridPos);
+            ContainingGridManager.RemovePuddles(GridPos, fadeOut: true);
             ContainingGridManager.SpawnThing<PuddleBlood>(GridPos);
         }
 

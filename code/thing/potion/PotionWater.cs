@@ -21,7 +21,7 @@ public partial class PotionWater : Potion
 
         if (Game.IsServer)
         {
-            AddTrait("", Globals.Icon(IconType.Water), $"Puts out fires", offset: new Vector2(0f, 0f));
+            AddTrait("", Globals.Icon(IconType.Burning), $"Puts out fires in a gross way", offset: new Vector2(0f, 0f), tattooIcon: Globals.Icon(IconType.Water), tattooScale: 0.95f, tattooOffset: new Vector2(8f, -6f));
         }
     }
 
@@ -49,7 +49,7 @@ public partial class PotionWater : Potion
     {
         if (!gridManager.DoesGridPosContainThingType<PuddleWater>(gridPos))
         {
-            gridManager.RemovePuddles(gridPos);
+            gridManager.RemovePuddles(gridPos, fadeOut: true);
             gridManager.SpawnThing<PuddleWater>(gridPos);
         }
     }

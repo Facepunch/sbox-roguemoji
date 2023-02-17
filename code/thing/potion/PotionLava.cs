@@ -52,7 +52,7 @@ public partial class PotionLava : Potion
     {
         if (!gridManager.DoesGridPosContainThingType<PuddleLava>(gridPos))
         {
-            gridManager.RemovePuddles(gridPos);
+            gridManager.RemovePuddles(gridPos, fadeOut: true);
             gridManager.SpawnThing<PuddleLava>(gridPos);
         }
     }
