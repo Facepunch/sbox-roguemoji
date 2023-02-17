@@ -24,11 +24,11 @@ public partial class Basketball : Thing
         }
     }
     
-    public override void OnBumpedOutOfBounds(Direction dir)
+    public override void OnBumpedOutOfBounds(Direction direction)
     {
         if (!HasComponent<CProjectile>())
         {
-            base.OnBumpedOutOfBounds(dir);
+            base.OnBumpedOutOfBounds(direction);
             return;
         }
 
@@ -44,9 +44,9 @@ public partial class Basketball : Thing
             distance = p.TotalDistance;
         }
 
-        base.OnBumpedOutOfBounds(dir);
+        base.OnBumpedOutOfBounds(direction);
 
-        AddProjectile(GridManager.GetOppositeDirection(dir), moveDelay, distance, thrower);
+        AddProjectile(GridManager.GetOppositeDirection(direction), moveDelay, distance, thrower);
     }
 
     public override void HitOther(Thing target, Direction direction)

@@ -70,7 +70,7 @@ public class CSleeping : ThingComponent
         Remove();
     }
 
-    public override void OnBumpedIntoBy(Thing thing)
+    public override void OnBumpedIntoBy(Thing thing, Direction direction)
     {
         if(TimeElapsed > 0f)
             Remove();

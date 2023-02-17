@@ -65,6 +65,33 @@ public partial class RugbyBall : Thing
 
         base.Use(user, direction);
     }
+
+    //public override void OnBumpedIntoThing(Thing thing, Direction direction)
+    //{
+    //    base.OnBumpedIntoThing(thing, direction);
+    //    RugbyBall.ShoveThing(thing, direction, stunTime: 0.5f);
+    //}
+
+    public static void ShoveThing(Thing thing, Direction direction, float stunTime)
+    {
+        var oldPos = thing.GridPos;
+        if (thing.TryMove(direction, out bool switchedLevel, dontRequireAction: true))
+        {
+            thing.ContainingGridManager.AddFloater("☁️", oldPos, 0.5f, new Vector2(0f, 4f), new Vector2(0f, -7f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.SineOut, fadeInTime: 0.15f, scale: 1.1f, opacity: 0.5f);
+
+            if (thing.GetComponent<CActing>(out var component))
+            {
+                var acting = (CActing)component;
+                acting.ActionTimer = 0f;
+            }
+        }
+
+        if (thing.HasComponent<CActing>())
+        {
+            var stunned = thing.AddComponent<CStunned>();
+            stunned.Lifetime = stunTime;
+        }
+    }
 }
 
 public class CRugbyCharge : ThingComponent
@@ -136,34 +163,13 @@ public class CRugbyCharge : ThingComponent
         //Thing.DebugText = $"{RemainingDistance}";
     }
 
-    public override void OnWieldedThingBumpedInto(Thing thing)
+    public override void OnWieldedThingBumpedOther(Thing thing, Direction direction)
     {
-        ShoveThing(thing);
+        RugbyBall.ShoveThing(thing, Direction, stunTime: 2f);
         Remove();
     }
 
-    void ShoveThing(Thing thing)
-    {
-        var oldPos = thing.GridPos;
-        if(thing.TryMove(Direction, out bool switchedLevel, dontRequireAction: true))
-        {
-            thing.ContainingGridManager.AddFloater("☁️", oldPos, 0.5f, new Vector2(0f, 4f), new Vector2(0f, -7f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.SineOut, fadeInTime: 0.15f, scale: 1.1f, opacity: 0.5f);
-
-            if (thing.GetComponent<CActing>(out var component))
-            {
-                var acting = (CActing)component;
-                acting.ActionTimer = 0f;
-            }
-        }
-
-        if (thing.HasComponent<CActing>())
-        {
-            var stunned = thing.AddComponent<CStunned>();
-            stunned.Lifetime = 2f;
-        }
-    }
-
-    public override void OnBumpedOutOfBounds(Direction dir)
+    public override void OnBumpedOutOfBounds(Direction direction)
     {
         Remove();
     }

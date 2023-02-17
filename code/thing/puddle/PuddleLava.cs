@@ -73,6 +73,12 @@ public partial class PuddleLava : Thing
         IgniteThing(thing);
     }
 
+    public override void OnBumpedIntoThing(Thing thing, Direction direction)
+    {
+        base.OnBumpedIntoThing(thing, direction);
+        IgniteThing(thing);
+    }
+
     void IgniteThing(Thing thing)
     {
         if (!thing.ContainingGridManager.ShouldCellPutOutFire(thing.GridPos) && thing.Flammability > 0)

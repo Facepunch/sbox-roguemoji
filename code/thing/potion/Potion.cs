@@ -86,17 +86,15 @@ public partial class Potion : Thing
         SetTattoo(icon, scale: 0.475f, offset: new Vector2(-0.858505f, 6f), offsetWielded: new Vector2(-1.5f, 6f), offsetInfo: new Vector2(-3.5f, 16f), offsetCharWielded: new Vector2(0f, 8f), offsetInfoWielded: new Vector2(-4.75f, 6.25f));
     }
 
-    public override void OnBumpedOutOfBounds(Direction dir)
+    public override void OnBumpedOutOfBounds(Direction direction)
     {
-        base.OnBumpedOutOfBounds(dir);
-
+        base.OnBumpedOutOfBounds(direction);
         Break(GridPos);
     }
 
     public override void HitOther(Thing target, Direction direction)
     {
         base.HitOther(target, direction);
-
         Break(target.GridPos);
     }
 

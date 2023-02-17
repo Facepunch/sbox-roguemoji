@@ -47,10 +47,16 @@ public partial class PotionWater : Potion
 
     public override void ApplyEffectToGridPos(GridManager gridManager, IntVector gridPos)
     {
-        if (!gridManager.DoesGridPosContainThingType<PuddleWater>(gridPos))
+        if (!gridManager.DoesGridPosContainThingType<PuddleMud>(gridPos))
         {
             gridManager.RemovePuddles(gridPos);
-            gridManager.SpawnThing<PuddleWater>(gridPos);
+            gridManager.SpawnThing<PuddleMud>(gridPos);
         }
+
+        //if (!gridManager.DoesGridPosContainThingType<PuddleWater>(gridPos))
+        //{
+        //    gridManager.RemovePuddles(gridPos);
+        //    gridManager.SpawnThing<PuddleWater>(gridPos);
+        //}
     }
 }

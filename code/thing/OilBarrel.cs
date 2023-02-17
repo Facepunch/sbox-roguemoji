@@ -21,13 +21,23 @@ public partial class OilBarrel : Thing
         RemainingOilAmount = 4;
     }
 
-    public override void OnBumpedIntoBy(Thing thing)
+    public override void OnBumpedIntoBy(Thing thing, Direction direction)
     {
-        base.OnBumpedIntoBy(thing);
+        base.OnBumpedIntoBy(thing, direction);
+        SquirtOil();        
+    }
 
+    public override void OnBumpedIntoThing(Thing thing, Direction direction)
+    {
+        base.OnBumpedIntoThing(thing, direction);
+        SquirtOil();
+    }
+
+    void SquirtOil()
+    {
         if (RemainingOilAmount > 0)
         {
-            if(GetRandomNearbyPos(out var nearbyGridPos))
+            if (GetRandomNearbyPos(out var nearbyGridPos))
                 SpawnOil(nearbyGridPos);
             else if (ContainingGridManager.GetRandomEmptyAdjacentGridPos(GridPos, out var nearbyGridPos2, allowNonSolid: true))
                 SpawnOil(nearbyGridPos2);
@@ -78,7 +88,7 @@ public partial class OilBarrel : Thing
                 if (!ContainingGridManager.IsGridPosInBounds(currGridPos))
                     continue;
 
-                if (ContainingGridManager.GetThingsAt(currGridPos).WithAll(ThingFlags.Puddle).Count() == 0)
+                if (ContainingGridManager.GetThingsAt(currGridPos).WithAll(ThingFlags.Puddle).WithNone(ThingFlags.Solid).Count() == 0)
                     gridPositions.Add(currGridPos);
             }
         }

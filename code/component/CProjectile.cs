@@ -47,7 +47,7 @@ public class CProjectile : ThingComponent
         //Thing.DebugText = $"{RemainingDistance}, {MoveDelay}, {TimeSinceMove}";
     }
 
-    public override void OnBumpedIntoThing(Thing thing)
+    public override void OnBumpedIntoThing(Thing thing, Direction direction)
     {
         if(TimeElapsed > 0f)
             Remove();
@@ -61,7 +61,7 @@ public class CProjectile : ThingComponent
         Remove();
     }
 
-    public override void OnBumpedOutOfBounds(Direction dir)
+    public override void OnBumpedOutOfBounds(Direction direction)
     {
         if (TimeElapsed > 0f)
             Remove();

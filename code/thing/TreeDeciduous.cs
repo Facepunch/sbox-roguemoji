@@ -60,9 +60,9 @@ public partial class TreeDeciduous : Thing
         }
     }
 
-    public override void OnBumpedIntoBy(Thing thing)
+    public override void OnBumpedIntoBy(Thing thing, Direction direction)
     {
-        base.OnBumpedIntoBy(thing);
+        base.OnBumpedIntoBy(thing, direction);
 
         if (WieldedThing != null && thing != WieldedThing)
         {

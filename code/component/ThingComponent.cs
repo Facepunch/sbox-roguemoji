@@ -49,10 +49,10 @@ public abstract class ThingComponent
     public virtual void OnEquippedTo(Thing thing) { }
     public virtual void OnUnequippedFrom(Thing thing) { }
     public virtual void OnActionRecharged() { }
-    public virtual void OnWieldedThingBumpedInto(Thing thing) { }
-    public virtual void OnBumpedIntoThing(Thing thing) { }
-    public virtual void OnBumpedIntoBy(Thing thing) { }
-    public virtual void OnBumpedOutOfBounds(Direction dir) { }
+    public virtual void OnWieldedThingBumpedOther(Thing thing, Direction direction) { }
+    public virtual void OnBumpedIntoThing(Thing thing, Direction direction) { }
+    public virtual void OnBumpedIntoBy(Thing thing, Direction direction) { }
+    public virtual void OnBumpedOutOfBounds(Direction direction) { }
     public virtual void OnMovedOntoThing(Thing thing) { }
     public virtual void OnMovedOntoBy(Thing thing) { }
     public virtual void OnChangedStat(StatType statType, int changeCurrent, int changeMin, int changeMax) { }

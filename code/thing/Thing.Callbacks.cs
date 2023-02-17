@@ -81,10 +81,10 @@ public partial class Thing : Entity
         foreach (var component in ThingComponents) { component.Value.OnActionRecharged(); }
         Brain?.OnActionRecharged();
     }
-    public virtual void OnWieldedThingBumpedInto(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnWieldedThingBumpedInto(thing); } }
-    public virtual void OnBumpedIntoThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoThing(thing); } }
-    public virtual void OnBumpedIntoBy(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoBy(thing); } } // thing may be null
-    public virtual void OnBumpedOutOfBounds(Direction dir) { foreach (var component in ThingComponents) { component.Value.OnBumpedOutOfBounds(dir); } }
+    public virtual void OnWieldedThingBumpedOther(Thing thing, Direction direction) { foreach (var component in ThingComponents) { component.Value.OnWieldedThingBumpedOther(thing, direction); } }
+    public virtual void OnBumpedIntoThing(Thing thing, Direction direction) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoThing(thing, direction); } }
+    public virtual void OnBumpedIntoBy(Thing thing, Direction direction) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoBy(thing, direction); } } // thing may be null
+    public virtual void OnBumpedOutOfBounds(Direction direction) { foreach (var component in ThingComponents) { component.Value.OnBumpedOutOfBounds(direction); } }
     public virtual void OnMovedOntoThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnMovedOntoThing(thing); } }
     public virtual void OnMovedOntoBy(Thing thing) { for(int i = ThingComponents.Count - 1; i >= 0; i--) ThingComponents.ElementAt(i).Value.OnMovedOntoBy(thing); } // todo: System.InvalidOperationException: Collection was modified
     public virtual void OnChangedGridPos() 

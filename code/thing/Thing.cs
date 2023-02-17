@@ -292,13 +292,13 @@ public partial class Thing : Entity
         bumpingThing.HitOther(target, direction);
 
         if (bumpingThing != null && !bumpingThing.IsRemoved)
-            bumpingThing.OnBumpedIntoThing(target);
+            bumpingThing.OnBumpedIntoThing(target, direction);
 
         if (target != null && !target.IsRemoved)
-            target.OnBumpedIntoBy(bumpingThing);
+            target.OnBumpedIntoBy(bumpingThing, direction);
 
         if (hasWieldedThing)
-            OnWieldedThingBumpedInto(target);
+            OnWieldedThingBumpedOther(target, direction);
     }
 
     public virtual void HitOther(Thing target, Direction direction)

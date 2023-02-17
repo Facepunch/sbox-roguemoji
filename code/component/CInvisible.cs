@@ -52,13 +52,13 @@ public class CInvisible : ThingComponent
             ((CIconPriority)component).RemoveIconPriority(IconId);
     }
 
-    public override void OnBumpedIntoThing(Thing thing)
+    public override void OnBumpedIntoThing(Thing thing, Direction direction)
     {
         if (TimeElapsed > 0f)
             Remove();
     }
 
-    public override void OnBumpedIntoBy(Thing thing)
+    public override void OnBumpedIntoBy(Thing thing, Direction direction)
     {
         if (TimeElapsed > 0f)
             Remove();

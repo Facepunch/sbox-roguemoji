@@ -55,7 +55,12 @@ public partial class PuddleWater : Thing
     public override void OnMovedOntoThing(Thing thing)
     {
         base.OnMovedOntoThing(thing);
+        DouseFire(thing);
+    }
 
+    public override void OnBumpedIntoThing(Thing thing, Direction direction)
+    {
+        base.OnBumpedIntoThing(thing, direction);
         DouseFire(thing);
     }
 

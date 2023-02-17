@@ -21,9 +21,9 @@ public partial class ProjectileArrow : Thing
         }
     }
 
-    public override void OnBumpedIntoThing(Thing thing)
+    public override void OnBumpedIntoThing(Thing thing, Direction direction)
     {
-        base.OnBumpedIntoThing(thing);
+        base.OnBumpedIntoThing(thing, direction);
         Destroy();
     }
 

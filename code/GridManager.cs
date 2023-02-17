@@ -218,14 +218,9 @@ public partial class GridManager : Entity
         }
     }
 
-    public bool HasPuddle(IntVector gridPos)
-    {
-        return GetThingsAt(gridPos).WithAll(ThingFlags.Puddle).Count() > 0;
-    }
-
     public void RemovePuddles(IntVector gridPos, bool fadeOut = false)
     {
-        var things = GetThingsAt(gridPos).WithAll(ThingFlags.Puddle).ToList();
+        var things = GetThingsAt(gridPos).WithAll(ThingFlags.Puddle).WithNone(ThingFlags.Solid).ToList();
         for(int i = things.Count - 1; i >= 0; i--)
         {
             var thing = things[i];
