@@ -49,6 +49,9 @@ public partial class Potion : Thing
             case PotionType.Amnesia: return "Amnesia Potion";
             case PotionType.Burning: return "Burning Potion";
             case PotionType.Water: return "Water Potion";
+            case PotionType.Blood: return "Blood Potion";
+            case PotionType.Oil: return "Oil Potion";
+            case PotionType.Mud: return "Mud Potion";
             case PotionType.Lava: return "Lava Potion";
         }
 
@@ -72,7 +75,11 @@ public partial class Potion : Thing
             case PotionType.Mutation: return $"🧉{Globals.Icon(IconType.Mutation)}";
             case PotionType.Invisibility: return $"🧉{Globals.Icon(IconType.Invisible)}";
             case PotionType.Amnesia: return $"🧉{Globals.Icon(IconType.Amnesia)}";
-            case PotionType.Burning: return $"🧉{Globals.Icon(IconType.Water)}";
+            case PotionType.Burning: return $"🧉{Globals.Icon(IconType.Burning)}";
+            case PotionType.Water: return $"🧉{Globals.Icon(IconType.Water)}";
+            case PotionType.Blood: return $"🧉{Globals.Icon(IconType.Blood)}";
+            case PotionType.Oil: return $"🧉{Globals.Icon(IconType.Oil)}";
+            case PotionType.Mud: return $"🧉{Globals.Icon(IconType.Mud)}";
             case PotionType.Lava: return $"🧉{Globals.Icon(IconType.Lava)}";
         }
 

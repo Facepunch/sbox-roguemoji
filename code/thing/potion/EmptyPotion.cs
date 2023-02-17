@@ -13,7 +13,7 @@ public partial class EmptyPotion : Thing
     {
         DisplayIcon = "🧉";
         IconDepth = (int)IconDepthLevel.Normal;
-        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
+        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
         DisplayName = "Empty Potion";
         Description = "Can be filled with liquids";
         Tooltip = "An empty potion";
@@ -21,14 +21,42 @@ public partial class EmptyPotion : Thing
 
         if (Game.IsServer)
         {
-            AddTrait(AbilityName, "😋", $"Consume potion to cause an effect", offset: new Vector2(0f, -1f), tattooIcon: "🧉", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f), isAbility: true);
-            AddTrait("Fragile", "🧉", $"Potion breaks when it hits something", offset: new Vector2(0f, -1f), tattooIcon: "💥", tattooScale: 0.65f, tattooOffset: new Vector2(7f, 7f));
+            AddTrait(AbilityName, "🚰", $"Fill potion with nearby puddle", offset: new Vector2(0f, -1f), tattooIcon: "🧉", tattooScale: 0.6f, tattooOffset: new Vector2(-4f, 8f), isAbility: true);
         }
     }
 
-    public override void Use(Thing user)
+    public override void Use(Thing user, GridType gridType, IntVector targetGridPos)
     {
-        base.Use(user);
-        
+        base.Use(user, gridType, targetGridPos);
+
+        var thing = user.ContainingGridManager.GetThingsAt(targetGridPos).WithAll(ThingFlags.Puddle).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+        if(thing != null)
+        {
+            thing.Destroy();
+            Destroy();
+
+            //user.ContainingGridManager.AddFloater("✨", user.GridPos, 0.8f, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.2f);
+            //user.ContainingGridManager.AddFloater("✨", targetGridPos, 0.5f, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.1f);
+        }
+    }
+
+    public override HashSet<IntVector> GetAimingTargetCellsClient()
+    {
+        Game.AssertClient();
+
+        if (ThingWieldingThis == null)
+            return null;
+
+        int RADIUS = 1;
+        return Scroll.GetArenaAimingCells(RADIUS, ThingWieldingThis);
+    }
+
+    public override bool IsPotentialAimingTargetCell(IntVector gridPos)
+    {
+        if (ThingWieldingThis == null)
+            return false;
+
+        int RADIUS = 1;
+        return Scroll.IsPotentialArenaAimingCell(gridPos, RADIUS, ThingWieldingThis);
     }
 }

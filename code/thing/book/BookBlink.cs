@@ -13,10 +13,11 @@ public partial class BookBlink : Book
     public override string ChatDisplayIcons => $"📘{Globals.Icon(IconType.Blink)}";
 
     public BookBlink()
-	{
+    {
         DisplayName = "Book of Blink";
         Description = "Teleport to a target place nearby";
         Tooltip = "A book of Blink";
+        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
 
         SetTattoo(Globals.Icon(IconType.Blink), scale: 0.5f, offset: new Vector2(0.5f, -4f), offsetWielded: new Vector2(0f, 0f), offsetInfo: new Vector2(1f, -1f), offsetCharWielded: new Vector2(2.5f, -6f), offsetInfoWielded: new Vector2(-1f, -2f));
 
