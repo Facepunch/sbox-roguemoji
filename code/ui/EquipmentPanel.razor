@@ -67,7 +67,7 @@
     @foreach(var thing in GetThings())
     {
         var index = GetIndex(thing.GridPos);
-        <GridCell style="left: @(thing.GridPos.x * RoguemojiGame.CellSize); top: @(thing.GridPos.y * RoguemojiGame.CellSize);" Thing=@thing GridIndex=@index />
+        <GridCell style="left: @(thing.GridPos.x * RoguemojiGame.CellSize + thing.TotalOffset.x * ScaleToScreen); top: @(thing.GridPos.y * RoguemojiGame.CellSize + thing.TotalOffset.y * ScaleToScreen);" Thing=@thing GridIndex=@index />
 
         @if(thing.HasFloaters)
         {
@@ -76,7 +76,7 @@
 
         @if (thing == player.SelectedThing)
         {
-            <div class="selected" style="left: @(thing.GridPos.x * RoguemojiGame.CellSize); top: @(thing.GridPos.y * RoguemojiGame.CellSize);"></div>
+            <div class="selected" style="left: @(thing.GridPos.x * RoguemojiGame.CellSize + thing.TotalOffset.x * ScaleToScreen); top: @(thing.GridPos.y * RoguemojiGame.CellSize + thing.TotalOffset.y * ScaleToScreen);"></div>
         }
     }
 

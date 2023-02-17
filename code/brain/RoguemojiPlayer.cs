@@ -844,11 +844,14 @@ public partial class RoguemojiPlayer : ThingBrain
 
         gridManager.DeregisterGridPos(thing, thing.GridPos);
         thing.SetGridPos(targetGridPos);
+        thing.VfxFly(sourceGridPos, 0.15f, heightY: 0f, progressEasingType: EasingType.QuadInOut);
 
         if (targetThing != null)
         {
-            gridManager.DeregisterGridPos(targetThing, targetThing.GridPos);
+            var oldGridPos = targetThing.GridPos;
+            gridManager.DeregisterGridPos(targetThing, oldGridPos);
             targetThing.SetGridPos(sourceGridPos);
+            targetThing.VfxFly(oldGridPos, 0.2f, heightY: 0f, progressEasingType: EasingType.QuadInOut);
         }
 
         RoguemojiGame.Instance.RefreshGridPanelClient(To.Single(this), gridType);

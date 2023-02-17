@@ -67,7 +67,7 @@
     @foreach(var thing in GetThings())
     {
         var index = GetIndex(thing.GridPos);
-        <GridCell style="left: @(thing.GridPos.x * RoguemojiGame.CellSize); top: @(thing.GridPos.y * RoguemojiGame.CellSize);" Thing=@thing GridIndex=@index />
+        <GridCell style="left: @(thing.GridPos.x * RoguemojiGame.CellSize + thing.TotalOffset.x * ScaleToScreen); top: @(thing.GridPos.y * RoguemojiGame.CellSize + thing.TotalOffset.y * ScaleToScreen);" Thing=@thing GridIndex=@index />
 
         @if(thing.HasFloaters)
         {
@@ -76,7 +76,7 @@
 
         @if (thing == player.SelectedThing)
         {
-            <div class="selected" style="left: @(thing.GridPos.x * RoguemojiGame.CellSize); top: @(thing.GridPos.y * RoguemojiGame.CellSize);"></div>
+            <div class="selected" style="left: @(thing.GridPos.x * RoguemojiGame.CellSize + thing.TotalOffset.x * ScaleToScreen); top: @(thing.GridPos.y * RoguemojiGame.CellSize + thing.TotalOffset.y * ScaleToScreen);"></div>
         }
     }
 
@@ -166,6 +166,17 @@
         var selectedThingHash = player.SelectedThing?.NetworkIdent ?? 0;
         var aimingHash = player.IsAiming && player.AimingGridType == GridType.Inventory ? Game.Random.Int(0, 9999) : 0;
         var floaterHash = player.InventoryGridManager.Floaters.Count > 0 ? Game.Random.Int(0, 9999) : 0;
-        return HashCode.Combine(GetThings().Count, gridWidthHash, selectedThingHash, aimingHash, floaterHash, player.InventoryGridManager.ThingFloaterCounter);
+
+        var componentHash = 0;
+        foreach(Thing thing in GetThings())
+        {
+            if(thing.ThingComponents.Count > 0)
+            {
+                componentHash = Game.Random.Int(0, 9999);
+                break;
+            }
+        }
+
+        return HashCode.Combine(GetThings().Count, gridWidthHash, selectedThingHash, aimingHash, floaterHash, player.InventoryGridManager.ThingFloaterCounter, componentHash);
     }
 }
