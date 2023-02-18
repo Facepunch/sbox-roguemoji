@@ -59,6 +59,9 @@ public partial class PotionMutation : Potion
 
     List<TypeDescription> GetPossibleMutations()
     {
-        return new List<TypeDescription>() { TypeLibrary.GetType(typeof(MTeleportitis)) };
+        return new List<TypeDescription>() { 
+            TypeLibrary.GetType(typeof(MTeleportitis)),
+            TypeLibrary.GetType(typeof(MSeeInvisible)),
+        };
     }
 }
