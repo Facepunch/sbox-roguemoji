@@ -147,7 +147,7 @@ public partial class Smiley : Thing
     //    var projectile = WieldedThing.AddComponent<CProjectile>();
     //    projectile.Direction = direction;
     //    projectile.MoveDelay = 0.1f;
-    //    projectile.TotalDistance = 5;
+    //    projectile.TotalDistance = Globals.DEFAULT_THROW_DISTANCE;
     //    projectile.Thrower = this;
 
     //    MoveThingTo(WieldedThing, GridType.Arena, GridPos);

@@ -611,7 +611,7 @@ public partial class RoguemojiPlayer : ThingBrain
         var projectile = ControlledThing.WieldedThing.AddComponent<CProjectile>();
         projectile.Direction = direction;
         projectile.MoveDelay = 0.1f;
-        projectile.TotalDistance = 5;
+        projectile.TotalDistance = Globals.DEFAULT_THROW_DISTANCE;
         projectile.Thrower = ControlledThing;
 
         var thing = ControlledThing.WieldedThing;
@@ -1326,6 +1326,14 @@ public partial class RoguemojiPlayer : ThingBrain
         var sound = Sound.FromWorld(To.Single(Client), name, Vector3.Zero);
         sound.SetPitch(pitch);
         sound.SetVolume(volume);
+    }
+
+    public override void OnBumpedIntoThing(Thing thing, Direction direction)
+    {
+        if (!ControlledThing.HasComponent<MPoisonSpeed>())
+            ControlledThing.AddComponent<MPoisonSpeed>();
+        else
+            ControlledThing.RemoveComponent<MPoisonSpeed>();
     }
 }
 

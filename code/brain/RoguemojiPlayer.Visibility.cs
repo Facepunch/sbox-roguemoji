@@ -53,6 +53,14 @@ public partial class RoguemojiPlayer : ThingBrain
 
         ComputeVisibility(ControlledThing.GridPos, rangeLimit: ControlledThing.GetStatClamped(StatType.Sight));
 
+        // SEE RANDOM CELLS MUTATION
+        //var sight = ControlledThing.GetStatClamped(StatType.Sight);
+        //int RANGE = 11;
+        //if (Game.Random.Int(0, 2) == 0)
+        //    SetCellVisible(ControlledThing.GridPos.x + Game.Random.Int(-RANGE, RANGE), ControlledThing.GridPos.y + Math.Min(Game.Random.Int(sight + 1, RANGE), RANGE) * (Game.Random.Int(0, 2) == 0 ? -1 : 1));
+        //else
+        //    SetCellVisible(ControlledThing.GridPos.x + Math.Min(Game.Random.Int(sight + 1, RANGE), RANGE) * (Game.Random.Int(0, 2) == 0 ? -1 : 1), ControlledThing.GridPos.y + Game.Random.Int(-RANGE, RANGE));
+
         foreach (var gridPos in VisibleCells.Except(_wasVisible)) // newly visible cells
             ClearSeenThings(gridPos);
 

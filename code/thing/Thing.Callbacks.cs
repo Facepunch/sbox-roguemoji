@@ -81,10 +81,26 @@ public partial class Thing : Entity
         foreach (var component in ThingComponents) { component.Value.OnActionRecharged(); }
         Brain?.OnActionRecharged();
     }
-    public virtual void OnWieldedThingBumpedOther(Thing thing, Direction direction) { foreach (var component in ThingComponents) { component.Value.OnWieldedThingBumpedOther(thing, direction); } }
-    public virtual void OnBumpedIntoThing(Thing thing, Direction direction) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoThing(thing, direction); } }
-    public virtual void OnBumpedIntoBy(Thing thing, Direction direction) { foreach (var component in ThingComponents) { component.Value.OnBumpedIntoBy(thing, direction); } } // thing may be null
-    public virtual void OnBumpedOutOfBounds(Direction direction) { foreach (var component in ThingComponents) { component.Value.OnBumpedOutOfBounds(direction); } }
+    public virtual void OnWieldedThingBumpedOther(Thing thing, Direction direction) 
+    { 
+        foreach (var component in ThingComponents) { component.Value.OnWieldedThingBumpedOther(thing, direction); }
+        Brain?.OnWieldedThingBumpedOther(thing, direction);
+    }
+    public virtual void OnBumpedIntoThing(Thing thing, Direction direction) 
+    { 
+        foreach (var component in ThingComponents) { component.Value.OnBumpedIntoThing(thing, direction); }
+        Brain?.OnBumpedIntoThing(thing, direction);
+    }
+    public virtual void OnBumpedIntoBy(Thing thing, Direction direction) // thing may be null
+    { 
+        foreach (var component in ThingComponents) { component.Value.OnBumpedIntoBy(thing, direction); }
+        Brain?.OnBumpedIntoBy(thing, direction);
+    } 
+    public virtual void OnBumpedOutOfBounds(Direction direction) 
+    { 
+        foreach (var component in ThingComponents) { component.Value.OnBumpedOutOfBounds(direction); }
+        Brain?.OnBumpedOutOfBounds(direction);
+    }
     public virtual void OnMovedOntoThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnMovedOntoThing(thing); } }
     public virtual void OnMovedOntoBy(Thing thing) { for(int i = ThingComponents.Count - 1; i >= 0; i--) ThingComponents.ElementAt(i).Value.OnMovedOntoBy(thing); } // todo: System.InvalidOperationException: Collection was modified
     public virtual void OnChangedGridPos() 

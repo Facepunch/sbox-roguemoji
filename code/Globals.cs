@@ -40,6 +40,7 @@ public static class Globals
     public const float IGNITION_BRIGHTNESS_MAX = 13.0f;
     public const float IGNITION_COOL_DELAY = 0.25f;
     public const int IGNITION_COOL_AMOUNT = 2;
+    public const int DEFAULT_THROW_DISTANCE = 5;
 
     private static List<HallucinationData> _hallucinations;
 

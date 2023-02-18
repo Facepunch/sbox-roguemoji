@@ -8,6 +8,8 @@ public partial class OilBarrel : Thing
 {
     public int RemainingOilAmount { get; set; }
 
+    // todo: barrel explodes with fiery oil puddles if ignited
+
 	public OilBarrel()
 	{
 		DisplayIcon = "️🛢";

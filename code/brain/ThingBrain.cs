@@ -35,4 +35,8 @@ public partial class ThingBrain : Entity
     public virtual void OnFindTarget(Thing target) { }
     public virtual void OnLoseTarget() { }
     public virtual void OnDestroyed() { }
+    public virtual void OnWieldedThingBumpedOther(Thing thing, Direction direction) { }
+    public virtual void OnBumpedIntoThing(Thing thing, Direction direction) { }
+    public virtual void OnBumpedIntoBy(Thing thing, Direction direction) { }
+    public virtual void OnBumpedOutOfBounds(Direction direction) { }
 }
