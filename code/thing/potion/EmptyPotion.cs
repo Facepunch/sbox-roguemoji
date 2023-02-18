@@ -32,11 +32,25 @@ public partial class EmptyPotion : Thing
         var thing = user.ContainingGridManager.GetThingsAt(targetGridPos).WithAll(ThingFlags.Puddle).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
         if(thing != null)
         {
-            thing.Destroy();
-            Destroy();
+            var puddle = thing as Puddle;
+            if(puddle != null)
+            {
+                Thing newPotion = null;
+                switch(puddle.LiquidType)
+                {
+                    case PotionType.Water: newPotion = ContainingGridManager.SpawnThing<PotionWater>(GridPos); break;
+                    case PotionType.Blood: newPotion = ContainingGridManager.SpawnThing<PotionBlood>(GridPos); break;
+                    case PotionType.Oil: newPotion = ContainingGridManager.SpawnThing<PotionOil>(GridPos); break;
+                    case PotionType.Mud: newPotion = ContainingGridManager.SpawnThing<PotionMud>(GridPos); break;
+                    case PotionType.Lava: newPotion = ContainingGridManager.SpawnThing<PotionLava>(GridPos); break;
+                }
 
-            //user.ContainingGridManager.AddFloater("✨", user.GridPos, 0.8f, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.2f);
-            //user.ContainingGridManager.AddFloater("✨", targetGridPos, 0.5f, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.1f);
+                newPotion?.AddFloater("🚰", 1.0f, new Vector2(0, 2f), new Vector2(0, -9f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.SineOut, fadeInTime: 0.2f);
+                user.ContainingGridManager.AddFloater("🧉", targetGridPos, 0.5f, new Vector2(0, 3f), new Vector2(0, -8f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.SineOut, fadeInTime: 0.1f);
+
+                puddle.Destroy();
+                Destroy();
+            }
         }
     }
 
