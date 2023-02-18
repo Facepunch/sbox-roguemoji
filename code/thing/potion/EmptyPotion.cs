@@ -45,7 +45,12 @@ public partial class EmptyPotion : Thing
                     case PotionType.Lava: newPotion = ContainingGridManager.SpawnThing<PotionLava>(GridPos); break;
                 }
 
-                newPotion?.AddFloater("🚰", 1.0f, new Vector2(0, 2f), new Vector2(0, -9f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.SineOut, fadeInTime: 0.2f);
+                if(newPotion != null)
+                {
+                    newPotion.ContainingGridManager.AddFloater("🚰", newPotion.GridPos, 1.0f, new Vector2(0, 2f), new Vector2(0, -9f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.SineOut, fadeInTime: 0.2f);
+                    user.WieldThing(newPotion);
+                }
+
                 user.ContainingGridManager.AddFloater("🧉", targetGridPos, 0.5f, new Vector2(0, 3f), new Vector2(0, -8f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.SineOut, fadeInTime: 0.1f);
 
                 puddle.Destroy();

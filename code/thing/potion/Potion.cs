@@ -114,6 +114,8 @@ public partial class Potion : Thing
         var gridManager = ThingWieldingThis?.ContainingGridManager ?? ContainingGridManager;
         var levelId = ThingWieldingThis?.CurrentLevelId ?? CurrentLevelId;
 
+        Destroy();
+
         for (int x = -1; x <= 1; x++)
         {
             for (int y = -1; y <= 1; y++)
@@ -133,8 +135,6 @@ public partial class Potion : Thing
         }
 
         RoguemojiGame.Instance.RevealPotion(PotionType, breakGridPos, levelId);
-
-        Destroy();
     }
 
     public virtual void ApplyEffectToThing(Thing thing) { }

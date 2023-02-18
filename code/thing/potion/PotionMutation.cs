@@ -41,6 +41,24 @@ public partial class PotionMutation : Potion
 
     public override void ApplyEffectToThing(Thing thing)
     {
-        //thing.AddSideFloater(Globals.Icon(IconType.Mutation));
+        var possibleMutations = GetPossibleMutations();
+
+        for(int i = possibleMutations.Count - 1; i >= 0; i--)
+        {
+            var mutationType = possibleMutations[i];
+            if(thing.HasComponent(mutationType))
+                possibleMutations.RemoveAt(i);
+        }
+
+        if(possibleMutations.Count > 0)
+        {
+            var selectedType = possibleMutations[Game.Random.Int(0, possibleMutations.Count - 1)];
+            thing.AddComponent(selectedType);
+        }
+    }
+
+    List<TypeDescription> GetPossibleMutations()
+    {
+        return new List<TypeDescription>() { TypeLibrary.GetType(typeof(MTeleportitis)) };
     }
 }

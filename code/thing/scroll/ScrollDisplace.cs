@@ -30,21 +30,11 @@ public partial class ScrollDisplace : Scroll
 
         var things = user.ContainingGridManager.GetThingsAt(targetGridPos).ToList();
         foreach(var thing in things)
-        {
-            ScrollTeleport.TeleportThing(thing);
-        }
+            ScrollTeleport.TeleportThing(thing, showStartFloater: false);
 
-        user.ContainingGridManager.AddFloater("✨", targetGridPos, 0.8f, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.2f);
+        user.ContainingGridManager.AddFloater(Globals.Icon(IconType.Teleport), targetGridPos, 0.8f, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.1f);
 
-        if (things.Count > 0)
-        {
-            if (user.ContainingGridManager.GetRandomEmptyAdjacentGridPos(targetGridPos, out var emptyGridPos, allowNonSolid: true))
-                targetGridPos = emptyGridPos;
-            else
-                targetGridPos = user.GridPos;
-        }
-
-        RoguemojiGame.Instance.RevealScroll(ScrollType, targetGridPos, user.CurrentLevelId);
+        RoguemojiGame.Instance.RevealScroll(ScrollType, user.GridPos, user.CurrentLevelId);
 
         Destroy();
     }

@@ -69,18 +69,9 @@ public partial class BookTeleport : Book
         if (!user.TrySpendStat(StatType.Mana, ManaCost))
             return;
 
-        if (user.ContainingGridManager.GetRandomEmptyGridPos(out var targetGridPos, allowNonSolid: true))
+        if(ScrollTeleport.TeleportThing(user))
         {
-            user.ContainingGridManager.AddFloater("✨", user.GridPos, 0.8f, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.2f);
-            user.ContainingGridManager.AddFloater("✨", targetGridPos, 0.5f, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.1f);
-
-            user.SetGridPos(targetGridPos);
-
-            if (user.Brain is RoguemojiPlayer player)
-                player.RecenterCamera();
-
             StartCooldown(CooldownTime);
-
             base.Use(user);
         }
     }

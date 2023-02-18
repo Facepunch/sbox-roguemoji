@@ -63,7 +63,7 @@ public partial class ScrollSentience : Scroll
 
         user.ContainingGridManager.AddFloater(Globals.Icon(IconType.Sentience), targetGridPos, 0.8f, new Vector2(0f, 0f), new Vector2(0f, -14f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.2f, scale: 0.9f);
 
-        RoguemojiGame.Instance.RevealScroll(ScrollType, targetGridPos, user.CurrentLevelId);
+        RoguemojiGame.Instance.RevealScroll(ScrollType, user.GridPos, user.CurrentLevelId);
 
         Destroy();
     }

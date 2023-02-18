@@ -71,22 +71,7 @@ public partial class BookBlink : Book
         if (!user.TrySpendStat(StatType.Mana, ManaCost))
             return;
 
-        var things = user.ContainingGridManager.GetThingsAt(targetGridPos).WithAll(ThingFlags.Solid).ToList();
-        if (things.Count > 0)
-        {
-            if (user.ContainingGridManager.GetRandomEmptyAdjacentGridPos(targetGridPos, out var emptyGridPos, allowNonSolid: true))
-                targetGridPos = emptyGridPos;
-            else
-                targetGridPos = user.GridPos;
-        }
-
-        user.ContainingGridManager.AddFloater("✨", user.GridPos, 0.8f, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.2f);
-        user.ContainingGridManager.AddFloater("✨", targetGridPos, 0.5f, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.1f);
-
-        user.SetGridPos(targetGridPos);
-
-        if (user.Brain is RoguemojiPlayer player)
-            player.RecenterCamera();
+        ScrollBlink.BlinkThing(user, targetGridPos);
 
         StartCooldown(CooldownTime);
 

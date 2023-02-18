@@ -26,6 +26,8 @@ public partial class PuddleLava : Puddle
     // todo: make splashing noise when you move onto it
     // todo: make visible when walking onto this while invisible
 
+    // todo: every once inawhile, light things on fire its touching that aren't already on fire
+
     public override void Update(float dt)
     {
         base.Update(dt);
