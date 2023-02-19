@@ -42,11 +42,9 @@ public partial class ScrollSentience : Scroll
             if (!thing.HasStat(StatType.Hearing)) thing.InitStat(StatType.Hearing, 3);
             if (!thing.HasStat(StatType.SightBlockAmount)) InitStat(StatType.SightBlockAmount, 3);
 
-            if (!thing.HasFlag(ThingFlags.Solid))
-                thing.Flags = thing.Flags | ThingFlags.Solid;
-
-            if (!thing.HasFlag(ThingFlags.CanWieldThings))
-                thing.Flags = thing.Flags | ThingFlags.CanWieldThings;
+            if (!thing.HasFlag(ThingFlags.Solid)) thing.Flags = thing.Flags | ThingFlags.Solid;
+            if (!thing.HasFlag(ThingFlags.CanWieldThings)) thing.Flags = thing.Flags | ThingFlags.CanWieldThings;
+            if (!thing.HasFlag(ThingFlags.CanGainMutations)) thing.Flags = thing.Flags | ThingFlags.CanGainMutations;
 
             if (!thing.HasComponent<CTargeting>())
                 thing.AddComponent<CTargeting>();

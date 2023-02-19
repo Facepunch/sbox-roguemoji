@@ -45,7 +45,7 @@ public partial class Smiley : Thing
     {
         DisplayIcon = "😀";
         IconDepth = (int)IconDepthLevel.Player;
-        Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanWieldThings;
+        Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanWieldThings | ThingFlags.CanGainMutations;
         //ActionDelay = TimeSinceAction = 0.5f;
         //IsActionReady = true;
         Faction = FactionType.Player;

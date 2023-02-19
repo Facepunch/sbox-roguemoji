@@ -21,6 +21,7 @@ public enum ThingFlags
     Exclusive = (1 << 9),
     DoesntBumpThings = (1 << 10),
     Puddle = (1 << 11),
+    CanGainMutations = (1 << 12),
 }
 
 public enum FactionType { Neutral, Player, Enemy, Ghost, }

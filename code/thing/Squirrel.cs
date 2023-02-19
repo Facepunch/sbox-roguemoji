@@ -15,7 +15,7 @@ public partial class Squirrel : Thing
         IconDepth = (int)IconDepthLevel.Solid;
         ShouldUpdate = true;
 		Tooltip = "A squirrel";
-		Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanWieldThings;
+		Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanWieldThings | ThingFlags.CanGainMutations;
         PathfindMovementCost = 5f;
         Faction = FactionType.Enemy;
         Flammability = 13;

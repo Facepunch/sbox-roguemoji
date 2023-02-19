@@ -1330,10 +1330,10 @@ public partial class RoguemojiPlayer : ThingBrain
 
     public override void OnBumpedIntoThing(Thing thing, Direction direction)
     {
-        if (!ControlledThing.HasComponent<MAllergicNuts>())
-            ControlledThing.AddComponent<MAllergicNuts>();
-        else
-            ControlledThing.RemoveComponent<MAllergicNuts>();
+        //if (!ControlledThing.HasComponent<MAllergicNuts>())
+        //    ControlledThing.AddComponent<MAllergicNuts>();
+        //else
+        //    ControlledThing.RemoveComponent<MAllergicNuts>();
     }
 }
 

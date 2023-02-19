@@ -41,6 +41,9 @@ public partial class PotionMutation : Potion
 
     public override void ApplyEffectToThing(Thing thing)
     {
+        if (!thing.HasFlag(ThingFlags.CanGainMutations))
+            return;
+
         var possibleMutations = GetPossibleMutations();
 
         for(int i = possibleMutations.Count - 1; i >= 0; i--)
@@ -54,6 +57,8 @@ public partial class PotionMutation : Potion
         {
             var selectedType = possibleMutations[Game.Random.Int(0, possibleMutations.Count - 1)];
             thing.AddComponent(selectedType);
+
+            thing.AddFloater(Globals.Icon(IconType.Mutation), 1.2f, new Vector2(0, -3f), new Vector2(0, -12f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.15f);
         }
     }
 
@@ -63,6 +68,7 @@ public partial class PotionMutation : Potion
             TypeLibrary.GetType(typeof(MTeleportitis)),
             TypeLibrary.GetType(typeof(MSeeInvisible)),
             TypeLibrary.GetType(typeof(MPoisonSpeed)),
+            TypeLibrary.GetType(typeof(MAllergicNuts)),
         };
     }
 }
