@@ -82,14 +82,19 @@ public class CTargeting : ThingComponent
 
         int closestDistance = int.MaxValue;
         Thing target = null;
-        int sight = Thing.GetStatClamped(StatType.Sight);
 
         foreach (var other in _potentialTargets)
         {
             if(Thing.CanSeeThing(other))
             {
                 target = other;
-                closestDistance = Utils.GetDistance(Thing.GridPos, other.GridPos);
+
+                var distance = Utils.GetDistance(Thing.GridPos, other.GridPos);
+                if(distance < closestDistance)
+                {
+                    target = other;
+                    closestDistance = distance;
+                }
             }
         }
 
