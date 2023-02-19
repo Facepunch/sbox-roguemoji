@@ -50,19 +50,13 @@ public class CTargeting : ThingComponent
 
     public bool EvaluateTarget(Thing other)
     {
-        if (other == null || other.Faction != TargetFaction || other.IsRemoved || other == Target || other.IsInTransit)
+        if (other.Faction != TargetFaction || other == Target)
             return false;
 
-        if (!Thing.CanPerceiveThing(other))
-            return false;
-
-        int adjustedSight = Math.Max(Thing.GetStatClamped(StatType.Sight) - other.GetStatClamped(StatType.Stealth), 1);
         int distance = Utils.GetDistance(Thing.GridPos, other.GridPos);
-        int existingDistance = Target != null ? Utils.GetDistance(Thing.GridPos, Target.GridPos) : int.MaxValue;
-        if (distance <= adjustedSight && distance < existingDistance)
+        if (Target == null || distance < Utils.GetDistance(Thing.GridPos, Target.GridPos))
         {
-            if (Thing.ContainingGridManager.HasLineOfSight(Thing.GridPos, other.GridPos, adjustedSight, out IntVector collisionCell))
-                return true;
+            return Thing.CanSeeThing(other);
         }
 
         return false;
@@ -92,18 +86,10 @@ public class CTargeting : ThingComponent
 
         foreach (var other in _potentialTargets)
         {
-            if (!Thing.CanPerceiveThing(other))
-                continue;
-
-            int adjustedSight = Math.Max(sight - other.GetStatClamped(StatType.Stealth), 1);
-            int distance = Utils.GetDistance(Thing.GridPos, other.GridPos);
-            if (distance <= adjustedSight && distance < closestDistance)
+            if(Thing.CanSeeThing(other))
             {
-                if(gridManager.HasLineOfSight(Thing.GridPos, other.GridPos, adjustedSight, out IntVector collisionCell))
-                {
-                    target = other;
-                    closestDistance = distance;
-                }
+                target = other;
+                closestDistance = Utils.GetDistance(Thing.GridPos, other.GridPos);
             }
         }
 

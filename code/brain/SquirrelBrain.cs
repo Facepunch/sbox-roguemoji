@@ -9,7 +9,7 @@ public partial class SquirrelBrain : ThingBrain
 {
     public float CantSeeTargetElapsedTime { get; private set; }
     public float CantSeeTargetLoseDelay { get; private set; }
-    public IntVector TargetLastSeenPos { get; set; }
+    public IntVector TargetLastKnownPos { get; set; }
     public IntVector WanderGridPos { get; set; }
 
     public SquirrelBrain()
@@ -68,12 +68,11 @@ public partial class SquirrelBrain : ThingBrain
 
             if (target.CurrentLevelId != ControlledThing.CurrentLevelId)
             {
-                targeting.Target = null;
+                targeting.LoseTarget();
             }
             else
             {
-                int adjustedSight = Math.Max(ControlledThing.GetStatClamped(StatType.Sight) - target.GetStatClamped(StatType.Stealth), 1);
-                bool canSeeTarget = ControlledThing.CanSeeGridPos(target.GridPos, adjustedSight) && ControlledThing.CanPerceiveThing(target);
+                bool canSeeTarget = ControlledThing.CanSeeThing(target);
                 bool isFearful = ControlledThing.GetComponent<CFearful>(out var fearful);
 
                 //RoguemojiGame.Instance.DebugGridLine(ControlledThing.GridPos, targeting.Target.GridPos, canSeeTarget ? new Color(0f, 0f, 1f, 0.8f) : new Color(1f, 0f, 0f, 0.8f), 0.025f);
@@ -81,11 +80,11 @@ public partial class SquirrelBrain : ThingBrain
                 if (acting.IsActionReady)
                 {
                     if (canSeeTarget)
-                        TargetLastSeenPos = target.GridPos;
+                        TargetLastKnownPos = target.GridPos;
 
                     var targetPos = isFearful
                         ? CFearful.GetTargetRetreatPoint(ControlledThing.GridPos, ((CFearful)fearful).FearedThing.GridPos, ControlledThing.ContainingGridManager)
-                        : TargetLastSeenPos;
+                        : TargetLastKnownPos;
 
                     //RoguemojiGame.Instance.DebugGridLine(GridPos, targetPos, canSeeTarget ? new Color(0f, 0f, 1f, 0.2f) : new Color(1f, 0f, 0f, 0.2f), 0.5f, CurrentLevelId);
 
@@ -157,7 +156,7 @@ public partial class SquirrelBrain : ThingBrain
             acting.ActionTimer = Game.Random.Float(0f, 0.1f);
         }
 
-        TargetLastSeenPos = target.GridPos;
+        TargetLastKnownPos = target.GridPos;
     }
 
     public override void OnLoseTarget()
@@ -174,7 +173,7 @@ public partial class SquirrelBrain : ThingBrain
             acting.ActionTimer = Game.Random.Float(0f, 0.1f);
         }
 
-        WanderGridPos = TargetLastSeenPos;
+        WanderGridPos = TargetLastKnownPos;
     }
 
     public override void HearSound(string name, IntVector soundPos, int loudness = 0, float volume = 1, float pitch = 1)

@@ -746,6 +746,28 @@ public partial class Thing : Entity
         }
     }
 
+    public bool CanSeeThing(Thing other)
+    {
+        if (other == this)
+            return true;
+
+        if (other == null || other.IsRemoved || other.IsInTransit)
+            return false;
+
+        if (!CanPerceiveThing(other))
+            return false;
+
+        int adjustedSight = Math.Max(GetStatClamped(StatType.Sight) - other.GetStatClamped(StatType.Stealth), 1);
+        int distance = Utils.GetDistance(GridPos, other.GridPos);
+        if (distance <= adjustedSight)
+        {
+            if (ContainingGridManager.HasLineOfSight(GridPos, other.GridPos, adjustedSight, out IntVector collisionCell))
+                return true;
+        }
+
+        return false;
+    }
+
     /// <summary> Whether the gridPos is in range and line of sight is not blocked. </summary>
     public bool CanSeeGridPos(IntVector gridPos, int sight)
     {
