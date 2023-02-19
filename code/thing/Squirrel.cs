@@ -26,7 +26,7 @@ public partial class Squirrel : Thing
             InitStat(StatType.Attack, 1);
             InitStat(StatType.Speed, 2);
             InitStat(StatType.Sight, 7);
-            InitStat(StatType.Hearing, 3);
+            InitStat(StatType.Hearing, 6);
             InitStat(StatType.SightBlockAmount, 5);
             //InitStat(StatType.Smell, 3);
         }

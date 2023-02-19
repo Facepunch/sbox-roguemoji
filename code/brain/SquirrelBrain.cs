@@ -178,6 +178,23 @@ public partial class SquirrelBrain : ThingBrain
 
     public override void HearSound(string name, IntVector soundPos, int loudness = 0, float volume = 1, float pitch = 1)
     {
-        
+        CTargeting targeting = null;
+        if (ControlledThing.GetComponent<CTargeting>(out var component))
+            targeting = (CTargeting)component;
+
+        if (targeting == null)
+            return;
+
+        if(!targeting.HasTarget)
+        {
+            WanderGridPos = soundPos;
+
+            ControlledThing.RemoveFloater("❕");
+            ControlledThing.AddFloater("❔", Game.Random.Float(0.95f, 1.1f), new Vector2(0f, -10f), new Vector2(0f, -30f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.QuadOut, 0.1f);
+        }
+        else if (!ControlledThing.CanSeeThing(targeting.Target))
+        {
+            TargetLastKnownPos = soundPos;
+        }
     }
 }
