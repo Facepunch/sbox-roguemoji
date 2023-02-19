@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 namespace Roguemoji;
 
 public enum AimingSource { Throwing, UsingWieldedItem }
@@ -139,6 +138,19 @@ public partial class RoguemojiPlayer : ThingBrain
     {
         SeenCells.Clear();
         SeenThings.Clear();
+    }
+
+    public override void HearSound(string name, IntVector soundPos, int loudness = 0, float volume = 1, float pitch = 1)
+    {
+        int maxDist = loudness + ControlledThing.GetStatClamped(StatType.Hearing);
+        var dist = Utils.GetDistance(soundPos, ControlledThing.GridPos);
+
+        var falloff = Utils.Map(dist, 0f, maxDist + 1, 1f, 0f, EasingType.SineIn);
+        var xOffset = Utils.Map(soundPos.x - ControlledThing.GridPos.x, -maxDist, maxDist, 1f, 0f, EasingType.Linear);
+        var yOffset = Utils.Map(soundPos.y - ControlledThing.GridPos.y, -maxDist, maxDist, 1f, 0f, EasingType.Linear);
+        var sound = Sound.FromScreen(To.Single(Client), name, xOffset, yOffset);
+        sound.SetPitch(pitch);
+        sound.SetVolume(volume * falloff);
     }
 
     void SpawnRandomInventoryThing(IntVector gridPos)

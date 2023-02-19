@@ -176,4 +176,9 @@ public partial class SquirrelBrain : ThingBrain
 
         WanderGridPos = TargetLastSeenPos;
     }
+
+    public override void HearSound(string name, IntVector soundPos, int loudness = 0, float volume = 1, float pitch = 1)
+    {
+        
+    }
 }

@@ -40,7 +40,7 @@ public partial class Leaf : Thing
 
         if(thing.HasFlag(ThingFlags.Solid))
         {
-            RoguemojiGame.Instance.PlaySfxArena("footstep_dry_leaves", GridPos, CurrentLevelId, loudness: 2);
+            thing.ContainingGridManager.PlaySfx("footstep_dry_leaves", GridPos, loudness: 2);
         }
     }
 }

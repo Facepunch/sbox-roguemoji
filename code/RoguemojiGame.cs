@@ -621,31 +621,4 @@ public partial class RoguemojiGame : GameManager
     {
         Hud.Instance.DebugDrawing.GridCell(gridPos, color, time, gridType);
     }
-
-    public void PlaySfxArena(string name, IntVector soundPos, LevelId levelId, int loudness = 0, float volume = 1f, float pitch = 1f)
-    {
-        foreach (RoguemojiPlayer player in Players)
-        {
-            var playerThing = player.ControlledThing;
-
-            if (playerThing == null || playerThing.CurrentLevelId != levelId)
-                continue;
-
-            var playerPos = playerThing.GridPos;
-
-            int hearing = playerThing.GetStatClamped(StatType.Hearing);
-            int maxDist = loudness + hearing;
-
-            var dist = Utils.GetDistance(soundPos, playerPos);
-            if (dist > maxDist)
-                continue;
-
-            var falloff = Utils.Map(dist, 0f, maxDist + 1, 1f, 0f, EasingType.SineIn);
-            var xOffset = Utils.Map(soundPos.x - playerPos.x, -maxDist, maxDist, 1f, 0f, EasingType.Linear);
-            var yOffset = Utils.Map(soundPos.y - playerPos.y, -maxDist, maxDist, 1f, 0f, EasingType.Linear);
-            var sound = Sound.FromScreen(To.Single(player.Client), name, xOffset, yOffset); 
-            sound.SetPitch(pitch);
-            sound.SetVolume(volume * falloff);
-        }
-    }
 }

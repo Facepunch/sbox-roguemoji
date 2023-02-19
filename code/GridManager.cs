@@ -912,4 +912,24 @@ public partial class GridManager : Entity
 
         return points;
     }
+
+    public void PlaySfx(string name, IntVector soundPos, int loudness = 0, float volume = 1f, float pitch = 1f)
+    {
+        for(int i = Things.Count - 1; i >= 0; i--)
+        {
+            var thing = Things[i];
+            var hearing = thing.GetStatClamped(StatType.Hearing);
+
+            if (hearing <= 0)
+                continue;
+
+            int maxDist = loudness + hearing;
+
+            var dist = Utils.GetDistance(soundPos, thing.GridPos);
+            if (dist > maxDist)
+                continue;
+
+            thing.Brain?.HearSound(name, soundPos, loudness, volume, pitch);
+        }
+    }
 }

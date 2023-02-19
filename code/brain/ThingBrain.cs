@@ -25,6 +25,12 @@ public partial class ThingBrain : Entity
     {
 
     }
+
+    public virtual void HearSound(string name, IntVector soundPos, int loudness = 0, float volume = 1f, float pitch = 1f)
+    {
+
+    }
+
     public virtual void OnTakeDamageFrom(Thing thing) { }
     public virtual void OnHurt(int amount) { }
     public virtual void OnChangedGridPos() { }

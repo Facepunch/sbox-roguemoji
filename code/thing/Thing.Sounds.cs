@@ -13,10 +13,11 @@ public partial class Thing : Entity
     {
         var gridPos = ThingWieldingThis?.GridPos ?? GridPos;
         var levelId = ThingWieldingThis?.CurrentLevelId ?? CurrentLevelId;
+        var level = RoguemojiGame.Instance.GetLevel(levelId);
 
-        GetSound(actionType, RoguemojiGame.Instance.GetLevel(levelId).SurfaceType, out string sfxName, out int loudness);
+        GetSound(actionType, level.SurfaceType, out string sfxName, out int loudness);
         if (!string.IsNullOrEmpty(sfxName))
-            RoguemojiGame.Instance.PlaySfxArena(sfxName, gridPos, levelId, loudness);
+            level.GridManager.PlaySfx(sfxName, gridPos, loudness);
     }
 
     public virtual void GetSound(SoundActionType actionType, SurfaceType surfaceType, out string sfxName, out int loudness)
