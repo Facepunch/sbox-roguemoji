@@ -60,6 +60,7 @@ public abstract class ThingComponent
     public virtual void OnMove(Direction direction) { }
     public virtual void OnAddComponent(TypeDescription type) { }
     public virtual void OnRemoveComponent(TypeDescription type) { }
+    public virtual void OnUseThing(Thing thing) { }
     public virtual void OnCooldownStart() { }
     public virtual void OnCooldownFinish() { }
     public virtual void OnFindTarget(Thing target) { }

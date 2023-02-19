@@ -366,6 +366,7 @@ public partial class Thing : Entity
             return;
 
         // todo: AI needs to choose direction/target cell for aimed useables
+        OnUseThing(WieldedThing);
         WieldedThing.Use(this);
     }
 
@@ -374,6 +375,7 @@ public partial class Thing : Entity
         if (WieldedThing == null)
             return;
 
+        OnUseThing(WieldedThing);
         WieldedThing.Use(this, direction);
     }
 
@@ -382,6 +384,7 @@ public partial class Thing : Entity
         if (WieldedThing == null)
             return;
 
+        OnUseThing(WieldedThing);
         WieldedThing.Use(this, gridType, targetGridPos);
     }
 

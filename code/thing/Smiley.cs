@@ -165,40 +165,40 @@ public partial class Smiley : Thing
     //    //    MoveThingTo(thing, GridType.Equipment, emptyGridPos);
     //}
 
-    public override void UseWieldedThing()
-    {
-        if (WieldedThing == null)
-            return;
+    //public override void UseWieldedThing()
+    //{
+    //    if (WieldedThing == null)
+    //        return;
 
-        if (!WieldedThing.HasFlag(ThingFlags.Useable))
-            return;
+    //    if (!WieldedThing.HasFlag(ThingFlags.Useable))
+    //        return;
 
-        if (WieldedThing.IsOnCooldown)
-            return;
+    //    if (WieldedThing.IsOnCooldown)
+    //        return;
             
-        if(!WieldedThing.CanBeUsedBy(this, shouldLogMessage: true))
-            return;
+    //    if(!WieldedThing.CanBeUsedBy(this, shouldLogMessage: true))
+    //        return;
 
-        if (WieldedThing.HasFlag(ThingFlags.UseRequiresAiming))
-        {
-            //AimingType aimingType = WieldedThing.HasFlag(ThingFlags.AimTypeTargetCell) ? AimingType.TargetCell : AimingType.Direction;
-            //StartAiming(AimingSource.UsingWieldedItem, aimingType, WieldedThing.AimingGridType);
-        }
-        else
-        {
-            WieldedThing.Use(this);
-        }
-    }
+    //    if (WieldedThing.HasFlag(ThingFlags.UseRequiresAiming))
+    //    {
+    //        //AimingType aimingType = WieldedThing.HasFlag(ThingFlags.AimTypeTargetCell) ? AimingType.TargetCell : AimingType.Direction;
+    //        //StartAiming(AimingSource.UsingWieldedItem, aimingType, WieldedThing.AimingGridType);
+    //    }
+    //    else
+    //    {
+    //        WieldedThing.Use(this);
+    //    }
+    //}
 
-    public override void UseWieldedThing(Direction direction)
-    {
-        base.UseWieldedThing(direction);
-    }
+    //public override void UseWieldedThing(Direction direction)
+    //{
+    //    base.UseWieldedThing(direction);
+    //}
 
-    public override void UseWieldedThing(GridType gridType, IntVector targetGridPos)
-    {
-        base.UseWieldedThing(gridType, targetGridPos);
-    }
+    //public override void UseWieldedThing(GridType gridType, IntVector targetGridPos)
+    //{
+    //    base.UseWieldedThing(gridType, targetGridPos);
+    //}
 
     public void MoveThingTo(Thing thing, GridType targetGridType, IntVector targetGridPos, bool dontRequireAction = false, bool wieldIfPossible = false)
     {

@@ -102,7 +102,10 @@ public partial class Thing : Entity
         Brain?.OnBumpedOutOfBounds(direction);
     }
     public virtual void OnMovedOntoThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnMovedOntoThing(thing); } }
-    public virtual void OnMovedOntoBy(Thing thing) { for(int i = ThingComponents.Count - 1; i >= 0; i--) ThingComponents.ElementAt(i).Value.OnMovedOntoBy(thing); } // todo: System.InvalidOperationException: Collection was modified
+    public virtual void OnMovedOntoBy(Thing thing) 
+    {
+        for (int i = ThingComponents.Count - 1; i >= 0; i--) { ThingComponents.ElementAt(i).Value.OnMovedOntoBy(thing); }
+    }
     public virtual void OnChangedGridPos() 
     { 
         foreach (var component in ThingComponents) { component.Value.OnChangedGridPos(); }
@@ -115,6 +118,11 @@ public partial class Thing : Entity
     }
     public virtual void OnAddComponent(TypeDescription type) { foreach (var component in ThingComponents) { component.Value.OnAddComponent(type); } }
     public virtual void OnRemoveComponent(TypeDescription type) { foreach (var component in ThingComponents) { component.Value.OnRemoveComponent(type); } }
+    public virtual void OnUseThing(Thing thing) 
+    {
+        for (int i = ThingComponents.Count - 1; i >= 0; i--) { ThingComponents.ElementAt(i).Value.OnUseThing(thing); }
+        Brain?.OnUseThing(thing);
+    }
     public virtual void OnCooldownStart() { foreach (var component in ThingComponents) { component.Value.OnCooldownStart(); } }
     public virtual void OnCooldownFinish() { foreach (var component in ThingComponents) { component.Value.OnCooldownFinish(); } }
     public virtual void OnFindTarget(Thing target) 

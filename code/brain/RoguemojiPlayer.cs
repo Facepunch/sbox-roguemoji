@@ -143,14 +143,13 @@ public partial class RoguemojiPlayer : ThingBrain
 
     void SpawnRandomInventoryThing(IntVector gridPos)
     {
-        int rand = Game.Random.Int(0, 36);
+        int rand = Game.Random.Int(0, 37);
         switch (rand)
         {
             //case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
             case 0: InventoryGridManager.SpawnThing<PotionMedicine>(gridPos); break;
             //case 1: InventoryGridManager.SpawnThing<Potato>(gridPos); break;
             case 1: InventoryGridManager.SpawnThing<PotionMutation>(gridPos); break;
-            //case 2: InventoryGridManager.SpawnThing<Nut>(gridPos); break;
             case 2: InventoryGridManager.SpawnThing<PotionHallucination>(gridPos); break;
             //case 3: InventoryGridManager.SpawnThing<Mushroom>(gridPos); break;
             case 3: InventoryGridManager.SpawnThing<ScrollDisplace>(gridPos); break;
@@ -201,6 +200,7 @@ public partial class RoguemojiPlayer : ThingBrain
             case 34: InventoryGridManager.SpawnThing<PotionMud>(gridPos); break;
             case 35: InventoryGridManager.SpawnThing<PotionBlood>(gridPos); break;
             case 36: InventoryGridManager.SpawnThing<PotionOil>(gridPos); break;
+            case 37: InventoryGridManager.SpawnThing<Nut>(gridPos); break;
         }
     }
 
@@ -672,7 +672,7 @@ public partial class RoguemojiPlayer : ThingBrain
                 return;
             }
 
-            wieldedThing.Use(ControlledThing);
+            ControlledThing.UseWieldedThing();
         }
     }
 
@@ -1330,10 +1330,10 @@ public partial class RoguemojiPlayer : ThingBrain
 
     public override void OnBumpedIntoThing(Thing thing, Direction direction)
     {
-        if (!ControlledThing.HasComponent<MPoisonSpeed>())
-            ControlledThing.AddComponent<MPoisonSpeed>();
+        if (!ControlledThing.HasComponent<MAllergicNuts>())
+            ControlledThing.AddComponent<MAllergicNuts>();
         else
-            ControlledThing.RemoveComponent<MPoisonSpeed>();
+            ControlledThing.RemoveComponent<MAllergicNuts>();
     }
 }
 

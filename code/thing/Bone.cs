@@ -4,6 +4,8 @@ using System;
 namespace Roguemoji;
 public partial class Bone : Thing
 {
+    // todo: add durability
+
 	public Bone()
 	{
 		DisplayIcon = "🦴";
