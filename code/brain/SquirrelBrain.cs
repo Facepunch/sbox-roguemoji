@@ -187,10 +187,13 @@ public partial class SquirrelBrain : ThingBrain
 
         if(!targeting.HasTarget)
         {
-            WanderGridPos = soundPos;
+            if(WanderGridPos.Equals(ControlledThing.GridPos))
+            {
+                ControlledThing.RemoveFloater("❔");
+                ControlledThing.AddFloater("❕", 1.55f, new Vector2(0f, -10f), new Vector2(0f, -35f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.QuadOut, 0.05f);
+            }
 
-            ControlledThing.RemoveFloater("❕");
-            ControlledThing.AddFloater("❔", Game.Random.Float(0.95f, 1.1f), new Vector2(0f, -10f), new Vector2(0f, -30f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.QuadOut, 0.1f);
+            WanderGridPos = soundPos;
         }
         else if (!ControlledThing.CanSeeThing(targeting.Target))
         {

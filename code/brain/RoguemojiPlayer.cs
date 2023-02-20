@@ -155,7 +155,7 @@ public partial class RoguemojiPlayer : ThingBrain
 
     void SpawnRandomInventoryThing(IntVector gridPos)
     {
-        int rand = Game.Random.Int(0, 37);
+        int rand = Game.Random.Int(0, 38);
         switch (rand)
         {
             //case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -165,7 +165,6 @@ public partial class RoguemojiPlayer : ThingBrain
             case 2: InventoryGridManager.SpawnThing<PotionHallucination>(gridPos); break;
             //case 3: InventoryGridManager.SpawnThing<Mushroom>(gridPos); break;
             case 3: InventoryGridManager.SpawnThing<ScrollDisplace>(gridPos); break;
-            //case 4: InventoryGridManager.SpawnThing<Trumpet>(gridPos); break;
             case 4: InventoryGridManager.SpawnThing<PotionConfusion>(gridPos); break;
             //case 5: InventoryGridManager.SpawnThing<Bouquet>(gridPos); break;
             case 5: InventoryGridManager.SpawnThing<PotionPoison>(gridPos); break;
@@ -213,6 +212,7 @@ public partial class RoguemojiPlayer : ThingBrain
             case 35: InventoryGridManager.SpawnThing<PotionBlood>(gridPos); break;
             case 36: InventoryGridManager.SpawnThing<PotionOil>(gridPos); break;
             case 37: InventoryGridManager.SpawnThing<Nut>(gridPos); break;
+            case 38: InventoryGridManager.SpawnThing<Trumpet>(gridPos); break;
         }
     }
 
