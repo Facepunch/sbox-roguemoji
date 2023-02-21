@@ -39,15 +39,6 @@ public partial class PotionLava : Potion
         base.Use(user);
     }
 
-    public override void ApplyEffectToThing(Thing thing)
-    {
-        //if (!thing.ContainingGridManager.ShouldCellPutOutFire(thing.GridPos) && thing.Flammability > 0)
-        //{
-        //    var burning = thing.AddComponent<CBurning>();
-        //    burning.Lifetime = 30f;
-        //}
-    }
-
     public override void ApplyEffectToGridPos(GridManager gridManager, IntVector gridPos)
     {
         if (!gridManager.DoesGridPosContainThingType<PuddleLava>(gridPos))

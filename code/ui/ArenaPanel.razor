@@ -103,7 +103,6 @@
         width: 100%;
         height: 100%;
         position: absolute;
-        background-color: #050505;
         z-index: 20002;
     }
 </style>
@@ -243,7 +242,7 @@
 
     @if(player.CameraFade > 0f)
     {
-        <div class="arena_fade" style="opacity:@(player.CameraFade);"></div>
+        <div class="arena_fade" style="opacity:@(player.CameraFade); background-color:@(player.CameraFadeColor.Hex)"></div>
     }
 
     <div class="level_label" style="opacity:@(LevelLabelOpacity);" @ref=LevelLabel>

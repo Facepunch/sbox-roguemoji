@@ -1,7 +1,7 @@
 ﻿using Sandbox;
-using Sandbox.Internal;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Roguemoji;
 public partial class Firecracker : Thing
@@ -23,9 +23,7 @@ public partial class Firecracker : Thing
         Tooltip = "A firecracker";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
-        Flammability = 24;
-
-        ShouldUpdate = true;
+        Flammability = 44;
 
         if (Game.IsServer)
         {
@@ -38,8 +36,6 @@ public partial class Firecracker : Thing
         if (IsLit)
             return;
 
-        PlaySfx("firecracker_light", loudness: 3);
-
         IsLit = true;
 
         RemoveFlag(ThingFlags.Useable);
@@ -48,8 +44,7 @@ public partial class Firecracker : Thing
         DisplayName = "Lit Firecracker";
         Tooltip = "A lit firecracker";
 
-        var burning = AddComponent<CBurning>();
-        burning.Lifetime = 5f;
+        AddComponent<CBurning>();
 
         ShouldUpdate = true;
         
@@ -65,30 +60,27 @@ public partial class Firecracker : Thing
             _fuseSfxTimer += dt;
             if (_fuseSfxTimer > FUSE_SFX_DELAY)
             {
-                PlaySfx("firecracker_fuse", loudness: 2, pitch: Utils.Map(_numFuseSfx++, 0, 5, 1f, 1.33f, EasingType.QuadIn));
+                PlaySfx("firecracker_fuse", loudness: 3, pitch: Utils.Map(_numFuseSfx++, 0, 5, 1f, 1.33f, EasingType.QuadIn));
                 _fuseSfxTimer -= FUSE_SFX_DELAY;
             }
         }
     }
 
-    public override void GetSound(SoundActionType actionType, SurfaceType surfaceType, out string sfxName, out int loudness)
+    public override void OnAddComponent(TypeDescription type)
     {
-        switch (actionType)
-        {
-            case SoundActionType.Use:
-                sfxName = "trumpet";
-                loudness = 9;
-                return;
-        }
+        base.OnAddComponent(type);
 
-        base.GetSound(actionType, surfaceType, out sfxName, out loudness);
+        if (type == TypeLibrary.GetType(typeof(CBurning)))
+        {
+            PlaySfx("firecracker_light", loudness: 5);
+        }
     }
 
     public override void OnDestroyed()
     {
         if(HasComponent<CBurning>())
         {
-            PlaySfx("firecracker_explode", loudness: 9);
+            PlaySfx("firecracker_explode", loudness: 12);
             ContainingGridManager.AddFloater(Globals.Icon(IconType.Explosion), GridPos, 1f, new Vector2(0f, 0f), new Vector2(0f, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.01f, scale: 1.3f, opacity: 0.6f, shakeAmount: 0f);
             ContainingGridManager.AddFloater("🔆", GridPos, 0.4f, new Vector2(0f, 0f), new Vector2(0f, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.01f, scale: 1f, opacity: 1f, shakeAmount: 2f);
 
@@ -110,19 +102,9 @@ public partial class Firecracker : Thing
                     bool didSeeExplosion = false;
                     var sight = thing.GetStatClamped(StatType.Sight);
                     if (thing.HasBrain && thing.Brain is RoguemojiPlayer player)
-                    {
                         didSeeExplosion = thing.CanSeeGridPos(gridPos, sight) && player.IsGridPosOnCamera(gridPos);
-
-                        if (didSeeExplosion)
-                        {
-                            player.PlaySfxUI("firecracker_tinnitus");
-                            player.PlaySfxUI("firecracker_explode", volume: 1f, pitch: 1.25f);
-                        }
-                    }
                     else
-                    {
                         didSeeExplosion = thing.CanSeeGridPos(gridPos, sight);
-                    }
 
                     if (didSeeExplosion)
                         StunThing(thing);
@@ -137,5 +119,12 @@ public partial class Firecracker : Thing
     {
         var stunned = thing.AddComponent<CStunned>();
         stunned.Lifetime = 5f;
+
+        if (thing.HasBrain && thing.Brain is RoguemojiPlayer player)
+        {
+            player.PlaySfxUI("firecracker_tinnitus");
+            player.PlaySfxUI("firecracker_explode", volume: 1f, pitch: 1.25f);
+            player.VfxFlashCamera(0.2f, new Color(0.925f, 0.925f, 0.925f));
+        }
     }
 }

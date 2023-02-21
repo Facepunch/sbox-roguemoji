@@ -24,6 +24,8 @@ public class VfxPlayerFadeCamera : PlayerComponent
             ? Utils.Map(TimeElapsed, 0f, Lifetime, 0f, 1f, EasingType.SineInOut)
             : Utils.Map(TimeElapsed, 0f, Lifetime, 1f, 0f, EasingType.SineInOut);
 
+        Player.CameraFadeColor = new Color(0.02f, 0.02f, 0.02f);
+
         if (TimeElapsed > Lifetime)
             Remove();
 

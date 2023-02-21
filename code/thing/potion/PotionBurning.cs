@@ -43,7 +43,6 @@ public partial class PotionBurning : Potion
         if(!thing.ContainingGridManager.ShouldCellPutOutFire(thing.GridPos) && thing.Flammability > 0)
         {
             var burning = thing.AddComponent<CBurning>();
-            burning.Lifetime = 30f;
         }
     }
 }

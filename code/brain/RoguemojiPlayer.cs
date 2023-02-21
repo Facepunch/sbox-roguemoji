@@ -13,6 +13,7 @@ public partial class RoguemojiPlayer : ThingBrain
     [Net] public IntVector CameraGridOffset { get; set; }
     public Vector2 CameraPixelOffset { get; set; } // Client-only
     public float CameraFade { get; set; } // Client-only
+    public Color CameraFadeColor { get; set; } // Client-only
 
     [Net] public GridManager InventoryGridManager { get; private set; }
     [Net] public GridManager EquipmentGridManager { get; private set; }
@@ -561,6 +562,14 @@ public partial class RoguemojiPlayer : ThingBrain
         var fade = AddPlayerComponent<VfxPlayerFadeCamera>();
         fade.Lifetime = lifetime;
         fade.ShouldFadeOut = shouldFadeOut;
+    }
+
+    [ClientRpc]
+    public void VfxFlashCamera(float lifetime, Color color)
+    {
+        var flash = AddPlayerComponent<VfxPlayerFlashCamera>();
+        flash.Lifetime = lifetime;
+        flash.Color = color;
     }
 
     public override void OnDestroyed()

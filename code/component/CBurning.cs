@@ -25,6 +25,8 @@ public class CBurning : ThingComponent
 
         thing.IgnitionAmount = Globals.IGNITION_MAX;
 
+        Lifetime = Utils.Map(thing.Flammability, 0, 100, 60f, 3f, EasingType.ExpoOut);
+        //Log.Info($"{thing.DisplayIcon} Flammability: {thing.Flammability} Lifetime: {Lifetime}");
         ShouldUpdate = true;
 
         BurnDelayMin = 2f;
@@ -142,10 +144,7 @@ public class CBurning : ThingComponent
                             other.IgnitionAmount += MathX.FloorToInt(other.Flammability * proximityFactor * ADJUST_SPREAD_SPEED);
                             if (other.IgnitionAmount >= Globals.IGNITION_MAX)
                             {
-                                var burning = other.AddComponent<CBurning>();
-                                burning.Lifetime = Math.Max(Lifetime, burning.Lifetime);
-
-                                other.IgnitionAmount = Globals.IGNITION_MAX;
+                                other.AddComponent<CBurning>();
                             }
                             else if(!hasMadeFloater)
                             {
