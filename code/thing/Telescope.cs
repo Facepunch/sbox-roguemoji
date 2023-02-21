@@ -7,6 +7,8 @@ public partial class Telescope : Thing
     public int SightAmount { get; private set; }
     public int SpeedAmount { get; private set; }
 
+    // todo: see farther, but dont see through more things
+
     public Telescope()
 	{
 		DisplayIcon = "🔭";

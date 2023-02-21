@@ -24,6 +24,8 @@ public partial class Trumpet : Thing
             EnergyCost = 1;
             CooldownTime = 1f;
 
+            InitStat(StatType.Attack, 1);
+
             AddTrait(AbilityName, "🎺", $"Make a very loud noise", offset: new Vector2(0f, -1f), tattooIcon: "🎵", tattooScale: 0.42f, tattooOffset: new Vector2(12f, -12f), isAbility: true);
             AddTrait("", GetStatIcon(StatType.Energy), $"Ability costs {EnergyCost}{GetStatIcon(StatType.Energy)}", offset: new Vector2(0f, -3f), labelText: $"{EnergyCost}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));

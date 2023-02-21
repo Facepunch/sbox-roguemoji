@@ -6,7 +6,7 @@ using System.Linq;
 namespace Roguemoji;
 public partial class PotionMud : Potion
 {
-    public override string SplashIcon => Globals.Icon(IconType.Mud);
+    public override string SplashIcon => "🟤";
 
     public PotionMud()
     {

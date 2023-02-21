@@ -36,9 +36,8 @@ public partial class Axe : Thing
         if (target is TreeDeciduous || target is TreeEvergreen)
         {
             target.VfxShake(0.25f, 6f);
-            target.Hurt(TreeAttackAmount);
-
             target.ContainingGridManager.PlaySfx("tree_hit_by_axe", target.GridPos, loudness: 3);
+            target.Hurt(TreeAttackAmount);
         }
         else
         {

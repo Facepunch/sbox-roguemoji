@@ -54,8 +54,6 @@ public class CBurning : ThingComponent
         TimeElapsed += dt;
         if(Lifetime > 0f && TimeElapsed > Lifetime)
         {
-            Remove();
-
             if (!Thing.HasStat(StatType.Health))
             {
                 Thing.ContainingGridManager.AddFloater(Globals.Icon(IconType.Burning), Thing.GridPos, 0.5f, new Vector2(0f, -12f), new Vector2(0, -18f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadIn, fadeInTime: 0.04f, scale: 1f, opacity: 0.6f, shakeAmount: 1f);
@@ -64,6 +62,7 @@ public class CBurning : ThingComponent
             else
             {
                 Thing.IgnitionAmount = 0;
+                Remove();
             }
 
             return;
@@ -195,7 +194,9 @@ public class CBurning : ThingComponent
             ((CIconPriority)component).RemoveIconPriority(IconId);
 
         Thing.RemoveFloater(Globals.Icon(IconType.Burning));
-        Thing.ContainingGridManager.ThingFloaterCounter++;
+
+        if(Thing.ContainingGridManager != null)
+            Thing.ContainingGridManager.ThingFloaterCounter++;
     }
 
     public override void OnThingDied()

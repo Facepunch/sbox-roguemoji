@@ -129,8 +129,8 @@ public partial class SquirrelBrain : ThingBrain
         base.OnTakeDamageFrom(thing);
 
         int amount = thing.GetAttackDamage();
-
-        if (amount > 0 && ControlledThing.GetStatClamped(StatType.Health) == 1 && !ControlledThing.HasComponent<CFearful>())
+        var health = ControlledThing.GetStatClamped(StatType.Health);
+        if (amount > 0 && (health - amount) == 1 && !ControlledThing.HasComponent<CFearful>())
         {
             var fearful = ControlledThing.AddComponent<CFearful>();
             fearful.Lifetime = 5f;

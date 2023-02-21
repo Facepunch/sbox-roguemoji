@@ -100,7 +100,7 @@ public partial class GridManager : Entity
 		thing.OnSpawned();
 
         if ((GridType == GridType.Inventory || GridType == GridType.Equipment) && OwningPlayer != null)
-            thing.ThingOwningThis = OwningPlayer.ControlledThing;
+            thing.SetOwningThing(OwningPlayer.ControlledThing);
 
         return thing;
     }
@@ -118,7 +118,7 @@ public partial class GridManager : Entity
         thing.OnSpawned();
 
         if ((GridType == GridType.Inventory || GridType == GridType.Equipment) && OwningPlayer != null)
-            thing.ThingOwningThis = OwningPlayer.ControlledThing;
+            thing.SetOwningThing(OwningPlayer.ControlledThing);
     }
 
     public void AddThing(Thing thing)

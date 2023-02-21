@@ -55,7 +55,7 @@ public partial class RoguemojiPlayer : ThingBrain
 
             IdentifiedScrollTypes = new List<ScrollType>();
             IdentifiedPotionTypes = new List<PotionType>();
-            SetStartingValues();
+            //SetStartingValues();
         }
         else
         {
@@ -155,7 +155,7 @@ public partial class RoguemojiPlayer : ThingBrain
 
     void SpawnRandomInventoryThing(IntVector gridPos)
     {
-        int rand = Game.Random.Int(0, 38);
+        int rand = Game.Random.Int(0, 42);
         switch (rand)
         {
             //case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -174,14 +174,11 @@ public partial class RoguemojiPlayer : ThingBrain
             case 7: InventoryGridManager.SpawnThing<ScrollTelekinesis>(gridPos); break;
             //case 8: InventoryGridManager.SpawnThing<SafetyVest>(gridPos); break;
             case 8: InventoryGridManager.SpawnThing<PotionSpeed>(gridPos); break;
-            //case 9: InventoryGridManager.SpawnThing<Sunglasses>(gridPos); break;
             case 9: InventoryGridManager.SpawnThing<GlassesOfPerception>(gridPos); break;
-            //case 10: InventoryGridManager.SpawnThing<Telescope>(gridPos); break;
             //case 10: InventoryGridManager.SpawnThing<Refreshment>(gridPos); break;
             case 10: InventoryGridManager.SpawnThing<PotionSleeping>(gridPos); break;
             //case 11: InventoryGridManager.SpawnThing<WhiteCane>(gridPos); break;
             case 11: InventoryGridManager.SpawnThing<ScrollConfetti>(gridPos); break;
-            //case 11: InventoryGridManager.SpawnThing<Cigarette>(gridPos); break;
             case 12: InventoryGridManager.SpawnThing<ScrollBlink>(gridPos); break;
             //case 13: InventoryGridManager.SpawnThing<BowAndArrow>(gridPos); break;
             case 13: InventoryGridManager.SpawnThing<ScrollIdentify>(gridPos); break;
@@ -213,6 +210,10 @@ public partial class RoguemojiPlayer : ThingBrain
             case 36: InventoryGridManager.SpawnThing<PotionOil>(gridPos); break;
             case 37: InventoryGridManager.SpawnThing<Nut>(gridPos); break;
             case 38: InventoryGridManager.SpawnThing<Trumpet>(gridPos); break;
+            case 39: InventoryGridManager.SpawnThing<Firecracker>(gridPos); break;
+            case 40: InventoryGridManager.SpawnThing<Sunglasses>(gridPos); break;
+            case 41: InventoryGridManager.SpawnThing<Telescope>(gridPos); break;
+            case 42: InventoryGridManager.SpawnThing<Cigarette>(gridPos); break;
         }
     }
 
@@ -784,7 +785,7 @@ public partial class RoguemojiPlayer : ThingBrain
 
             thing.CurrentLevelId = ControlledThing.CurrentLevelId;
 
-            thing.ThingOwningThis = null;
+            thing.SetOwningThing(null);
 
             if (playSfx)
                 thing.PlaySfx(SoundActionType.Drop);
@@ -797,13 +798,13 @@ public partial class RoguemojiPlayer : ThingBrain
                 if (wieldIfPossible && ControlledThing.WieldedThing == null && !thing.HasFlag(ThingFlags.Equipment))
                     WieldThing(thing, dontRequireAction: true);
 
-                thing.ThingOwningThis = ControlledThing;
+                thing.SetOwningThing(ControlledThing);
             }
 
             if (targetGridType == GridType.Equipment)
             {
                 targetGridManager.OwningPlayer.ControlledThing.EquipThing(thing);
-                thing.ThingOwningThis = ControlledThing;
+                thing.SetOwningThing(ControlledThing);
             }
 
             if(playSfx)

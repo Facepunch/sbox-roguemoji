@@ -9,7 +9,7 @@ public partial class Explosion : Thing
 
 	public Explosion()
 	{
-        DisplayIcon = "💥";
+        DisplayIcon = Globals.Icon(IconType.Explosion);
         IconDepth = (int)IconDepthLevel.Effect;
         _spawnTime = 0f;
 		ShouldUpdate = true;

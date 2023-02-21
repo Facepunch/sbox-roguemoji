@@ -40,6 +40,7 @@ public class TattooData
 public partial class Thing : Entity
 {
     [Net] public ThingBrain Brain { get; set; }
+    public bool HasBrain => Brain != null;
 
     [Net] public IntVector GridPos { get; protected set; }
     [Net] public GridType ContainingGridType { get; set; }
@@ -72,6 +73,8 @@ public partial class Thing : Entity
 
     [Net] public ThingFlags Flags { get; set; }
     public bool HasFlag(ThingFlags flag) => Flags.HasFlag(flag);
+    public void AddFlag(ThingFlags flag) { if (!HasFlag(flag)) Flags |= flag; }
+    public void RemoveFlag(ThingFlags flag) { if (HasFlag(flag)) Flags &= ~flag; }
 
     [Net] public Thing WieldedThing { get; protected set; }
     [Net] public Thing ThingWieldingThis { get; protected set; }
@@ -82,6 +85,7 @@ public partial class Thing : Entity
 
     [Net] public IList<Thing> EquippedThings { get; private set; }
     [Net] public Thing ThingOwningThis { get; set; } // in inventory, equipment, and/or wielding
+    public void SetOwningThing(Thing owningThing) { ThingOwningThis = owningThing; }
 
     [Net] public float ActionRechargePercent { get; set; }
 
@@ -313,9 +317,9 @@ public partial class Thing : Entity
 
     public virtual void HitBy(Thing hittingThing, Direction direction)
     {
-        TakeDamageFrom(hittingThing);
-        VfxShake(0.2f, 4f);
         PlaySfx(SoundActionType.GetHit);
+        VfxShake(0.2f, 4f);
+        TakeDamageFrom(hittingThing);
     }
 
     public virtual void TakeDamageFrom(Thing thing)
@@ -323,9 +327,9 @@ public partial class Thing : Entity
         //if (!HasStat(StatType.Health))
         //    return;
 
-        Hurt(thing.GetAttackDamage(), showImpactFloater: true);
-
         OnTakeDamageFrom(thing);
+
+        Hurt(thing.GetAttackDamage(), showImpactFloater: true);
     }
 
     public virtual void Hurt(int amount, bool showImpactFloater = true)
@@ -340,7 +344,7 @@ public partial class Thing : Entity
             var floaterOffset = new Vector2(Game.Random.Float(3f, 10f) * (FloaterNum % 2 == 0 ? -1 : 1), Game.Random.Float(-3f, 8f));
 
             if (showImpactFloater)
-                AddFloater("💥", 0.45f, floaterOffset, floaterOffset, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineIn, fadeInTime: 0.025f, scale: 1f, opacity: 1f, shakeAmount: 0f, moveToGridOnDeath: true);
+                AddFloater(Globals.Icon(IconType.Explosion), 0.45f, floaterOffset, floaterOffset, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineIn, fadeInTime: 0.025f, scale: 1f, opacity: 1f, shakeAmount: 0f, moveToGridOnDeath: true);
 
             AddFloater("💔", 1.2f, floaterOffset, new Vector2(Game.Random.Float(10f, 20f) * (FloaterNum++ % 2 == 0 ? -1 : 1), Game.Random.Float(-13f, 3f)), height: Game.Random.Float(10f, 25f), text: $"-{amount}", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.Linear, fadeInTime: 0.1f, scale: 0.75f, opacity: 1f, shakeAmount: 0f, moveToGridOnDeath: true);
 
@@ -418,6 +422,8 @@ public partial class Thing : Entity
 
     public virtual void Destroy()
     {
+        OnDestroyed();
+
         DestroyFloatersClient();
 
         if (ThingWieldingThis != null)
@@ -425,8 +431,6 @@ public partial class Thing : Entity
 
         if (WieldedThing != null)
             WieldThing(null);
-
-        OnDestroyed();
 
         Remove();
     }
@@ -615,7 +619,7 @@ public partial class Thing : Entity
 
         WieldThing(thing);
 
-        thing.ThingOwningThis = this;
+        thing.SetOwningThing(this);
 
         if (thing.ContainingGridType != GridType.None)
             thing.ContainingGridManager.RemoveThing(thing);
@@ -665,7 +669,7 @@ public partial class Thing : Entity
         CurrentLevelId = LevelId.None;
         IsRemoved = false;
         EquippedThings.Clear();
-        ThingOwningThis = null;
+        SetOwningThing(null);
         WieldedThing = null;
         ThingWieldingThis = null;
         IsOnCooldown = false;
@@ -856,7 +860,7 @@ public partial class Thing : Entity
             if(WieldedThing == thing)
                 WieldThing(null);
 
-            thing.ThingOwningThis = null;
+            thing.SetOwningThing(null);
 
             return true;
         }

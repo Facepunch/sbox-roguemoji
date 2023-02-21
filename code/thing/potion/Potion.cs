@@ -26,7 +26,7 @@ public partial class Potion : Thing
         if (Game.IsServer)
         {
             AddTrait(AbilityName, "😋", $"Consume potion to cause an effect", offset: new Vector2(0f, -1f), tattooIcon: "🧉", tattooScale: 0.5f, tattooOffset: new Vector2(-8f, 8f), isAbility: true);
-            AddTrait("Fragile", "🧉", $"Full potions break when hitting something", offset: new Vector2(0f, -1f), tattooIcon: "💥", tattooScale: 0.65f, tattooOffset: new Vector2(7f, 7f));
+            AddTrait("Fragile", "🧉", $"Full potions break when hitting something", offset: new Vector2(0f, -1f), tattooIcon: Globals.Icon(IconType.Explosion), tattooScale: 0.65f, tattooOffset: new Vector2(7f, 7f));
         }
     }
 

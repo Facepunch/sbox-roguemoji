@@ -28,4 +28,6 @@ public class MAllergicNuts : Mutation
                 ((CIconPriority)component).AddIconPriority("🤢", (int)PlayerIconPriority.NutAllergyReaction, 2.0f);
         }
     }
+
+    // todo: effect when holding nut or hit by nut
 }

@@ -235,13 +235,15 @@ public partial class RoguemojiGame : GameManager
         RoguemojiPlayer player = new RoguemojiPlayer();
         player.PlayerNum = ++PlayerNum;
         player.ControlThing(smiley);
+        
+        level0.GridManager.AddPlayer(player);
+
+        player.Restart();
 
         smiley.DisplayName = $"{client.Name}";
         smiley.Tooltip = $"{client.Name}";
 
         client.Pawn = player;
-
-        level0.GridManager.AddPlayer(player);
 
         Players.Add(player);
 
@@ -462,10 +464,6 @@ public partial class RoguemojiGame : GameManager
 		{
             //Log.Info($"Restart - player: {player.PlayerNum}");
 
-			player.Restart();
-            player.RestartClient();
-            //player.RestartClient(To.Everyone);
-
             var levelId = LevelId.Forest1;
             //var levelId = LevelId.Test0;
             var level0 = Levels[levelId];
@@ -474,6 +472,10 @@ public partial class RoguemojiGame : GameManager
             player.ControlThing(smiley);
 
             level0.GridManager.AddPlayer(player);
+
+            player.Restart();
+            player.RestartClient();
+            //player.RestartClient(To.Everyone);
 
             player.RecenterCamera();
             player.RefreshVisibility();
