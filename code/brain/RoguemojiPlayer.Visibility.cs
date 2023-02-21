@@ -20,6 +20,25 @@ public class SeenThingData
     public float wieldedOpacity;
     public bool isVisible;
     public int networkIdent;
+    public List<SeenFloaterData> floaterList;
+}
+
+public struct SeenFloaterData
+{
+    public string icon;
+    public string text;
+    public Vector2 offset;
+    public float scale;
+    public float opacity;
+
+    public SeenFloaterData(string icon, Vector2 offset, string text, float scale, float opacity)
+    {
+        this.icon = icon;
+        this.offset = offset;
+        this.text = text;
+        this.scale = scale;
+        this.opacity = opacity;
+    }
 }
 
 public enum PlayerVisionChangeReason { ChangedGridPos, IncreasedSightBlockAmount, DecreasedSightBlockAmount, ChangedInvisibleAmount }
@@ -131,6 +150,22 @@ public partial class RoguemojiPlayer : ThingBrain
                 seenData.wieldedThingOffset = thing.WieldedThingOffset;
                 seenData.wieldedThingFontSize = thing.WieldedThingFontSize;
             }
+
+            if(thing.HasFloaters)
+            {
+                foreach (var floater in thing.Floaters)
+                {
+                    if(floater.showOnSeen)
+                    {
+                        if (seenData.floaterList == null)
+                            seenData.floaterList = new List<SeenFloaterData>();
+
+                        var offset = floater.time > 0f ? Vector2.Lerp(floater.offsetStart, floater.offsetEnd, Utils.Map(floater.timeSinceStart, 0f, floater.time, 0f, 1f, floater.offsetEasingType)) : floater.offsetStart;
+                        var opacity = Thing.GetFloaterOpacity(floater);
+                        seenData.floaterList.Add(new SeenFloaterData(floater.icon, offset, floater.text, floater.scale, opacity));
+                    }
+                }
+            } 
 
             SeenThings[ControlledThing.CurrentLevelId][gridPos].Add(seenData);
         }

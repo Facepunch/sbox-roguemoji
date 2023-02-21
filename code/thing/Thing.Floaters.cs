@@ -23,9 +23,10 @@ public struct ThingFloaterData
     public float shakeAmount;
     public bool moveToGridOnDeath;
     public bool showOnInvisible;
+    public bool showOnSeen;
 
     public ThingFloaterData(string icon, float time, Vector2 offsetStart, Vector2 offsetEnd, float height, string text, bool requireSight, bool alwaysShowWhenAdjacent,
-        EasingType offsetEasingType, float fadeInTime, float scale, float opacity, float shakeAmount, bool moveToGridOnDeath, bool showOnInvisible)
+        EasingType offsetEasingType, float fadeInTime, float scale, float opacity, float shakeAmount, bool moveToGridOnDeath, bool showOnInvisible, bool showOnSeen)
     {
         this.icon = icon;
         this.time = time;
@@ -43,6 +44,7 @@ public struct ThingFloaterData
         this.shakeAmount = shakeAmount;
         this.moveToGridOnDeath = moveToGridOnDeath;
         this.showOnInvisible = showOnInvisible;
+        this.showOnSeen = showOnSeen;
     }
 }
 
@@ -64,20 +66,20 @@ public partial class Thing : Entity
         }
     }
 
-    public void AddFloater(string icon, float time, Vector2 offsetStart, Vector2 offsetEnd, float height = 0f, string text = "", bool requireSight = true, bool alwaysShowWhenAdjacent = false,
-                        EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, float shakeAmount = 0f, bool moveToGridOnDeath = false, bool showOnInvisible = false)
+    public void AddFloater(string icon, float time, Vector2 offsetStart, Vector2 offsetEnd, float height = 0f, string text = "", bool requireSight = true, bool alwaysShowWhenAdjacent = false, EasingType offsetEasingType = EasingType.Linear, 
+        float fadeInTime = 0f, float scale = 1f, float opacity = 1f, float shakeAmount = 0f, bool moveToGridOnDeath = false, bool showOnInvisible = false, bool showOnSeen = false)
     {
-        AddFloaterClient(icon, time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, shakeAmount, moveToGridOnDeath, showOnInvisible);
+        AddFloaterClient(icon, time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, shakeAmount, moveToGridOnDeath, showOnInvisible, showOnSeen);
     }
 
     [ClientRpc]
-    public void AddFloaterClient(string icon, float time, Vector2 offsetStart, Vector2 offsetEnd, float height = 0f, string text = "", bool requireSight = true, bool alwaysShowWhenAdjacent = false,
-                        EasingType offsetEasingType = EasingType.Linear, float fadeInTime = 0f, float scale = 1f, float opacity = 1f, float shakeAmount = 0f, bool moveToGridOnDeath = false, bool showOnInvisible = false)
+    public void AddFloaterClient(string icon, float time, Vector2 offsetStart, Vector2 offsetEnd, float height = 0f, string text = "", bool requireSight = true, bool alwaysShowWhenAdjacent = false, EasingType offsetEasingType = EasingType.Linear, 
+        float fadeInTime = 0f, float scale = 1f, float opacity = 1f, float shakeAmount = 0f, bool moveToGridOnDeath = false, bool showOnInvisible = false, bool showOnSeen = false)
     {
         if (Floaters == null)
             Floaters = new List<ThingFloaterData>();
 
-        Floaters.Add(new ThingFloaterData(icon, time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, shakeAmount, moveToGridOnDeath, showOnInvisible));
+        Floaters.Add(new ThingFloaterData(icon, time, offsetStart, offsetEnd, height, text, requireSight, alwaysShowWhenAdjacent, offsetEasingType, fadeInTime, scale, opacity, shakeAmount, moveToGridOnDeath, showOnInvisible, showOnSeen));
     }
 
     public void RemoveFloater(string icon)

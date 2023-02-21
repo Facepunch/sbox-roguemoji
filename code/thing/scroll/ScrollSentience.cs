@@ -56,7 +56,7 @@ public partial class ScrollSentience : Scroll
                 acting.ActionTimer = Game.Random.Float(0f, 1f);
             }
 
-            thing.AddFloater(Globals.Icon(IconType.Sentience), time: 0f, new Vector2(0f, -5f), new Vector2(0f, -5f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.3f, scale: 0.6f, opacity: 1f);
+            thing.AddFloater(Globals.Icon(IconType.Sentience), time: 0f, new Vector2(0f, -5f), new Vector2(0f, -5f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.3f, scale: 0.6f, opacity: 1f, showOnSeen: true);
         }
 
         user.ContainingGridManager.AddFloater(Globals.Icon(IconType.Sentience), targetGridPos, 0.8f, new Vector2(0f, 0f), new Vector2(0f, -14f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.2f, scale: 0.9f);
