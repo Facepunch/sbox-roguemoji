@@ -12,7 +12,7 @@ public class MSeeInvisible : Mutation
     {
         base.Init(thing);
 
-        Trait = thing.AddTrait("Keen Eye", "🧐", $"Slightly improves ability to see invisible things", offset: Vector2.Zero, tattooIcon: Thing.GetStatIcon(StatType.Sight), tattooScale: 0.375f, tattooOffset: new Vector2(5.25f, -0.5f));
+        Trait = thing.AddTrait("Keen Eye", "🧐", $"Slightly improves ability to see invisible things", offset: Vector2.Zero, tattooIcon: Thing.GetStatIcon(StatType.SightDistance), tattooScale: 0.375f, tattooOffset: new Vector2(5.25f, -0.5f));
 
         PerceptionAmount = 1;
 

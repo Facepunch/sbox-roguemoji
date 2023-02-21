@@ -26,11 +26,11 @@ public class CBlinded : ThingComponent
         CurrSightDelta = 0;
         AdjustTimer = 0f;
         AdjustDelay = 0.075f;
-        TotalAmount = Thing.GetStat(StatType.Sight).CurrentValue + 3;
+        TotalAmount = Thing.GetStat(StatType.SightDistance).CurrentValue + 3;
         IsReducing = true;
 
         AdjustSight(-1);
-        Trait = thing.AddTrait("Blinded", Globals.Icon(IconType.Blindness), $"Drastically reduced {Thing.GetStatIcon(StatType.Sight)}", offset: Vector2.Zero);
+        Trait = thing.AddTrait("Blinded", Globals.Icon(IconType.Blindness), $"Drastically reduced {Thing.GetStatIcon(StatType.SightDistance)}", offset: Vector2.Zero);
 
         thing.AddFloater(Globals.Icon(IconType.Blindness), time: 0f, new Vector2(-14f, -4f), Vector2.Zero, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.025f, scale: 0.4f, opacity: 0.35f);
 
@@ -87,13 +87,13 @@ public class CBlinded : ThingComponent
 
     void AdjustSight(int amount)
     {
-        Thing.AdjustStat(StatType.Sight, amount);
+        Thing.AdjustStat(StatType.SightDistance, amount);
         CurrSightDelta += amount;
     }
 
     public override void OnRemove()
     {
-        Thing.AdjustStat(StatType.Sight, -CurrSightDelta);
+        Thing.AdjustStat(StatType.SightDistance, -CurrSightDelta);
         Thing.RemoveTrait(Trait);
         Thing.RemoveFloater(Globals.Icon(IconType.Blindness));
 

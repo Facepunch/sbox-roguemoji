@@ -22,7 +22,7 @@ public partial class WhiteCane : Thing
             MinSightChange = 1;
 
             InitStat(StatType.Attack, 2);
-            AddTrait("", "😎", $"Prevents your {GetStatIcon(StatType.Sight)} from reaching zero", offset: Vector2.Zero, tattooIcon: "🦯", tattooScale: 0.7f, tattooOffset: new Vector2(7f, 6f));
+            AddTrait("", "😎", $"Prevents your {GetStatIcon(StatType.SightDistance)} from reaching zero", offset: Vector2.Zero, tattooIcon: "🦯", tattooScale: 0.7f, tattooOffset: new Vector2(7f, 6f));
         }
     }
 
@@ -30,15 +30,15 @@ public partial class WhiteCane : Thing
     {
         base.OnWieldedBy(thing);
 
-        thing.AdjustStatMin(StatType.Sight, MinSightChange);
-        Trait = thing.AddTrait("", "😎", $"Your {GetStatIcon(StatType.Sight)} can't go down to zero", offset: Vector2.Zero, tattooIcon: "🦯", tattooScale: 0.7f, tattooOffset: new Vector2(7f, 6f), source: DisplayName);
+        thing.AdjustStatMin(StatType.SightDistance, MinSightChange);
+        Trait = thing.AddTrait("", "😎", $"Your {GetStatIcon(StatType.SightDistance)} can't go down to zero", offset: Vector2.Zero, tattooIcon: "🦯", tattooScale: 0.7f, tattooOffset: new Vector2(7f, 6f), source: DisplayName);
     }
 
     public override void OnNoLongerWieldedBy(Thing thing)
     {
         base.OnNoLongerWieldedBy(thing);
 
-        thing.AdjustStatMin(StatType.Sight, -MinSightChange);
+        thing.AdjustStatMin(StatType.SightDistance, -MinSightChange);
         thing.RemoveTrait(Trait);
     }
 }

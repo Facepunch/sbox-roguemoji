@@ -762,11 +762,11 @@ public partial class Thing : Entity
         if (!CanPerceiveThing(other))
             return false;
 
-        int adjustedSight = Math.Max(GetStatClamped(StatType.Sight) - other.GetStatClamped(StatType.Stealth), 1);
+        int adjustedSightDistance = Math.Max(GetStatClamped(StatType.SightDistance) - other.GetStatClamped(StatType.Stealth), 1);
         int distance = Utils.GetDistance(GridPos, other.GridPos);
-        if (distance <= adjustedSight)
+        if (distance <= adjustedSightDistance)
         {
-            if (ContainingGridManager.HasLineOfSight(GridPos, other.GridPos, adjustedSight, out IntVector collisionCell))
+            if (ContainingGridManager.HasLineOfSight(GridPos, other.GridPos, GetStatClamped(StatType.SightPenetration), out IntVector collisionCell))
                 return true;
         }
 

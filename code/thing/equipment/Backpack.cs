@@ -17,12 +17,16 @@ public partial class Backpack : Thing
 
     public override void OnEquippedTo(Thing thing)
     {
+        base.OnEquippedTo(thing);
+
         if(thing.Brain is RoguemojiPlayer player)
             player.InventoryGridManager.SetWidth(player.InventoryGridManager.GridWidth + 1);
     }
 
     public override void OnUnequippedFrom(Thing thing)
     {
+        base.OnUnequippedFrom(thing);
+
         if (thing.Brain is RoguemojiPlayer player)
             player.InventoryGridManager.SetWidth(player.InventoryGridManager.GridWidth - 1);
     }

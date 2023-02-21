@@ -6,9 +6,9 @@ using System.Linq;
 namespace Roguemoji;
 
 public enum StatType { 
-    Health, Energy, Mana, Attack, Strength, Speed, Intelligence, Stamina, Stealth, Charisma, Sight, Hearing, Smell, Perception,
+    Health, Energy, Mana, Attack, Strength, Speed, Intelligence, Stamina, Stealth, Charisma, SightDistance, Hearing, Smell, Perception,
     Durability, MaxHealth, 
-    Invisible, SightBlockAmount,
+    Invisible, SightBlockAmount, SightPenetration,
 }
 
 public partial class Stat : Entity
@@ -54,7 +54,7 @@ public partial class Thing : Entity
             case StatType.Stamina: return "🏃";
             case StatType.Stealth: return "👤";
             case StatType.Charisma: return "💋";
-            case StatType.Sight: return "👁";
+            case StatType.SightDistance: return "👁";
             case StatType.Hearing: return "👂️";
             case StatType.Smell: return "👃";
             case StatType.Perception: return "🕵️";
@@ -80,7 +80,7 @@ public partial class Thing : Entity
             case StatType.Stamina: return "Stamina";
             case StatType.Stealth: return "Stealth";
             case StatType.Charisma: return "Charisma";
-            case StatType.Sight: return "Sight";
+            case StatType.SightDistance: return "Sight";
             case StatType.Hearing: return "Hearing";
             case StatType.Smell: return "Smell";
             case StatType.Perception: return "Perception";
@@ -106,7 +106,7 @@ public partial class Thing : Entity
             case StatType.Stamina: return $"Regenerates {GetStatIcon(StatType.Energy)} more quickly/Increases {GetStatIcon(StatType.Energy)} capacity";
             case StatType.Stealth: return $"Skill at avoiding detection";
             case StatType.Charisma: return $"Likeability and attractiveness";
-            case StatType.Sight: return $"The ability to see farther and see through objects";
+            case StatType.SightDistance: return $"The ability to see farther";
             case StatType.Hearing: return $"The ability to notice sounds from a distance";
             case StatType.Smell: return $"The ability to detect odors left by things";
             case StatType.Perception: return $"The range in which you can detect invisible things";
@@ -132,7 +132,7 @@ public partial class Thing : Entity
             case StatType.Stamina: return "#448844";
             case StatType.Stealth: return "#444444";
             case StatType.Charisma: return "#dd33bb";
-            case StatType.Sight: return "#ffff55";
+            case StatType.SightDistance: return "#ffff55";
             case StatType.Hearing: return "#aa5500";
             case StatType.Perception: return "#dddd88";
 
@@ -190,6 +190,7 @@ public partial class Thing : Entity
             case StatType.Invisible: return true;
             case StatType.Perception: return (stat.ClampedValue == 0);
             case StatType.SightBlockAmount: return true;
+            case StatType.SightPenetration: return true;
             case StatType.Stealth: return (stat.ClampedValue == 0);
         }
 

@@ -21,13 +21,13 @@ public partial class PotionBlindness : Potion
 
         if (Game.IsServer)
         {
-            AddTrait("", "🚫", $"Drinking temporarily reduces your {Thing.GetStatIcon(StatType.Sight)}", offset: new Vector2(0f, -1f), tattooIcon: Thing.GetStatIcon(StatType.Sight), tattooOffset: new Vector2(-0.2f, 0.5f), tattooScale: 0.5f);
+            AddTrait("", "🚫", $"Drinking temporarily reduces your {Thing.GetStatIcon(StatType.SightDistance)}", offset: new Vector2(0f, -1f), tattooIcon: Thing.GetStatIcon(StatType.SightDistance), tattooOffset: new Vector2(-0.2f, 0.5f), tattooScale: 0.5f);
         }
     }
 
     public override bool CanBeUsedBy(Thing user, bool ignoreResources = false, bool shouldLogMessage = false)
     {
-        if (!user.HasStat(StatType.Sight))
+        if (!user.HasStat(StatType.SightDistance))
             return false;
 
         return true;
@@ -43,7 +43,7 @@ public partial class PotionBlindness : Potion
 
     public override void ApplyEffectToThing(Thing thing)
     {
-        if (!thing.HasStat(StatType.Sight))
+        if (!thing.HasStat(StatType.SightDistance))
             return;
 
         var blinded = thing.AddComponent<CBlinded>();

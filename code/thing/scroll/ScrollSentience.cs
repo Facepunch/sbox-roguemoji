@@ -36,7 +36,8 @@ public partial class ScrollSentience : Scroll
             brain.ControlThing(thing);
 
             if (!thing.HasStat(StatType.Health)) thing.InitStat(StatType.Health, 10, 0, 10);
-            if (!thing.HasStat(StatType.Sight)) thing.InitStat(StatType.Sight, 7);
+            if (!thing.HasStat(StatType.SightDistance)) thing.InitStat(StatType.SightDistance, 7);
+            if (!thing.HasStat(StatType.SightPenetration)) thing.InitStat(StatType.SightPenetration, 7);
             if (!thing.HasStat(StatType.Speed)) thing.InitStat(StatType.Speed, 5);
             if (!thing.HasStat(StatType.Attack)) thing.InitStat(StatType.Attack, 1);
             if (!thing.HasStat(StatType.Hearing)) thing.InitStat(StatType.Hearing, 3);

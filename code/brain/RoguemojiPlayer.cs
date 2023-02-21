@@ -1141,7 +1141,7 @@ public partial class RoguemojiPlayer : ThingBrain
 
     public override void OnChangedStat(StatType statType, int changeCurrent, int changeMin, int changeMax)
     {
-        if (statType == StatType.Sight)
+        if (statType == StatType.SightDistance)
         {
             RefreshVisibility();
         }

@@ -70,7 +70,7 @@ public partial class RoguemojiPlayer : ThingBrain
         foreach (var gridPos in VisibleCells)
             _wasVisible.Add(gridPos);
 
-        ComputeVisibility(ControlledThing.GridPos, rangeLimit: ControlledThing.GetStatClamped(StatType.Sight));
+        ComputeVisibility(ControlledThing.GridPos, rangeLimit: ControlledThing.GetStatClamped(StatType.SightDistance));
 
         // SEE RANDOM CELLS MUTATION
         //var sight = ControlledThing.GetStatClamped(StatType.Sight);
@@ -423,6 +423,6 @@ public partial class RoguemojiPlayer : ThingBrain
     {
         Game.AssertClient();
 
-        return ControlledThing.ContainingGridManager.GetThingsAtClient(new IntVector(x, y)).Where(x => x.GetStatClamped(StatType.SightBlockAmount) >= ControlledThing.GetStatClamped(StatType.Sight)).Where(x => x.GetStatClamped(StatType.Invisible) <= 0).Count() > 0;
+        return ControlledThing.ContainingGridManager.GetThingsAtClient(new IntVector(x, y)).Where(x => x.GetStatClamped(StatType.SightBlockAmount) >= ControlledThing.GetStatClamped(StatType.SightPenetration)).Where(x => x.GetStatClamped(StatType.Invisible) <= 0).Count() > 0;
     }
 }

@@ -29,6 +29,8 @@ public partial class GlassesOfPerception : Thing
 
     public override void OnEquippedTo(Thing thing)
     {
+        base.OnEquippedTo(thing);
+
         if (!thing.HasStat(StatType.Perception))
             thing.InitStat(StatType.Perception, Range);
         else
@@ -46,6 +48,8 @@ public partial class GlassesOfPerception : Thing
 
     public override void OnUnequippedFrom(Thing thing)
     {
+        base.OnUnequippedFrom(thing);
+
         thing.AdjustStat(StatType.Perception, -Range);
 
         if (thing is Smiley smiley)

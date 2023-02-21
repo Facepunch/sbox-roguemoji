@@ -28,11 +28,15 @@ public partial class SafetyVest : Thing
 
     public override void OnEquippedTo(Thing thing)
     {
+        base.OnEquippedTo(thing);
+
         thing.AdjustStat(StatType.Stealth, StealthAmount);
     }
 
     public override void OnUnequippedFrom(Thing thing)
     {
+        base.OnUnequippedFrom(thing);
+
         thing.AdjustStat(StatType.Stealth, -StealthAmount);
     }
 }

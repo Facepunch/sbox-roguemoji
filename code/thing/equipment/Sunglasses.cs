@@ -24,13 +24,15 @@ public partial class Sunglasses : Thing
             SightAmount = -2;
 
             InitStat(StatType.Charisma, CharismaAmount, isModifier: true);
-            InitStat(StatType.Sight, SightAmount, min: -999, isModifier: true);
+            InitStat(StatType.SightDistance, SightAmount, min: -999, isModifier: true);
         }
     }
 
     public override void OnEquippedTo(Thing thing)
     {
-        foreach(var pair in Stats)
+        base.OnEquippedTo(thing);
+
+        foreach (var pair in Stats)
             thing.AdjustStat(pair.Key, pair.Value.CurrentValue);
 
         if(thing is Smiley smiley)
@@ -45,6 +47,8 @@ public partial class Sunglasses : Thing
 
     public override void OnUnequippedFrom(Thing thing)
     {
+        base.OnUnequippedFrom(thing);
+
         foreach (var pair in Stats)
             thing.AdjustStat(pair.Key, -pair.Value.CurrentValue);
 

@@ -53,7 +53,8 @@ public partial class Ghost : Thing
 
         ClearStats();
         InitStat(StatType.Speed, 13);
-        InitStat(StatType.Sight, 7, min: 0); // setting this will RefreshVisibility for the player
+        InitStat(StatType.SightDistance, 7, min: 0); // setting this will RefreshVisibility for the player
+        InitStat(StatType.SightPenetration, 7);
         InitStat(StatType.Hearing, 3);
         InitStat(StatType.SightBlockAmount, 1);
         InitStat(StatType.Invisible, 1);

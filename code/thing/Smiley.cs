@@ -62,7 +62,8 @@ public partial class Smiley : Thing
         InitStat(StatType.Stamina, 4);
         InitStat(StatType.Stealth, 0, -999, 999);
         InitStat(StatType.Charisma, 3);
-        InitStat(StatType.Sight, 7, min: 0); // setting this will RefreshVisibility for the player
+        InitStat(StatType.SightDistance, 7, min: 0); // setting this will RefreshVisibility for the player
+        InitStat(StatType.SightPenetration, 7);
         InitStat(StatType.Hearing, 5);
         InitStat(StatType.SightBlockAmount, 10);
         //InitStat(StatType.Smell, 1);

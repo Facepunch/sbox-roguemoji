@@ -253,14 +253,12 @@ public partial class GridManager : Entity
             if (VisionChangedPlayers.Contains(player) || thing == player.ControlledThing)
                 continue;
 
-            var sight = player.ControlledThing.GetStatClamped(StatType.Sight);
-
             // if thing doesn't block our sight, we can ignore it, unless it lowered its SightBlockAmount (as it might previously have been blocking us)
-            if (thing.GetStatClamped(StatType.SightBlockAmount) < sight && reason != PlayerVisionChangeReason.DecreasedSightBlockAmount)
+            if (thing.GetStatClamped(StatType.SightBlockAmount) < player.ControlledThing.GetStatClamped(StatType.SightPenetration) && reason != PlayerVisionChangeReason.DecreasedSightBlockAmount)
 				continue;
 
-			var dist = GetDistance(player.ControlledThing.GridPos, gridPos);
-			if (dist > sight)
+            var dist = GetDistance(player.ControlledThing.GridPos, gridPos);
+			if (dist > player.ControlledThing.GetStatClamped(StatType.SightDistance))
 				continue;
 
 			VisionChangedPlayers.Add(player);
@@ -275,10 +273,8 @@ public partial class GridManager : Entity
             if (CheckSeenThingsPlayers.Contains(player))
                 continue;
 
-            var sight = player.ControlledThing.GetStatClamped(StatType.Sight);
-
             var dist = GetDistance(player.ControlledThing.GridPos, gridPos);
-            if (dist > sight)
+            if (dist > player.ControlledThing.GetStatClamped(StatType.SightDistance))
                 continue;
 
             CheckSeenThingsPlayers.Add(player);
@@ -756,7 +752,7 @@ public partial class GridManager : Entity
         return Level.GetLevelBgColor(level.SurfaceType, Utils.IsOdd(gridPos));
 	}
 
-    public bool HasLineOfSight(IntVector gridPosA, IntVector gridPosB, int sight, out IntVector collisionCell)
+    public bool HasLineOfSight(IntVector gridPosA, IntVector gridPosB, int sightPenetration, out IntVector collisionCell)
     {
 		int x1 = gridPosA.x;
 		int y1 = gridPosA.y;
@@ -774,11 +770,11 @@ public partial class GridManager : Entity
 		{
 			// test the 2 squares that would allow you to see target
 			IntVector cellA = gridPosA + (Math.Abs(diff.x) > Math.Abs(diff.y) ? new IntVector(Math.Sign(diff.x), 0) : new IntVector(0, Math.Sign(diff.y)));
-			if(!BlocksSight(cellA, sight))
+			if(!BlocksSight(cellA, sightPenetration))
                 return true;
 
 			IntVector cellB = gridPosA + new IntVector(Math.Sign(diff.x), Math.Sign(diff.y));
-			if(BlocksSight(cellB, sight)) 
+			if(BlocksSight(cellB, sightPenetration)) 
 			{
                 collisionCell = cellB;
                 //RoguemojiGame.Instance.DebugGridCell(cellB, new Color(1f, 0f, 1f, 0.3f), 0.05f, LevelId);
@@ -811,7 +807,7 @@ public partial class GridManager : Entity
             var currGridPos = new IntVector(x1, y1);
 			if(!currGridPos.Equals(gridPosA) && !currGridPos.Equals(gridPosB))
 			{
-				if(BlocksSight(currGridPos, sight))
+				if(BlocksSight(currGridPos, sightPenetration))
 				{
                     collisionCell = currGridPos;
                     //RoguemojiGame.Instance.DebugGridCell(currGridPos, new Color(1f, 0f, 0f, 0.3f), 0.05f, LevelId);
@@ -838,11 +834,11 @@ public partial class GridManager : Entity
         return true;
     }
 
-	bool BlocksSight(IntVector gridPos, int sight)
+	bool BlocksSight(IntVector gridPos, int sightPenetration)
 	{
         foreach (var thing in GetThingsAt(gridPos))
         {
-            if (thing.GetStatClamped(StatType.SightBlockAmount) >= sight && thing.GetStatClamped(StatType.Invisible) <= 0)
+            if (thing.GetStatClamped(StatType.SightBlockAmount) >= sightPenetration && thing.GetStatClamped(StatType.Invisible) <= 0)
 				return true;
         }
 

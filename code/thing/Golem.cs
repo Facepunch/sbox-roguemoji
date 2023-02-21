@@ -21,7 +21,8 @@ public partial class Golem : Thing
         if (Game.IsServer)
         {
             InitStat(StatType.Speed, 2);
-            InitStat(StatType.Sight, 7);
+            InitStat(StatType.SightDistance, 7);
+            InitStat(StatType.SightPenetration, 7);
             InitStat(StatType.Hearing, 3);
             InitStat(StatType.SightBlockAmount, 20);
         }

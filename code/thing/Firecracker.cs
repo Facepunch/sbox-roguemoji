@@ -93,14 +93,14 @@ public partial class Firecracker : Thing
                 var gridManager = ThingWieldingThis != null ? ThingWieldingThis.ContainingGridManager : ContainingGridManager;
                 var gridPos = ThingWieldingThis != null ? ThingWieldingThis.GridPos : GridPos;
 
-                var things = gridManager.GetAllThings().Where(x => x.HasStat(StatType.Sight)).ToList();
+                var things = gridManager.GetAllThings().Where(x => x.HasStat(StatType.SightDistance)).ToList();
                 foreach (var thing in things)
                 {
                     if (thing == this)
                         continue;
 
                     bool didSeeExplosion = false;
-                    var sight = thing.GetStatClamped(StatType.Sight);
+                    var sight = thing.GetStatClamped(StatType.SightDistance);
                     if (thing.HasBrain && thing.Brain is RoguemojiPlayer player)
                         didSeeExplosion = thing.CanSeeGridPos(gridPos, sight) && player.IsGridPosOnCamera(gridPos);
                     else

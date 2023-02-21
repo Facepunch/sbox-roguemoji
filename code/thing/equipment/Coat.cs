@@ -26,11 +26,15 @@ public partial class Coat : Thing
 
     public override void OnEquippedTo(Thing thing)
     {
+        base.OnEquippedTo(thing);
+
         thing.AdjustStatMax(StatType.Health, MaxHealthAmount);
     }
 
     public override void OnUnequippedFrom(Thing thing)
     {
+        base.OnUnequippedFrom(thing);
+
         thing.AdjustStatMax(StatType.Health, -MaxHealthAmount);
     }
 }

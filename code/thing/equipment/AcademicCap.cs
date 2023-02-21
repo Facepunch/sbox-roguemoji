@@ -25,6 +25,8 @@ public partial class AcademicCap : Thing
 
     public override void OnEquippedTo(Thing thing)
     {
+        base.OnEquippedTo(thing);
+
         thing.AdjustStat(StatType.Intelligence, IntelligenceAmount);
 
         if (thing is Smiley && thing.GetComponent<CIconPriority>(out var component))
@@ -33,6 +35,8 @@ public partial class AcademicCap : Thing
 
     public override void OnUnequippedFrom(Thing thing)
     {
+        base.OnUnequippedFrom(thing);
+
         thing.AdjustStat(StatType.Intelligence, -IntelligenceAmount);
     }
 }

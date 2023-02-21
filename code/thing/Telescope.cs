@@ -16,31 +16,31 @@ public partial class Telescope : Thing
         Description = "See farther but move slower";
         Tooltip = "A telescope";
         IconDepth = (int)IconDepthLevel.Normal;
-        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
+        Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Equipment;
         Flammability = 9;
 
         if (Game.IsServer)
         {
             SightAmount = 4;
             SpeedAmount = -3;
-            InitStat(StatType.Sight, SightAmount, min: -999, isModifier: true);
+            InitStat(StatType.SightDistance, SightAmount, min: -999, isModifier: true);
             InitStat(StatType.Speed, SpeedAmount, min: -999, isModifier: true);
         }
     }
 
-    public override void OnWieldedBy(Thing thing)
+    public override void OnEquippedTo(Thing thing)
     {
-        base.OnWieldedBy(thing);
+        base.OnEquippedTo(thing);
 
-        thing.AdjustStat(StatType.Sight, SightAmount);
+        thing.AdjustStat(StatType.SightDistance, SightAmount);
         thing.AdjustStat(StatType.Speed, SpeedAmount);
     }
 
-    public override void OnNoLongerWieldedBy(Thing thing)
+    public override void OnUnequippedFrom(Thing thing)
     {
-        base.OnNoLongerWieldedBy(thing);
+        base.OnUnequippedFrom(thing);
 
-        thing.AdjustStat(StatType.Sight, -SightAmount);
+        thing.AdjustStat(StatType.SightDistance, -SightAmount);
         thing.AdjustStat(StatType.Speed, -SpeedAmount);
     }
 }
