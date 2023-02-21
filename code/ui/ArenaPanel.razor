@@ -246,7 +246,7 @@
     }
 
     <div class="level_label" style="opacity:@(LevelLabelOpacity);" @ref=LevelLabel>
-        @(Hud.GetConfusedText(level.LevelName))
+        @($"{Hud.GetConfusedText(level.Icon)} {Hud.GetConfusedText(level.LevelName)}")
     </div>
 </root>
 

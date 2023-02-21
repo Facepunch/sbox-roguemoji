@@ -9,6 +9,7 @@ namespace Roguemoji;
 public class LevelData
 {
     public string Name { get; set; }
+    public string Icon { get; set; }
     public int Width { get; set; }
     public int Height { get; set; }
     public SurfaceType SurfaceType { get; set; }

@@ -16,6 +16,7 @@ public partial class Level : Entity
     [Net] public LevelId LevelId { get; private set; }
 
     [Net] public string LevelName { get; private set; }
+    [Net] public string Icon { get; private set; }
 
     public LevelData LevelData { get; private set; }
 
@@ -38,6 +39,7 @@ public partial class Level : Entity
         GridManager.LevelId = LevelId;
 
         LevelName = LevelData.Name;
+        Icon = LevelData.Icon;
         SurfaceType = LevelData.SurfaceType;
 
         Transmit = TransmitType.Always;
