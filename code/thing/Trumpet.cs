@@ -77,6 +77,10 @@ public partial class Trumpet : Thing
                 sfxName = "trumpet";
                 loudness = 9;
                 return;
+            case SoundActionType.HitOther:
+                sfxName = "trumpet";
+                loudness = 9;
+                return;
         }
 
         base.GetSound(actionType, surfaceType, out sfxName, out loudness);

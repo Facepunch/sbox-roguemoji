@@ -10,7 +10,7 @@ public partial class PuddleOil : Puddle
         DisplayName = "Puddle of Oil";
         Description = "The ground is covered with flammable oil";
         Tooltip = "A puddle of oil";
-        Flammability = 45;
+        Flammability = 65;
         PathfindMovementCost = 1.5f;
         LiquidType = PotionType.Oil;
     }

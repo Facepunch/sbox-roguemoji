@@ -139,7 +139,7 @@ public class CBurning : ThingComponent
 
                         if (!shouldCellPutOutFire && other.Flammability > 0 && !other.HasComponent<CBurning>())
                         {
-                            float ADJUST_SPREAD_SPEED = 1.333f;
+                            float ADJUST_SPREAD_SPEED = 1.111f;
                             float proximityFactor = (offset.ManhattanLength == 0) ? 1.4f : 1f;
                             other.IgnitionAmount += MathX.FloorToInt(other.Flammability * proximityFactor * ADJUST_SPREAD_SPEED);
                             if (other.IgnitionAmount >= Globals.IGNITION_MAX)

@@ -311,6 +311,7 @@ public partial class Thing : Entity
         // todo: a way to force-feed food to other units
         //if (shouldUse && HasFlag(ThingFlags.Useable) && target.CanUseThing(this))
         //    Use(target);
+        PlaySfx(SoundActionType.HitOther);
 
         target.HitBy(this, direction);
     }

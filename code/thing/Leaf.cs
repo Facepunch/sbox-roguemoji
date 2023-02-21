@@ -12,7 +12,7 @@ public partial class Leaf : Thing
         Tooltip = "A pile of leaves";
         IconDepth = (int)IconDepthLevel.Normal;
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp;
-        Flammability = 42;
+        Flammability = 55;
     }
 
     // todo: make crunching noise when you move onto it

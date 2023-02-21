@@ -189,8 +189,7 @@ public partial class SquirrelBrain : ThingBrain
         {
             if(WanderGridPos.Equals(ControlledThing.GridPos))
             {
-                ControlledThing.RemoveFloater("❔");
-                ControlledThing.AddFloater("❕", 1.55f, new Vector2(0f, -10f), new Vector2(0f, -35f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.QuadOut, 0.05f);
+                ControlledThing.AddFloater("❔", Game.Random.Float(0.7f, 0.8f), new Vector2(0f, -10f), new Vector2(0f, -30f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.QuadOut, 0.1f);
             }
 
             WanderGridPos = soundPos;
