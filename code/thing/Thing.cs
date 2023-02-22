@@ -759,7 +759,7 @@ public partial class Thing : Entity
         if (other == null || other.IsRemoved || other.IsInTransit)
             return false;
 
-        if (!CanPerceiveThing(other))
+        if (!CanPerceiveAnyPartOfThing(other))
             return false;
 
         int adjustedSightDistance = Math.Max(GetStatClamped(StatType.SightDistance) - other.GetStatClamped(StatType.Stealth), 1);
@@ -805,7 +805,7 @@ public partial class Thing : Entity
     }
 
     /// <summary> Whether the thing is visible, or its wielded thing is visible (eg. an invisible thing carrying a non-invisible item) </summary>
-    public bool CanSeeAnyPartOfThing(Thing thing)
+    public bool CanPerceiveAnyPartOfThing(Thing thing)
     {
         return CanPerceiveThing(thing) || (thing.WieldedThing != null && CanPerceiveThing(thing.WieldedThing));
     }

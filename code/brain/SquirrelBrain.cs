@@ -31,7 +31,6 @@ public partial class SquirrelBrain : ThingBrain
 
         //RoguemojiGame.Instance.DebugGridLine(ControlledThing.GridPos, TargetLastSeenPos, new Color(0f, 1f, 0f, 0.3f), 0.025f);
 
-        //DebugText = WieldedThing == null ? "null" : WieldedThing.DisplayName;
         CActing acting = null;
         if (ControlledThing.GetComponent<CActing>(out var component))
             acting = (CActing)component;
@@ -43,7 +42,7 @@ public partial class SquirrelBrain : ThingBrain
         if (acting == null || targeting == null || ControlledThing.IsInTransit || ControlledThing.IsRemoved)
             return;
 
-        ControlledThing.DebugText = $"Posi: {ControlledThing.GridPos}\nWand: {WanderGridPos}\nLast: {TargetLastKnownPos}\ntarget: {(targeting.HasTarget ? targeting.Target.DisplayIcon : "none")}";
+        ControlledThing.DebugText = $"Posi: {ControlledThing.GridPos}\nWand: {WanderGridPos}\nLast: {TargetLastKnownPos}\ntarget: {(targeting.HasTarget ? targeting.Target.DisplayName : "NONE")}";
 
         if (!targeting.HasTarget)
         {
@@ -204,7 +203,7 @@ public partial class SquirrelBrain : ThingBrain
         base.OnLoseTarget();
 
         ControlledThing.RemoveFloater("❕");
-        ControlledThing.AddFloater("❔", Game.Random.Float(0.95f, 1.1f), new Vector2(0f, -10f), new Vector2(0f, -30f), height: 0f, text: "", requireSight: false, alwaysShowWhenAdjacent: true, EasingType.QuadOut, 0.1f);
+        ControlledThing.AddFloater("❔", Game.Random.Float(0.95f, 1.1f), new Vector2(0f, -10f), new Vector2(0f, -30f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.QuadOut, 0.1f);
 
         if (ControlledThing.GetComponent<CActing>(out var component))
         {

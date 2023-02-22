@@ -99,7 +99,7 @@ public partial class RoguemojiPlayer : ThingBrain
         var things = ControlledThing.ContainingGridManager.GetThingsAtClient(gridPos).OrderBy(x => x.GetZPos());
         foreach (var thing in things)
         {
-            if(!ControlledThing.CanSeeAnyPartOfThing(thing))
+            if(!ControlledThing.CanPerceiveAnyPartOfThing(thing))
                 continue;
 
             bool isVisible = ControlledThing.CanPerceiveThing(thing);
