@@ -141,7 +141,7 @@ public partial class RoguemojiPlayer : ThingBrain
         SeenThings.Clear();
     }
 
-    public override void HearSound(string name, IntVector soundPos, int loudness = 0, float volume = 1, float pitch = 1, bool noFalloff = false)
+    public override void HearSound(string name, IntVector soundPos, Thing sourceThing, int loudness = 0, float volume = 1, float pitch = 1, bool noFalloff = false)
     {
         int maxDist = loudness + ControlledThing.GetStatClamped(StatType.Hearing);
         var dist = Utils.GetDistance(soundPos, ControlledThing.GridPos);
@@ -595,7 +595,7 @@ public partial class RoguemojiPlayer : ThingBrain
         TryPickUp(thing);
     }
 
-    public bool TryPickUp(Thing thing, bool dontRequireAction = true)
+    public bool TryPickUp(Thing thing, bool dontRequireAction = false)
     {
         if (thing == null)
             return false;

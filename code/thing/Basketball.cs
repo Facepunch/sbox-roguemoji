@@ -75,7 +75,7 @@ public partial class Basketball : Thing
             {
                 if(target.Brain is RoguemojiPlayer player)
                 {
-                    if(!player.TryPickUp(this))
+                    if(!player.TryPickUp(this, dontRequireAction: true))
                     {
                         RemoveComponent<CProjectile>();
                         AddProjectile(GridManager.GetOppositeDirection(direction), moveDelay, distance, thrower);

@@ -81,7 +81,7 @@
     public override void DrawContent(ref RenderState state)
     {
         foreach (var line in DebugLines)
-            GraphicsX.Line(line.color, 2f, line.a, 1f, line.b);
+            GraphicsX.Line(line.color, 1f, line.a, 1f, line.b);
 
         foreach (var cell in DebugGridCells)
         {

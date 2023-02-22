@@ -40,7 +40,7 @@ public partial class Leaf : Thing
 
         if(thing.HasFlag(ThingFlags.Solid))
         {
-            thing.ContainingGridManager.PlaySfx("footstep_dry_leaves", GridPos, loudness: 2);
+            thing.ContainingGridManager.PlaySfx("footstep_dry_leaves", GridPos, sourceThing: thing, loudness: 2);
         }
     }
 }

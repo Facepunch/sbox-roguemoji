@@ -79,4 +79,21 @@ public partial class Thing : Entity
     {
         return 1f + ContainingGridManager.GetPathfindMovementCost(b);
     }
+
+    public static void DrawPath(List<IntVector> path, Color color, float time)
+    {
+        if(path.Count == 0) 
+            return;
+
+        for(int i = 0; i < path.Count - 1; i++)
+        {
+            if ((i + 1) >= path.Count - 1)
+                continue;
+
+            IntVector pos0 = path[i];
+            IntVector pos1 = path[i + 1];
+
+            RoguemojiGame.Instance.DebugGridLine(pos0, pos1, color, time);
+        }
+    }
 }

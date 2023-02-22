@@ -16,7 +16,7 @@ public partial class Thing : Entity
         
         GetSound(actionType, level.SurfaceType, out string sfxName, out int loudness);
         if (!string.IsNullOrEmpty(sfxName))
-            level.GridManager.PlaySfx(sfxName, soundThing.GridPos, loudness, volume, pitch, noFalloff);
+            level.GridManager.PlaySfx(sfxName, soundThing.GridPos, soundThing, loudness, volume, pitch, noFalloff);
     }
 
     public void PlaySfx(string sfxName, int loudness, float volume = 1f, float pitch = 1f, bool noFalloff = false)
@@ -25,7 +25,7 @@ public partial class Thing : Entity
         var level = RoguemojiGame.Instance.GetLevel(soundThing.CurrentLevelId);
 
         if (!string.IsNullOrEmpty(sfxName))
-            level.GridManager.PlaySfx(sfxName, soundThing.GridPos, loudness, volume, pitch, noFalloff);
+            level.GridManager.PlaySfx(sfxName, soundThing.GridPos, soundThing, loudness, volume, pitch, noFalloff);
     }
 
     public virtual void GetSound(SoundActionType actionType, SurfaceType surfaceType, out string sfxName, out int loudness)

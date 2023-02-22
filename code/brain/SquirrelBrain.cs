@@ -14,7 +14,7 @@ public partial class SquirrelBrain : ThingBrain
 
     public SquirrelBrain()
     {
-        WanderGridPos = new IntVector(1, 1);
+        WanderGridPos = new IntVector(0, 0);
     }
 
     public override void ControlThing(Thing thing)
@@ -31,7 +31,6 @@ public partial class SquirrelBrain : ThingBrain
 
         //RoguemojiGame.Instance.DebugGridLine(ControlledThing.GridPos, TargetLastSeenPos, new Color(0f, 1f, 0f, 0.3f), 0.025f);
 
-        //ControlledThing.DebugText = $"{WanderGridPos}";
         //DebugText = WieldedThing == null ? "null" : WieldedThing.DisplayName;
         CActing acting = null;
         if (ControlledThing.GetComponent<CActing>(out var component))
@@ -43,6 +42,8 @@ public partial class SquirrelBrain : ThingBrain
 
         if (acting == null || targeting == null || ControlledThing.IsInTransit || ControlledThing.IsRemoved)
             return;
+
+        ControlledThing.DebugText = $"Posi: {ControlledThing.GridPos}\nWand: {WanderGridPos}\nLast: {TargetLastKnownPos}\ntarget: {(targeting.HasTarget ? targeting.Target.DisplayIcon : "none")}";
 
         if (!targeting.HasTarget)
         {
@@ -59,7 +60,7 @@ public partial class SquirrelBrain : ThingBrain
         {
             var target = targeting.Target;
 
-            if (target == null || !target.IsValid || (target.HasStat(StatType.Health) && target.GetStatClamped(StatType.Health) <= 0))
+            if (target == null || !target.IsValid)
             {
                 targeting.LoseTarget();
                 WanderGridPos = ControlledThing.GridPos;
@@ -77,11 +78,11 @@ public partial class SquirrelBrain : ThingBrain
 
                 //RoguemojiGame.Instance.DebugGridLine(ControlledThing.GridPos, targeting.Target.GridPos, canSeeTarget ? new Color(0f, 0f, 1f, 0.8f) : new Color(1f, 0f, 0f, 0.8f), 0.025f);
 
+                if (canSeeTarget)
+                    TargetLastKnownPos = target.GridPos;
+
                 if (acting.IsActionReady)
                 {
-                    if (canSeeTarget)
-                        TargetLastKnownPos = target.GridPos;
-
                     var targetPos = isFearful
                         ? CFearful.GetTargetRetreatPoint(ControlledThing.GridPos, ((CFearful)fearful).FearedThing.GridPos, ControlledThing.ContainingGridManager)
                         : TargetLastKnownPos;
@@ -110,9 +111,48 @@ public partial class SquirrelBrain : ThingBrain
 
     public void TryToMoveToPos(IntVector gridPos)
     {
+        CTargeting targeting = null;
+        if (ControlledThing.GetComponent<CTargeting>(out var component2))
+            targeting = (CTargeting)component2;
+
+
+
         var path = ControlledThing.GetPathTo(ControlledThing.GridPos, gridPos);
         if (path != null && path.Count > 0 && !path[0].Equals(ControlledThing.GridPos))
         {
+            if(path.Count > 1)
+            {
+                var color = Color.White;
+                if(targeting.HasTarget)
+                {
+                    var target = targeting.Target;
+                    bool canSeeTarget = ControlledThing.CanSeeThing(target);
+
+                    if (canSeeTarget)
+                    {
+                        color = new Color(1f, 0.3f, 0f, 0.7f);
+                    }
+                    else
+                    {
+                        color = new Color(1f, 0.3f, 0.6f, 0.7f);
+
+                        RoguemojiGame.Instance.DebugGridLine(ControlledThing.GridPos, TargetLastKnownPos, new Color(1f, 0.6f, 1f, 0.5f), 0.5f);
+                    }
+                }
+                else
+                {
+                    color = new Color(0.3f, 0.3f, 1f, 0.7f);
+
+                    RoguemojiGame.Instance.DebugGridLine(ControlledThing.GridPos, WanderGridPos, new Color(0.2f, 0.2f, 1f, 0.5f), 0.5f);
+                }
+
+                Thing.DrawPath(path, color, 0.7f);
+            }
+            else
+            {
+                RoguemojiGame.Instance.DebugGridLine(ControlledThing.GridPos, path[0], Color.Red, 0.5f);
+            }
+
             var dir = GridManager.GetDirectionForIntVector(path[0] - ControlledThing.GridPos);
             ControlledThing.TryMove(dir, out bool switchedLevel);
         }
@@ -164,7 +204,7 @@ public partial class SquirrelBrain : ThingBrain
         base.OnLoseTarget();
 
         ControlledThing.RemoveFloater("❕");
-        ControlledThing.AddFloater("❔", Game.Random.Float(0.95f, 1.1f), new Vector2(0f, -10f), new Vector2(0f, -30f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.QuadOut, 0.1f);
+        ControlledThing.AddFloater("❔", Game.Random.Float(0.95f, 1.1f), new Vector2(0f, -10f), new Vector2(0f, -30f), height: 0f, text: "", requireSight: false, alwaysShowWhenAdjacent: true, EasingType.QuadOut, 0.1f);
 
         if (ControlledThing.GetComponent<CActing>(out var component))
         {
@@ -176,8 +216,11 @@ public partial class SquirrelBrain : ThingBrain
         WanderGridPos = TargetLastKnownPos;
     }
 
-    public override void HearSound(string name, IntVector soundPos, int loudness = 0, float volume = 1, float pitch = 1, bool noFalloff = false)
+    public override void HearSound(string name, IntVector soundPos, Thing sourceThing, int loudness = 0, float volume = 1, float pitch = 1, bool noFalloff = false)
     {
+        if (sourceThing == ControlledThing)
+            return;
+
         CTargeting targeting = null;
         if (ControlledThing.GetComponent<CTargeting>(out var component))
             targeting = (CTargeting)component;
@@ -194,9 +237,9 @@ public partial class SquirrelBrain : ThingBrain
 
             WanderGridPos = soundPos;
         }
-        else if (!ControlledThing.CanSeeThing(targeting.Target))
-        {
-            TargetLastKnownPos = soundPos;
-        }
+        //else if (!ControlledThing.CanSeeThing(targeting.Target))
+        //{
+        //    TargetLastKnownPos = soundPos;
+        //}
     }
 }

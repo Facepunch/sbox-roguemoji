@@ -80,7 +80,7 @@ public partial class Firecracker : Thing
     {
         if(HasComponent<CBurning>())
         {
-            PlaySfx("firecracker_explode", loudness: 9, noFalloff: true);
+            PlaySfx("firecracker_explode", loudness: 9, volume: 2f, noFalloff: true);
             ContainingGridManager.AddFloater(Globals.Icon(IconType.Explosion), GridPos, 1f, new Vector2(0f, 0f), new Vector2(0f, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.01f, scale: 1.3f, opacity: 0.6f, shakeAmount: 0f);
             ContainingGridManager.AddFloater("🔆", GridPos, 0.4f, new Vector2(0f, 0f), new Vector2(0f, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.01f, scale: 1f, opacity: 1f, shakeAmount: 2f);
 
