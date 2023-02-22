@@ -6,8 +6,7 @@ public partial class Telescope : Thing
 {
     public int SightAmount { get; private set; }
     public int SpeedAmount { get; private set; }
-
-    // todo: see farther, but dont see through more things
+    public float CooldownTime { get; private set; }
 
     public Telescope()
 	{
@@ -23,8 +22,13 @@ public partial class Telescope : Thing
         {
             SightAmount = 4;
             SpeedAmount = -3;
+
             InitStat(StatType.SightDistance, SightAmount, min: -999, isModifier: true);
             InitStat(StatType.Speed, SpeedAmount, min: -999, isModifier: true);
+
+            CooldownTime = 20f;
+
+            AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
         }
     }
 
@@ -34,6 +38,8 @@ public partial class Telescope : Thing
 
         thing.AdjustStat(StatType.SightDistance, SightAmount);
         thing.AdjustStat(StatType.Speed, SpeedAmount);
+
+        StartCooldown(CooldownTime);
     }
 
     public override void OnUnequippedFrom(Thing thing)
@@ -42,5 +48,7 @@ public partial class Telescope : Thing
 
         thing.AdjustStat(StatType.SightDistance, -SightAmount);
         thing.AdjustStat(StatType.Speed, -SpeedAmount);
+
+        StartCooldown(CooldownTime);
     }
 }

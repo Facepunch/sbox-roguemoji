@@ -605,7 +605,7 @@ public partial class RoguemojiPlayer : ThingBrain
             MoveThingTo(thing, GridType.Inventory, emptyGridPos, dontRequireAction, wieldIfPossible: true, playSfx: true);
             return true;
         }
-        else if (thing.HasFlag(ThingFlags.Equipment) && EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPosEquipment))
+        else if (thing.HasFlag(ThingFlags.Equipment) && !thing.IsOnCooldown && EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPosEquipment))
         {
             MoveThingTo(thing, GridType.Equipment, emptyGridPosEquipment, dontRequireAction, playSfx: true);
             return true;
@@ -651,6 +651,9 @@ public partial class RoguemojiPlayer : ThingBrain
 
     void TryEquipThing(Thing thing)
     {
+        if (thing.IsOnCooldown)
+            return;
+
         if (EquipmentGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
             MoveThingTo(thing, GridType.Equipment, emptyGridPos, playSfx: true);
     }
@@ -929,14 +932,14 @@ public partial class RoguemojiPlayer : ThingBrain
 
             if (!rightClick)
             {
-                if (thing != null && shift)
+                if (thing != null && shift && !thing.IsOnCooldown)
                     MoveThingTo(thing, GridType.Arena, ControlledThing.GridPos, playSfx: true);
                 else
                     SelectThing(thing, playSfx: true);
             }
             else
             {
-                if (thing != null && InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
+                if (thing != null && !thing.IsOnCooldown && InventoryGridManager.GetFirstEmptyGridPos(out var emptyGridPos))
                     MoveThingTo(thing, GridType.Inventory, emptyGridPos, playSfx: true);
             }
         }
@@ -1000,7 +1003,7 @@ public partial class RoguemojiPlayer : ThingBrain
         }
         else if (destinationPanelType == PanelType.EquipmentGrid)
         {
-            if (!thing.HasFlag(ThingFlags.Equipment))
+            if (!thing.HasFlag(ThingFlags.Equipment) || thing.IsOnCooldown)
                 return;
 
             MoveThingTo(thing, GridType.Equipment, targetGridPos, playSfx: true);
@@ -1032,10 +1035,16 @@ public partial class RoguemojiPlayer : ThingBrain
 
         if (destinationPanelType == PanelType.ArenaGrid || destinationPanelType == PanelType.Nearby)// || destinationPanelType == PanelType.None)
         {
+            if (thing.IsOnCooldown)
+                return;
+
             MoveThingTo(thing, GridType.Arena, ControlledThing.GridPos, playSfx: true);
         }
         else if (destinationPanelType == PanelType.InventoryGrid)
         {
+            if (thing.IsOnCooldown)
+                return;
+
             MoveThingTo(thing, GridType.Inventory, targetGridPos, playSfx: true);
         }
         else if (destinationPanelType == PanelType.EquipmentGrid)
@@ -1071,7 +1080,7 @@ public partial class RoguemojiPlayer : ThingBrain
         }
         else if (destinationPanelType == PanelType.EquipmentGrid)
         {
-            if (!thing.HasFlag(ThingFlags.Equipment))
+            if (!thing.HasFlag(ThingFlags.Equipment) || thing.IsOnCooldown)
                 return;
 
             MoveThingTo(thing, GridType.Equipment, targetGridPos, playSfx: true);
