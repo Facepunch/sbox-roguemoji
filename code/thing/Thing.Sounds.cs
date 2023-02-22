@@ -9,23 +9,23 @@ public partial class Thing : Entity
 {
     [Net] public ThingSoundProfileType SoundProfileType { get; set; }
 
-    public void PlaySfx(SoundActionType actionType, float volume = 1f, float pitch = 1f)
+    public void PlaySfx(SoundActionType actionType, float volume = 1f, float pitch = 1f, bool noFalloff = false)
     {
         var soundThing = ThingOwningThis != null ? ThingOwningThis : this;
         var level = RoguemojiGame.Instance.GetLevel(soundThing.CurrentLevelId);
         
         GetSound(actionType, level.SurfaceType, out string sfxName, out int loudness);
         if (!string.IsNullOrEmpty(sfxName))
-            level.GridManager.PlaySfx(sfxName, soundThing.GridPos, loudness, volume, pitch);
+            level.GridManager.PlaySfx(sfxName, soundThing.GridPos, loudness, volume, pitch, noFalloff);
     }
 
-    public void PlaySfx(string sfxName, int loudness, float volume = 1f, float pitch = 1f)
+    public void PlaySfx(string sfxName, int loudness, float volume = 1f, float pitch = 1f, bool noFalloff = false)
     {
         var soundThing = ThingOwningThis != null ? ThingOwningThis : this;
         var level = RoguemojiGame.Instance.GetLevel(soundThing.CurrentLevelId);
 
         if (!string.IsNullOrEmpty(sfxName))
-            level.GridManager.PlaySfx(sfxName, soundThing.GridPos, loudness, volume, pitch);
+            level.GridManager.PlaySfx(sfxName, soundThing.GridPos, loudness, volume, pitch, noFalloff);
     }
 
     public virtual void GetSound(SoundActionType actionType, SurfaceType surfaceType, out string sfxName, out int loudness)

@@ -26,7 +26,7 @@ public partial class ThingBrain : Entity
 
     }
 
-    public virtual void HearSound(string name, IntVector soundPos, int loudness = 0, float volume = 1f, float pitch = 1f)
+    public virtual void HearSound(string name, IntVector soundPos, int loudness = 0, float volume = 1f, float pitch = 1f, bool noFalloff = false)
     {
 
     }

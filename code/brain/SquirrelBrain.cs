@@ -176,7 +176,7 @@ public partial class SquirrelBrain : ThingBrain
         WanderGridPos = TargetLastKnownPos;
     }
 
-    public override void HearSound(string name, IntVector soundPos, int loudness = 0, float volume = 1, float pitch = 1)
+    public override void HearSound(string name, IntVector soundPos, int loudness = 0, float volume = 1, float pitch = 1, bool noFalloff = false)
     {
         CTargeting targeting = null;
         if (ControlledThing.GetComponent<CTargeting>(out var component))

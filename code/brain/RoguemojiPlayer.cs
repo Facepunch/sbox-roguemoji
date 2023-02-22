@@ -141,12 +141,12 @@ public partial class RoguemojiPlayer : ThingBrain
         SeenThings.Clear();
     }
 
-    public override void HearSound(string name, IntVector soundPos, int loudness = 0, float volume = 1, float pitch = 1)
+    public override void HearSound(string name, IntVector soundPos, int loudness = 0, float volume = 1, float pitch = 1, bool noFalloff = false)
     {
         int maxDist = loudness + ControlledThing.GetStatClamped(StatType.Hearing);
         var dist = Utils.GetDistance(soundPos, ControlledThing.GridPos);
 
-        var falloff = Utils.Map(dist, 0f, maxDist + 1, 1f, 0f, EasingType.SineIn);
+        var falloff = noFalloff ? 1f : Utils.Map(dist, 0f, maxDist + 1, 1f, 0f, EasingType.SineIn);
         var xOffset = Utils.Map(soundPos.x - ControlledThing.GridPos.x, -maxDist, maxDist, 1f, 0f, EasingType.Linear);
         var yOffset = Utils.Map(soundPos.y - ControlledThing.GridPos.y, -maxDist, maxDist, 1f, 0f, EasingType.Linear);
         var sound = Sound.FromScreen(To.Single(Client), name, xOffset, yOffset);

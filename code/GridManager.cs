@@ -909,7 +909,7 @@ public partial class GridManager : Entity
         return points;
     }
 
-    public void PlaySfx(string name, IntVector soundPos, int loudness = 0, float volume = 1f, float pitch = 1f)
+    public void PlaySfx(string name, IntVector soundPos, int loudness = 0, float volume = 1f, float pitch = 1f, bool noFalloff = false)
     {
         for(int i = Things.Count - 1; i >= 0; i--)
         {
@@ -925,7 +925,7 @@ public partial class GridManager : Entity
             if (dist > maxDist)
                 continue;
 
-            thing.Brain?.HearSound(name, soundPos, loudness, volume, pitch);
+            thing.Brain?.HearSound(name, soundPos, loudness, volume, pitch, noFalloff);
         }
     }
 }
