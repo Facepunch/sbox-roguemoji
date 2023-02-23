@@ -50,7 +50,10 @@ public partial class SquirrelBrain : ThingBrain
 
             if (acting.IsActionReady && !ControlledThing.GridPos.Equals(WanderGridPos))
             {
-                TryToMoveToPos(WanderGridPos);
+                if((WanderGridPos - ControlledThing.GridPos).ManhattanLength > 1 || ControlledThing.ContainingGridManager.GetThingsAt(WanderGridPos).WithAll(ThingFlags.Solid).Where(x => !targeting.IsAppropriateTarget(x)).Count() == 0)
+                {
+                    TryToMoveToPos(WanderGridPos);
+                }
             }
 
             //Targeting.Target = RoguemojiGame.Instance.GetClosestPlayer(GridPos);
@@ -227,7 +230,7 @@ public partial class SquirrelBrain : ThingBrain
         if (targeting == null)
             return;
 
-        if(!targeting.HasTarget)
+        if(!targeting.HasTarget && targeting.IsAppropriateTarget(sourceThing))
         {
             if(WanderGridPos.Equals(ControlledThing.GridPos))
             {

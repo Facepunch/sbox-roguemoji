@@ -11,21 +11,47 @@ public partial class Thing : Entity
 
     public void PlaySfx(SoundActionType actionType, float volume = 1f, float pitch = 1f, bool noFalloff = false)
     {
-        var soundThing = ThingOwningThis != null ? ThingOwningThis : this;
-        var level = RoguemojiGame.Instance.GetLevel(soundThing.CurrentLevelId);
+        Thing soundThingLocation = GetSoundThingLocation();
+        Thing soundThingSource = GetSoundThingSource();
+        var level = RoguemojiGame.Instance.GetLevel(soundThingLocation.CurrentLevelId);
         
         GetSound(actionType, level.SurfaceType, out string sfxName, out int loudness);
         if (!string.IsNullOrEmpty(sfxName))
-            level.GridManager.PlaySfx(sfxName, soundThing.GridPos, soundThing, loudness, volume, pitch, noFalloff);
+            level.GridManager.PlaySfx(sfxName, soundThingLocation.GridPos, soundThingSource, loudness, volume, pitch, noFalloff);
     }
 
     public void PlaySfx(string sfxName, int loudness, float volume = 1f, float pitch = 1f, bool noFalloff = false)
     {
-        var soundThing = ThingOwningThis != null ? ThingOwningThis : this;
-        var level = RoguemojiGame.Instance.GetLevel(soundThing.CurrentLevelId);
+        Thing soundThingLocation = GetSoundThingLocation();
+        Thing soundThingSource = GetSoundThingSource();
+        var level = RoguemojiGame.Instance.GetLevel(soundThingLocation.CurrentLevelId);
 
         if (!string.IsNullOrEmpty(sfxName))
-            level.GridManager.PlaySfx(sfxName, soundThing.GridPos, soundThing, loudness, volume, pitch, noFalloff);
+            level.GridManager.PlaySfx(sfxName, soundThingLocation.GridPos, soundThingSource, loudness, volume, pitch, noFalloff);
+    }
+
+    public Thing GetSoundThingLocation()
+    {
+        return ThingOwningThis != null ? ThingOwningThis : this;
+    }
+
+    public Thing GetSoundThingSource()
+    {
+        if (ThingOwningThis != null)
+        {
+            return ThingOwningThis;
+        }
+        else
+        {
+            if (GetComponent<CProjectile>(out var component))
+            {
+                var projectile = (CProjectile)component;
+                if (projectile.Thrower != null)
+                    return projectile.Thrower;
+            }
+
+            return this;
+        }
     }
 
     public virtual void GetSound(SoundActionType actionType, SurfaceType surfaceType, out string sfxName, out int loudness)

@@ -50,7 +50,7 @@ public class CTargeting : ThingComponent
 
     public bool EvaluateTarget(Thing other)
     {
-        if (other.Faction != TargetFaction || other == Target)
+        if (!IsAppropriateTarget(other))
             return false;
 
         int distance = Utils.GetDistance(Thing.GridPos, other.GridPos);
@@ -60,6 +60,11 @@ public class CTargeting : ThingComponent
         }
 
         return false;
+    }
+
+    public bool IsAppropriateTarget(Thing other)
+    {
+        return other.Faction == TargetFaction && other != Target;
     }
 
     private List<Thing> _potentialTargets = new List<Thing>();
