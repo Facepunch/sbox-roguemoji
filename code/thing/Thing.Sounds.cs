@@ -76,10 +76,6 @@ public partial class Thing : Entity
                             case SurfaceType.Grass: sfxName = "drop_grass"; break;
                         }
                         break;
-                    case SoundActionType.HitOther:
-                        sfxName = "";
-                        loudness = 0;
-                        break;
                     case SoundActionType.GetHit:
                         sfxName = "impact";
                         loudness = 1;

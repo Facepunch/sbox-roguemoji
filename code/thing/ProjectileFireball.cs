@@ -5,6 +5,8 @@ using System.Linq;
 namespace Roguemoji;
 public partial class ProjectileFireball : Thing
 {
+    public int ExplosionDamage { get; set; }
+
 	public ProjectileFireball()
 	{
 		DisplayIcon = Globals.Icon(IconType.Fire);
@@ -43,6 +45,8 @@ public partial class ProjectileFireball : Thing
 
     void Explode(IntVector explodeGridPos)
     {
+        PlaySfx("fireball_explode", loudness: 5);
+
         for (int x = -1; x <= 1; x++)
         {
             for (int y = -1; y <= 1; y++)
@@ -53,8 +57,15 @@ public partial class ProjectileFireball : Thing
                     ContainingGridManager.AddFloater(Globals.Icon(IconType.Fire), gridPos, Game.Random.Float(0.7f, 0.9f), new Vector2(0f, 0f), new Vector2(0f, Game.Random.Float(-10f, -15f)), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true,
                         EasingType.QuadOut, fadeInTime: Game.Random.Float(0.01f, 0.05f), scale: Game.Random.Float(0.75f, 0.9f), opacity: 0.4f);
 
-                    foreach (var thing in ContainingGridManager.GetThingsAt(gridPos).Where(x => x != this && x.Flammability > 0))
+                    var things = ContainingGridManager.GetThingsAt(gridPos).Where(x => x != this && x.Flammability > 0).ToList();
+                    for (int i = things.Count - 1; i >= 0; i--)
+                    {
+                        var thing = things[i];
                         thing.AddComponent<CBurning>();
+
+                        if (thing.HasStat(StatType.Health))
+                            thing.Hurt(ExplosionDamage);
+                    }
                 }
             }
         }

@@ -94,6 +94,7 @@ public partial class Thing : Entity
     public bool HasTattoo { get; set; } // Client-only
     public TattooData TattooData { get; set; } // Client-only
 
+    public bool IsDestroyed { get; set; }
     [Net] public bool IsRemoved { get; set; }
     [Net] public bool IsOnCooldown { get; set; }
     [Net] public float CooldownProgressPercent { get; set; }
@@ -402,16 +403,19 @@ public partial class Thing : Entity
 
     public virtual void Use(Thing user) 
     {
+        PlaySfx(SoundActionType.Use);
         PerformedAction(user);
     }
 
     public virtual void Use(Thing user, Direction direction) 
     {
+        PlaySfx(SoundActionType.Use);
         PerformedAction(user);
     }
 
     public virtual void Use(Thing user, GridType gridType, IntVector targetGridPos) 
     {
+        PlaySfx(SoundActionType.Use);
         PerformedAction(user);
     }
 
@@ -423,6 +427,11 @@ public partial class Thing : Entity
 
     public virtual void Destroy()
     {
+        if (IsDestroyed)
+            return;
+
+        IsDestroyed = true;
+
         OnDestroyed();
 
         DestroyFloatersClient();

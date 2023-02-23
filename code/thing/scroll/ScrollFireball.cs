@@ -19,7 +19,7 @@ public partial class ScrollFireball : Scroll
 
         if (Game.IsServer)
         {
-            //AddTrait("", "📈", $"Spell range increased by {GetStatIcon(StatType.Intelligence)}", offset: new Vector2(0f, -1f), tattooIcon: GetStatIcon(StatType.Intelligence), tattooScale: 0.6f, tattooOffset: new Vector2(6f, -8f));
+            AddTrait("", Thing.GetStatIcon(StatType.Attack), $"Spell damage increased by {GetStatIcon(StatType.Intelligence)}", offset: new Vector2(0f, -1f), tattooIcon: GetStatIcon(StatType.Intelligence), tattooScale: 0.6f, tattooOffset: new Vector2(6f, -8f));
         }
     }
 
@@ -34,6 +34,7 @@ public partial class ScrollFireball : Scroll
         var fireball = user.ContainingGridManager.SpawnThing<ProjectileFireball>(user.GridPos);
         var degrees = (-dir).Degrees;
         fireball.SetTransformClient(degrees: degrees);
+        fireball.ExplosionDamage = Math.Max(user.GetStatClamped(StatType.Intelligence), 3);
 
         var projectile = fireball.AddComponent<CProjectile>();
         projectile.MoveDelay = 0.115f;
@@ -42,5 +43,18 @@ public partial class ScrollFireball : Scroll
         projectile.UseDirectionVector(dir);
 
         Destroy();
+    }
+
+    public override void GetSound(SoundActionType actionType, SurfaceType surfaceType, out string sfxName, out int loudness)
+    {
+        switch (actionType)
+        {
+            case SoundActionType.Use:
+                sfxName = "fireball_cast";
+                loudness = 3;
+                return;
+        }
+
+        base.GetSound(actionType, surfaceType, out sfxName, out loudness);
     }
 }

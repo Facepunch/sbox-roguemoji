@@ -54,8 +54,6 @@ public partial class Trumpet : Thing
         if (!user.TrySpendStat(StatType.Energy, EnergyCost))
             return;
 
-        PlaySfx(SoundActionType.Use);
-
         var startOffset = user.WieldedThingOffset + new Vector2(13f, 8f);
         var endOffset = startOffset + new Vector2(Game.Random.Float(20f, 40f), Game.Random.Float(-10f, -50f));
         var icon = Game.Random.Int(0, 10) == 0 ? "🎶" : "🎵";

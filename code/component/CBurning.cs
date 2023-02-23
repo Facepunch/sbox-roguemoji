@@ -25,8 +25,9 @@ public class CBurning : ThingComponent
 
         thing.IgnitionAmount = Globals.IGNITION_MAX;
 
-        Lifetime = Utils.Map(thing.Flammability, 0, 100, 60f, 3f, EasingType.ExpoOut);
+        Lifetime = Utils.Map(thing.Flammability, 0, 100, 75f, 3f, EasingType.ExpoOut);
         //Log.Info($"{thing.DisplayIcon} Flammability: {thing.Flammability} Lifetime: {Lifetime}");
+
         ShouldUpdate = true;
 
         BurnDelayMin = 2f;

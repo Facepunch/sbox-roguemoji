@@ -4,8 +4,6 @@ using System;
 namespace Roguemoji;
 public partial class Bone : Thing
 {
-    // todo: add durability
-
 	public Bone()
 	{
 		DisplayIcon = "🦴";
@@ -17,7 +15,7 @@ public partial class Bone : Thing
 
         if (Game.IsServer)
         {
-            InitStat(StatType.Attack, 2);
+            InitStat(StatType.Attack, 1);
         }
     }
 }
