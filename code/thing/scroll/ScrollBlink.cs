@@ -54,24 +54,4 @@ public partial class ScrollBlink : Scroll
         if (thing.Brain is RoguemojiPlayer player)
             player.RecenterCamera();
     }
-
-    public override HashSet<IntVector> GetAimingTargetCellsClient() 
-    {
-        Game.AssertClient();
-
-        if (ThingWieldingThis == null)
-            return null;
-
-        int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 1, 10);
-        return Scroll.GetArenaAimingCells(radius, ThingWieldingThis);
-    }
-
-    public override bool IsPotentialAimingTargetCell(IntVector gridPos)
-    {
-        if (ThingWieldingThis == null)
-            return false;
-
-        int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 1, 10);
-        return Scroll.IsPotentialArenaAimingCell(gridPos, radius, ThingWieldingThis);
-    }
 }

@@ -156,7 +156,10 @@ public partial class RoguemojiPlayer : ThingBrain
 
     void SpawnRandomInventoryThing(IntVector gridPos)
     {
-        int rand = Game.Random.Int(0, 42);
+        //InventoryGridManager.SpawnThing<ScrollFireball>(gridPos);
+        //return;
+
+        int rand = Game.Random.Int(0, 44);
         switch (rand)
         {
             //case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -181,7 +184,6 @@ public partial class RoguemojiPlayer : ThingBrain
             //case 11: InventoryGridManager.SpawnThing<WhiteCane>(gridPos); break;
             case 11: InventoryGridManager.SpawnThing<ScrollConfetti>(gridPos); break;
             case 12: InventoryGridManager.SpawnThing<ScrollBlink>(gridPos); break;
-            //case 13: InventoryGridManager.SpawnThing<BowAndArrow>(gridPos); break;
             case 13: InventoryGridManager.SpawnThing<ScrollIdentify>(gridPos); break;
             case 14: InventoryGridManager.SpawnThing<Backpack>(gridPos); break;
             //case 14: InventoryGridManager.SpawnThing<Joystick>(gridPos); break;
@@ -215,6 +217,8 @@ public partial class RoguemojiPlayer : ThingBrain
             case 40: InventoryGridManager.SpawnThing<Sunglasses>(gridPos); break;
             case 41: InventoryGridManager.SpawnThing<Telescope>(gridPos); break;
             case 42: InventoryGridManager.SpawnThing<Cigarette>(gridPos); break;
+            case 43: InventoryGridManager.SpawnThing<ScrollFireball>(gridPos); break;
+            case 44: InventoryGridManager.SpawnThing<BowAndArrow>(gridPos); break;
         }
     }
 

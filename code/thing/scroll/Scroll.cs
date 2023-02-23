@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public enum ScrollType { Blink, Teleport, Fear, Telekinesis, Displace, Confetti, Identify, Organize, Sentience, }
+public enum ScrollType { Blink, Teleport, Fear, Telekinesis, Displace, Confetti, Identify, Organize, Sentience, Fireball, }
 public partial class Scroll : Thing
 {
     [Net] public ScrollType ScrollType { get; protected set; }
@@ -37,6 +37,7 @@ public partial class Scroll : Thing
             case ScrollType.Identify: return "Identify";
             case ScrollType.Organize: return "Organize";
             case ScrollType.Sentience: return "Sentience";
+            case ScrollType.Fireball: return "Fireball";
         }
 
         return "";
@@ -54,6 +55,7 @@ public partial class Scroll : Thing
             case ScrollType.Identify: return $"📜{Globals.Icon(IconType.Identify)}";
             case ScrollType.Organize: return $"📜{Globals.Icon(IconType.Organize)}";
             case ScrollType.Sentience: return $"📜{Globals.Icon(IconType.Sentience)}";
+            case ScrollType.Fireball: return $"📜{Globals.Icon(IconType.Burning)}";
         }
 
         return "🧉";
@@ -103,6 +105,26 @@ public partial class Scroll : Thing
         SetTattoo(icon, scale: 0.5f, offset: new Vector2(1.5f, 0f), offsetWielded: new Vector2(0.5f, 2.3f), offsetInfo: new Vector2(8f, 5f), offsetCharWielded: new Vector2(2.5f, -0.5f), offsetInfoWielded: new Vector2(2.5f, 1f));
     }
 
+    public override HashSet<IntVector> GetAimingTargetCellsClient()
+    {
+        Game.AssertClient();
+
+        if (ThingWieldingThis == null)
+            return null;
+
+        int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 3, 12);
+        return Scroll.GetArenaAimingCells(radius, ThingWieldingThis);
+    }
+
+    public override bool IsPotentialAimingTargetCell(IntVector gridPos)
+    {
+        if (ThingWieldingThis == null)
+            return false;
+
+        int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 3, 12);
+        return Scroll.IsPotentialArenaAimingCell(gridPos, radius, ThingWieldingThis);
+    }
+
     public static HashSet<IntVector> GetArenaAimingCells(int radius, Thing thingWieldingThis)
     {
         HashSet<IntVector> aimingCells = new HashSet<IntVector>();
@@ -128,7 +150,7 @@ public partial class Scroll : Thing
 
     public static bool IsPotentialArenaAimingCell(IntVector gridPos, int radius, Thing thingWieldingThis)
     {
-        // todo: rething this
+        // todo: rethink this
         for (int x = -radius; x <= radius; x++)
         {
             for (int y = -radius; y <= radius; y++)

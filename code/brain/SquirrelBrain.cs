@@ -42,7 +42,7 @@ public partial class SquirrelBrain : ThingBrain
         if (acting == null || targeting == null || ControlledThing.IsInTransit || ControlledThing.IsRemoved)
             return;
 
-        ControlledThing.DebugText = $"Posi: {ControlledThing.GridPos}\nWand: {WanderGridPos}\nLast: {TargetLastKnownPos}\ntarget: {(targeting.HasTarget ? targeting.Target.DisplayName : "NONE")}";
+        //ControlledThing.DebugText = $"Posi: {ControlledThing.GridPos}\nWand: {WanderGridPos}\nLast: {TargetLastKnownPos}\ntarget: {(targeting.HasTarget ? targeting.Target.DisplayName : "NONE")}";
 
         if (!targeting.HasTarget)
         {
@@ -113,6 +113,8 @@ public partial class SquirrelBrain : ThingBrain
 
     public void TryToMoveToPos(IntVector gridPos)
     {
+
+
         CTargeting targeting = null;
         if (ControlledThing.GetComponent<CTargeting>(out var component2))
             targeting = (CTargeting)component2;
@@ -138,21 +140,21 @@ public partial class SquirrelBrain : ThingBrain
                     {
                         color = new Color(1f, 0.3f, 0.6f, 0.7f);
 
-                        RoguemojiGame.Instance.DebugGridLine(ControlledThing.GridPos, TargetLastKnownPos, new Color(1f, 0.6f, 1f, 0.5f), 0.5f);
+                        //RoguemojiGame.Instance.DebugGridLine(ControlledThing.GridPos, TargetLastKnownPos, new Color(1f, 0.6f, 1f, 0.5f), 0.5f);
                     }
                 }
                 else
                 {
                     color = new Color(0.3f, 0.3f, 1f, 0.7f);
 
-                    RoguemojiGame.Instance.DebugGridLine(ControlledThing.GridPos, WanderGridPos, new Color(0.2f, 0.2f, 1f, 0.5f), 0.5f);
+                    //RoguemojiGame.Instance.DebugGridLine(ControlledThing.GridPos, WanderGridPos, new Color(0.2f, 0.2f, 1f, 0.5f), 0.5f);
                 }
 
-                Thing.DrawPath(path, color, 0.7f);
+                //Thing.DrawPath(path, color, 0.7f);
             }
             else
             {
-                RoguemojiGame.Instance.DebugGridLine(ControlledThing.GridPos, path[0], Color.Red, 0.5f);
+                //RoguemojiGame.Instance.DebugGridLine(ControlledThing.GridPos, path[0], Color.Red, 0.5f);
             }
 
             var dir = GridManager.GetDirectionForIntVector(path[0] - ControlledThing.GridPos);

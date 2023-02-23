@@ -163,7 +163,23 @@ public partial class GridManager : Entity
 	public static int GetIndex( int x, int y, int width) { return y * width + x; }
 	public static IntVector GetGridPos( int index, int width) { return new IntVector( index % width, ((float)index / (float)width).FloorToInt() ); }
 
-	public bool IsGridPosInBounds( IntVector gridPos )
+    public Vector2 GetWorldPosForGridPos(IntVector gridPos)
+    {
+        return new Vector2(
+            (gridPos.x + 0.5f) * RoguemojiGame.CellSize,
+            (gridPos.y + 0.5f) * RoguemojiGame.CellSize
+        );
+    }
+
+    public IntVector GetGridPosForWorldPos(Vector2 worldPos)
+    {
+        return new IntVector(
+            MathX.FloorToInt(worldPos.x / RoguemojiGame.CellSize),
+            MathX.FloorToInt(worldPos.y / RoguemojiGame.CellSize)
+        );
+    }
+
+    public bool IsGridPosInBounds( IntVector gridPos )
 	{
 		return
 			gridPos.x >= 0 &&

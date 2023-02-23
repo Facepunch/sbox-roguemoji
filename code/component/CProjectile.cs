@@ -12,6 +12,9 @@ public class CProjectile : ThingComponent
     public int TotalDistance { get; set; }
     public Thing Thrower { get; set; }
     public bool ShouldHit { get; set; }
+    public Vector2 DirectionVector { get; private set; }
+    public bool ShouldUseDirectionVector { get; private set; }
+    public Vector2 WorldPos { get; private set; }
 
     public override void Init(Thing thing)
     {
@@ -36,11 +39,29 @@ public class CProjectile : ThingComponent
         {
             TimeSinceMove = 0f;
 
-            if (Thing.TryMove(Direction, out bool switchedLevel, shouldAnimate: false))
+            if(ShouldUseDirectionVector)
             {
-                CurrentDistance++;
-                if (CurrentDistance >= TotalDistance)
-                    Remove();
+                WorldPos += DirectionVector * RoguemojiGame.CellSize;
+                IntVector newGridPos = Thing.ContainingGridManager.GetGridPosForWorldPos(WorldPos);
+                if(!newGridPos.Equals(Thing.GridPos))
+                {
+                    var direction = GridManager.GetDirectionForIntVector(newGridPos - Thing.GridPos);
+                    if (Thing.TryMove(direction, out bool switchedLevel, shouldAnimate: false))
+                    {
+                        CurrentDistance++;
+                        if (CurrentDistance >= TotalDistance)
+                            Remove();
+                    }
+                }
+            }
+            else
+            {
+                if (Thing.TryMove(Direction, out bool switchedLevel, shouldAnimate: false))
+                {
+                    CurrentDistance++;
+                    if (CurrentDistance >= TotalDistance)
+                        Remove();
+                }
             }
         }
 
@@ -70,5 +91,12 @@ public class CProjectile : ThingComponent
     public override void OnRemove()
     {
         base.OnRemove();
+    }
+
+    public void UseDirectionVector(Vector2 vec)
+    {
+        ShouldUseDirectionVector = true;
+        DirectionVector = vec;
+        WorldPos = Thing.ContainingGridManager.GetWorldPosForGridPos(Thing.GridPos);
     }
 }

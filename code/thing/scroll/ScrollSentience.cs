@@ -67,26 +67,6 @@ public partial class ScrollSentience : Scroll
         Destroy();
     }
 
-    public override HashSet<IntVector> GetAimingTargetCellsClient() 
-    {
-        Game.AssertClient();
-
-        if (ThingWieldingThis == null)
-            return null;
-
-        int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 1, 10);
-        return Scroll.GetArenaAimingCells(radius, ThingWieldingThis);
-    }
-
-    public override bool IsPotentialAimingTargetCell(IntVector gridPos)
-    {
-        if (ThingWieldingThis == null)
-            return false;
-
-        int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 1, 10);
-        return Scroll.IsPotentialArenaAimingCell(gridPos, radius, ThingWieldingThis);
-    }
-
     public static bool CanGainSentience(Thing thing)
     {
         if (thing is Hole)
