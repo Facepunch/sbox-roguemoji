@@ -55,7 +55,7 @@ public partial class Scroll : Thing
             case ScrollType.Identify: return $"📜{Globals.Icon(IconType.Identify)}";
             case ScrollType.Organize: return $"📜{Globals.Icon(IconType.Organize)}";
             case ScrollType.Sentience: return $"📜{Globals.Icon(IconType.Sentience)}";
-            case ScrollType.Fireball: return $"📜{Globals.Icon(IconType.Burning)}";
+            case ScrollType.Fireball: return $"📜{Globals.Icon(IconType.Fire)}";
         }
 
         return "🧉";

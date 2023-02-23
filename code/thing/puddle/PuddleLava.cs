@@ -52,7 +52,7 @@ public partial class PuddleLava : Puddle
             var shakeAmount = Game.Random.Float(0.1f, 0.4f);
             var fadeInTime = Game.Random.Float(0.015f, 0.2f);
 
-            ContainingGridManager.AddFloater(Globals.Icon(IconType.Burning), GridPos, time, startOffset, endOffset, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: fadeInTime, scale: scale, opacity: opacity, shakeAmount: shakeAmount);
+            ContainingGridManager.AddFloater(Globals.Icon(IconType.Fire), GridPos, time, startOffset, endOffset, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: fadeInTime, scale: scale, opacity: opacity, shakeAmount: shakeAmount);
 
             FloaterCountdown = Game.Random.Float(FloaterDelayMin, FloaterDelayMax);
         }

@@ -7,7 +7,7 @@ public partial class ProjectileFireball : Thing
 {
 	public ProjectileFireball()
 	{
-		DisplayIcon = Globals.Icon(IconType.Burning);
+		DisplayIcon = Globals.Icon(IconType.Fire);
         DisplayName = "Fireball";
         Description = "";
         Tooltip = "";
@@ -50,7 +50,7 @@ public partial class ProjectileFireball : Thing
                 var gridPos = explodeGridPos + new IntVector(x, y);
                 if (ContainingGridManager.IsGridPosInBounds(gridPos) && !ContainingGridManager.ShouldCellPutOutFire(gridPos))
                 {
-                    ContainingGridManager.AddFloater(Globals.Icon(IconType.Burning), gridPos, Game.Random.Float(0.7f, 0.9f), new Vector2(0f, 0f), new Vector2(0f, Game.Random.Float(-10f, -15f)), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true,
+                    ContainingGridManager.AddFloater(Globals.Icon(IconType.Fire), gridPos, Game.Random.Float(0.7f, 0.9f), new Vector2(0f, 0f), new Vector2(0f, Game.Random.Float(-10f, -15f)), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true,
                         EasingType.QuadOut, fadeInTime: Game.Random.Float(0.01f, 0.05f), scale: Game.Random.Float(0.75f, 0.9f), opacity: 0.4f);
 
                     foreach (var thing in ContainingGridManager.GetThingsAt(gridPos).Where(x => x != this && x.Flammability > 0))

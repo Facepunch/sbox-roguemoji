@@ -15,11 +15,11 @@ public partial class ScrollFireball : Scroll
         Description = "Launch an explosive ball of fire";
         Tooltip = "A scroll of Fireball";
 
-        SetTattoo(Globals.Icon(IconType.Burning));
+        SetTattoo(Globals.Icon(IconType.Fire));
 
         if (Game.IsServer)
         {
-            AddTrait("", "📈", $"Spell range increased by {GetStatIcon(StatType.Intelligence)}", offset: new Vector2(0f, -1f), tattooIcon: GetStatIcon(StatType.Intelligence), tattooScale: 0.6f, tattooOffset: new Vector2(6f, -8f));
+            //AddTrait("", "📈", $"Spell range increased by {GetStatIcon(StatType.Intelligence)}", offset: new Vector2(0f, -1f), tattooIcon: GetStatIcon(StatType.Intelligence), tattooScale: 0.6f, tattooOffset: new Vector2(6f, -8f));
         }
     }
 

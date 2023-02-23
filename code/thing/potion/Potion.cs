@@ -6,7 +6,7 @@ using System.Linq;
 namespace Roguemoji;
 
 public enum PotionType {
-    /* unknown: */ Health, Mana, Energy, Poison, Blindness, Sleeping, Confusion, Hallucination, Speed, Medicine, Mutation, Invisibility, Amnesia, Burning, 
+    /* unknown: */ Health, Mana, Energy, Poison, Blindness, Sleeping, Confusion, Hallucination, Speed, Medicine, Mutation, Invisibility, Amnesia,
     /* starts identified: */ Water, Lava, Blood, Mud, Oil, Piss, ToxicSludge, Snow, Purple 
 } 
 
@@ -47,7 +47,6 @@ public partial class Potion : Thing
             case PotionType.Mutation: return "Mutation Potion";
             case PotionType.Invisibility: return "Invisibility Potion";
             case PotionType.Amnesia: return "Amnesia Potion";
-            case PotionType.Burning: return "Burning Potion";
             case PotionType.Water: return "Water Potion";
             case PotionType.Blood: return "Blood Potion";
             case PotionType.Oil: return "Oil Potion";
@@ -75,7 +74,6 @@ public partial class Potion : Thing
             case PotionType.Mutation: return $"🧉{Globals.Icon(IconType.Mutation)}";
             case PotionType.Invisibility: return $"🧉{Globals.Icon(IconType.Invisible)}";
             case PotionType.Amnesia: return $"🧉{Globals.Icon(IconType.Amnesia)}";
-            case PotionType.Burning: return $"🧉{Globals.Icon(IconType.Burning)}";
             case PotionType.Water: return $"🧉{Globals.Icon(IconType.Water)}";
             case PotionType.Blood: return $"🧉{Globals.Icon(IconType.Blood)}";
             case PotionType.Oil: return $"🧉{Globals.Icon(IconType.Oil)}";

@@ -13,7 +13,7 @@ public partial class Firecracker : Thing
     private float FUSE_SFX_DELAY = 0.5f;
     private int _numFuseSfx;
 
-    public override string ChatDisplayIcons => $"🧨{(IsLit ? Globals.Icon(IconType.Burning) : "")}";
+    public override string ChatDisplayIcons => $"🧨{(IsLit ? Globals.Icon(IconType.Fire) : "")}";
 
     public Firecracker()
 	{
@@ -27,7 +27,7 @@ public partial class Firecracker : Thing
 
         if (Game.IsServer)
         {
-            AbilityTrait = AddTrait(AbilityName, "🧨", $"Ignite the fuse", offset: new Vector2(0f, -1f), tattooIcon: Globals.Icon(IconType.Burning), tattooScale: 0.6f, tattooOffset: new Vector2(9f, -9f), isAbility: true);
+            AbilityTrait = AddTrait(AbilityName, "🧨", $"Ignite the fuse", offset: new Vector2(0f, -1f), tattooIcon: Globals.Icon(IconType.Fire), tattooScale: 0.6f, tattooOffset: new Vector2(9f, -9f), isAbility: true);
         }
     }
 

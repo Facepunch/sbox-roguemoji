@@ -191,7 +191,6 @@ public partial class RoguemojiPlayer : ThingBrain
             case 15: InventoryGridManager.SpawnThing<BookBlink>(gridPos); break;
             case 16: InventoryGridManager.SpawnThing<PotionMana>(gridPos); break;
             case 17: InventoryGridManager.SpawnThing<PotionHealth>(gridPos); break;
-            //case 18: InventoryGridManager.SpawnThing<PotionEnergy>(gridPos); break;
             case 18: InventoryGridManager.SpawnThing<Axe>(gridPos); break;
             case 19: InventoryGridManager.SpawnThing<ScrollTeleport>(gridPos); break;
             case 20: InventoryGridManager.SpawnThing<BookTeleport>(gridPos); break;
@@ -201,7 +200,7 @@ public partial class RoguemojiPlayer : ThingBrain
             case 24: InventoryGridManager.SpawnThing<ScrollOrganize>(gridPos); break;
             case 25: InventoryGridManager.SpawnThing<BookOrganize>(gridPos); break;
             case 26: InventoryGridManager.SpawnThing<PotionAmnesia>(gridPos); break;
-            case 27: InventoryGridManager.SpawnThing<PotionBurning>(gridPos); break;
+            case 27: InventoryGridManager.SpawnThing<PotionEnergy>(gridPos); break;
             case 28: InventoryGridManager.SpawnThing<AcademicCap>(gridPos); break;
             case 29: InventoryGridManager.SpawnThing<Basketball>(gridPos); break;
             case 30: InventoryGridManager.SpawnThing<ScrollSentience>(gridPos); break;

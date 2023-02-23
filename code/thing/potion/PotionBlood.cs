@@ -21,7 +21,7 @@ public partial class PotionBlood : Potion
 
         if (Game.IsServer)
         {
-            AddTrait("", Globals.Icon(IconType.Burning), $"Puts out fires in a gross way", offset: new Vector2(0f, 0f), tattooIcon: Globals.Icon(IconType.Blood), tattooScale: 0.95f, tattooOffset: new Vector2(8f, -6f));
+            AddTrait("", Globals.Icon(IconType.Fire), $"Puts out fires in a gross way", offset: new Vector2(0f, 0f), tattooIcon: Globals.Icon(IconType.Blood), tattooScale: 0.95f, tattooOffset: new Vector2(8f, -6f));
         }
     }
 

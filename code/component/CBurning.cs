@@ -38,12 +38,12 @@ public class CBurning : ThingComponent
         SpreadDelayMax = 0.45f;
         SpreadCountdown = Game.Random.Float(SpreadDelayMin, SpreadDelayMax);
 
-        Trait = thing.AddTrait("Burning", Globals.Icon(IconType.Burning), $"Being consumed by fire", offset: Vector2.Zero);
+        Trait = thing.AddTrait("Burning", Globals.Icon(IconType.Fire), $"Being consumed by fire", offset: Vector2.Zero);
 
         if (thing is Smiley && thing.GetComponent<CIconPriority>(out var component2))
             IconId = ((CIconPriority)component2).AddIconPriority("🥵", (int)PlayerIconPriority.Sleeping);
 
-        thing.AddFloater(Globals.Icon(IconType.Burning), time: 0f, new Vector2(0f, -12f), new Vector2(0f, -12f), height: 0f, text: "", requireSight: true, 
+        thing.AddFloater(Globals.Icon(IconType.Fire), time: 0f, new Vector2(0f, -12f), new Vector2(0f, -12f), height: 0f, text: "", requireSight: true, 
             alwaysShowWhenAdjacent: false, EasingType.Linear, fadeInTime: 0.25f, scale: 1f, opacity: 0.5f, shakeAmount: 1f, showOnInvisible: true);
 
         thing.ContainingGridManager.ThingFloaterCounter++;
@@ -58,7 +58,7 @@ public class CBurning : ThingComponent
         {
             if (!Thing.HasStat(StatType.Health))
             {
-                Thing.ContainingGridManager.AddFloater(Globals.Icon(IconType.Burning), Thing.GridPos, 0.5f, new Vector2(0f, -12f), new Vector2(0, -18f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadIn, fadeInTime: 0.04f, scale: 1f, opacity: 0.6f, shakeAmount: 1f);
+                Thing.ContainingGridManager.AddFloater(Globals.Icon(IconType.Fire), Thing.GridPos, 0.5f, new Vector2(0f, -12f), new Vector2(0, -18f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadIn, fadeInTime: 0.04f, scale: 1f, opacity: 0.6f, shakeAmount: 1f);
                 Thing.Destroy();
             }
             else
@@ -126,7 +126,7 @@ public class CBurning : ThingComponent
                         var shakeAmount = Game.Random.Float(0.1f, 0.4f);
                         var fadeInTime = Game.Random.Float(0.015f, 0.2f);
 
-                        Thing.ContainingGridManager.AddFloater(Globals.Icon(IconType.Burning), gridPos, time, startOffset, endOffset, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: fadeInTime, scale: scale, opacity: opacity, shakeAmount: shakeAmount);
+                        Thing.ContainingGridManager.AddFloater(Globals.Icon(IconType.Fire), gridPos, time, startOffset, endOffset, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: fadeInTime, scale: scale, opacity: opacity, shakeAmount: shakeAmount);
                     }
                 }
                 else
@@ -155,7 +155,7 @@ public class CBurning : ThingComponent
                                 var opacity = Utils.Map(other.IgnitionAmount, 0, Globals.IGNITION_MAX, 0.33f, 1f, EasingType.QuadIn);
                                 var shakeAmount = Utils.Map(other.IgnitionAmount, 0, Globals.IGNITION_MAX, 0.1f, 1f, EasingType.Linear);
 
-                                other.AddFloater(Globals.Icon(IconType.Burning), time, startOffset, endOffset, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.025f, scale: scale, opacity: opacity, shakeAmount: shakeAmount);
+                                other.AddFloater(Globals.Icon(IconType.Fire), time, startOffset, endOffset, height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.QuadOut, fadeInTime: 0.025f, scale: scale, opacity: opacity, shakeAmount: shakeAmount);
                                 hasMadeFloater = true;
                             }
                         }
@@ -192,7 +192,7 @@ public class CBurning : ThingComponent
         if (Thing is Smiley && Thing.GetComponent<CIconPriority>(out var component))
             ((CIconPriority)component).RemoveIconPriority(IconId);
 
-        Thing.RemoveFloater(Globals.Icon(IconType.Burning));
+        Thing.RemoveFloater(Globals.Icon(IconType.Fire));
 
         if(Thing.ContainingGridManager != null)
             Thing.ContainingGridManager.ThingFloaterCounter++;
