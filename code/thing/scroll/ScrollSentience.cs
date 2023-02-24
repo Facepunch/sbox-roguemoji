@@ -28,7 +28,7 @@ public partial class ScrollSentience : Scroll
     {
         base.Use(user, gridType, targetGridPos);
 
-        var thing = user.ContainingGridManager.GetThingsAt(targetGridPos).Where(x => x.Brain == null).Where(x => ScrollSentience.CanGainSentience(x)).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+        var thing = user.ContainingGridManager.GetThingsAt(targetGridPos).WithAll(ThingFlags.Selectable).Where(x => x.Brain == null).Where(x => ScrollSentience.CanGainSentience(x)).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 
         if(thing != null)
         {

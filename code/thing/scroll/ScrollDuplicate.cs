@@ -30,7 +30,7 @@ public partial class ScrollDuplicate : Scroll
         if (user is Smiley && user.GetComponent<CIconPriority>(out var component))
             ((CIconPriority)component).AddIconPriority("🤗", (int)PlayerIconPriority.UseScroll, 1.0f);
 
-        var targetThing = user.ContainingGridManager.GetThingsAt(targetGridPos).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+        var targetThing = user.ContainingGridManager.GetThingsAt(targetGridPos).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
         if (targetThing == null)
         {
             Destroy();

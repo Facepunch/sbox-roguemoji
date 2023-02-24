@@ -44,7 +44,7 @@ public partial class Ghost : Thing
     {
         DisplayIcon = "👻";
         IconDepth = (int)IconDepthLevel.Ghost;
-        Flags = ThingFlags.Selectable | ThingFlags.CanWieldThings | ThingFlags.DoesntBumpThings;
+        Flags = ThingFlags.Selectable | ThingFlags.CanWieldThings | ThingFlags.DoesntBumpThings | ThingFlags.CantBePushed;
         //ActionDelay = TimeSinceAction = 0.5f;
         //IsActionReady = true;
         Faction = FactionType.Ghost;

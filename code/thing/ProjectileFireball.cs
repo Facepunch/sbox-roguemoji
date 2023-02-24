@@ -23,9 +23,9 @@ public partial class ProjectileFireball : Thing
         Destroy();
     }
 
-    public override void OnMovedOntoBy(Thing thing)
+    public override void OnMovedOntoBy(Thing thing, IntVector fromGridPos)
     {
-        base.OnMovedOntoBy(thing);
+        base.OnMovedOntoBy(thing, fromGridPos);
         Destroy();
     }
 

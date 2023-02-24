@@ -479,7 +479,7 @@ public partial class RoguemojiGame : GameManager
         thing.CurrentLevelId = levelId;
 
         gridManager.GetRandomEmptyGridPos(out var gridPos);
-        thing.SetGridPos(gridPos);
+        thing.SetGridPos(gridPos, setLastGridPosSame: true);
 
         if(thing.Brain is RoguemojiPlayer player)
         {

@@ -92,10 +92,9 @@ public partial class GridManager : Entity
         Game.AssertServer();
 
         var thing = TypeLibrary.GetType(typeof(T)).Create<T>();
+        thing.CurrentLevelId = LevelId;
         AddThing(thing);
-
-        thing.SetGridPos(gridPos);
-		thing.CurrentLevelId = LevelId;
+        thing.SetGridPos(gridPos, setLastGridPosSame: true);
 
 		thing.OnSpawned();
 
@@ -110,11 +109,10 @@ public partial class GridManager : Entity
         Game.AssertServer();
 
         var thing = TypeLibrary.Create<Thing>(type.TargetType);
-        AddThing(thing);
-
-        thing.SetGridPos(gridPos);
         thing.CurrentLevelId = LevelId;
-
+        AddThing(thing);
+        thing.SetGridPos(gridPos, setLastGridPosSame: true);
+        
         thing.OnSpawned();
 
         if ((GridType == GridType.Inventory || GridType == GridType.Equipment) && OwningPlayer != null)

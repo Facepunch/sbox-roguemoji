@@ -16,7 +16,7 @@ public partial class TreeDeciduous : Thing
         Description = "A tall deciduous tree";
         Tooltip = "A tree";
         IconDepth = (int)IconDepthLevel.Solid;
-        Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanWieldThings;
+        Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CanWieldThings | ThingFlags.CantBePushed;
 		PathfindMovementCost = 99f;
         HealthAmount = 400;
         Flammability = 17;

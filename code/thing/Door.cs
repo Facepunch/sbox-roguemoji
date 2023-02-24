@@ -10,7 +10,7 @@ public partial class Door : Thing
         DisplayName = "Door";
         IconDepth = (int)IconDepthLevel.Solid;
         Tooltip = "A door";
-        Flags = ThingFlags.Solid | ThingFlags.Selectable;
+        Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CantBePushed;
         PathfindMovementCost = 15f;
         Flammability = 0;
 

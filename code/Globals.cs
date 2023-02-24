@@ -7,7 +7,7 @@ using Sandbox;
 namespace Roguemoji;
 
 public enum IconType { Blink, Teleport, Fear, Telekinesis, Poison, Blindness, Sleeping, Confusion, Hallucination, Medicine, Mutation, Stunned, UnarmedAttack, Invisible, Polymorph, Displace, Confetti, Identify, Identified, Explosion,
-    SacrificeScroll, Organize, Amnesia, Fire, Sentience, Water, Blood, Oil, Mud, Lava, Heal, Duplicate, Awareness, Shroud,
+    SacrificeScroll, Organize, Amnesia, Fire, Sentience, Water, Blood, Oil, Mud, Lava, Heal, Duplicate, Awareness, Shroud, Wave,
 }
 public enum VerbType { Use, Read }
 public enum HallucinationTextType { Icon, Name, Tooltip, Description }
@@ -87,6 +87,7 @@ public static class Globals
             case IconType.Duplicate: return "👯";
             case IconType.Awareness: return "🧭";
             case IconType.Shroud: return "👤";
+            case IconType.Wave: return "🌊";
         }
 
         return "";

@@ -11,7 +11,7 @@ public partial class Hole : Thing
         Description = "A deep hole leading to another area";
         Tooltip = "A hole";
         IconDepth = (int)IconDepthLevel.Hole;
-        Flags = ThingFlags.Exclusive | ThingFlags.Selectable;
+        Flags = ThingFlags.Exclusive | ThingFlags.Selectable | ThingFlags.CantBePushed;
         PathfindMovementCost = 15f;
         Flammability = 0;
 
@@ -21,17 +21,17 @@ public partial class Hole : Thing
         }
     }
 
-    public override void OnMovedOntoBy(Thing thing)
+    public override void OnMovedOntoBy(Thing thing, IntVector fromGridPos)
     {
-        base.OnMovedOntoBy(thing);
+        base.OnMovedOntoBy(thing, fromGridPos);
 
         if (thing.Brain is RoguemojiPlayer player)
             SwallowThing(thing);
     }
 
-    public override void OnMovedOntoThing(Thing thing)
+    public override void OnMovedOntoThing(Thing thing, IntVector fromGridPos)
     {
-        base.OnMovedOntoThing(thing);
+        base.OnMovedOntoThing(thing, fromGridPos);
 
         if (thing.Brain is RoguemojiPlayer player)
             SwallowThing(thing);

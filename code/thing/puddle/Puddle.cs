@@ -16,6 +16,6 @@ public partial class Puddle : Thing
 	{
         IconDepth = (int)IconDepthLevel.Normal;
         ShouldUpdate = true;
-        Flags = ThingFlags.Selectable | ThingFlags.Puddle;
+        Flags = ThingFlags.Selectable | ThingFlags.Puddle | ThingFlags.CantBePushed;
     }
 }

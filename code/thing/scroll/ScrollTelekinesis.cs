@@ -27,7 +27,7 @@ public partial class ScrollTelekinesis : Scroll
     {
         base.Use(user, gridType, targetGridPos);
 
-        var targetThing = user.ContainingGridManager.GetThingsAt(targetGridPos).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
+        var targetThing = user.ContainingGridManager.GetThingsAt(targetGridPos).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
         if (targetThing == null || targetThing == user)
         {
             user.ContainingGridManager.AddFloater($"{Globals.Icon(IconType.Telekinesis)}", targetGridPos, 0.5f, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.1f);

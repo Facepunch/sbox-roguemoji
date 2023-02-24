@@ -1,0 +1,13 @@
+{
+  "UI": true,
+  "Volume": "1.00,1.00,0",
+  "Pitch": "0.95,1.05,1",
+  "Decibels": 70,
+  "SelectionMode": "Random",
+  "Sounds": [
+    "sounds/tidal_wave_1.vsnd",
+    "sounds/tidal_wave_2.vsnd"
+  ],
+  "MaximumDistance": 1143.9335,
+  "MinimumDistance": 57.196674
+}

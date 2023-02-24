@@ -37,7 +37,7 @@ public partial class ScrollTeleport : Scroll
             if(showStartFloater)
                 thing.ContainingGridManager.AddFloater(Globals.Icon(IconType.Teleport), targetGridPos, 0.8f, new Vector2(0, -3f), new Vector2(0, -4f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.1f);
 
-            thing.SetGridPos(targetGridPos);
+            thing.SetGridPos(targetGridPos, setLastGridPosSame: true);
             thing.AddFloater(Globals.Icon(IconType.Teleport), 1.1f, new Vector2(0, -3f), new Vector2(0, -12f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.2f);
 
             if (thing.Brain is RoguemojiPlayer player)

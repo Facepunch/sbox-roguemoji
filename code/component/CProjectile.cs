@@ -74,9 +74,12 @@ public class CProjectile : ThingComponent
             Remove();
     }
 
-    public override void OnMovedOntoBy(Thing thing)
+    public override void OnMovedOntoBy(Thing thing, IntVector fromGridPos)
     {
-        if(ShouldHit && TimeElapsed > 0f && thing.HasFlag(ThingFlags.Solid))
+        if (!ShouldHit)
+            return;
+
+        if(TimeElapsed > 0f && thing.HasFlag(ThingFlags.Solid))
             Thing.HitOther(thing, Direction);
 
         Remove();

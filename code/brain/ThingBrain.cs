@@ -33,7 +33,7 @@ public partial class ThingBrain : Entity
 
     public virtual void OnTakeDamageFrom(Thing thing) { }
     public virtual void OnHurt(int amount) { }
-    public virtual void OnChangedGridPos() { }
+    public virtual void OnChangedGridPos(IntVector fromGridPos) { }
     public virtual void OnMove(Direction direction) { }
     public virtual void OnChangedStat(StatType statType, int changeCurrent, int changeMin, int changeMax) { }
     public virtual void OnWieldThing(Thing thing) { }

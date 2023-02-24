@@ -14,6 +14,11 @@ public partial class Thing : Entity
         Thing soundThingLocation = GetSoundThingLocation();
         Thing soundThingSource = GetSoundThingSource();
         var level = RoguemojiGame.Instance.GetLevel(soundThingLocation.CurrentLevelId);
+
+        if(level == null)
+        {
+            Log.Info($"PlaySfx - level == null - this: {this} ThingOwningThis: {ThingOwningThis} this.CurrentLevelId: {CurrentLevelId}");
+        }
         
         GetSound(actionType, level.SurfaceType, out string sfxName, out int loudness);
         if (!string.IsNullOrEmpty(sfxName))

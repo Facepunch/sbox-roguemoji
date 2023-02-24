@@ -58,15 +58,15 @@ public partial class PuddleLava : Puddle
         }
     }
 
-    public override void OnMovedOntoBy(Thing thing)
+    public override void OnMovedOntoBy(Thing thing, IntVector fromGridPos)
     {
-        base.OnMovedOntoBy(thing);
+        base.OnMovedOntoBy(thing, fromGridPos);
         IgniteThing(thing);
     }
 
-    public override void OnMovedOntoThing(Thing thing)
+    public override void OnMovedOntoThing(Thing thing, IntVector fromGridPos)
     {
-        base.OnMovedOntoThing(thing);
+        base.OnMovedOntoThing(thing, fromGridPos);
         IgniteThing(thing);
     }
 

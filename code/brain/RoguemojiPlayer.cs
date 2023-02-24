@@ -81,9 +81,9 @@ public partial class RoguemojiPlayer : ThingBrain
         ResetPotionKnowledge();
 
         // -----------------
-        //foreach (int i in Enum.GetValues(typeof(ScrollType)))
-        //    if(!IdentifiedScrollTypes.Contains((ScrollType)i))
-        //        IdentifiedScrollTypes.Add((ScrollType)i);
+        foreach (int i in Enum.GetValues(typeof(ScrollType)))
+            if (!IdentifiedScrollTypes.Contains((ScrollType)i))
+                IdentifiedScrollTypes.Add((ScrollType)i);
 
         foreach (int i in Enum.GetValues(typeof(PotionType)))
             if (!IdentifiedPotionTypes.Contains((PotionType)i))
@@ -159,7 +159,7 @@ public partial class RoguemojiPlayer : ThingBrain
         //InventoryGridManager.SpawnThing<ScrollFireball>(gridPos);
         //return;
 
-        int rand = Game.Random.Int(0, 49);
+        int rand = Game.Random.Int(0, 50);
         switch (rand)
         {
             //case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -223,6 +223,7 @@ public partial class RoguemojiPlayer : ThingBrain
             case 47: InventoryGridManager.SpawnThing<ScrollDuplicate>(gridPos); break;
             case 48: InventoryGridManager.SpawnThing<ScrollAwareness>(gridPos); break;
             case 49: InventoryGridManager.SpawnThing<ScrollShroud>(gridPos); break;
+            case 50: InventoryGridManager.SpawnThing<ScrollTidalWave>(gridPos); break;
         }
     }
 
@@ -778,7 +779,7 @@ public partial class RoguemojiPlayer : ThingBrain
         IntVector sourceGridPos = thing.GridPos;
 
         targetGridManager.AddThing(thing);
-        thing.SetGridPos(targetGridPos);
+        thing.SetGridPos(targetGridPos, setLastGridPosSame: true);
 
         if (existingInvEquipItem != null)
         {
@@ -1273,9 +1274,9 @@ public partial class RoguemojiPlayer : ThingBrain
         IsAiming = false;
     }
 
-    public override void OnChangedGridPos()
+    public override void OnChangedGridPos(IntVector fromGridPos)
     {
-        base.OnChangedGridPos();
+        base.OnChangedGridPos(fromGridPos);
 
         RefreshVisibility();
         ControlledThing.ContainingGridManager.PlayerChangedGridPos(this);

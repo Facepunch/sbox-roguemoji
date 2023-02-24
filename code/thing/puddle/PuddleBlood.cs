@@ -38,16 +38,16 @@ public partial class PuddleBlood : Puddle
         }
     }
 
-    public override void OnMovedOntoBy(Thing thing)
+    public override void OnMovedOntoBy(Thing thing, IntVector fromGridPos)
     {
-        base.OnMovedOntoBy(thing);
+        base.OnMovedOntoBy(thing, fromGridPos);
 
         PuddleWater.DouseFire(thing);
     }
 
-    public override void OnMovedOntoThing(Thing thing)
+    public override void OnMovedOntoThing(Thing thing, IntVector fromGridPos)
     {
-        base.OnMovedOntoThing(thing);
+        base.OnMovedOntoThing(thing, fromGridPos);
 
         PuddleWater.DouseFire(thing);
     }

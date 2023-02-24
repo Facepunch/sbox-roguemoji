@@ -112,6 +112,11 @@ public static class Utils
         return new Vector2(MathF.Cos(rads), MathF.Sin(rads));
     }
 
+    public static Vector2 GetPerpendicularVector(Vector2 vec)
+    {
+        return new Vector2(-vec.y, vec.x);
+    }
+
     public static int GetDistance(int x, int y)
     {
         return (int)Math.Round(Math.Sqrt(x * x + y * y));

@@ -101,15 +101,18 @@ public partial class Thing : Entity
         foreach (var component in ThingComponents) { component.Value.OnBumpedOutOfBounds(direction); }
         Brain?.OnBumpedOutOfBounds(direction);
     }
-    public virtual void OnMovedOntoThing(Thing thing) { foreach (var component in ThingComponents) { component.Value.OnMovedOntoThing(thing); } }
-    public virtual void OnMovedOntoBy(Thing thing) 
-    {
-        for (int i = ThingComponents.Count - 1; i >= 0; i--) { ThingComponents.ElementAt(i).Value.OnMovedOntoBy(thing); }
-    }
-    public virtual void OnChangedGridPos() 
+    public virtual void OnMovedOntoThing(Thing thing, IntVector fromGridPos) 
     { 
-        foreach (var component in ThingComponents) { component.Value.OnChangedGridPos(); }
-        Brain?.OnChangedGridPos();
+        foreach (var component in ThingComponents) { component.Value.OnMovedOntoThing(thing, fromGridPos); } 
+    }
+    public virtual void OnMovedOntoBy(Thing thing, IntVector fromGridPos) 
+    {
+        for (int i = ThingComponents.Count - 1; i >= 0; i--) { ThingComponents.ElementAt(i).Value.OnMovedOntoBy(thing, fromGridPos); }
+    }
+    public virtual void OnChangedGridPos(IntVector fromGridPos) 
+    { 
+        foreach (var component in ThingComponents) { component.Value.OnChangedGridPos(fromGridPos); }
+        Brain?.OnChangedGridPos(fromGridPos);
     }
     public virtual void OnMove(Direction direction)
     {

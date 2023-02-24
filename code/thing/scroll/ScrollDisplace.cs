@@ -28,7 +28,7 @@ public partial class ScrollDisplace : Scroll
     {
         base.Use(user, gridType, targetGridPos);
 
-        var things = user.ContainingGridManager.GetThingsAt(targetGridPos).ToList();
+        var things = user.ContainingGridManager.GetThingsAt(targetGridPos).WithAll(ThingFlags.Selectable).ToList();
         foreach(var thing in things)
             ScrollTeleport.TeleportThing(thing, showStartFloater: false);
 

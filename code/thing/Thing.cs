@@ -22,6 +22,7 @@ public enum ThingFlags
     DoesntBumpThings = (1 << 10),
     Puddle = (1 << 11),
     CanGainMutations = (1 << 12),
+    CantBePushed = (1 << 13),
 }
 
 public enum FactionType { Neutral, Player, Enemy, Ghost, }
@@ -43,6 +44,7 @@ public partial class Thing : Entity
     public bool HasBrain => Brain != null;
 
     [Net] public IntVector GridPos { get; protected set; }
+    public IntVector LastGridPos { get; protected set; }
     [Net] public GridType ContainingGridType { get; set; }
     [Net] public GridManager ContainingGridManager { get; set; }
 
@@ -231,6 +233,11 @@ public partial class Thing : Entity
 
     public virtual bool TryMove(Direction direction, out bool switchedLevel, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
     {
+        if(ContainingGridType == GridType.None)
+        {
+            Log.Info($"TryMove - ContainingGridType == GridType.None - {DisplayIcon}");
+        }
+
         Sandbox.Diagnostics.Assert.True(ContainingGridType != GridType.None);
 
         switchedLevel = false;
@@ -445,7 +452,7 @@ public partial class Thing : Entity
         Remove();
     }
 
-    public virtual void SetGridPos(IntVector gridPos)
+    public virtual void SetGridPos(IntVector gridPos, bool setLastGridPosSame = false)
     {
         Sandbox.Diagnostics.Assert.True(ContainingGridManager.IsGridPosInBounds(gridPos));
 
@@ -456,6 +463,8 @@ public partial class Thing : Entity
             return;
 
         ContainingGridManager.SetGridPos(this, gridPos);
+        LastGridPos = setLastGridPosSame ? gridPos : GridPos;
+        var lastGridPos = LastGridPos;
         GridPos = gridPos;
 
         if (ContainingGridManager.GridType == GridType.Inventory || ContainingGridManager.GridType == GridType.Equipment)
@@ -463,7 +472,7 @@ public partial class Thing : Entity
         else
             RefreshGridPanelClient();
 
-        OnChangedGridPos();
+        OnChangedGridPos(fromGridPos: lastGridPos);
 
         var existingThings = ContainingGridManager.GetThingsAt(gridPos);
         for (int i = existingThings.Count() - 1; i >= 0; i--)
@@ -472,8 +481,8 @@ public partial class Thing : Entity
             if (thing == this)
                 continue;
 
-            OnMovedOntoThing(thing);
-            thing.OnMovedOntoBy(this);
+            OnMovedOntoThing(thing, fromGridPos: lastGridPos);
+            thing.OnMovedOntoBy(this, fromGridPos: lastGridPos);
         }
     }
 
@@ -525,21 +534,25 @@ public partial class Thing : Entity
         IconScale = scale;
     }
 
+    // Client-only
     public void SetMoveOffset(Vector2 moveOffset)
     {
         MoveOffset = moveOffset;
     }
 
+    // Client-only
     public void SetShakeOffset(Vector2 shakeOffset)
     {
         ShakeOffset = shakeOffset;
     }
 
+    // Client-only
     public void SetRotation(float rotationDegrees)
     {
         RotationDegrees = rotationDegrees;
     }
 
+    // Client-only
     public void SetScale(float scale)
     {
         IconScale = scale;

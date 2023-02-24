@@ -13,7 +13,7 @@ public partial class TreeEvergreen : Thing
         Description = "A tall evergreen tree";
         Tooltip = "A tree";
         IconDepth = (int)IconDepthLevel.Solid;
-        Flags = ThingFlags.Solid | ThingFlags.Selectable;
+        Flags = ThingFlags.Solid | ThingFlags.Selectable | ThingFlags.CantBePushed;
         PathfindMovementCost = 99f;
         HealthAmount = 400;
         Flammability = 17;
