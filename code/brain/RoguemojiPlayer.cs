@@ -81,9 +81,9 @@ public partial class RoguemojiPlayer : ThingBrain
         ResetPotionKnowledge();
 
         // -----------------
-        foreach (int i in Enum.GetValues(typeof(ScrollType)))
-            if(!IdentifiedScrollTypes.Contains((ScrollType)i))
-                IdentifiedScrollTypes.Add((ScrollType)i);
+        //foreach (int i in Enum.GetValues(typeof(ScrollType)))
+        //    if(!IdentifiedScrollTypes.Contains((ScrollType)i))
+        //        IdentifiedScrollTypes.Add((ScrollType)i);
 
         foreach (int i in Enum.GetValues(typeof(PotionType)))
             if (!IdentifiedPotionTypes.Contains((PotionType)i))

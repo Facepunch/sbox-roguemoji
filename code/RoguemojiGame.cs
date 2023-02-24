@@ -3,6 +3,7 @@ using Sandbox;
 using Sandbox.UI;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Roguemoji;
 
@@ -77,70 +78,35 @@ public partial class RoguemojiGame : GameManager
 
             Players = new List<RoguemojiPlayer>();
 
-            UnidentifiedScrollSymbols = new List<string>() { "🈁", "🈂️", "🈷️", "🈯️", "🈹", "🈳", "🈚️", "🈸", "🈴", }; // 🈶 🈺 🈵
-            UnidentifiedScrollSymbols.Shuffle();
-            UnidentifiedScrollNames = new List<string>() { "WYZ'LOK", "MYR'KLYN", "PHYZGRYF", "XORPHYX", "GRYFAD", "RYXORK", "ORAXUM", "ZORKOZAL", "KLYNX", "QYN", "ARPHYNY", "LUZ'ROKLUM", "YNDRYNY", "PYG'JYG", "BRAX'PHY", "FEN'XOR", "CIRXYX" };
-            UnidentifiedScrollNames.Shuffle();
-
-            UnidentifiedPotionSymbols = new List<string>() { "🉑", "🔘", "🧿", "🌐", "🌓", "🌑", "🌕️", "🌙", "©️", "®️", "㊗️", "㊙️", "⭕️", "Ⓜ️", "🍥", "🉐", }; // 🌒🌔🌖🌘🌗 🔺🔻 ♠️♥️♦️♣️🎱 💿️📀 🌍️🌎️🌏️ 🌚🌝🌞 🔅🔆 ❥
-            UnidentifiedPotionSymbols.Shuffle();
-            UnidentifiedPotionNames = new List<string>() { "cloudy", "misty", "murky", "sparkling", "fizzy", "bubbly", "smoky", "congealed", "chalky", "radiant", "milky", "thick", "pasty", "glossy", "dull", "dusty", "syrupy", "pungent", 
-                "viscous", "sludgy", "pale", "filmy", "rusty", "chunky", "creamy", "hazy", "silky", "foggy", "pulpy", "dark", "oily", "opaque", "shiny", "frothy", "wavy" };
-            UnidentifiedPotionNames.Shuffle();
-
-            //var levelData = FileSystem.Mounted.ReadJson<LevelData>("levels/Forest1.json");
-            //Log.Info($"{levelData.Name} {levelData.Width} {levelData.Height} {levelData.SurfaceType}");
-
-            //foreach (var thing in levelData.Things)
-            //{
-            //    var list = thing.Value;
-            //    foreach(var t2 in list)
-            //    {
-            //        Log.Info(thing.Key + ": " + t2);
-            //    }
-            //}
-
-            //foreach (var thing in levelData.RandomThings)
-            //{
-            //    Log.Info(thing.Key + ": " + thing.Value);
-            //}
+            ResetUnidentifiedScrolls();
+            ResetUnidentifiedPotions();
         }
 
 		if (Game.IsClient)
 		{
 			Hud = new Hud();
 			_panelsToFlicker = new List<PanelFlickerData>();
-
-            //var levelData = new LevelData()
-            //{
-            //    Name = "Test Level",
-            //    Width = 21,
-            //    Height = 17,
-            //    SurfaceType = SurfaceType.Grass,
-            //    Things = new Dictionary<string, List<IntVector>>()
-            //    {
-            //        {
-            //            "Trumpet",
-            //            new List<IntVector>()
-            //            {
-            //                new IntVector(10, 10),
-            //                new IntVector(10, 10)
-            //            }
-            //        },
-            //        {
-            //            "TreeDeciduous",
-            //            new List<IntVector>()
-            //            {
-            //                new IntVector(2, 1)
-            //            }
-            //        },
-            //    },
-            //    RandomThings = new Dictionary<string, int>() { { "Bone", 5 }, { "Squirrel", 3 } },
-            //};
-
-            //FileSystem.Data.WriteJson("test_level_data.json", levelData);
         }
 	}
+
+    public void ResetUnidentifiedScrolls()
+    {
+        UnidentifiedScrollSymbols = new List<string>() { "🈁", "🈂️", "🈷️", "🈯️", "🈹", "🈳", "🈚️", "🈸", "🈴", "🔠", "🔢", "🔣", "🔤", "🈶", "🈺", "🈵", "🆎", "🅰️", "🅱️", "🆑", "🅾️", "🅿️", "🆖", "🆚", 
+            "➿", "🚾", "⏺️", "♈️", "♉️", "♊️", "♋️", "♌️", "♍️", "♎️", "♏️", "♐️", "♑️", "♒️", "♓️", "⛎", "☦️", "🕉️", "☸️", "☯️", "🕎", };
+        UnidentifiedScrollSymbols.Shuffle();
+
+        UnidentifiedScrollNames = new List<string>();
+        GenerateUnidentifiedScrollNames();
+    }
+    
+    public void ResetUnidentifiedPotions()
+    {
+        UnidentifiedPotionSymbols = new List<string>() { "🉑", "🔘", "🧿", "🌐", "🌓", "🌑", "🌕️", "🌙", "©️", "®️", "㊗️", "㊙️", "⭕️", "Ⓜ️", "🍥", "🉐", }; // 🌒🌔🌖🌘🌗 🔺🔻 ♠️♥️♦️♣️🎱 💿️📀 🌍️🌎️🌏️ 🌚🌝🌞 🔅🔆 ❥
+        UnidentifiedPotionSymbols.Shuffle();
+        UnidentifiedPotionNames = new List<string>() { "cloudy", "misty", "murky", "sparkling", "fizzy", "bubbly", "smoky", "congealed", "chalky", "radiant", "milky", "thick", "pasty", "glossy", "dull", "dusty", "syrupy", "pungent",
+                "viscous", "sludgy", "pale", "filmy", "rusty", "chunky", "creamy", "hazy", "silky", "foggy", "pulpy", "dark", "oily", "opaque", "shiny", "frothy", "wavy" };
+        UnidentifiedPotionNames.Shuffle();
+    }
 
     public string GetUnidentifiedScrollIcon(ScrollType scrollType) { return UnidentifiedScrollSymbols[(int)scrollType]; }
     public string GetUnidentifiedScrollName(ScrollType scrollType) { return UnidentifiedScrollNames[(int)scrollType]; }
@@ -454,10 +420,8 @@ public partial class RoguemojiGame : GameManager
 
 	public void Restart()
 	{
-        UnidentifiedScrollSymbols.Shuffle();
-        UnidentifiedScrollNames.Shuffle();
-        UnidentifiedPotionSymbols.Shuffle();
-        UnidentifiedPotionNames.Shuffle();
+        ResetUnidentifiedScrolls();
+        ResetUnidentifiedPotions();
 
         foreach (var pair in Levels)
 			pair.Value.Restart();
@@ -603,6 +567,61 @@ public partial class RoguemojiGame : GameManager
     {
         var player = ConsoleSystem.Caller.Pawn as RoguemojiPlayer;
         player.IdentifyPotion(potionType);
+    }
+
+    void GenerateUnidentifiedScrollNames()
+    {
+        UnidentifiedScrollNames.Clear();
+        int numScrollTypes = Enum.GetValues(typeof(ScrollType)).Length;
+        for (int i = 0; i < numScrollTypes; i++)
+        {
+            UnidentifiedScrollNames.Add(GenerateUnidentifiedScrollName());
+        }
+    }
+
+    string GenerateUnidentifiedScrollName()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        int length = Game.Random.Int(3, 7);
+        bool isConsonant = Game.Random.Int(0, 2) == 0;
+
+        for (int i = 0; i < length; i++)
+        {
+            char c = isConsonant ? GetRandomConsonant() : GetRandomVowel();
+            sb.Append(c);
+
+            string validDoubleChars = "BẞÐEFĶŁMꞤOPRSTXZƵΩӘØƎƩꝆƧϷꝐ";
+            if (Game.Random.Int(0, 8) == 0 && validDoubleChars.Contains(c) && i > 0 && i < length - 1)
+            {
+                sb.Append(c);
+            }
+            else if(Game.Random.Int(0, 8) == 0 && i < length - 1)
+            {
+                if (c == 'C' || c == 'Ͼ' || c == 'T')
+                    sb.Append(("HЋ")[Game.Random.Int(0, 1)]);
+                else if (c == 'Q')
+                    sb.Append(("UƱ")[Game.Random.Int(0, 1)]);
+                if (c == 'B' || c == 'ẞ' || c == 'Ð' || c == 'F' || c == 'G' || c == 'P' || c == 'Ꝑ' || c == 'Ꝁ')
+                    sb.Append(("RLꝆY")[Game.Random.Int(0, 3)]);
+            }
+
+            isConsonant = !isConsonant;
+        }
+
+        return sb.ToString();
+    }
+
+    char GetRandomConsonant() 
+    {
+        string consonants = "BẞCÐFGЋJĶŁMꞤPQRSTVWXYZƵΩӜꝀꝆƧϷꝐϾ";
+        return consonants[Game.Random.Int(0, consonants.Length - 1)]; 
+    }
+
+    char GetRandomVowel() 
+    {
+        string vowels = "AĀEIOԱӘØƎƩƱꝎꝘ";
+        return vowels[Game.Random.Int(0, vowels.Length - 1)]; 
     }
 
     public void DebugGridLine(IntVector a, IntVector b, Color color, float time, GridType gridTypeA = GridType.Arena, GridType gridTypeB = GridType.Arena)

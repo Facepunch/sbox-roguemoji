@@ -15,7 +15,7 @@ public enum PlayerIconPriority { Default, Move, ExitLevel, EnterLevel, AcademicC
     Hallucinating, Sleeping, UseScroll, GainMutation, MudSad, BloodWet, WaterWet, EatReaction, NutAllergyReaction, TakeDamage, Stunned, RugbyCharge, Dead }
 public enum IconDepthLevel { Puddle = 0, Hole = 1, Normal = 2, Solid = 5, Player = 6, Ghost = 7, Projectile = 8, Effect = 9 }
 public enum SurfaceType { None, Grass, Dirt, Puddle, DeepWater, Concrete, }
-public enum SoundActionType { Move, HitOther, GetHit, Drop, Throw, PickUp, PickUpInventory, PutDownInventory, Wield, Use, Destroyed }
+public enum SoundActionType { Move, HitOther, GetHit, Drop, Throw, PickUp, DragInventory, DropInventory, Wield, Use, Destroyed }
 public enum ThingSoundProfileType { Default, SmallCreature, MediumCreature, LargeCreature, Clothing, Scroll, Potion, Book, SmallLightObject, SmallHeavyObject, }
 
 public struct HallucinationData
