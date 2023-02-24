@@ -249,6 +249,8 @@ public partial class RoguemojiGame : GameManager
 
         player.RecenterCamera();
         player.RefreshVisibility();
+
+        player.ControlledThing.AddComponent<COrganizeDebug>();
     }
 
 	public override void ClientDisconnect(IClient client, NetworkDisconnectionReason reason)
@@ -486,6 +488,7 @@ public partial class RoguemojiGame : GameManager
 
             //player.RecenterCamera();
             //player.RefreshVisibility();
+            player.ControlledThing.AddComponent<COrganizeDebug>();
         }
 
         Log.Info($"# Entities: {Entity.All.Count()}");

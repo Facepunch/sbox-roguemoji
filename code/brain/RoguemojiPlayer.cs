@@ -159,7 +159,7 @@ public partial class RoguemojiPlayer : ThingBrain
         //InventoryGridManager.SpawnThing<ScrollFireball>(gridPos);
         //return;
 
-        int rand = Game.Random.Int(0, 46);
+        int rand = Game.Random.Int(0, 47);
         switch (rand)
         {
             //case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -220,6 +220,7 @@ public partial class RoguemojiPlayer : ThingBrain
             case 44: InventoryGridManager.SpawnThing<BowAndArrow>(gridPos); break;
             case 45: InventoryGridManager.SpawnThing<BookFireball>(gridPos); break;
             case 46: InventoryGridManager.SpawnThing<ScrollHeal>(gridPos); break;
+            case 47: InventoryGridManager.SpawnThing<ScrollDuplicate>(gridPos); break;
         }
     }
 
@@ -865,7 +866,7 @@ public partial class RoguemojiPlayer : ThingBrain
             acting.PerformedAction();
     }
 
-    public void SwapGridThingPos(Thing thing, GridType gridType, IntVector targetGridPos)
+    public void SwapGridThingPos(Thing thing, GridType gridType, IntVector targetGridPos, bool shouldAnimate = true)
     {
         if (gridType == GridType.Arena)
             return;
@@ -876,14 +877,18 @@ public partial class RoguemojiPlayer : ThingBrain
 
         gridManager.DeregisterGridPos(thing, thing.GridPos);
         thing.SetGridPos(targetGridPos);
-        thing.VfxFly(sourceGridPos, 0.15f, heightY: 0f, progressEasingType: EasingType.QuadInOut);
+
+        if(shouldAnimate)
+            thing.VfxFly(sourceGridPos, 0.15f, heightY: 0f, progressEasingType: EasingType.QuadInOut);
 
         if (targetThing != null)
         {
             var oldGridPos = targetThing.GridPos;
             gridManager.DeregisterGridPos(targetThing, oldGridPos);
             targetThing.SetGridPos(sourceGridPos);
-            targetThing.VfxFly(oldGridPos, 0.2f, heightY: 0f, progressEasingType: EasingType.QuadInOut);
+
+            if(shouldAnimate)
+                targetThing.VfxFly(oldGridPos, 0.2f, heightY: 0f, progressEasingType: EasingType.QuadInOut);
         }
 
         RoguemojiGame.Instance.RefreshGridPanelClient(To.Single(this), gridType);
@@ -1302,6 +1307,7 @@ public partial class RoguemojiPlayer : ThingBrain
     public void ResetScrollKnowledge()
     {
         IdentifiedScrollTypes.Clear();
+        IdentifiedScrollTypes.Add(ScrollType.Identify);
     }
 
     public void IdentifyPotion(PotionType potionType)

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public enum ScrollType { Blink, Teleport, Fear, Telekinesis, Displace, Confetti, Identify, Organize, Sentience, Fireball, Heal, }
+public enum ScrollType { Blink, Teleport, Fear, Telekinesis, Displace, Confetti, Identify, Organize, Sentience, Fireball, Heal, Duplicate, }
 public partial class Scroll : Thing
 {
     [Net] public ScrollType ScrollType { get; protected set; }
@@ -39,6 +39,7 @@ public partial class Scroll : Thing
             case ScrollType.Sentience: return "Sentience";
             case ScrollType.Fireball: return "Fireball";
             case ScrollType.Heal: return "Heal";
+            case ScrollType.Duplicate: return "Duplicate";
         }
 
         return "";
@@ -58,6 +59,7 @@ public partial class Scroll : Thing
             case ScrollType.Sentience: return $"📜{Globals.Icon(IconType.Sentience)}";
             case ScrollType.Fireball: return $"📜{Globals.Icon(IconType.Fire)}";
             case ScrollType.Heal: return $"📜{Globals.Icon(IconType.Heal)}";
+            case ScrollType.Duplicate: return $"📜{Globals.Icon(IconType.Duplicate)}";
         }
 
         return "🧉";

@@ -28,7 +28,7 @@ public partial class ScrollHeal : Scroll
         base.Use(user, gridType, targetGridPos);
 
         if (user is Smiley && user.GetComponent<CIconPriority>(out var component))
-            ((CIconPriority)component).AddIconPriority("😘", (int)PlayerIconPriority.HealOther, 1.0f);
+            ((CIconPriority)component).AddIconPriority("😘", (int)PlayerIconPriority.UseScroll, 1.0f);
 
         var targetThing = user.ContainingGridManager.GetThingsAt(targetGridPos).Where(x => x.HasStat(StatType.Health)).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
         if (targetThing == null)

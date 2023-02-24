@@ -105,7 +105,7 @@ public partial class GridManager : Entity
         return thing;
     }
 
-    public void SpawnThing(TypeDescription type, IntVector gridPos)
+    public Thing SpawnThing(TypeDescription type, IntVector gridPos)
     {
         Game.AssertServer();
 
@@ -119,6 +119,8 @@ public partial class GridManager : Entity
 
         if ((GridType == GridType.Inventory || GridType == GridType.Equipment) && OwningPlayer != null)
             thing.SetOwningThing(OwningPlayer.ControlledThing);
+
+        return thing;
     }
 
     public void AddThing(Thing thing)
