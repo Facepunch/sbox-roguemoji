@@ -159,7 +159,7 @@ public partial class RoguemojiPlayer : ThingBrain
         //InventoryGridManager.SpawnThing<ScrollFireball>(gridPos);
         //return;
 
-        int rand = Game.Random.Int(0, 48);
+        int rand = Game.Random.Int(0, 49);
         switch (rand)
         {
             //case 0: InventoryGridManager.SpawnThing<Leaf>(gridPos); break;
@@ -222,6 +222,7 @@ public partial class RoguemojiPlayer : ThingBrain
             case 46: InventoryGridManager.SpawnThing<ScrollHeal>(gridPos); break;
             case 47: InventoryGridManager.SpawnThing<ScrollDuplicate>(gridPos); break;
             case 48: InventoryGridManager.SpawnThing<ScrollAwareness>(gridPos); break;
+            case 49: InventoryGridManager.SpawnThing<ScrollShroud>(gridPos); break;
         }
     }
 

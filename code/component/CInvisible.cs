@@ -32,14 +32,17 @@ public class CInvisible : ThingComponent
     {
         base.Update(dt);
 
-        TimeElapsed += dt;
-        if(Lifetime > 0f && TimeElapsed > Lifetime)
+        if(Lifetime > 0f)
         {
-            Remove();
-            return;
-        }
+            TimeElapsed += dt;
+            if (TimeElapsed > Lifetime)
+            {
+                Remove();
+                return;
+            }
 
-        Trait.BarPercent = 1f - Utils.Map(TimeElapsed, 0f, Lifetime, 0f, 1f);
+            Trait.BarPercent = 1f - Utils.Map(TimeElapsed, 0f, Lifetime, 0f, 1f);
+        }
     }
 
     public override void OnRemove()

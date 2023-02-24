@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Roguemoji;
 
-public enum ScrollType { Blink, Teleport, Fear, Telekinesis, Displace, Confetti, Identify, Organize, Sentience, Fireball, Heal, Duplicate, Awareness, }
+public enum ScrollType { Blink, Teleport, Fear, Telekinesis, Displace, Confetti, Identify, Organize, Sentience, Fireball, Heal, Duplicate, Awareness, Shroud, }
 public partial class Scroll : Thing
 {
     [Net] public ScrollType ScrollType { get; protected set; }
@@ -41,6 +41,7 @@ public partial class Scroll : Thing
             case ScrollType.Heal: return "Heal";
             case ScrollType.Duplicate: return "Duplicate";
             case ScrollType.Awareness: return "Awareness";
+            case ScrollType.Shroud: return "Shroud";
         }
 
         return "";
@@ -62,9 +63,10 @@ public partial class Scroll : Thing
             case ScrollType.Heal: return $"📜{Globals.Icon(IconType.Heal)}";
             case ScrollType.Duplicate: return $"📜{Globals.Icon(IconType.Duplicate)}";
             case ScrollType.Awareness: return $"📜{Globals.Icon(IconType.Awareness)}";
+            case ScrollType.Shroud: return $"📜{Globals.Icon(IconType.Shroud)}";
         }
 
-        return "🧉";
+        return "📜";
     }
 
     public override bool CanBeUsedBy(Thing user, bool ignoreResources = false, bool shouldLogMessage = false)

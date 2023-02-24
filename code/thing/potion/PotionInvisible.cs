@@ -14,7 +14,7 @@ public partial class PotionInvisible : Potion
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable;
 
         DisplayName = Potion.GetDisplayName(PotionType);
-        Description = "Makes drinker invisible";
+        Description = "Makes things temporarily invisible";
         Tooltip = "An invisibility potion";
         
         SetTattoo(Globals.Icon(IconType.Invisible));
