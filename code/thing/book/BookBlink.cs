@@ -14,9 +14,10 @@ public partial class BookBlink : Book
 
     public BookBlink()
     {
-        DisplayName = "Book of Blink";
-        Description = "Teleport to a target place nearby";
-        Tooltip = "A book of Blink";
+        SpellName = "Blink";
+        DisplayName = $"Book of {SpellName}";
+        Description = $"Teleport to a target place nearby";
+        Tooltip = $"A book of {SpellName}";
         Flags = ThingFlags.Selectable | ThingFlags.CanBePickedUp | ThingFlags.Useable | ThingFlags.UseRequiresAiming | ThingFlags.AimTypeTargetCell;
 
         SetTattoo(Globals.Icon(IconType.Blink), scale: 0.5f, offset: new Vector2(0.5f, -4f), offsetWielded: new Vector2(0f, 0f), offsetInfo: new Vector2(1f, -1f), offsetCharWielded: new Vector2(2.5f, -6f), offsetInfoWielded: new Vector2(-1f, -2f));
@@ -27,7 +28,7 @@ public partial class BookBlink : Book
             ReqInt = 5;
             CooldownTime = 3f;
 
-            AddTrait(AbilityName, "📖", $"Spend {GetStatIcon(StatType.Mana)} to cast the spell Blink", offset: new Vector2(0f, -2f), tattooIcon: Globals.Icon(IconType.Blink), tattooScale: 0.7f, tattooOffset: new Vector2(0f, -5f), isAbility: true);
+            AddTrait(AbilityName, "📖", $"Spend {GetStatIcon(StatType.Mana)} to cast the spell {SpellName}", offset: new Vector2(0f, -2f), tattooIcon: Globals.Icon(IconType.Blink), tattooScale: 0.7f, tattooOffset: new Vector2(0f, -5f), isAbility: true);
             AddTrait("", GetStatIcon(StatType.Mana), $"{ManaCost}{GetStatIcon(StatType.Mana)} used to cast spell", offset: new Vector2(0f, -3f), labelText: $"{ManaCost}", labelFontSize: 16, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", GetStatIcon(StatType.Intelligence), Globals.GetStatReqString(StatType.Intelligence, ReqInt, VerbType.Read), offset: new Vector2(0f, -1f), labelText: $"≥{ReqInt}", labelFontSize: 16, labelOffset: new Vector2(0f, 0f), labelColor: new Color(1f, 1f, 1f));
             AddTrait("", "⏳", $"Cooldown time: {CooldownTime}s", offset: new Vector2(0f, -2f), labelText: $"{CooldownTime}", labelFontSize: 16, labelOffset: new Vector2(0f, 1f), labelColor: new Color(1f, 1f, 1f));
@@ -37,6 +38,7 @@ public partial class BookBlink : Book
 
     public override bool CanBeUsedBy(Thing user, bool ignoreResources = false, bool shouldLogMessage = false)
     {
+        // todo: let confused things read, but aim poorly
         if (user.Brain is RoguemojiPlayer p && p.IsConfused)
         {
             if (shouldLogMessage)
@@ -76,25 +78,5 @@ public partial class BookBlink : Book
         StartCooldown(CooldownTime);
 
         base.Use(user, gridType, targetGridPos);
-    }
-
-    public override HashSet<IntVector> GetAimingTargetCellsClient()
-    {
-        Game.AssertClient();
-
-        if (ThingWieldingThis == null)
-            return null;
-
-        int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 1, 10);
-        return Scroll.GetArenaAimingCells(radius, ThingWieldingThis);
-    }
-
-    public override bool IsPotentialAimingTargetCell(IntVector gridPos)
-    {
-        if (ThingWieldingThis == null)
-            return false;
-
-        int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 1, 10);
-        return Scroll.IsPotentialArenaAimingCell(gridPos, radius, ThingWieldingThis);
     }
 }

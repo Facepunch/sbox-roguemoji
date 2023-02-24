@@ -27,6 +27,13 @@ public partial class ScrollFireball : Scroll
     {
         base.Use(user, gridType, targetGridPos);
 
+        ShootFireball(user, targetGridPos);
+
+        Destroy();
+    }
+
+    public static void ShootFireball(Thing user, IntVector targetGridPos)
+    {
         var worldTarget = user.ContainingGridManager.GetWorldPosForGridPos(targetGridPos);
         var worldStart = user.ContainingGridManager.GetWorldPosForGridPos(user.GridPos);
         Vector2 dir = (worldTarget - worldStart).Normal;
@@ -41,8 +48,6 @@ public partial class ScrollFireball : Scroll
         projectile.TotalDistance = 10;
         projectile.Thrower = user;
         projectile.UseDirectionVector(dir);
-
-        Destroy();
     }
 
     public override void GetSound(SoundActionType actionType, SurfaceType surfaceType, out string sfxName, out int loudness)

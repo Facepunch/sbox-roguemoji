@@ -112,7 +112,7 @@ public partial class Scroll : Thing
         if (ThingWieldingThis == null)
             return null;
 
-        int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 3, 12);
+        int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 1, 12);
         return Scroll.GetArenaAimingCells(radius, ThingWieldingThis);
     }
 
@@ -121,7 +121,7 @@ public partial class Scroll : Thing
         if (ThingWieldingThis == null)
             return false;
 
-        int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 3, 12);
+        int radius = Math.Clamp(ThingWieldingThis.GetStatClamped(StatType.Intelligence), 1, 12);
         return Scroll.IsPotentialArenaAimingCell(gridPos, radius, ThingWieldingThis);
     }
 
