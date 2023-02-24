@@ -24,6 +24,7 @@ public partial class ScrollTeleport : Scroll
 
         TeleportThing(user);
 
+        // reveal scroll at destination after teleporting
         RoguemojiGame.Instance.RevealScroll(ScrollType, user.GridPos, user.CurrentLevelId);
 
         Destroy();

@@ -87,6 +87,28 @@ public partial class RoguemojiPlayer : ThingBrain
             SaveSeenData(gridPos);
     }
 
+    [ClientRpc]
+    public void RevealEntireLevelClient()
+    {
+        if (ControlledThing == null)
+            return;
+
+        var level = RoguemojiGame.Instance.GetLevel(ControlledThing.CurrentLevelId);
+        var gridManager = level.GridManager;
+
+        for (int x = 0; x < gridManager.GridWidth; x++)
+        {
+            for (int y = 0; y < gridManager.GridHeight; y++)
+            {
+                var gridPos = new IntVector(x, y);
+                if (VisibleCells.Contains(gridPos))
+                    continue;
+
+                SaveSeenData(gridPos);
+            }
+        }
+    }
+
     void SaveSeenData(IntVector gridPos)
     {
         SeenCells[ControlledThing.CurrentLevelId].Add(gridPos);
