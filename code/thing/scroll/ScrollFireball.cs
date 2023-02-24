@@ -19,7 +19,7 @@ public partial class ScrollFireball : Scroll
 
         if (Game.IsServer)
         {
-            AddTrait("", Thing.GetStatIcon(StatType.Attack), $"Spell damage increased by {GetStatIcon(StatType.Intelligence)}", offset: new Vector2(0f, -1f), tattooIcon: GetStatIcon(StatType.Intelligence), tattooScale: 0.6f, tattooOffset: new Vector2(6f, -8f));
+            AddTrait("", Thing.GetStatIcon(StatType.Attack), $"Spell damage increased by {GetStatIcon(StatType.Intelligence)}", offset: new Vector2(0f, -1f), tattooIcon: GetStatIcon(StatType.Intelligence), tattooScale: 0.6f, tattooOffset: new Vector2(0f, 0f));
         }
     }
 

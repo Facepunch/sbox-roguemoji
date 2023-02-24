@@ -15,6 +15,9 @@ public class MPoisonSpeed : Mutation
 
         Trait = thing.AddTrait("Poison Rush", "🤩", $"Act more quickly while poisoned", offset: Vector2.Zero, tattooIcon: Globals.Icon(IconType.Poison), tattooScale: 0.4f, tattooOffset: new Vector2(-5.5f, -5f));
 
+        if (Thing is Smiley && Thing.GetComponent<CIconPriority>(out var component))
+            ((CIconPriority)component).AddIconPriority("🤩", (int)PlayerIconPriority.GainMutation, 1.5f);
+
         SpeedAmount = 2;
 
         if (Thing.HasComponent<CPoisoned>())

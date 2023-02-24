@@ -11,6 +11,9 @@ public class MAllergicNuts : Mutation
         base.Init(thing);
 
         Trait = thing.AddTrait("Nut Allergy", "🥺", $"Eating nuts will poison you", offset: new Vector2(2f, 2f), tattooIcon: "🌰", tattooScale: 0.6f, tattooOffset: new Vector2(-15f, -15f));
+
+        if (Thing is Smiley && Thing.GetComponent<CIconPriority>(out var component))
+            ((CIconPriority)component).AddIconPriority("🥺", (int)PlayerIconPriority.GainMutation, 1.5f);
     }
 
     public override void OnUseThing(Thing thing)
