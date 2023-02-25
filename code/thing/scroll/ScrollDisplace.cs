@@ -28,6 +28,9 @@ public partial class ScrollDisplace : Scroll
     {
         base.Use(user, gridType, targetGridPos);
 
+        if (user is Smiley && user.GetComponent<CIconPriority>(out var component))
+            ((CIconPriority)component).AddIconPriority("😛", (int)PlayerIconPriority.UseScroll, 1.0f);
+
         var things = user.ContainingGridManager.GetThingsAt(targetGridPos).WithAll(ThingFlags.Selectable).ToList();
         foreach(var thing in things)
             ScrollTeleport.TeleportThing(thing, showStartFloater: false);

@@ -231,7 +231,7 @@ public partial class Thing : Entity
         //    DrawDebugText($"{IgnitionAmount}");
     }
 
-    public virtual bool TryMove(Direction direction, out bool switchedLevel, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
+    public virtual bool TryMove(Direction direction, out bool switchedLevel, out bool actionWasntReady, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
     {
         if(ContainingGridType == GridType.None)
         {
@@ -241,12 +241,34 @@ public partial class Thing : Entity
         Sandbox.Diagnostics.Assert.True(ContainingGridType != GridType.None);
 
         switchedLevel = false;
+        actionWasntReady = false;
 
         if (IsInTransit)
             return false;
 
         if (direction == Direction.None)
             return true;
+
+        if (!dontRequireAction)
+        {
+            CActing acting = null;
+            if (GetComponent<CActing>(out var cActing))
+                acting = (CActing)cActing;
+
+            if (acting != null)
+            {
+                if (!acting.IsActionReady)
+                {
+                    if (shouldQueueAction && HasBrain && Brain is RoguemojiPlayer p)
+                        p.QueueAction(new TryMoveAction(direction));
+
+                    actionWasntReady = true;
+                    return false;
+                }
+
+                acting.PerformedAction();
+            }
+        }
 
         if (HasComponent<CConfused>() && Game.Random.Int(0, 2) == 0)
         {
@@ -290,6 +312,9 @@ public partial class Thing : Entity
 
         if(HasFlag(ThingFlags.Solid))
             PlaySfx(SoundActionType.Move);
+
+        if(HasBrain && Brain is RoguemojiPlayer player)
+            player.RecenterCamera(shouldAnimate: true);
 
         return true;
     }
@@ -472,7 +497,7 @@ public partial class Thing : Entity
         else
             RefreshGridPanelClient();
 
-        OnChangedGridPos(fromGridPos: lastGridPos);
+        OnChangedGridPos();
 
         var existingThings = ContainingGridManager.GetThingsAt(gridPos);
         for (int i = existingThings.Count() - 1; i >= 0; i--)
@@ -481,8 +506,8 @@ public partial class Thing : Entity
             if (thing == this)
                 continue;
 
-            OnMovedOntoThing(thing, fromGridPos: lastGridPos);
-            thing.OnMovedOntoBy(this, fromGridPos: lastGridPos);
+            OnMovedOntoThing(thing);
+            thing.OnMovedOntoBy(this);
         }
     }
 

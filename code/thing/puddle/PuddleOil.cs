@@ -8,13 +8,14 @@ public partial class PuddleOil : Puddle
 	{
 		DisplayIcon = "⚫️";
         DisplayName = "Puddle of Oil";
-        Description = "The ground is covered with flammable oil";
+        Description = "Flammable and slippery";
         Tooltip = "A puddle of oil";
         Flammability = 65;
-        PathfindMovementCost = 1.5f;
+        PathfindMovementCost = 0.1f;
         LiquidType = PotionType.Oil;
     }
 
+    // todo: make things moving on it slide
     // todo: make splashing noise when you move onto it
     // todo: make visible when walking onto this while invisible
 
@@ -30,6 +31,20 @@ public partial class PuddleOil : Puddle
             DisplayIcon = "⬛️";
             IconDepth = (int)IconDepthLevel.Puddle;
             ShouldUpdate = false;
+        }
+    }
+
+    public override void OnMovedOntoBy(Thing thing)
+    {
+        base.OnMovedOntoBy(thing);
+
+        if(!thing.LastGridPos.Equals(GridPos))
+        {
+            var projectile = thing.AddComponent<CProjectile>();
+            projectile.Direction = GridManager.GetDirectionForIntVector(GridPos - thing.LastGridPos);
+            projectile.MoveDelay = 0.15f;
+            projectile.TotalDistance = 1;
+            projectile.Thrower = null;
         }
     }
 }

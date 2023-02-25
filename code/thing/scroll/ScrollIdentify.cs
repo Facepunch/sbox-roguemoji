@@ -29,6 +29,9 @@ public partial class ScrollIdentify : Scroll
         if (player == null)
             return;
 
+        if (user is Smiley && user.GetComponent<CIconPriority>(out var component))
+            ((CIconPriority)component).AddIconPriority("🧐", (int)PlayerIconPriority.UseScroll, 1.0f);
+
         var item = player.InventoryGridManager.GetThingsAt(targetGridPos).FirstOrDefault();
         if (item == null)
             return;

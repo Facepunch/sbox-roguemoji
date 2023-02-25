@@ -39,17 +39,17 @@ public partial class PuddleWater : Puddle
         }
     }
 
-    public override void OnMovedOntoBy(Thing thing, IntVector fromGridPos)
+    public override void OnMovedOntoBy(Thing thing)
     {
-        base.OnMovedOntoBy(thing, fromGridPos);
+        base.OnMovedOntoBy(thing);
 
         // todo: wet component?
         DouseFire(thing);
     }
 
-    public override void OnMovedOntoThing(Thing thing, IntVector fromGridPos)
+    public override void OnMovedOntoThing(Thing thing)
     {
-        base.OnMovedOntoThing(thing, fromGridPos);
+        base.OnMovedOntoThing(thing);
         DouseFire(thing);
     }
 

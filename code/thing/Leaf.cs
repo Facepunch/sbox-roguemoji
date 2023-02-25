@@ -34,9 +34,9 @@ public partial class Leaf : Thing
             SetIcon("🍂");
     }
 
-    public override void OnMovedOntoBy(Thing thing, IntVector fromGridPos)
+    public override void OnMovedOntoBy(Thing thing)
     {
-        base.OnMovedOntoBy(thing, fromGridPos);
+        base.OnMovedOntoBy(thing);
 
         if(thing.HasFlag(ThingFlags.Solid))
         {

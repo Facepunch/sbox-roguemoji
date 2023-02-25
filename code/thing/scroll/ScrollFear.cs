@@ -22,6 +22,9 @@ public partial class ScrollFear : Scroll
     {
         base.Use(user);
 
+        if (user is Smiley && user.GetComponent<CIconPriority>(out var c))
+            ((CIconPriority)c).AddIconPriority("🤬", (int)PlayerIconPriority.UseScroll, 1.0f);
+
         int radius = 3;
         var things = user.ContainingGridManager.GetThingsWithinRange(user.GridPos, radius, allFlags: ThingFlags.Solid);
         foreach (var thing in things)

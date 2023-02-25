@@ -28,6 +28,9 @@ public partial class ScrollSentience : Scroll
     {
         base.Use(user, gridType, targetGridPos);
 
+        if (user is Smiley && user.GetComponent<CIconPriority>(out var component))
+            ((CIconPriority)component).AddIconPriority("😯", (int)PlayerIconPriority.UseScroll, 1.0f);
+
         var thing = user.ContainingGridManager.GetThingsAt(targetGridPos).WithAll(ThingFlags.Selectable).Where(x => x.Brain == null).Where(x => ScrollSentience.CanGainSentience(x)).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
 
         if(thing != null)

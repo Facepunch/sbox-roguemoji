@@ -294,16 +294,16 @@ public partial class RoguemojiPlayer : ThingBrain
                     else if (Input.Pressed(InputButton.Drop))                                                   DropWieldedItem();
                     else if (Input.Pressed(InputButton.Jump))                                                   UseWieldedThing();
                     else if (Input.Pressed(InputButton.Menu))                                                   WieldThing(null);
-                    else if (Input.Pressed(InputButton.Left))                                                   TryMove(Direction.Left, shouldQueueAction: true);
-                    else if (Input.Pressed(InputButton.Right))                                                  TryMove(Direction.Right, shouldQueueAction: true);
-                    else if (Input.Pressed(InputButton.Back))                                                   TryMove(Direction.Down, shouldQueueAction: true);
-                    else if (Input.Pressed(InputButton.Forward))                                                TryMove(Direction.Up, shouldQueueAction: true);
+                    else if (Input.Pressed(InputButton.Left))                                                   ControlledThing.TryMove(Direction.Left, out bool switchedLevel, out bool actionWasntReady, shouldQueueAction: true);
+                    else if (Input.Pressed(InputButton.Right))                                                  ControlledThing.TryMove(Direction.Right, out bool switchedLevel, out bool actionWasntReady, shouldQueueAction: true);
+                    else if (Input.Pressed(InputButton.Back))                                                   ControlledThing.TryMove(Direction.Down, out bool switchedLevel, out bool actionWasntReady, shouldQueueAction: true);
+                    else if (Input.Pressed(InputButton.Forward))                                                ControlledThing.TryMove(Direction.Up, out bool switchedLevel, out bool actionWasntReady, shouldQueueAction: true);
                     else if (Input.Pressed(InputButton.Flashlight))                                             StartAimingThrow();
                     else if (Input.Pressed(InputButton.Voice))                                                  SelectWieldedItem();
-                    else if (Input.Down(InputButton.Left))                                                      TryMove(Direction.Left);
-                    else if (Input.Down(InputButton.Right))                                                     TryMove(Direction.Right);
-                    else if (Input.Down(InputButton.Back))                                                      TryMove(Direction.Down);
-                    else if (Input.Down(InputButton.Forward))                                                   TryMove(Direction.Up);
+                    else if (Input.Down(InputButton.Left))                                                      ControlledThing.TryMove(Direction.Left, out bool switchedLevel, out bool actionWasntReady);
+                    else if (Input.Down(InputButton.Right))                                                     ControlledThing.TryMove(Direction.Right, out bool switchedLevel, out bool actionWasntReady);
+                    else if (Input.Down(InputButton.Back))                                                      ControlledThing.TryMove(Direction.Down, out bool switchedLevel, out bool actionWasntReady);
+                    else if (Input.Down(InputButton.Forward))                                                   ControlledThing.TryMove(Direction.Up, out bool switchedLevel, out bool actionWasntReady);
                 }
                 else
                 {
@@ -380,59 +380,11 @@ public partial class RoguemojiPlayer : ThingBrain
         RoguemojiGame.Instance.FlickerWieldingPanel();
     }
 
-    public bool TryMove(Direction direction, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
-	{
-        if (ControlledThing.IsInTransit)
-            return false;
-
-        CActing acting = null;
-        if (ControlledThing.GetComponent<CActing>(out var component))
-            acting = (CActing)component;
-
-        if (acting == null)
-            return false;
-
-        if (!acting.IsActionReady && !dontRequireAction)
-        {
-            if(shouldQueueAction)
-            {
-                QueuedAction = new TryMoveAction(direction);
-                QueuedActionName = QueuedAction.ToString();
-            }
-            
-            return false;
-        }
-
-        //if(IsConfused && Game.Random.Int(0, 2) == 0)
-        //    direction = GridManager.GetRandomDirection(cardinalOnly: false);
-
-        bool success = ControlledThing.TryMove(direction, out bool switchedLevel, shouldAnimate, shouldQueueAction: false, dontRequireAction);
-
-        if (success && !switchedLevel)
-            RecenterCamera(shouldAnimate: true);
-
-        return success;
-	}
-
-    //public override void BumpInto(Thing other, Direction direction)
-    //{
-    //    base.BumpInto(other, direction);
-
-    //    //if(other is Hole)
-    //    //{
-    //    //    if(CurrentLevelId == LevelId.Forest0)
-    //    //        RoguemojiGame.Instance.SetPlayerLevel(this, LevelId.Forest1);
-    //    //    else if (CurrentLevelId == LevelId.Forest1)
-    //    //        RoguemojiGame.Instance.SetPlayerLevel(this, LevelId.Forest2);
-    //    //}
-    //    if(other is Door)
-    //    {
-    //        if (Smiley.CurrentLevelId == LevelId.Forest1)
-    //            RoguemojiGame.Instance.ChangeThingLevel(Smiley, LevelId.Forest0);
-    //        else if (Smiley.CurrentLevelId == LevelId.Forest2)
-    //            RoguemojiGame.Instance.ChangeThingLevel(Smiley, LevelId.Forest1);
-    //    }
-    //}
+    public void QueueAction(IQueuedAction action)
+    {
+        QueuedAction = action;
+        QueuedActionName = QueuedAction.ToString();
+    }
 
 	public void SelectThing(Thing thing, bool playSfx = false)
 	{
@@ -1274,9 +1226,9 @@ public partial class RoguemojiPlayer : ThingBrain
         IsAiming = false;
     }
 
-    public override void OnChangedGridPos(IntVector fromGridPos)
+    public override void OnChangedGridPos()
     {
-        base.OnChangedGridPos(fromGridPos);
+        base.OnChangedGridPos();
 
         RefreshVisibility();
         ControlledThing.ContainingGridManager.PlayerChangedGridPos(this);
@@ -1398,7 +1350,7 @@ public class TryMoveAction : IQueuedAction
 
     public void Execute(RoguemojiPlayer player)
     {
-        player.TryMove(Direction, shouldQueueAction: false);
+        player.ControlledThing.TryMove(Direction, out bool switchedLevel, out bool actionWasntReady, shouldQueueAction: false);
     }
 
     public override string ToString()

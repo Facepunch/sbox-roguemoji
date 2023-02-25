@@ -27,6 +27,9 @@ public partial class ScrollBlink : Scroll
     {
         base.Use(user, gridType, targetGridPos);
 
+        if (user is Smiley && user.GetComponent<CIconPriority>(out var component))
+            ((CIconPriority)component).AddIconPriority("😝", (int)PlayerIconPriority.UseScroll, 1.0f);
+
         BlinkThing(user, targetGridPos);
 
         RoguemojiGame.Instance.RevealScroll(ScrollType, user.GridPos, user.CurrentLevelId);
@@ -50,6 +53,9 @@ public partial class ScrollBlink : Scroll
         thing.AddFloater(Globals.Icon(IconType.Blink), 1.1f, new Vector2(0, -3f), new Vector2(0, -12f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: true, EasingType.SineOut, fadeInTime: 0.2f);
 
         if (thing.Brain is RoguemojiPlayer player)
+        {
             player.RecenterCamera();
+            player.VfxFlashCamera(0.8f, new Color(0.8f, 0.8f, 0.3f, 0.1f));
+        }
     }
 }

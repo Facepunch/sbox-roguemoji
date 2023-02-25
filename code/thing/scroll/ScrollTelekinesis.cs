@@ -27,6 +27,9 @@ public partial class ScrollTelekinesis : Scroll
     {
         base.Use(user, gridType, targetGridPos);
 
+        if (user is Smiley && user.GetComponent<CIconPriority>(out var component))
+            ((CIconPriority)component).AddIconPriority("😙", (int)PlayerIconPriority.UseScroll, 1.0f);
+
         var targetThing = user.ContainingGridManager.GetThingsAt(targetGridPos).WithAll(ThingFlags.Selectable).OrderByDescending(x => x.GetZPos()).FirstOrDefault();
         if (targetThing == null || targetThing == user)
         {
@@ -40,9 +43,7 @@ public partial class ScrollTelekinesis : Scroll
             Direction pullDirection = GridManager.GetDirectionForIntVector(GridManager.GetIntVectorForSlope(targetGridPos, user.GridPos));
 
             var player = (targetThing.Brain != null && targetThing.Brain is RoguemojiPlayer) ? (RoguemojiPlayer)targetThing.Brain : null;
-            bool success = player != null
-                ? player.TryMove(pullDirection, dontRequireAction: true)
-                : targetThing.TryMove(pullDirection, out bool switchedLevel, dontRequireAction: true);
+            bool success = targetThing.TryMove(pullDirection, out bool switchedLevel, out bool actionWasntReady, dontRequireAction: true);
 
             if (targetThing.GetComponent<CActing>(out var c))
                 ((CActing)c).PerformedAction();

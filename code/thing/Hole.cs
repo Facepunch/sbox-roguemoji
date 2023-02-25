@@ -21,17 +21,17 @@ public partial class Hole : Thing
         }
     }
 
-    public override void OnMovedOntoBy(Thing thing, IntVector fromGridPos)
+    public override void OnMovedOntoBy(Thing thing)
     {
-        base.OnMovedOntoBy(thing, fromGridPos);
+        base.OnMovedOntoBy(thing);
 
         if (thing.Brain is RoguemojiPlayer player)
             SwallowThing(thing);
     }
 
-    public override void OnMovedOntoThing(Thing thing, IntVector fromGridPos)
+    public override void OnMovedOntoThing(Thing thing)
     {
-        base.OnMovedOntoThing(thing, fromGridPos);
+        base.OnMovedOntoThing(thing);
 
         if (thing.Brain is RoguemojiPlayer player)
             SwallowThing(thing);

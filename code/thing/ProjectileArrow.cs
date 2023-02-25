@@ -27,9 +27,9 @@ public partial class ProjectileArrow : Thing
         Destroy();
     }
 
-    public override void OnMovedOntoBy(Thing thing, IntVector fromGridPos)
+    public override void OnMovedOntoBy(Thing thing)
     {
-        base.OnMovedOntoBy(thing, fromGridPos);
+        base.OnMovedOntoBy(thing);
         Destroy();
     }
 

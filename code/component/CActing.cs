@@ -7,7 +7,7 @@ public class CActing : ThingComponent
 {
     public float ActionTimer { get; set; }
     public float ActionDelay { get; set; }
-    public bool IsActionReady { get; set; }
+    public bool IsActionReady { get; private set; }
 
     public int NumPreventActionSources { get; private set; } // the number of things that want to stop this from acting, eg. Sleeping or Stunned
 

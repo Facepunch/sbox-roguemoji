@@ -75,7 +75,7 @@ public partial class RugbyBall : Thing
     public static void ShoveThing(Thing thing, Direction direction, float stunTime)
     {
         var oldPos = thing.GridPos;
-        if (thing.TryMove(direction, out bool switchedLevel, dontRequireAction: true))
+        if (thing.TryMove(direction, out bool switchedLevel, out bool actionWasntReady, dontRequireAction: true))
         {
             thing.ContainingGridManager.AddFloater("☁️", oldPos, 0.5f, new Vector2(0f, 4f), new Vector2(0f, -7f), height: 0f, text: "", requireSight: true, alwaysShowWhenAdjacent: false, EasingType.SineOut, fadeInTime: 0.15f, scale: 1.1f, opacity: 0.5f);
 
@@ -144,9 +144,7 @@ public class CRugbyCharge : ThingComponent
             var oldPos = Thing.GridPos;
 
             var player = Thing.Brain != null ? (RoguemojiPlayer)Thing.Brain : null;
-            bool success = player != null
-                ? player.TryMove(Direction, dontRequireAction: true)
-                : Thing.TryMove(Direction, out bool switchedLevel, dontRequireAction: true);
+            bool success = Thing.TryMove(Direction, out bool switchedLevel, out bool actionWasntReady, dontRequireAction: true);
 
             if (success)
             {

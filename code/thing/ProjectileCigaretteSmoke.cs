@@ -22,16 +22,16 @@ public partial class ProjectileCigaretteSmoke : Thing
         }
     }
 
-    public override void OnMovedOntoThing(Thing thing, IntVector fromGridPos)
+    public override void OnMovedOntoThing(Thing thing)
     {
-        base.OnMovedOntoThing(thing, fromGridPos);
+        base.OnMovedOntoThing(thing);
 
         thing.TakeDamageFrom(this);
     }
 
-    public override void OnMovedOntoBy(Thing thing, IntVector fromGridPos)
+    public override void OnMovedOntoBy(Thing thing)
     {
-        base.OnMovedOntoBy(thing, fromGridPos);
+        base.OnMovedOntoBy(thing);
 
         thing.TakeDamageFrom(this);
     }

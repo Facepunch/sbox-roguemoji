@@ -63,20 +63,4 @@ public partial class Ghost : Thing
 
         ClearTraits();
     }
-
-    public override bool TryMove(Direction direction, out bool switchedLevel, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
-	{
-        switchedLevel = false;
-
-        if (IsInTransit)
-            return false;
-
-        var success = base.TryMove(direction, out switchedLevel, shouldAnimate, shouldQueueAction: false, dontRequireAction);
-
-        if(!dontRequireAction)
-            Acting.PerformedAction();
-
-		return success;
-	}
-
 }

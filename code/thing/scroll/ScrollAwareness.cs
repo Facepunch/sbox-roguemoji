@@ -22,6 +22,9 @@ public partial class ScrollAwareness : Scroll
     {
         base.Use(user);
 
+        if (user is Smiley && user.GetComponent<CIconPriority>(out var component))
+            ((CIconPriority)component).AddIconPriority("😏", (int)PlayerIconPriority.UseScroll, 1.0f);
+
         RevealLevel(user);
 
         Destroy();

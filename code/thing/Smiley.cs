@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using Sandbox.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,15 +75,15 @@ public partial class Smiley : Thing
         ClearTraits();
     }
 
-
-    public override bool TryMove(Direction direction, out bool switchedLevel, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
+    public override bool TryMove(Direction direction, out bool switchedLevel, out bool actionWasntReady, bool shouldAnimate = true, bool shouldQueueAction = false, bool dontRequireAction = false)
     {
         switchedLevel = false;
+        actionWasntReady = false;
 
         if (IsInTransit)
             return false;
 
-        var success = base.TryMove(direction, out switchedLevel, shouldAnimate, shouldQueueAction: false, dontRequireAction);
+        var success = base.TryMove(direction, out switchedLevel, out actionWasntReady, shouldAnimate, shouldQueueAction, dontRequireAction);
 		if (success)
 		{
             if(Game.Random.Int(0, 5) == 0)
@@ -90,11 +91,9 @@ public partial class Smiley : Thing
         }
         else 
 		{
-            IconPriority.AddIconPriority("😠", (int)PlayerIconPriority.Attack, 0.4f);
+            if(!actionWasntReady)
+                IconPriority.AddIconPriority("😠", (int)PlayerIconPriority.Attack, 0.4f);
         }
-
-        if(!dontRequireAction)
-            Acting.PerformedAction();
 
 		return success;
 	}

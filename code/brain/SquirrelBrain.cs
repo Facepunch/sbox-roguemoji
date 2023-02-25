@@ -158,13 +158,7 @@ public partial class SquirrelBrain : ThingBrain
             }
 
             var dir = GridManager.GetDirectionForIntVector(path[0] - ControlledThing.GridPos);
-            ControlledThing.TryMove(dir, out bool switchedLevel);
-        }
-
-        if (ControlledThing.GetComponent<CActing>(out var component))
-        {
-            var acting = (CActing)component;
-            acting.PerformedAction();
+            ControlledThing.TryMove(dir, out bool switchedLevel, out bool actionWasntReady);
         }
     }
 

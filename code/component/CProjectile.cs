@@ -8,7 +8,7 @@ public class CProjectile : ThingComponent
     public Direction Direction { get; set; }
     public float MoveDelay { get; set; }
     public TimeSince TimeSinceMove { get; set; }
-    public int CurrentDistance { get; set; }
+    public int CurrentNumMoves { get; set; }
     public int TotalDistance { get; set; }
     public Thing Thrower { get; set; }
     public bool ShouldHit { get; set; }
@@ -23,6 +23,17 @@ public class CProjectile : ThingComponent
         ShouldUpdate = true;
         TimeSinceMove = 0f;
         ShouldHit = true;
+
+        if (thing.GetComponent<CActing>(out var component))
+            ((CActing)component).PreventAction();
+    }
+
+    public override void ReInitialize()
+    {
+        base.ReInitialize();
+
+        CurrentNumMoves = 0;
+        TimeSinceMove = 0f;
     }
 
     public override void Update(float dt)
@@ -37,6 +48,7 @@ public class CProjectile : ThingComponent
 
         if(TimeSinceMove > MoveDelay)
         {
+            CurrentNumMoves++;
             TimeSinceMove = 0f;
 
             if(ShouldUseDirectionVector)
@@ -46,20 +58,18 @@ public class CProjectile : ThingComponent
                 if(!newGridPos.Equals(Thing.GridPos))
                 {
                     var direction = GridManager.GetDirectionForIntVector(newGridPos - Thing.GridPos);
-                    if (Thing.TryMove(direction, out bool switchedLevel, shouldAnimate: false))
+                    if (Thing.TryMove(direction, out bool switchedLevel, out bool actionWasntReady, shouldAnimate: true, dontRequireAction: true))
                     {
-                        CurrentDistance++;
-                        if (CurrentDistance >= TotalDistance)
+                        if (CurrentNumMoves >= TotalDistance)
                             Remove();
                     }
                 }
             }
             else
             {
-                if (Thing.TryMove(Direction, out bool switchedLevel, shouldAnimate: false))
+                if (Thing.TryMove(Direction, out bool switchedLevel, out bool actionWasntReady, shouldAnimate: true, dontRequireAction: true))
                 {
-                    CurrentDistance++;
-                    if (CurrentDistance >= TotalDistance)
+                    if (CurrentNumMoves >= TotalDistance)
                         Remove();
                 }
             }
@@ -74,7 +84,7 @@ public class CProjectile : ThingComponent
             Remove();
     }
 
-    public override void OnMovedOntoBy(Thing thing, IntVector fromGridPos)
+    public override void OnMovedOntoBy(Thing thing)
     {
         if (!ShouldHit)
             return;
@@ -93,7 +103,8 @@ public class CProjectile : ThingComponent
 
     public override void OnRemove()
     {
-        base.OnRemove();
+        if (Thing.GetComponent<CActing>(out var component))
+            ((CActing)component).AllowAction();
     }
 
     public void UseDirectionVector(Vector2 vec)

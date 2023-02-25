@@ -27,6 +27,9 @@ public partial class ScrollFireball : Scroll
     {
         base.Use(user, gridType, targetGridPos);
 
+        if (user is Smiley && user.GetComponent<CIconPriority>(out var component))
+            ((CIconPriority)component).AddIconPriority("😤", (int)PlayerIconPriority.UseScroll, 1.0f);
+
         ShootFireball(user, targetGridPos);
 
         Destroy();

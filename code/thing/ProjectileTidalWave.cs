@@ -18,38 +18,38 @@ public partial class ProjectileTidalWave : Thing
         Flammability = 0;
     }
 
-    public override void OnMovedOntoThing(Thing thing, IntVector fromGridPos)
+    public override void OnMovedOntoThing(Thing thing)
     {
-        base.OnMovedOntoThing(thing, fromGridPos);
+        base.OnMovedOntoThing(thing);
 
         if(!LastGridPos.Equals(GridPos) && !thing.HasFlag(ThingFlags.CantBePushed))
         {
-            if(!thing.TryMove(GridManager.GetDirectionForIntVector(GridPos - LastGridPos), out bool switchedLevel))
+            if(!thing.TryMove(GridManager.GetDirectionForIntVector(GridPos - LastGridPos), out bool switchedLevel, out bool actionWasntReady, dontRequireAction: true))
                 thing.Hurt(SlamDamage);
         }
     }
 
-    public override void OnMovedOntoBy(Thing thing, IntVector fromGridPos)
+    public override void OnMovedOntoBy(Thing thing)
     {
-        base.OnMovedOntoBy(thing, fromGridPos);
+        base.OnMovedOntoBy(thing);
 
         if (!LastGridPos.Equals(GridPos) && !thing.HasFlag(ThingFlags.CantBePushed))
         {
-            if (!thing.TryMove(GridManager.GetDirectionForIntVector(GridPos - LastGridPos), out bool switchedLevel))
+            if (!thing.TryMove(GridManager.GetDirectionForIntVector(GridPos - LastGridPos), out bool switchedLevel, out bool actionWasntReady, dontRequireAction: true))
                 thing.Hurt(SlamDamage);
         }
     }
 
-    public override void OnChangedGridPos(IntVector fromGridPos)
+    public override void OnChangedGridPos()
     {
-        base.OnChangedGridPos(fromGridPos);
+        base.OnChangedGridPos();
 
-        if (!fromGridPos.Equals(GridPos))
+        if (!LastGridPos.Equals(GridPos))
         {
-            if (!ContainingGridManager.DoesGridPosContainThingType<PuddleWater>(fromGridPos))
+            if (!ContainingGridManager.DoesGridPosContainThingType<PuddleWater>(LastGridPos))
             {
-                ContainingGridManager.RemovePuddles(fromGridPos, fadeOut: true);
-                ContainingGridManager.SpawnThing<PuddleWater>(fromGridPos);
+                ContainingGridManager.RemovePuddles(LastGridPos, fadeOut: true);
+                ContainingGridManager.SpawnThing<PuddleWater>(LastGridPos);
             }
         }
     }
@@ -59,7 +59,7 @@ public partial class ProjectileTidalWave : Thing
         var things = ContainingGridManager.GetThingsAt(GridPos).WithNone(ThingFlags.CantBePushed).Where(x => x != this).ToList();
         foreach(var thing in things)
         {
-            if (!thing.TryMove(GridManager.GetDirectionForIntVector(gridDir), out bool switchedLevel))
+            if (!thing.TryMove(GridManager.GetDirectionForIntVector(gridDir), out bool switchedLevel, out bool actionWasntReady, dontRequireAction: true))
                 thing.Hurt(SlamDamage);
         }
     }

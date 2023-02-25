@@ -34,7 +34,7 @@ public class CTargeting : ThingComponent
         }
     }
 
-    public override void OnChangedGridPos(IntVector fromGridPos)
+    public override void OnChangedGridPos()
     {
         CheckForTargets();
     }
